@@ -1,0 +1,19 @@
+# Local reference copy of the Kiro docs. Not redistributed.
+kiro-docs/
+
+# Node
+node_modules/
+
+# Python caches and virtual environments
+__pycache__/
+.venv/
+.pytest_cache/
+.hypothesis/
+
+# Local build caches. app/ui/dist/ is committed on purpose; only the replay build is ignored.
+app/ui/dist-replay/
+spikes/**/dist-replay/
+
+# App secrets
+*.app_secret
+.app_secret

@@ -1,0 +1,15 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "All tests after a spec task",
+      "description": "When a spec task is marked completed, run the Python and TypeScript test suites (Requirement 11.3).",
+      "trigger": "PostTaskExec",
+      "action": {
+        "type": "command",
+        "command": "scripts/test-all.sh"
+      },
+      "timeout": 300
+    }
+  ]
+}

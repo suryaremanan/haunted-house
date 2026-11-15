@@ -1,0 +1,15 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Check .kiro stays tracked",
+      "description": "When the agent saves a .gitignore, fail if git would ignore .kiro/ or any file under it (Requirement 11.1).",
+      "trigger": "PostFileSave",
+      "matcher": "(^|/)\\.gitignore$",
+      "action": {
+        "type": "command",
+        "command": "scripts/check-kiro-tracked.sh"
+      }
+    }
+  ]
+}

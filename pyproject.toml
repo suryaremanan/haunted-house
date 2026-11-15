@@ -1,0 +1,21 @@
+# Tool configuration for the repo's Python tests.
+#
+# This file sits at the repo root, outside app/, on purpose: it is not a
+# package definition, and Crew must never try to `pip install .` the app.
+# Dev dependencies are in requirements-dev.txt. Run the tests with
+# scripts/test-py.sh.
+#
+# Async tests use plain `asyncio.run(...)` with aiohttp's own
+# `aiohttp.test_utils` (TestServer, TestClient). No pytest async plugin is
+# installed, which keeps Hypothesis tests free of function-scoped fixtures.
+# Hypothesis profiles are registered in the root conftest.py.
+
+[tool.pytest.ini_options]
+minversion = "9.0"
+testpaths = ["app/backend/tests", "scripts/tests"]
+pythonpath = ["app/backend"]
+addopts = ["-ra", "--strict-markers", "--strict-config", "--import-mode=importlib"]
+xfail_strict = true
+markers = [
+    "core: tests of pure core logic (fast; run by the save hook)",
+]

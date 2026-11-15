@@ -1,0 +1,35 @@
+{
+  "name": "haunted-house-ui",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Haunted House dashboard page for Kiro Crew. React, react-dom, lucide-react and @kirocrew/app-sdk are supplied by the Crew dashboard at runtime.",
+  "license": "MIT",
+  "engines": {
+    "node": "^22.22.2 || ^24.15.0 || >=26.0.0"
+  },
+  "scripts": {
+    "build": "vite build",
+    "build:replay": "vite build -c vite.replay.config.ts",
+    "test": "vitest run",
+    "test:core": "vitest run src/core --passWithNoTests",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@types/react": "~18.3.31",
+    "@types/react-dom": "~18.3.7",
+    "@vitejs/plugin-react": "^6.3.0",
+    "es-module-lexer": "^3.0.4",
+    "fast-check": "^4.10.2",
+    "jsdom": "^31.0.0",
+    "lucide-react": "^1.72.0",
+    "react": "~18.3.1",
+    "react-dom": "~18.3.1",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.8",
+    "vitest": "^5.1.0"
+  }
+}

@@ -1,0 +1,845 @@
+{
+  "pbtResults": {
+    "3.2 Write property test: signatures accepted only inside the window": {
+      "status": "passed",
+      "lastRunTimestamp": 1794735895760
+    },
+    "3.3 Write property test: any change is rejected": {
+      "status": "passed",
+      "lastRunTimestamp": 1794735902833
+    },
+    "3.4 Write property test: malformed input rejected without errors": {
+      "status": "passed",
+      "lastRunTimestamp": 1794735907218
+    },
+    "4.2 Write property test: token placed exactly once": {
+      "status": "passed",
+      "lastRunTimestamp": 1794735911888
+    },
+    "11.2 Write property test: credentials found without being printed": {
+      "status": "passed",
+      "lastRunTimestamp": 1794735896516
+    },
+    "11.3 Write property test: home paths in fixtures flagged": {
+      "status": "passed",
+      "lastRunTimestamp": 1794735935392
+    },
+    "10.2 Write property test: replay delivers each frame once, in order": {
+      "status": "passed",
+      "lastRunTimestamp": 1794735930361
+    },
+    "5.2 Write property test: unsigned API requests never reach a handler": {
+      "status": "passed",
+      "lastRunTimestamp": 1794735916729
+    },
+    "6.5 Write property test: never calls outside the manifest scope": {
+      "status": "passed",
+      "lastRunTimestamp": 1794735925981
+    },
+    "6.3 Write property test: secret and token never revealed": {
+      "status": "passed",
+      "lastRunTimestamp": 1794735896024
+    },
+    "6.4 Write property test: at most one refresh and retry": {
+      "status": "passed",
+      "lastRunTimestamp": 1794735896274
+    }
+  },
+  "executionHistory": {
+    "1.1 Initialize the repo and add the baseline files": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465394781
+      },
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465415631
+      },
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465669477
+      }
+    ],
+    "1.2 Set up the Python and test tooling": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465394818
+      },
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465727172
+      },
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794466181245
+      }
+    ],
+    "2.1 Write `scripts/check-kiro-tracked.sh`": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465394842
+      },
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794466193658
+      },
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794471061854
+      }
+    ],
+    "2.2 Write example tests for the check": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465394862
+      },
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794471949700
+      },
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794473306005
+      }
+    ],
+    "3.1 Implement `haunted_house/core/proxy_signature.py`": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465394888
+      },
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794466193752
+      },
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794471061924
+      }
+    ],
+    "3.2 Write property test: signatures accepted only inside the window": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465394910
+      },
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794471074431
+      },
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794471937953
+      }
+    ],
+    "3.3 Write property test: any change is rejected": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465394929
+      },
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794471075639
+      },
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794471938041
+      }
+    ],
+    "3.4 Write property test: malformed input rejected without errors": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465394950
+      },
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794471076375
+      },
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794471938986
+      }
+    ],
+    "4.1 Implement `core/scope.py`, `core/urls.py` and `core/redact.py`": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465394969
+      },
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794466194371
+      },
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794471062000
+      }
+    ],
+    "4.2 Write property test: token placed exactly once": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465394990
+      },
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794471949852
+      },
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794473307855
+      }
+    ],
+    "5.1 Implement settings, server and entry point": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465395010
+      },
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794471073471
+      },
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794471937883
+      }
+    ],
+    "5.2 Write property test: unsigned API requests never reach a handler": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465395028
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794487135566
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794573401145
+      }
+    ],
+    "5.3 Write unit tests for the server": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465395050
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794487136385
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794550124744
+      }
+    ],
+    "6.1 Implement `adapters/gateway_client.py`": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465395071
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794487135405
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794550124711
+      }
+    ],
+    "6.2 Wire `GET /api/whoami` to the client": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465395102
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794573791651
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794574760623
+      }
+    ],
+    "6.3 Write property test: secret and token never revealed": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465395124
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794573792717
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794574760915
+      }
+    ],
+    "6.4 Write property test: at most one refresh and retry": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465395144
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794573793961
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794574762031
+      }
+    ],
+    "6.5 Write property test: never calls outside the manifest scope": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465395163
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794573794723
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794574762832
+      }
+    ],
+    "7.1 Write `app/app.json` and an original placeholder icon": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465395185
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794573795704
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794574763687
+      }
+    ],
+    "7.2 Write the manifest test": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465395205
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794575424725
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794576205871
+      }
+    ],
+    "8. Checkpoint: all Python tests pass": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465395225
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794576214886
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794577297057
+      }
+    ],
+    "9.1 Set up `app/ui`": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465395244
+      },
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465727220
+      },
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794466181963
+      }
+    ],
+    "9.2 Implement the SDK adapter and status page": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465395265
+      },
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794466195576
+      },
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794471062983
+      }
+    ],
+    "9.3 Write DOM tests for the status page": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465395285
+      },
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794471950792
+      },
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794473305967
+      }
+    ],
+    "9.4 Write `scripts/check-bundle-imports.mjs` and the adapter-only import test": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465395302
+      },
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794471951601
+      },
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794473305872
+      }
+    ],
+    "9.5 Build `app/ui/dist/index.mjs`": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465395320
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794575425706
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794576205935
+      }
+    ],
+    "10.1 Implement the replay stand-in and entry": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465395343
+      },
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794471077226
+      },
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794471937802
+      }
+    ],
+    "10.2 Write property test: replay delivers each frame once, in order": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465395365
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794487137742
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794550124778
+      }
+    ],
+    "10.3 Write the replay DOM test": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465395387
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794573409050
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794573783015
+      }
+    ],
+    "11.1 Implement `scripts/secret_scan.py`": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465395409
+      },
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794466196219
+      },
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794471063738
+      }
+    ],
+    "11.2 Write property test: credentials found without being printed": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465395430
+      },
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794471952448
+      },
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794473307188
+      }
+    ],
+    "11.3 Write property test: home paths in fixtures flagged": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465395451
+      },
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794473326639
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794486133725
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794487114871
+      }
+    ],
+    "11.4 Scan the repo and fix any findings": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465395473
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794576215951
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794577297092
+      }
+    ],
+    "12.1 Write `scripts/install-local.sh`": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465395495
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794487138342
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794550124969
+      }
+    ],
+    "12.2 Write tests with a fake `kirocrew` on `PATH`": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465395517
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794574772231
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794575415394
+      }
+    ],
+    "13.1 Create the four hook files in `.kiro/hooks/`": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465395537
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794575426329
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794576205983
+      }
+    ],
+    "13.2 Test the hooks": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465395559
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794576216889
+      },
+      {
+        "executionId": "374be3b5-116a-49d8-9914-50b8f0db9a6d",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794734880698
+      }
+    ],
+    "14.1 Write `.github/workflows/ci.yml`": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465395579
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794576217560
+      },
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794577297773
+      }
+    ],
+    "14.2 Push and confirm a green run (needs you)": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465395600
+      },
+      {
+        "executionId": "374be3b5-116a-49d8-9914-50b8f0db9a6d",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794735762223
+      }
+    ],
+    "15.1 Install and confirm the status line": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465395620
+      },
+      {
+        "executionId": "374be3b5-116a-49d8-9914-50b8f0db9a6d",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794734925203
+      },
+      {
+        "executionId": "374be3b5-116a-49d8-9914-50b8f0db9a6d",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794735464777
+      }
+    ],
+    "15.2 Spot-check the trust boundary and record results": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465395645
+      },
+      {
+        "executionId": "374be3b5-116a-49d8-9914-50b8f0db9a6d",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794735497632
+      },
+      {
+        "executionId": "374be3b5-116a-49d8-9914-50b8f0db9a6d",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794735708830
+      }
+    ],
+    "16. Final checkpoint: all checks pass": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794465395680
+      }
+    ],
+    "1. Repository baseline (MVP)": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794466181280
+      }
+    ],
+    "3. Proxy signature core (MVP)": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794471939010
+      }
+    ],
+    "2. `.kiro` tracking check (MVP)": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794473306025
+      }
+    ],
+    "4. Scope, URL and redaction core (MVP)": [
+      {
+        "executionId": "1d653604-e39f-4176-b297-612233550868",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794473307880
+      }
+    ],
+    "5. Backend server (MVP)": [
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794573401172
+      }
+    ],
+    "10. Replay build (MVP)": [
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794573783054
+      }
+    ],
+    "6. Gateway client (MVP)": [
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794574762857
+      }
+    ],
+    "12. Install script (MVP)": [
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794575415425
+      }
+    ],
+    "7. Manifest (MVP)": [
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794576205905
+      }
+    ],
+    "9. Live UI build (MVP)": [
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794576205955
+      }
+    ],
+    "11. Secret scan (MVP)": [
+      {
+        "executionId": "5d8b13cd-7fc6-46c8-9931-e8ca9aa3abfc",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794577297121
+      }
+    ],
+    "13. Kiro hooks (MVP)": [
+      {
+        "executionId": "374be3b5-116a-49d8-9914-50b8f0db9a6d",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794734880740
+      }
+    ],
+    "15. Live check on Crew 0.12.1 (MVP, needs you)": [
+      {
+        "executionId": "374be3b5-116a-49d8-9914-50b8f0db9a6d",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794735708861
+      }
+    ]
+  }
+}

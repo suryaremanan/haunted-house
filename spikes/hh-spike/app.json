@@ -1,0 +1,49 @@
+{
+  "name": "hh-spike",
+  "version": "0.1.1",
+  "displayName": "HH Spike",
+  "description": "Throwaway day-one spike for Haunted House. Safe to uninstall.",
+  "author": "haunted-house",
+  "license": "MIT",
+  "minKiroCrewVersion": "0.12.1",
+  "iconPath": "assets/icon.png",
+  "agents": [
+    "agents/hh-scribe.json"
+  ],
+  "backend": {
+    "entryPoint": "backend/server.py",
+    "type": "python",
+    "port": "auto",
+    "healthCheck": "/health"
+  },
+  "ui": {
+    "entry": "dist/index.mjs",
+    "pages": [
+      {
+        "route": "/apps/hh-spike",
+        "label": "HH Spike",
+        "icon": "Ghost"
+      }
+    ]
+  },
+  "permissions": {
+    "api": [
+      "/api/spawn",
+      "/api/spawn/*",
+      "/api/approvals",
+      "/api/approvals/*",
+      "/api/chat",
+      "/api/chat/*"
+    ],
+    "events": [
+      "tool_call",
+      "approval",
+      "subagent_done",
+      "task_update",
+      "chat_done",
+      "chat_error",
+      "notification"
+    ],
+    "sessionApproval": true
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "UI core tests on save",
+      "description": "When the agent saves a .ts or .tsx file under app/ui/src/core/, run the UI core tests once (Requirement 11.2).",
+      "trigger": "PostFileSave",
+      "matcher": "(^|/)app/ui/src/core/.+\\.tsx?$",
+      "action": {
+        "type": "command",
+        "command": "npm --prefix app/ui run test:core"
+      }
+    },
+    {
+      "name": "Backend core tests on save",
+      "description": "When the agent saves a .py file under app/backend/haunted_house/core/, run the pytest tests marked core once (Requirement 11.2).",
+      "trigger": "PostFileSave",
+      "matcher": "(^|/)app/backend/haunted_house/core/.+\\.py$",
+      "action": {
+        "type": "command",
+        "command": "scripts/test-py.sh -q -m core app/backend/tests"
+      }
+    }
+  ]
+}

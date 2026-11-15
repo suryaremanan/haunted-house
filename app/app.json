@@ -1,0 +1,32 @@
+{
+  "name": "haunted-house",
+  "version": "0.1.0",
+  "displayName": "Haunted House",
+  "description": "A spatial home for AI agents: rooms are spec phases, ghosts are agents, doors are your approvals.",
+  "author": "Haunted House contributors",
+  "license": "MIT",
+  "minKiroCrewVersion": "0.12.1",
+  "iconPath": "assets/icon.png",
+  "backend": {
+    "entryPoint": "backend/main.py",
+    "type": "python",
+    "port": "auto",
+    "healthCheck": "/health"
+  },
+  "ui": {
+    "entry": "dist/index.mjs",
+    "pages": [
+      {
+        "route": "/apps/haunted-house",
+        "label": "Haunted House",
+        "icon": "Ghost"
+      }
+    ]
+  },
+  "permissions": {
+    "api": [
+      "/api/version",
+      "/apps/haunted-house/api/*"
+    ]
+  }
+}
