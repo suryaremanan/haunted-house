@@ -146,11 +146,11 @@ Build the Haunted House foundation from the approved requirements and design: re
     - A test that each file parses and names the expected trigger, matcher and command; a manual check that the secret guard blocks an agent write of a fake key
     - _Requirements: 11.1, 11.2, 11.3, 11.4_
 
-- [ ] 14. CI (MVP)
+- [x] 14. CI (MVP)
   - [x] 14.1 Write `.github/workflows/ci.yml`
     - Jobs `python`, `ui` (tests, build, import check, `git diff --exit-code app/ui/dist`, replay build) and `repo` (`.kiro` check, secret scan, shellcheck); any failing step fails the run
     - _Requirements: 4.5, 9.2, 9.3_
-  - [-] 14.2 Push and confirm a green run (needs you)
+  - [x] 14.2 Push and confirm a green run (needs you)
     - User creates the public GitHub repo `haunted-house` and approves the first push; confirm all three jobs pass
     - _Requirements: 9.2, 9.3_
 
@@ -162,7 +162,7 @@ Build the Haunted House foundation from the approved requirements and design: re
     - Unsigned request straight to the backend port returns 401; record the results and the resolved assumptions in tech.md
     - _Requirements: 5.3_
 
-- [~] 16. Final checkpoint: all checks pass
+- [x] 16. Final checkpoint: all checks pass
   - Run `scripts/test-all.sh`, the `.kiro` check and the secret scan; ask the user before making the first commit; ask the user if anything is unclear
 
 - [ ]* 17. Verify the v2 replay-proof proxy signature (stretch)

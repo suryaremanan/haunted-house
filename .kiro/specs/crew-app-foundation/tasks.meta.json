@@ -2,47 +2,47 @@
   "pbtResults": {
     "3.2 Write property test: signatures accepted only inside the window": {
       "status": "passed",
-      "lastRunTimestamp": 1794735895760
+      "lastRunTimestamp": 1794736288492
     },
     "3.3 Write property test: any change is rejected": {
       "status": "passed",
-      "lastRunTimestamp": 1794735902833
+      "lastRunTimestamp": 1794736292911
     },
     "3.4 Write property test: malformed input rejected without errors": {
       "status": "passed",
-      "lastRunTimestamp": 1794735907218
+      "lastRunTimestamp": 1794736297407
     },
     "4.2 Write property test: token placed exactly once": {
       "status": "passed",
-      "lastRunTimestamp": 1794735911888
+      "lastRunTimestamp": 1794736301715
     },
     "11.2 Write property test: credentials found without being printed": {
       "status": "passed",
-      "lastRunTimestamp": 1794735896516
+      "lastRunTimestamp": 1794736337106
     },
     "11.3 Write property test: home paths in fixtures flagged": {
       "status": "passed",
-      "lastRunTimestamp": 1794735935392
+      "lastRunTimestamp": 1794736341508
     },
     "10.2 Write property test: replay delivers each frame once, in order": {
       "status": "passed",
-      "lastRunTimestamp": 1794735930361
+      "lastRunTimestamp": 1794736332824
     },
     "5.2 Write property test: unsigned API requests never reach a handler": {
       "status": "passed",
-      "lastRunTimestamp": 1794735916729
+      "lastRunTimestamp": 1794736310689
     },
     "6.5 Write property test: never calls outside the manifest scope": {
       "status": "passed",
-      "lastRunTimestamp": 1794735925981
+      "lastRunTimestamp": 1794736323933
     },
     "6.3 Write property test: secret and token never revealed": {
       "status": "passed",
-      "lastRunTimestamp": 1794735896024
+      "lastRunTimestamp": 1794736315077
     },
     "6.4 Write property test: at most one refresh and retry": {
       "status": "passed",
-      "lastRunTimestamp": 1794735896274
+      "lastRunTimestamp": 1794736319499
     }
   },
   "executionHistory": {
@@ -707,6 +707,11 @@
         "executionId": "374be3b5-116a-49d8-9914-50b8f0db9a6d",
         "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
         "timestamp": 1794735762223
+      },
+      {
+        "executionId": "374be3b5-116a-49d8-9914-50b8f0db9a6d",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794736088245
       }
     ],
     "15.1 Install and confirm the status line": [
@@ -748,6 +753,16 @@
         "executionId": "1d653604-e39f-4176-b297-612233550868",
         "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
         "timestamp": 1794465395680
+      },
+      {
+        "executionId": "374be3b5-116a-49d8-9914-50b8f0db9a6d",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794736116444
+      },
+      {
+        "executionId": "374be3b5-116a-49d8-9914-50b8f0db9a6d",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794736446285
       }
     ],
     "1. Repository baseline (MVP)": [
@@ -839,6 +854,13 @@
         "executionId": "374be3b5-116a-49d8-9914-50b8f0db9a6d",
         "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
         "timestamp": 1794735708861
+      }
+    ],
+    "14. CI (MVP)": [
+      {
+        "executionId": "374be3b5-116a-49d8-9914-50b8f0db9a6d",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794736088277
       }
     ]
   }
