@@ -1,7 +1,11 @@
-// Haunted House dashboard page. Spec 1 shows only the status panel: whether
-// our backend answers, and whether the backend can reach the gateway.
+// Haunted House dashboard page. The status panel says whether our backend
+// answers and whether the backend can reach the gateway. Once the backend is
+// reachable, the Foyer mounts below it and lists, creates, and opens mansions.
 import { CircleCheck, CircleDashed, LoaderCircle, RotateCw, TriangleAlert } from 'lucide-react'
+import { useState } from 'react'
 import { useBackendStatus, type BackendStatus, type GatewayErrorKind } from './adapters/sdk'
+import { Foyer } from './rooms/foyer/Foyer'
+import { House } from './rooms/house/House'
 
 type Tone = 'ok' | 'problem' | 'pending' | 'unknown'
 
@@ -104,6 +108,7 @@ const STYLES = `
 .hh-icon-problem { color: var(--warn, currentColor); }
 .hh-icon-pending, .hh-icon-unknown { color: var(--muted, currentColor); }
 .hh-summary { margin: 0; }
+.hh-announcement { display: block; margin-top: 4px; }
 .hh-actions { margin-top: 12px; }
 .hh-retry { display: inline-flex; align-items: center; gap: 6px; font: inherit; cursor: pointer;
   color: var(--accent-fg, inherit); background: var(--accent, transparent);
@@ -117,24 +122,45 @@ const STYLES = `
 
 export default function HauntedHouseApp() {
   const { state, retry } = useBackendStatus()
+  // The page has one polite live region: the summary line. The Foyer hands it
+  // each completed create or open result instead of adding a second region.
+  const [announcement, setAnnouncement] = useState('')
+  const reachable = state.kind === 'ok'
   return (
-    <main className="hh-status" aria-labelledby="hh-status-title">
+    <main className="hh-house" aria-labelledby="hh-status-title">
       <style>{STYLES}</style>
-      <h1 id="hh-status-title">Haunted House</h1>
-      <ul className="hh-rows" aria-label="Status">
-        <StatusRow name="Backend" view={backendRow(state)} />
-        <StatusRow name="Gateway" view={gatewayRow(state)} />
-      </ul>
-      <p className="hh-summary" aria-live="polite">
-        {summaryLine(state)}
-      </p>
-      {state.kind === 'unreachable' ? (
-        <div className="hh-actions">
-          <button type="button" className="hh-retry" onClick={retry}>
-            <RotateCw size={16} aria-hidden />
-            Retry
-          </button>
-        </div>
+      <div className="hh-status">
+        <h1 id="hh-status-title">Haunted House</h1>
+        <ul className="hh-rows" aria-label="Status">
+          <StatusRow name="Backend" view={backendRow(state)} />
+          <StatusRow name="Gateway" view={gatewayRow(state)} />
+        </ul>
+        <p className="hh-summary" aria-live="polite">
+          {summaryLine(state)}
+          {reachable && announcement !== '' ? (
+            <>
+              {' '}
+              <span className="hh-announcement">{announcement}</span>
+            </>
+          ) : null}
+        </p>
+        {state.kind === 'unreachable' ? (
+          <div className="hh-actions">
+            <button type="button" className="hh-retry" onClick={retry}>
+              <RotateCw size={16} aria-hidden />
+              Retry
+            </button>
+          </div>
+        ) : null}
+      </div>
+      {/* Mounted only once the backend answers, so an outage has one retry path. */}
+      {reachable ? (
+        <Foyer
+          onAnnounce={setAnnouncement}
+          // The opened mansion shows its house: rooms, Doors and what needs the Operator.
+          // It announces through the same one live region.
+          renderMansion={(mansion) => <House mansionId={mansion.name} specName={mansion.projectSpec} onAnnounce={setAnnouncement} />}
+        />
       ) : null}
     </main>
   )

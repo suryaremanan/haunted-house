@@ -15,6 +15,11 @@ vi.mock('./adapters/sdk', () => ({
   useBackendStatus: () => ({ state: backend.state, retry: backend.retry }),
 }))
 
+// These tests cover the status panel alone. The Foyer, which mounts beside it
+// once the backend is reachable, has its own DOM tests (rooms/foyer/Foyer.test.tsx)
+// and is tested together with this page in App.foyer.test.tsx.
+vi.mock('./rooms/foyer/Foyer', () => ({ Foyer: () => null }))
+
 const REACHABLE: BackendStatus = { kind: 'ok', gateway: { version: '0.12.1' } }
 const UNREACHABLE_502: BackendStatus = { kind: 'unreachable', status: 502, message: 'Bad Gateway' }
 const UNREACHABLE_NO_STATUS: BackendStatus = { kind: 'unreachable', message: 'Failed to fetch' }

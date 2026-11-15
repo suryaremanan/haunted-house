@@ -1,0 +1,5591 @@
+{
+  "description": "Normative vectors for the Room Ghosts read route, GET /api/mansions/{mansion}/specs/{spec}/room-ghosts (schema_version 1). Every 'valid' value must be accepted unchanged by the UI parser (app/ui/src/core/room-projection.ts) and is a shape the backend serializer may emit; every 'invalid' value differs from a valid one in one respect and must be refused at 'refused_at'. All values are synthetic.",
+  "valid": [
+    {
+      "name": "empty",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 0,
+        "integrity": "valid",
+        "seance_enabled": false,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": null
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": null
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": null
+          }
+        ],
+        "task_plan": null,
+        "runs": [],
+        "review": null
+      }
+    },
+    {
+      "name": "study_invalid_requirements",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 14,
+        "integrity": "valid",
+        "seance_enabled": false,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "size_bytes": 1200
+              },
+              "validated": false,
+              "content": "# Requirements Document\n\n## Introduction\n\nA guest book that keeps entries in the order they were written.\n\n## Requirements\n\n### Requirement 1: Keep entries\n\n1. WHEN a guest signs, THE Guest_Book SHALL store the entry.\n2. THE Guest_Book SHALL keep entries in insertion order.\n",
+              "findings": [
+                {
+                  "code": "ears_pattern_missing",
+                  "location": "criterion:1.2",
+                  "message": "This criterion matches no EARS pattern."
+                },
+                {
+                  "code": "glossary_term_undefined",
+                  "location": "term:Guest_Book",
+                  "message": "This term is used before the glossary defines it."
+                }
+              ]
+            }
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": null
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": null
+          }
+        ],
+        "task_plan": null,
+        "runs": [
+          {
+            "run_id": "requirements-1",
+            "run_sequence": 0,
+            "ghost_id": "archivist",
+            "session_slot": "hh-archivist-requirements-1",
+            "phase": "requirements",
+            "task_id": null,
+            "attempt": 1,
+            "can_cancel": false,
+            "cancel_requested": false,
+            "can_retry": true,
+            "session_link": null,
+            "summary": "Wrote 2 EARS criteria and a glossary.",
+            "reason_code": "artifact_invalid",
+            "claim_paths": []
+          }
+        ],
+        "review": null
+      }
+    },
+    {
+      "name": "workshop_at_work",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 42,
+        "integrity": "valid",
+        "seance_enabled": false,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "size_bytes": 1200
+              },
+              "validated": true,
+              "content": "# Requirements Document\n\n## Introduction\n\nA guest book that keeps entries in the order they were written.\n\n## Requirements\n\n### Requirement 1: Keep entries\n\n1. WHEN a guest signs, THE Guest_Book SHALL store the entry.\n2. THE Guest_Book SHALL keep entries in insertion order.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 2,
+                "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "size_bytes": 4871
+              },
+              "validated": true,
+              "content": "# Design Document\n\n## Overview\n\nOne module, one store.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "size_bytes": 912
+              },
+              "validated": true,
+              "content": "# Implementation Plan: Guest Book\n",
+              "findings": []
+            }
+          }
+        ],
+        "task_plan": {
+          "tasks": [
+            {
+              "task_id": "1.1",
+              "title": "Create the entry model",
+              "optional": false,
+              "complete": true,
+              "requirements": [
+                "1.1",
+                "1.2"
+              ],
+              "writes": [
+                "src/guestbook/model.py"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "1.2",
+              "title": "Implement the entry store",
+              "optional": false,
+              "complete": false,
+              "requirements": [
+                "1.3",
+                "2.1",
+                "2.2",
+                "2.3"
+              ],
+              "writes": [
+                "src/guestbook/store.py"
+              ],
+              "wave": 0,
+              "selected": true,
+              "outcome": {
+                "status": "active",
+                "attempt": 1,
+                "run_id": "task-1-2-a1",
+                "reason_code": null
+              },
+              "backpressure": null
+            },
+            {
+              "task_id": "1.3",
+              "title": "Write the property test for store ordering",
+              "optional": true,
+              "complete": false,
+              "requirements": [
+                "1.3"
+              ],
+              "writes": [
+                "tests/test_store_order.py"
+              ],
+              "wave": 1,
+              "selected": true,
+              "outcome": {
+                "status": "queued",
+                "attempt": 0,
+                "run_id": null,
+                "reason_code": null
+              },
+              "backpressure": null
+            },
+            {
+              "task_id": "2.1",
+              "title": "Implement the page renderer",
+              "optional": false,
+              "complete": false,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "src/guestbook/render.py",
+                "src/guestbook/templates/*.html"
+              ],
+              "wave": 0,
+              "selected": true,
+              "outcome": {
+                "status": "queued",
+                "attempt": 0,
+                "run_id": null,
+                "reason_code": null
+              },
+              "backpressure": {
+                "dispatch_failures": 2,
+                "next_delay_seconds": 4,
+                "last_reason": "crew_capacity"
+              }
+            },
+            {
+              "task_id": "2.2",
+              "title": "Write renderer unit tests",
+              "optional": true,
+              "complete": false,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "tests/render/**"
+              ],
+              "wave": 1,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            }
+          ],
+          "waves": [
+            [
+              "1.2",
+              "2.1"
+            ],
+            [
+              "1.3",
+              "2.2"
+            ]
+          ],
+          "findings": []
+        },
+        "runs": [
+          {
+            "run_id": "task-1-2-a1",
+            "run_sequence": 0,
+            "ghost_id": "tinker-1",
+            "session_slot": "hh-tinker-1-task-1-2-a1",
+            "phase": "implementation",
+            "task_id": "1.2",
+            "attempt": 1,
+            "can_cancel": true,
+            "cancel_requested": false,
+            "can_retry": false,
+            "session_link": null,
+            "summary": null,
+            "reason_code": null,
+            "claim_paths": [
+              "src/guestbook/store.py"
+            ]
+          }
+        ],
+        "review": null
+      }
+    },
+    {
+      "name": "seance_review_changes_requested",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 60,
+        "integrity": "valid",
+        "seance_enabled": true,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "size_bytes": 1200
+              },
+              "validated": true,
+              "content": "# Requirements Document\n\n## Introduction\n\nA guest book that keeps entries in the order they were written.\n\n## Requirements\n\n### Requirement 1: Keep entries\n\n1. WHEN a guest signs, THE Guest_Book SHALL store the entry.\n2. THE Guest_Book SHALL keep entries in insertion order.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 2,
+                "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "size_bytes": 4871
+              },
+              "validated": true,
+              "content": "# Design Document\n\n## Overview\n\nOne module, one store.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "size_bytes": 912
+              },
+              "validated": true,
+              "content": "# Implementation Plan: Guest Book\n",
+              "findings": []
+            }
+          }
+        ],
+        "task_plan": {
+          "tasks": [
+            {
+              "task_id": "1.1",
+              "title": "Create the entry model",
+              "optional": false,
+              "complete": true,
+              "requirements": [
+                "1.1",
+                "1.2"
+              ],
+              "writes": [
+                "src/guestbook/model.py"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "1.2",
+              "title": "Implement the entry store",
+              "optional": false,
+              "complete": true,
+              "requirements": [
+                "1.3",
+                "2.1",
+                "2.2",
+                "2.3"
+              ],
+              "writes": [
+                "src/guestbook/store.py"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "1.3",
+              "title": "Write the property test for store ordering",
+              "optional": true,
+              "complete": true,
+              "requirements": [
+                "1.3"
+              ],
+              "writes": [
+                "tests/test_store_order.py"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "2.1",
+              "title": "Implement the page renderer",
+              "optional": false,
+              "complete": true,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "src/guestbook/render.py",
+                "src/guestbook/templates/*.html"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "2.2",
+              "title": "Write renderer unit tests",
+              "optional": true,
+              "complete": true,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "tests/render/**"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            }
+          ],
+          "waves": [],
+          "findings": []
+        },
+        "runs": [],
+        "review": {
+          "cycle": 2,
+          "status": "changes_requested",
+          "ghost_id": "medium",
+          "session_link": null,
+          "findings": [
+            {
+              "finding_id": "f-1",
+              "requirement_ids": [
+                "1.3"
+              ],
+              "paths": [
+                "src/guestbook/store.py"
+              ],
+              "summary": "Entries are sorted by name, not kept in insertion order."
+            }
+          ],
+          "repairs": [
+            {
+              "task_id": "4.1",
+              "finding_id": "f-1",
+              "title": "Keep insertion order in the store",
+              "writes": [
+                "src/guestbook/store.py"
+              ],
+              "status": "proposed"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "replay_read_only",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 7,
+        "integrity": "valid",
+        "seance_enabled": false,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": null
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": null
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": null
+          }
+        ],
+        "task_plan": null,
+        "runs": [],
+        "review": null,
+        "read_only": true
+      }
+    }
+  ],
+  "invalid": [
+    {
+      "name": "unknown_top_level_key",
+      "refused_at": "$",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 0,
+        "integrity": "valid",
+        "seance_enabled": false,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": null
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": null
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": null
+          }
+        ],
+        "task_plan": null,
+        "runs": [],
+        "review": null,
+        "transcript": "hello"
+      }
+    },
+    {
+      "name": "schema_version_two",
+      "refused_at": "$.schema_version",
+      "value": {
+        "schema_version": 2,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 0,
+        "integrity": "valid",
+        "seance_enabled": false,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": null
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": null
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": null
+          }
+        ],
+        "task_plan": null,
+        "runs": [],
+        "review": null
+      }
+    },
+    {
+      "name": "integrity_unknown",
+      "refused_at": "$.integrity",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 0,
+        "integrity": "fine",
+        "seance_enabled": false,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": null
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": null
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": null
+          }
+        ],
+        "task_plan": null,
+        "runs": [],
+        "review": null
+      }
+    },
+    {
+      "name": "version_negative",
+      "refused_at": "$.version",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": -1,
+        "integrity": "valid",
+        "seance_enabled": false,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": null
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": null
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": null
+          }
+        ],
+        "task_plan": null,
+        "runs": [],
+        "review": null
+      }
+    },
+    {
+      "name": "documents_missing_tasks",
+      "refused_at": "$.documents",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 0,
+        "integrity": "valid",
+        "seance_enabled": false,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": null
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": null
+          }
+        ],
+        "task_plan": null,
+        "runs": [],
+        "review": null
+      }
+    },
+    {
+      "name": "document_out_of_order",
+      "refused_at": "$.documents[0].phase",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 0,
+        "integrity": "valid",
+        "seance_enabled": false,
+        "documents": [
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": null
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": null
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": null
+          }
+        ],
+        "task_plan": null,
+        "runs": [],
+        "review": null
+      }
+    },
+    {
+      "name": "document_path_of_another_spec",
+      "refused_at": "$.documents[0].document_path",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 0,
+        "integrity": "valid",
+        "seance_enabled": false,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/other/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": null
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": null
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": null
+          }
+        ],
+        "task_plan": null,
+        "runs": [],
+        "review": null
+      }
+    },
+    {
+      "name": "write_scope_absolute",
+      "refused_at": "$.documents[0].write_scope[0]",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 0,
+        "integrity": "valid",
+        "seance_enabled": false,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              "/etc/passwd"
+            ],
+            "artifact": null
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": null
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": null
+          }
+        ],
+        "task_plan": null,
+        "runs": [],
+        "review": null
+      }
+    },
+    {
+      "name": "write_scope_traversal",
+      "refused_at": "$.documents[1].write_scope[0]",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 0,
+        "integrity": "valid",
+        "seance_enabled": false,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": null
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              "../other/design.md"
+            ],
+            "artifact": null
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": null
+          }
+        ],
+        "task_plan": null,
+        "runs": [],
+        "review": null
+      }
+    },
+    {
+      "name": "artifact_digest_uppercase",
+      "refused_at": "$.documents[0].artifact.artifact_revision.sha256",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 42,
+        "integrity": "valid",
+        "seance_enabled": false,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "size_bytes": 1200
+              },
+              "validated": true,
+              "content": "# Requirements Document\n\n## Introduction\n\nA guest book that keeps entries in the order they were written.\n\n## Requirements\n\n### Requirement 1: Keep entries\n\n1. WHEN a guest signs, THE Guest_Book SHALL store the entry.\n2. THE Guest_Book SHALL keep entries in insertion order.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 2,
+                "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "size_bytes": 4871
+              },
+              "validated": true,
+              "content": "# Design Document\n\n## Overview\n\nOne module, one store.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "size_bytes": 912
+              },
+              "validated": true,
+              "content": "# Implementation Plan: Guest Book\n",
+              "findings": []
+            }
+          }
+        ],
+        "task_plan": {
+          "tasks": [
+            {
+              "task_id": "1.1",
+              "title": "Create the entry model",
+              "optional": false,
+              "complete": true,
+              "requirements": [
+                "1.1",
+                "1.2"
+              ],
+              "writes": [
+                "src/guestbook/model.py"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "1.2",
+              "title": "Implement the entry store",
+              "optional": false,
+              "complete": false,
+              "requirements": [
+                "1.3",
+                "2.1",
+                "2.2",
+                "2.3"
+              ],
+              "writes": [
+                "src/guestbook/store.py"
+              ],
+              "wave": 0,
+              "selected": true,
+              "outcome": {
+                "status": "active",
+                "attempt": 1,
+                "run_id": "task-1-2-a1",
+                "reason_code": null
+              },
+              "backpressure": null
+            },
+            {
+              "task_id": "1.3",
+              "title": "Write the property test for store ordering",
+              "optional": true,
+              "complete": false,
+              "requirements": [
+                "1.3"
+              ],
+              "writes": [
+                "tests/test_store_order.py"
+              ],
+              "wave": 1,
+              "selected": true,
+              "outcome": {
+                "status": "queued",
+                "attempt": 0,
+                "run_id": null,
+                "reason_code": null
+              },
+              "backpressure": null
+            },
+            {
+              "task_id": "2.1",
+              "title": "Implement the page renderer",
+              "optional": false,
+              "complete": false,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "src/guestbook/render.py",
+                "src/guestbook/templates/*.html"
+              ],
+              "wave": 0,
+              "selected": true,
+              "outcome": {
+                "status": "queued",
+                "attempt": 0,
+                "run_id": null,
+                "reason_code": null
+              },
+              "backpressure": {
+                "dispatch_failures": 2,
+                "next_delay_seconds": 4,
+                "last_reason": "crew_capacity"
+              }
+            },
+            {
+              "task_id": "2.2",
+              "title": "Write renderer unit tests",
+              "optional": true,
+              "complete": false,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "tests/render/**"
+              ],
+              "wave": 1,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            }
+          ],
+          "waves": [
+            [
+              "1.2",
+              "2.1"
+            ],
+            [
+              "1.3",
+              "2.2"
+            ]
+          ],
+          "findings": []
+        },
+        "runs": [
+          {
+            "run_id": "task-1-2-a1",
+            "run_sequence": 0,
+            "ghost_id": "tinker-1",
+            "session_slot": "hh-tinker-1-task-1-2-a1",
+            "phase": "implementation",
+            "task_id": "1.2",
+            "attempt": 1,
+            "can_cancel": true,
+            "cancel_requested": false,
+            "can_retry": false,
+            "session_link": null,
+            "summary": null,
+            "reason_code": null,
+            "claim_paths": [
+              "src/guestbook/store.py"
+            ]
+          }
+        ],
+        "review": null
+      }
+    },
+    {
+      "name": "artifact_content_not_text",
+      "refused_at": "$.documents[0].artifact.content",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 42,
+        "integrity": "valid",
+        "seance_enabled": false,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "size_bytes": 1200
+              },
+              "validated": true,
+              "content": 7,
+              "findings": []
+            }
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 2,
+                "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "size_bytes": 4871
+              },
+              "validated": true,
+              "content": "# Design Document\n\n## Overview\n\nOne module, one store.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "size_bytes": 912
+              },
+              "validated": true,
+              "content": "# Implementation Plan: Guest Book\n",
+              "findings": []
+            }
+          }
+        ],
+        "task_plan": {
+          "tasks": [
+            {
+              "task_id": "1.1",
+              "title": "Create the entry model",
+              "optional": false,
+              "complete": true,
+              "requirements": [
+                "1.1",
+                "1.2"
+              ],
+              "writes": [
+                "src/guestbook/model.py"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "1.2",
+              "title": "Implement the entry store",
+              "optional": false,
+              "complete": false,
+              "requirements": [
+                "1.3",
+                "2.1",
+                "2.2",
+                "2.3"
+              ],
+              "writes": [
+                "src/guestbook/store.py"
+              ],
+              "wave": 0,
+              "selected": true,
+              "outcome": {
+                "status": "active",
+                "attempt": 1,
+                "run_id": "task-1-2-a1",
+                "reason_code": null
+              },
+              "backpressure": null
+            },
+            {
+              "task_id": "1.3",
+              "title": "Write the property test for store ordering",
+              "optional": true,
+              "complete": false,
+              "requirements": [
+                "1.3"
+              ],
+              "writes": [
+                "tests/test_store_order.py"
+              ],
+              "wave": 1,
+              "selected": true,
+              "outcome": {
+                "status": "queued",
+                "attempt": 0,
+                "run_id": null,
+                "reason_code": null
+              },
+              "backpressure": null
+            },
+            {
+              "task_id": "2.1",
+              "title": "Implement the page renderer",
+              "optional": false,
+              "complete": false,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "src/guestbook/render.py",
+                "src/guestbook/templates/*.html"
+              ],
+              "wave": 0,
+              "selected": true,
+              "outcome": {
+                "status": "queued",
+                "attempt": 0,
+                "run_id": null,
+                "reason_code": null
+              },
+              "backpressure": {
+                "dispatch_failures": 2,
+                "next_delay_seconds": 4,
+                "last_reason": "crew_capacity"
+              }
+            },
+            {
+              "task_id": "2.2",
+              "title": "Write renderer unit tests",
+              "optional": true,
+              "complete": false,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "tests/render/**"
+              ],
+              "wave": 1,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            }
+          ],
+          "waves": [
+            [
+              "1.2",
+              "2.1"
+            ],
+            [
+              "1.3",
+              "2.2"
+            ]
+          ],
+          "findings": []
+        },
+        "runs": [
+          {
+            "run_id": "task-1-2-a1",
+            "run_sequence": 0,
+            "ghost_id": "tinker-1",
+            "session_slot": "hh-tinker-1-task-1-2-a1",
+            "phase": "implementation",
+            "task_id": "1.2",
+            "attempt": 1,
+            "can_cancel": true,
+            "cancel_requested": false,
+            "can_retry": false,
+            "session_link": null,
+            "summary": null,
+            "reason_code": null,
+            "claim_paths": [
+              "src/guestbook/store.py"
+            ]
+          }
+        ],
+        "review": null
+      }
+    },
+    {
+      "name": "finding_code_not_stable",
+      "refused_at": "$.documents[0].artifact.findings[0].code",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 14,
+        "integrity": "valid",
+        "seance_enabled": false,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "size_bytes": 1200
+              },
+              "validated": false,
+              "content": "# Requirements Document\n\n## Introduction\n\nA guest book that keeps entries in the order they were written.\n\n## Requirements\n\n### Requirement 1: Keep entries\n\n1. WHEN a guest signs, THE Guest_Book SHALL store the entry.\n2. THE Guest_Book SHALL keep entries in insertion order.\n",
+              "findings": [
+                {
+                  "code": "Not A Code",
+                  "location": "criterion:1.2",
+                  "message": "This criterion matches no EARS pattern."
+                },
+                {
+                  "code": "glossary_term_undefined",
+                  "location": "term:Guest_Book",
+                  "message": "This term is used before the glossary defines it."
+                }
+              ]
+            }
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": null
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": null
+          }
+        ],
+        "task_plan": null,
+        "runs": [
+          {
+            "run_id": "requirements-1",
+            "run_sequence": 0,
+            "ghost_id": "archivist",
+            "session_slot": "hh-archivist-requirements-1",
+            "phase": "requirements",
+            "task_id": null,
+            "attempt": 1,
+            "can_cancel": false,
+            "cancel_requested": false,
+            "can_retry": true,
+            "session_link": null,
+            "summary": "Wrote 2 EARS criteria and a glossary.",
+            "reason_code": "artifact_invalid",
+            "claim_paths": []
+          }
+        ],
+        "review": null
+      }
+    },
+    {
+      "name": "finding_message_too_long",
+      "refused_at": "$.documents[0].artifact.findings[0].message",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 14,
+        "integrity": "valid",
+        "seance_enabled": false,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "size_bytes": 1200
+              },
+              "validated": false,
+              "content": "# Requirements Document\n\n## Introduction\n\nA guest book that keeps entries in the order they were written.\n\n## Requirements\n\n### Requirement 1: Keep entries\n\n1. WHEN a guest signs, THE Guest_Book SHALL store the entry.\n2. THE Guest_Book SHALL keep entries in insertion order.\n",
+              "findings": [
+                {
+                  "code": "ears_pattern_missing",
+                  "location": "criterion:1.2",
+                  "message": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                },
+                {
+                  "code": "glossary_term_undefined",
+                  "location": "term:Guest_Book",
+                  "message": "This term is used before the glossary defines it."
+                }
+              ]
+            }
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": null
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": null
+          }
+        ],
+        "task_plan": null,
+        "runs": [
+          {
+            "run_id": "requirements-1",
+            "run_sequence": 0,
+            "ghost_id": "archivist",
+            "session_slot": "hh-archivist-requirements-1",
+            "phase": "requirements",
+            "task_id": null,
+            "attempt": 1,
+            "can_cancel": false,
+            "cancel_requested": false,
+            "can_retry": true,
+            "session_link": null,
+            "summary": "Wrote 2 EARS criteria and a glossary.",
+            "reason_code": "artifact_invalid",
+            "claim_paths": []
+          }
+        ],
+        "review": null
+      }
+    },
+    {
+      "name": "task_id_not_decimal",
+      "refused_at": "$.task_plan.tasks[0].task_id",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 42,
+        "integrity": "valid",
+        "seance_enabled": false,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "size_bytes": 1200
+              },
+              "validated": true,
+              "content": "# Requirements Document\n\n## Introduction\n\nA guest book that keeps entries in the order they were written.\n\n## Requirements\n\n### Requirement 1: Keep entries\n\n1. WHEN a guest signs, THE Guest_Book SHALL store the entry.\n2. THE Guest_Book SHALL keep entries in insertion order.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 2,
+                "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "size_bytes": 4871
+              },
+              "validated": true,
+              "content": "# Design Document\n\n## Overview\n\nOne module, one store.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "size_bytes": 912
+              },
+              "validated": true,
+              "content": "# Implementation Plan: Guest Book\n",
+              "findings": []
+            }
+          }
+        ],
+        "task_plan": {
+          "tasks": [
+            {
+              "task_id": "one",
+              "title": "Create the entry model",
+              "optional": false,
+              "complete": true,
+              "requirements": [
+                "1.1",
+                "1.2"
+              ],
+              "writes": [
+                "src/guestbook/model.py"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "1.2",
+              "title": "Implement the entry store",
+              "optional": false,
+              "complete": false,
+              "requirements": [
+                "1.3",
+                "2.1",
+                "2.2",
+                "2.3"
+              ],
+              "writes": [
+                "src/guestbook/store.py"
+              ],
+              "wave": 0,
+              "selected": true,
+              "outcome": {
+                "status": "active",
+                "attempt": 1,
+                "run_id": "task-1-2-a1",
+                "reason_code": null
+              },
+              "backpressure": null
+            },
+            {
+              "task_id": "1.3",
+              "title": "Write the property test for store ordering",
+              "optional": true,
+              "complete": false,
+              "requirements": [
+                "1.3"
+              ],
+              "writes": [
+                "tests/test_store_order.py"
+              ],
+              "wave": 1,
+              "selected": true,
+              "outcome": {
+                "status": "queued",
+                "attempt": 0,
+                "run_id": null,
+                "reason_code": null
+              },
+              "backpressure": null
+            },
+            {
+              "task_id": "2.1",
+              "title": "Implement the page renderer",
+              "optional": false,
+              "complete": false,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "src/guestbook/render.py",
+                "src/guestbook/templates/*.html"
+              ],
+              "wave": 0,
+              "selected": true,
+              "outcome": {
+                "status": "queued",
+                "attempt": 0,
+                "run_id": null,
+                "reason_code": null
+              },
+              "backpressure": {
+                "dispatch_failures": 2,
+                "next_delay_seconds": 4,
+                "last_reason": "crew_capacity"
+              }
+            },
+            {
+              "task_id": "2.2",
+              "title": "Write renderer unit tests",
+              "optional": true,
+              "complete": false,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "tests/render/**"
+              ],
+              "wave": 1,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            }
+          ],
+          "waves": [
+            [
+              "1.2",
+              "2.1"
+            ],
+            [
+              "1.3",
+              "2.2"
+            ]
+          ],
+          "findings": []
+        },
+        "runs": [
+          {
+            "run_id": "task-1-2-a1",
+            "run_sequence": 0,
+            "ghost_id": "tinker-1",
+            "session_slot": "hh-tinker-1-task-1-2-a1",
+            "phase": "implementation",
+            "task_id": "1.2",
+            "attempt": 1,
+            "can_cancel": true,
+            "cancel_requested": false,
+            "can_retry": false,
+            "session_link": null,
+            "summary": null,
+            "reason_code": null,
+            "claim_paths": [
+              "src/guestbook/store.py"
+            ]
+          }
+        ],
+        "review": null
+      }
+    },
+    {
+      "name": "task_duplicate_id",
+      "refused_at": "$.task_plan.tasks",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 42,
+        "integrity": "valid",
+        "seance_enabled": false,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "size_bytes": 1200
+              },
+              "validated": true,
+              "content": "# Requirements Document\n\n## Introduction\n\nA guest book that keeps entries in the order they were written.\n\n## Requirements\n\n### Requirement 1: Keep entries\n\n1. WHEN a guest signs, THE Guest_Book SHALL store the entry.\n2. THE Guest_Book SHALL keep entries in insertion order.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 2,
+                "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "size_bytes": 4871
+              },
+              "validated": true,
+              "content": "# Design Document\n\n## Overview\n\nOne module, one store.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "size_bytes": 912
+              },
+              "validated": true,
+              "content": "# Implementation Plan: Guest Book\n",
+              "findings": []
+            }
+          }
+        ],
+        "task_plan": {
+          "tasks": [
+            {
+              "task_id": "2.2",
+              "title": "Create the entry model",
+              "optional": false,
+              "complete": true,
+              "requirements": [
+                "1.1",
+                "1.2"
+              ],
+              "writes": [
+                "src/guestbook/model.py"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "1.2",
+              "title": "Implement the entry store",
+              "optional": false,
+              "complete": false,
+              "requirements": [
+                "1.3",
+                "2.1",
+                "2.2",
+                "2.3"
+              ],
+              "writes": [
+                "src/guestbook/store.py"
+              ],
+              "wave": 0,
+              "selected": true,
+              "outcome": {
+                "status": "active",
+                "attempt": 1,
+                "run_id": "task-1-2-a1",
+                "reason_code": null
+              },
+              "backpressure": null
+            },
+            {
+              "task_id": "1.3",
+              "title": "Write the property test for store ordering",
+              "optional": true,
+              "complete": false,
+              "requirements": [
+                "1.3"
+              ],
+              "writes": [
+                "tests/test_store_order.py"
+              ],
+              "wave": 1,
+              "selected": true,
+              "outcome": {
+                "status": "queued",
+                "attempt": 0,
+                "run_id": null,
+                "reason_code": null
+              },
+              "backpressure": null
+            },
+            {
+              "task_id": "2.1",
+              "title": "Implement the page renderer",
+              "optional": false,
+              "complete": false,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "src/guestbook/render.py",
+                "src/guestbook/templates/*.html"
+              ],
+              "wave": 0,
+              "selected": true,
+              "outcome": {
+                "status": "queued",
+                "attempt": 0,
+                "run_id": null,
+                "reason_code": null
+              },
+              "backpressure": {
+                "dispatch_failures": 2,
+                "next_delay_seconds": 4,
+                "last_reason": "crew_capacity"
+              }
+            },
+            {
+              "task_id": "2.2",
+              "title": "Write renderer unit tests",
+              "optional": true,
+              "complete": false,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "tests/render/**"
+              ],
+              "wave": 1,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            }
+          ],
+          "waves": [
+            [
+              "1.2",
+              "2.1"
+            ],
+            [
+              "1.3",
+              "2.2"
+            ]
+          ],
+          "findings": []
+        },
+        "runs": [
+          {
+            "run_id": "task-1-2-a1",
+            "run_sequence": 0,
+            "ghost_id": "tinker-1",
+            "session_slot": "hh-tinker-1-task-1-2-a1",
+            "phase": "implementation",
+            "task_id": "1.2",
+            "attempt": 1,
+            "can_cancel": true,
+            "cancel_requested": false,
+            "can_retry": false,
+            "session_link": null,
+            "summary": null,
+            "reason_code": null,
+            "claim_paths": [
+              "src/guestbook/store.py"
+            ]
+          }
+        ],
+        "review": null
+      }
+    },
+    {
+      "name": "task_outcome_unknown_status",
+      "refused_at": "$.task_plan.tasks[1].outcome.status",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 42,
+        "integrity": "valid",
+        "seance_enabled": false,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "size_bytes": 1200
+              },
+              "validated": true,
+              "content": "# Requirements Document\n\n## Introduction\n\nA guest book that keeps entries in the order they were written.\n\n## Requirements\n\n### Requirement 1: Keep entries\n\n1. WHEN a guest signs, THE Guest_Book SHALL store the entry.\n2. THE Guest_Book SHALL keep entries in insertion order.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 2,
+                "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "size_bytes": 4871
+              },
+              "validated": true,
+              "content": "# Design Document\n\n## Overview\n\nOne module, one store.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "size_bytes": 912
+              },
+              "validated": true,
+              "content": "# Implementation Plan: Guest Book\n",
+              "findings": []
+            }
+          }
+        ],
+        "task_plan": {
+          "tasks": [
+            {
+              "task_id": "1.1",
+              "title": "Create the entry model",
+              "optional": false,
+              "complete": true,
+              "requirements": [
+                "1.1",
+                "1.2"
+              ],
+              "writes": [
+                "src/guestbook/model.py"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "1.2",
+              "title": "Implement the entry store",
+              "optional": false,
+              "complete": false,
+              "requirements": [
+                "1.3",
+                "2.1",
+                "2.2",
+                "2.3"
+              ],
+              "writes": [
+                "src/guestbook/store.py"
+              ],
+              "wave": 0,
+              "selected": true,
+              "outcome": {
+                "status": "done",
+                "attempt": 1,
+                "run_id": "task-1-2-a1",
+                "reason_code": null
+              },
+              "backpressure": null
+            },
+            {
+              "task_id": "1.3",
+              "title": "Write the property test for store ordering",
+              "optional": true,
+              "complete": false,
+              "requirements": [
+                "1.3"
+              ],
+              "writes": [
+                "tests/test_store_order.py"
+              ],
+              "wave": 1,
+              "selected": true,
+              "outcome": {
+                "status": "queued",
+                "attempt": 0,
+                "run_id": null,
+                "reason_code": null
+              },
+              "backpressure": null
+            },
+            {
+              "task_id": "2.1",
+              "title": "Implement the page renderer",
+              "optional": false,
+              "complete": false,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "src/guestbook/render.py",
+                "src/guestbook/templates/*.html"
+              ],
+              "wave": 0,
+              "selected": true,
+              "outcome": {
+                "status": "queued",
+                "attempt": 0,
+                "run_id": null,
+                "reason_code": null
+              },
+              "backpressure": {
+                "dispatch_failures": 2,
+                "next_delay_seconds": 4,
+                "last_reason": "crew_capacity"
+              }
+            },
+            {
+              "task_id": "2.2",
+              "title": "Write renderer unit tests",
+              "optional": true,
+              "complete": false,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "tests/render/**"
+              ],
+              "wave": 1,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            }
+          ],
+          "waves": [
+            [
+              "1.2",
+              "2.1"
+            ],
+            [
+              "1.3",
+              "2.2"
+            ]
+          ],
+          "findings": []
+        },
+        "runs": [
+          {
+            "run_id": "task-1-2-a1",
+            "run_sequence": 0,
+            "ghost_id": "tinker-1",
+            "session_slot": "hh-tinker-1-task-1-2-a1",
+            "phase": "implementation",
+            "task_id": "1.2",
+            "attempt": 1,
+            "can_cancel": true,
+            "cancel_requested": false,
+            "can_retry": false,
+            "session_link": null,
+            "summary": null,
+            "reason_code": null,
+            "claim_paths": [
+              "src/guestbook/store.py"
+            ]
+          }
+        ],
+        "review": null
+      }
+    },
+    {
+      "name": "task_complete_outcome_without_checkbox",
+      "refused_at": "$.task_plan.tasks[1].outcome",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 42,
+        "integrity": "valid",
+        "seance_enabled": false,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "size_bytes": 1200
+              },
+              "validated": true,
+              "content": "# Requirements Document\n\n## Introduction\n\nA guest book that keeps entries in the order they were written.\n\n## Requirements\n\n### Requirement 1: Keep entries\n\n1. WHEN a guest signs, THE Guest_Book SHALL store the entry.\n2. THE Guest_Book SHALL keep entries in insertion order.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 2,
+                "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "size_bytes": 4871
+              },
+              "validated": true,
+              "content": "# Design Document\n\n## Overview\n\nOne module, one store.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "size_bytes": 912
+              },
+              "validated": true,
+              "content": "# Implementation Plan: Guest Book\n",
+              "findings": []
+            }
+          }
+        ],
+        "task_plan": {
+          "tasks": [
+            {
+              "task_id": "1.1",
+              "title": "Create the entry model",
+              "optional": false,
+              "complete": true,
+              "requirements": [
+                "1.1",
+                "1.2"
+              ],
+              "writes": [
+                "src/guestbook/model.py"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "1.2",
+              "title": "Implement the entry store",
+              "optional": false,
+              "complete": false,
+              "requirements": [
+                "1.3",
+                "2.1",
+                "2.2",
+                "2.3"
+              ],
+              "writes": [
+                "src/guestbook/store.py"
+              ],
+              "wave": 0,
+              "selected": true,
+              "outcome": {
+                "status": "complete",
+                "attempt": 1,
+                "run_id": "task-1-2-a1",
+                "reason_code": null
+              },
+              "backpressure": null
+            },
+            {
+              "task_id": "1.3",
+              "title": "Write the property test for store ordering",
+              "optional": true,
+              "complete": false,
+              "requirements": [
+                "1.3"
+              ],
+              "writes": [
+                "tests/test_store_order.py"
+              ],
+              "wave": 1,
+              "selected": true,
+              "outcome": {
+                "status": "queued",
+                "attempt": 0,
+                "run_id": null,
+                "reason_code": null
+              },
+              "backpressure": null
+            },
+            {
+              "task_id": "2.1",
+              "title": "Implement the page renderer",
+              "optional": false,
+              "complete": false,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "src/guestbook/render.py",
+                "src/guestbook/templates/*.html"
+              ],
+              "wave": 0,
+              "selected": true,
+              "outcome": {
+                "status": "queued",
+                "attempt": 0,
+                "run_id": null,
+                "reason_code": null
+              },
+              "backpressure": {
+                "dispatch_failures": 2,
+                "next_delay_seconds": 4,
+                "last_reason": "crew_capacity"
+              }
+            },
+            {
+              "task_id": "2.2",
+              "title": "Write renderer unit tests",
+              "optional": true,
+              "complete": false,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "tests/render/**"
+              ],
+              "wave": 1,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            }
+          ],
+          "waves": [
+            [
+              "1.2",
+              "2.1"
+            ],
+            [
+              "1.3",
+              "2.2"
+            ]
+          ],
+          "findings": []
+        },
+        "runs": [
+          {
+            "run_id": "task-1-2-a1",
+            "run_sequence": 0,
+            "ghost_id": "tinker-1",
+            "session_slot": "hh-tinker-1-task-1-2-a1",
+            "phase": "implementation",
+            "task_id": "1.2",
+            "attempt": 1,
+            "can_cancel": true,
+            "cancel_requested": false,
+            "can_retry": false,
+            "session_link": null,
+            "summary": null,
+            "reason_code": null,
+            "claim_paths": [
+              "src/guestbook/store.py"
+            ]
+          }
+        ],
+        "review": null
+      }
+    },
+    {
+      "name": "task_fourth_attempt",
+      "refused_at": "$.task_plan.tasks[1].outcome.attempt",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 42,
+        "integrity": "valid",
+        "seance_enabled": false,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "size_bytes": 1200
+              },
+              "validated": true,
+              "content": "# Requirements Document\n\n## Introduction\n\nA guest book that keeps entries in the order they were written.\n\n## Requirements\n\n### Requirement 1: Keep entries\n\n1. WHEN a guest signs, THE Guest_Book SHALL store the entry.\n2. THE Guest_Book SHALL keep entries in insertion order.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 2,
+                "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "size_bytes": 4871
+              },
+              "validated": true,
+              "content": "# Design Document\n\n## Overview\n\nOne module, one store.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "size_bytes": 912
+              },
+              "validated": true,
+              "content": "# Implementation Plan: Guest Book\n",
+              "findings": []
+            }
+          }
+        ],
+        "task_plan": {
+          "tasks": [
+            {
+              "task_id": "1.1",
+              "title": "Create the entry model",
+              "optional": false,
+              "complete": true,
+              "requirements": [
+                "1.1",
+                "1.2"
+              ],
+              "writes": [
+                "src/guestbook/model.py"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "1.2",
+              "title": "Implement the entry store",
+              "optional": false,
+              "complete": false,
+              "requirements": [
+                "1.3",
+                "2.1",
+                "2.2",
+                "2.3"
+              ],
+              "writes": [
+                "src/guestbook/store.py"
+              ],
+              "wave": 0,
+              "selected": true,
+              "outcome": {
+                "status": "active",
+                "attempt": 4,
+                "run_id": "task-1-2-a1",
+                "reason_code": null
+              },
+              "backpressure": null
+            },
+            {
+              "task_id": "1.3",
+              "title": "Write the property test for store ordering",
+              "optional": true,
+              "complete": false,
+              "requirements": [
+                "1.3"
+              ],
+              "writes": [
+                "tests/test_store_order.py"
+              ],
+              "wave": 1,
+              "selected": true,
+              "outcome": {
+                "status": "queued",
+                "attempt": 0,
+                "run_id": null,
+                "reason_code": null
+              },
+              "backpressure": null
+            },
+            {
+              "task_id": "2.1",
+              "title": "Implement the page renderer",
+              "optional": false,
+              "complete": false,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "src/guestbook/render.py",
+                "src/guestbook/templates/*.html"
+              ],
+              "wave": 0,
+              "selected": true,
+              "outcome": {
+                "status": "queued",
+                "attempt": 0,
+                "run_id": null,
+                "reason_code": null
+              },
+              "backpressure": {
+                "dispatch_failures": 2,
+                "next_delay_seconds": 4,
+                "last_reason": "crew_capacity"
+              }
+            },
+            {
+              "task_id": "2.2",
+              "title": "Write renderer unit tests",
+              "optional": true,
+              "complete": false,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "tests/render/**"
+              ],
+              "wave": 1,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            }
+          ],
+          "waves": [
+            [
+              "1.2",
+              "2.1"
+            ],
+            [
+              "1.3",
+              "2.2"
+            ]
+          ],
+          "findings": []
+        },
+        "runs": [
+          {
+            "run_id": "task-1-2-a1",
+            "run_sequence": 0,
+            "ghost_id": "tinker-1",
+            "session_slot": "hh-tinker-1-task-1-2-a1",
+            "phase": "implementation",
+            "task_id": "1.2",
+            "attempt": 1,
+            "can_cancel": true,
+            "cancel_requested": false,
+            "can_retry": false,
+            "session_link": null,
+            "summary": null,
+            "reason_code": null,
+            "claim_paths": [
+              "src/guestbook/store.py"
+            ]
+          }
+        ],
+        "review": null
+      }
+    },
+    {
+      "name": "wave_names_unknown_task",
+      "refused_at": "$.task_plan.waves[0][0]",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 42,
+        "integrity": "valid",
+        "seance_enabled": false,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "size_bytes": 1200
+              },
+              "validated": true,
+              "content": "# Requirements Document\n\n## Introduction\n\nA guest book that keeps entries in the order they were written.\n\n## Requirements\n\n### Requirement 1: Keep entries\n\n1. WHEN a guest signs, THE Guest_Book SHALL store the entry.\n2. THE Guest_Book SHALL keep entries in insertion order.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 2,
+                "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "size_bytes": 4871
+              },
+              "validated": true,
+              "content": "# Design Document\n\n## Overview\n\nOne module, one store.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "size_bytes": 912
+              },
+              "validated": true,
+              "content": "# Implementation Plan: Guest Book\n",
+              "findings": []
+            }
+          }
+        ],
+        "task_plan": {
+          "tasks": [
+            {
+              "task_id": "1.1",
+              "title": "Create the entry model",
+              "optional": false,
+              "complete": true,
+              "requirements": [
+                "1.1",
+                "1.2"
+              ],
+              "writes": [
+                "src/guestbook/model.py"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "1.2",
+              "title": "Implement the entry store",
+              "optional": false,
+              "complete": false,
+              "requirements": [
+                "1.3",
+                "2.1",
+                "2.2",
+                "2.3"
+              ],
+              "writes": [
+                "src/guestbook/store.py"
+              ],
+              "wave": 0,
+              "selected": true,
+              "outcome": {
+                "status": "active",
+                "attempt": 1,
+                "run_id": "task-1-2-a1",
+                "reason_code": null
+              },
+              "backpressure": null
+            },
+            {
+              "task_id": "1.3",
+              "title": "Write the property test for store ordering",
+              "optional": true,
+              "complete": false,
+              "requirements": [
+                "1.3"
+              ],
+              "writes": [
+                "tests/test_store_order.py"
+              ],
+              "wave": 1,
+              "selected": true,
+              "outcome": {
+                "status": "queued",
+                "attempt": 0,
+                "run_id": null,
+                "reason_code": null
+              },
+              "backpressure": null
+            },
+            {
+              "task_id": "2.1",
+              "title": "Implement the page renderer",
+              "optional": false,
+              "complete": false,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "src/guestbook/render.py",
+                "src/guestbook/templates/*.html"
+              ],
+              "wave": 0,
+              "selected": true,
+              "outcome": {
+                "status": "queued",
+                "attempt": 0,
+                "run_id": null,
+                "reason_code": null
+              },
+              "backpressure": {
+                "dispatch_failures": 2,
+                "next_delay_seconds": 4,
+                "last_reason": "crew_capacity"
+              }
+            },
+            {
+              "task_id": "2.2",
+              "title": "Write renderer unit tests",
+              "optional": true,
+              "complete": false,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "tests/render/**"
+              ],
+              "wave": 1,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            }
+          ],
+          "waves": [
+            [
+              "9.9",
+              "2.1"
+            ],
+            [
+              "1.3",
+              "2.2"
+            ]
+          ],
+          "findings": []
+        },
+        "runs": [
+          {
+            "run_id": "task-1-2-a1",
+            "run_sequence": 0,
+            "ghost_id": "tinker-1",
+            "session_slot": "hh-tinker-1-task-1-2-a1",
+            "phase": "implementation",
+            "task_id": "1.2",
+            "attempt": 1,
+            "can_cancel": true,
+            "cancel_requested": false,
+            "can_retry": false,
+            "session_link": null,
+            "summary": null,
+            "reason_code": null,
+            "claim_paths": [
+              "src/guestbook/store.py"
+            ]
+          }
+        ],
+        "review": null
+      }
+    },
+    {
+      "name": "wave_disagrees_with_task",
+      "refused_at": "$.task_plan.waves[0][0]",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 42,
+        "integrity": "valid",
+        "seance_enabled": false,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "size_bytes": 1200
+              },
+              "validated": true,
+              "content": "# Requirements Document\n\n## Introduction\n\nA guest book that keeps entries in the order they were written.\n\n## Requirements\n\n### Requirement 1: Keep entries\n\n1. WHEN a guest signs, THE Guest_Book SHALL store the entry.\n2. THE Guest_Book SHALL keep entries in insertion order.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 2,
+                "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "size_bytes": 4871
+              },
+              "validated": true,
+              "content": "# Design Document\n\n## Overview\n\nOne module, one store.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "size_bytes": 912
+              },
+              "validated": true,
+              "content": "# Implementation Plan: Guest Book\n",
+              "findings": []
+            }
+          }
+        ],
+        "task_plan": {
+          "tasks": [
+            {
+              "task_id": "1.1",
+              "title": "Create the entry model",
+              "optional": false,
+              "complete": true,
+              "requirements": [
+                "1.1",
+                "1.2"
+              ],
+              "writes": [
+                "src/guestbook/model.py"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "1.2",
+              "title": "Implement the entry store",
+              "optional": false,
+              "complete": false,
+              "requirements": [
+                "1.3",
+                "2.1",
+                "2.2",
+                "2.3"
+              ],
+              "writes": [
+                "src/guestbook/store.py"
+              ],
+              "wave": 1,
+              "selected": true,
+              "outcome": {
+                "status": "active",
+                "attempt": 1,
+                "run_id": "task-1-2-a1",
+                "reason_code": null
+              },
+              "backpressure": null
+            },
+            {
+              "task_id": "1.3",
+              "title": "Write the property test for store ordering",
+              "optional": true,
+              "complete": false,
+              "requirements": [
+                "1.3"
+              ],
+              "writes": [
+                "tests/test_store_order.py"
+              ],
+              "wave": 1,
+              "selected": true,
+              "outcome": {
+                "status": "queued",
+                "attempt": 0,
+                "run_id": null,
+                "reason_code": null
+              },
+              "backpressure": null
+            },
+            {
+              "task_id": "2.1",
+              "title": "Implement the page renderer",
+              "optional": false,
+              "complete": false,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "src/guestbook/render.py",
+                "src/guestbook/templates/*.html"
+              ],
+              "wave": 0,
+              "selected": true,
+              "outcome": {
+                "status": "queued",
+                "attempt": 0,
+                "run_id": null,
+                "reason_code": null
+              },
+              "backpressure": {
+                "dispatch_failures": 2,
+                "next_delay_seconds": 4,
+                "last_reason": "crew_capacity"
+              }
+            },
+            {
+              "task_id": "2.2",
+              "title": "Write renderer unit tests",
+              "optional": true,
+              "complete": false,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "tests/render/**"
+              ],
+              "wave": 1,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            }
+          ],
+          "waves": [
+            [
+              "1.2",
+              "2.1"
+            ],
+            [
+              "1.3",
+              "2.2"
+            ]
+          ],
+          "findings": []
+        },
+        "runs": [
+          {
+            "run_id": "task-1-2-a1",
+            "run_sequence": 0,
+            "ghost_id": "tinker-1",
+            "session_slot": "hh-tinker-1-task-1-2-a1",
+            "phase": "implementation",
+            "task_id": "1.2",
+            "attempt": 1,
+            "can_cancel": true,
+            "cancel_requested": false,
+            "can_retry": false,
+            "session_link": null,
+            "summary": null,
+            "reason_code": null,
+            "claim_paths": [
+              "src/guestbook/store.py"
+            ]
+          }
+        ],
+        "review": null
+      }
+    },
+    {
+      "name": "four_active_tinkers",
+      "refused_at": "$.task_plan.tasks",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 42,
+        "integrity": "valid",
+        "seance_enabled": false,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "size_bytes": 1200
+              },
+              "validated": true,
+              "content": "# Requirements Document\n\n## Introduction\n\nA guest book that keeps entries in the order they were written.\n\n## Requirements\n\n### Requirement 1: Keep entries\n\n1. WHEN a guest signs, THE Guest_Book SHALL store the entry.\n2. THE Guest_Book SHALL keep entries in insertion order.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 2,
+                "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "size_bytes": 4871
+              },
+              "validated": true,
+              "content": "# Design Document\n\n## Overview\n\nOne module, one store.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "size_bytes": 912
+              },
+              "validated": true,
+              "content": "# Implementation Plan: Guest Book\n",
+              "findings": []
+            }
+          }
+        ],
+        "task_plan": {
+          "tasks": [
+            {
+              "task_id": "1.1",
+              "title": "Create the entry model",
+              "optional": false,
+              "complete": false,
+              "requirements": [
+                "1.1",
+                "1.2"
+              ],
+              "writes": [
+                "src/guestbook/model.py"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": {
+                "status": "active",
+                "attempt": 1,
+                "run_id": null,
+                "reason_code": null
+              },
+              "backpressure": null
+            },
+            {
+              "task_id": "1.2",
+              "title": "Implement the entry store",
+              "optional": false,
+              "complete": false,
+              "requirements": [
+                "1.3",
+                "2.1",
+                "2.2",
+                "2.3"
+              ],
+              "writes": [
+                "src/guestbook/store.py"
+              ],
+              "wave": 0,
+              "selected": true,
+              "outcome": {
+                "status": "active",
+                "attempt": 1,
+                "run_id": "task-1-2-a1",
+                "reason_code": null
+              },
+              "backpressure": null
+            },
+            {
+              "task_id": "1.3",
+              "title": "Write the property test for store ordering",
+              "optional": true,
+              "complete": false,
+              "requirements": [
+                "1.3"
+              ],
+              "writes": [
+                "tests/test_store_order.py"
+              ],
+              "wave": 1,
+              "selected": true,
+              "outcome": {
+                "status": "active",
+                "attempt": 1,
+                "run_id": null,
+                "reason_code": null
+              },
+              "backpressure": null
+            },
+            {
+              "task_id": "2.1",
+              "title": "Implement the page renderer",
+              "optional": false,
+              "complete": false,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "src/guestbook/render.py",
+                "src/guestbook/templates/*.html"
+              ],
+              "wave": 0,
+              "selected": true,
+              "outcome": {
+                "status": "active",
+                "attempt": 1,
+                "run_id": null,
+                "reason_code": null
+              },
+              "backpressure": {
+                "dispatch_failures": 2,
+                "next_delay_seconds": 4,
+                "last_reason": "crew_capacity"
+              }
+            },
+            {
+              "task_id": "2.2",
+              "title": "Write renderer unit tests",
+              "optional": true,
+              "complete": false,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "tests/render/**"
+              ],
+              "wave": 1,
+              "selected": false,
+              "outcome": {
+                "status": "active",
+                "attempt": 1,
+                "run_id": null,
+                "reason_code": null
+              },
+              "backpressure": null
+            }
+          ],
+          "waves": [
+            [
+              "1.2",
+              "2.1"
+            ],
+            [
+              "1.3",
+              "2.2"
+            ]
+          ],
+          "findings": []
+        },
+        "runs": [
+          {
+            "run_id": "task-1-2-a1",
+            "run_sequence": 0,
+            "ghost_id": "tinker-1",
+            "session_slot": "hh-tinker-1-task-1-2-a1",
+            "phase": "implementation",
+            "task_id": "1.2",
+            "attempt": 1,
+            "can_cancel": true,
+            "cancel_requested": false,
+            "can_retry": false,
+            "session_link": null,
+            "summary": null,
+            "reason_code": null,
+            "claim_paths": [
+              "src/guestbook/store.py"
+            ]
+          }
+        ],
+        "review": null
+      }
+    },
+    {
+      "name": "backpressure_delay_over_cap",
+      "refused_at": "$.task_plan.tasks[3].backpressure.next_delay_seconds",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 42,
+        "integrity": "valid",
+        "seance_enabled": false,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "size_bytes": 1200
+              },
+              "validated": true,
+              "content": "# Requirements Document\n\n## Introduction\n\nA guest book that keeps entries in the order they were written.\n\n## Requirements\n\n### Requirement 1: Keep entries\n\n1. WHEN a guest signs, THE Guest_Book SHALL store the entry.\n2. THE Guest_Book SHALL keep entries in insertion order.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 2,
+                "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "size_bytes": 4871
+              },
+              "validated": true,
+              "content": "# Design Document\n\n## Overview\n\nOne module, one store.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "size_bytes": 912
+              },
+              "validated": true,
+              "content": "# Implementation Plan: Guest Book\n",
+              "findings": []
+            }
+          }
+        ],
+        "task_plan": {
+          "tasks": [
+            {
+              "task_id": "1.1",
+              "title": "Create the entry model",
+              "optional": false,
+              "complete": true,
+              "requirements": [
+                "1.1",
+                "1.2"
+              ],
+              "writes": [
+                "src/guestbook/model.py"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "1.2",
+              "title": "Implement the entry store",
+              "optional": false,
+              "complete": false,
+              "requirements": [
+                "1.3",
+                "2.1",
+                "2.2",
+                "2.3"
+              ],
+              "writes": [
+                "src/guestbook/store.py"
+              ],
+              "wave": 0,
+              "selected": true,
+              "outcome": {
+                "status": "active",
+                "attempt": 1,
+                "run_id": "task-1-2-a1",
+                "reason_code": null
+              },
+              "backpressure": null
+            },
+            {
+              "task_id": "1.3",
+              "title": "Write the property test for store ordering",
+              "optional": true,
+              "complete": false,
+              "requirements": [
+                "1.3"
+              ],
+              "writes": [
+                "tests/test_store_order.py"
+              ],
+              "wave": 1,
+              "selected": true,
+              "outcome": {
+                "status": "queued",
+                "attempt": 0,
+                "run_id": null,
+                "reason_code": null
+              },
+              "backpressure": null
+            },
+            {
+              "task_id": "2.1",
+              "title": "Implement the page renderer",
+              "optional": false,
+              "complete": false,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "src/guestbook/render.py",
+                "src/guestbook/templates/*.html"
+              ],
+              "wave": 0,
+              "selected": true,
+              "outcome": {
+                "status": "queued",
+                "attempt": 0,
+                "run_id": null,
+                "reason_code": null
+              },
+              "backpressure": {
+                "dispatch_failures": 2,
+                "next_delay_seconds": 16,
+                "last_reason": "crew_capacity"
+              }
+            },
+            {
+              "task_id": "2.2",
+              "title": "Write renderer unit tests",
+              "optional": true,
+              "complete": false,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "tests/render/**"
+              ],
+              "wave": 1,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            }
+          ],
+          "waves": [
+            [
+              "1.2",
+              "2.1"
+            ],
+            [
+              "1.3",
+              "2.2"
+            ]
+          ],
+          "findings": []
+        },
+        "runs": [
+          {
+            "run_id": "task-1-2-a1",
+            "run_sequence": 0,
+            "ghost_id": "tinker-1",
+            "session_slot": "hh-tinker-1-task-1-2-a1",
+            "phase": "implementation",
+            "task_id": "1.2",
+            "attempt": 1,
+            "can_cancel": true,
+            "cancel_requested": false,
+            "can_retry": false,
+            "session_link": null,
+            "summary": null,
+            "reason_code": null,
+            "claim_paths": [
+              "src/guestbook/store.py"
+            ]
+          }
+        ],
+        "review": null
+      }
+    },
+    {
+      "name": "run_duplicate_id",
+      "refused_at": "$.runs",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 42,
+        "integrity": "valid",
+        "seance_enabled": false,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "size_bytes": 1200
+              },
+              "validated": true,
+              "content": "# Requirements Document\n\n## Introduction\n\nA guest book that keeps entries in the order they were written.\n\n## Requirements\n\n### Requirement 1: Keep entries\n\n1. WHEN a guest signs, THE Guest_Book SHALL store the entry.\n2. THE Guest_Book SHALL keep entries in insertion order.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 2,
+                "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "size_bytes": 4871
+              },
+              "validated": true,
+              "content": "# Design Document\n\n## Overview\n\nOne module, one store.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "size_bytes": 912
+              },
+              "validated": true,
+              "content": "# Implementation Plan: Guest Book\n",
+              "findings": []
+            }
+          }
+        ],
+        "task_plan": {
+          "tasks": [
+            {
+              "task_id": "1.1",
+              "title": "Create the entry model",
+              "optional": false,
+              "complete": true,
+              "requirements": [
+                "1.1",
+                "1.2"
+              ],
+              "writes": [
+                "src/guestbook/model.py"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "1.2",
+              "title": "Implement the entry store",
+              "optional": false,
+              "complete": false,
+              "requirements": [
+                "1.3",
+                "2.1",
+                "2.2",
+                "2.3"
+              ],
+              "writes": [
+                "src/guestbook/store.py"
+              ],
+              "wave": 0,
+              "selected": true,
+              "outcome": {
+                "status": "active",
+                "attempt": 1,
+                "run_id": "task-1-2-a1",
+                "reason_code": null
+              },
+              "backpressure": null
+            },
+            {
+              "task_id": "1.3",
+              "title": "Write the property test for store ordering",
+              "optional": true,
+              "complete": false,
+              "requirements": [
+                "1.3"
+              ],
+              "writes": [
+                "tests/test_store_order.py"
+              ],
+              "wave": 1,
+              "selected": true,
+              "outcome": {
+                "status": "queued",
+                "attempt": 0,
+                "run_id": null,
+                "reason_code": null
+              },
+              "backpressure": null
+            },
+            {
+              "task_id": "2.1",
+              "title": "Implement the page renderer",
+              "optional": false,
+              "complete": false,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "src/guestbook/render.py",
+                "src/guestbook/templates/*.html"
+              ],
+              "wave": 0,
+              "selected": true,
+              "outcome": {
+                "status": "queued",
+                "attempt": 0,
+                "run_id": null,
+                "reason_code": null
+              },
+              "backpressure": {
+                "dispatch_failures": 2,
+                "next_delay_seconds": 4,
+                "last_reason": "crew_capacity"
+              }
+            },
+            {
+              "task_id": "2.2",
+              "title": "Write renderer unit tests",
+              "optional": true,
+              "complete": false,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "tests/render/**"
+              ],
+              "wave": 1,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            }
+          ],
+          "waves": [
+            [
+              "1.2",
+              "2.1"
+            ],
+            [
+              "1.3",
+              "2.2"
+            ]
+          ],
+          "findings": []
+        },
+        "runs": [
+          {
+            "run_id": "task-1-2-a1",
+            "run_sequence": 0,
+            "ghost_id": "tinker-1",
+            "session_slot": "hh-tinker-1-task-1-2-a1",
+            "phase": "implementation",
+            "task_id": "1.2",
+            "attempt": 1,
+            "can_cancel": true,
+            "cancel_requested": false,
+            "can_retry": false,
+            "session_link": null,
+            "summary": null,
+            "reason_code": null,
+            "claim_paths": [
+              "src/guestbook/store.py"
+            ]
+          },
+          {
+            "run_id": "task-1-2-a1",
+            "run_sequence": 0,
+            "ghost_id": "tinker-1",
+            "session_slot": "hh-tinker-1-task-1-2-a1",
+            "phase": "implementation",
+            "task_id": "1.2",
+            "attempt": 1,
+            "can_cancel": true,
+            "cancel_requested": false,
+            "can_retry": false,
+            "session_link": null,
+            "summary": null,
+            "reason_code": null,
+            "claim_paths": [
+              "src/guestbook/store.py"
+            ]
+          }
+        ],
+        "review": null
+      }
+    },
+    {
+      "name": "run_phase_run_with_task",
+      "refused_at": "$.runs[0].task_id",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 14,
+        "integrity": "valid",
+        "seance_enabled": false,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "size_bytes": 1200
+              },
+              "validated": false,
+              "content": "# Requirements Document\n\n## Introduction\n\nA guest book that keeps entries in the order they were written.\n\n## Requirements\n\n### Requirement 1: Keep entries\n\n1. WHEN a guest signs, THE Guest_Book SHALL store the entry.\n2. THE Guest_Book SHALL keep entries in insertion order.\n",
+              "findings": [
+                {
+                  "code": "ears_pattern_missing",
+                  "location": "criterion:1.2",
+                  "message": "This criterion matches no EARS pattern."
+                },
+                {
+                  "code": "glossary_term_undefined",
+                  "location": "term:Guest_Book",
+                  "message": "This term is used before the glossary defines it."
+                }
+              ]
+            }
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": null
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": null
+          }
+        ],
+        "task_plan": null,
+        "runs": [
+          {
+            "run_id": "requirements-1",
+            "run_sequence": 0,
+            "ghost_id": "archivist",
+            "session_slot": "hh-archivist-requirements-1",
+            "phase": "requirements",
+            "task_id": "1.2",
+            "attempt": 1,
+            "can_cancel": false,
+            "cancel_requested": false,
+            "can_retry": true,
+            "session_link": null,
+            "summary": "Wrote 2 EARS criteria and a glossary.",
+            "reason_code": "artifact_invalid",
+            "claim_paths": []
+          }
+        ],
+        "review": null
+      }
+    },
+    {
+      "name": "run_tinker_without_task",
+      "refused_at": "$.runs[0].task_id",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 42,
+        "integrity": "valid",
+        "seance_enabled": false,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "size_bytes": 1200
+              },
+              "validated": true,
+              "content": "# Requirements Document\n\n## Introduction\n\nA guest book that keeps entries in the order they were written.\n\n## Requirements\n\n### Requirement 1: Keep entries\n\n1. WHEN a guest signs, THE Guest_Book SHALL store the entry.\n2. THE Guest_Book SHALL keep entries in insertion order.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 2,
+                "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "size_bytes": 4871
+              },
+              "validated": true,
+              "content": "# Design Document\n\n## Overview\n\nOne module, one store.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "size_bytes": 912
+              },
+              "validated": true,
+              "content": "# Implementation Plan: Guest Book\n",
+              "findings": []
+            }
+          }
+        ],
+        "task_plan": {
+          "tasks": [
+            {
+              "task_id": "1.1",
+              "title": "Create the entry model",
+              "optional": false,
+              "complete": true,
+              "requirements": [
+                "1.1",
+                "1.2"
+              ],
+              "writes": [
+                "src/guestbook/model.py"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "1.2",
+              "title": "Implement the entry store",
+              "optional": false,
+              "complete": false,
+              "requirements": [
+                "1.3",
+                "2.1",
+                "2.2",
+                "2.3"
+              ],
+              "writes": [
+                "src/guestbook/store.py"
+              ],
+              "wave": 0,
+              "selected": true,
+              "outcome": {
+                "status": "active",
+                "attempt": 1,
+                "run_id": "task-1-2-a1",
+                "reason_code": null
+              },
+              "backpressure": null
+            },
+            {
+              "task_id": "1.3",
+              "title": "Write the property test for store ordering",
+              "optional": true,
+              "complete": false,
+              "requirements": [
+                "1.3"
+              ],
+              "writes": [
+                "tests/test_store_order.py"
+              ],
+              "wave": 1,
+              "selected": true,
+              "outcome": {
+                "status": "queued",
+                "attempt": 0,
+                "run_id": null,
+                "reason_code": null
+              },
+              "backpressure": null
+            },
+            {
+              "task_id": "2.1",
+              "title": "Implement the page renderer",
+              "optional": false,
+              "complete": false,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "src/guestbook/render.py",
+                "src/guestbook/templates/*.html"
+              ],
+              "wave": 0,
+              "selected": true,
+              "outcome": {
+                "status": "queued",
+                "attempt": 0,
+                "run_id": null,
+                "reason_code": null
+              },
+              "backpressure": {
+                "dispatch_failures": 2,
+                "next_delay_seconds": 4,
+                "last_reason": "crew_capacity"
+              }
+            },
+            {
+              "task_id": "2.2",
+              "title": "Write renderer unit tests",
+              "optional": true,
+              "complete": false,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "tests/render/**"
+              ],
+              "wave": 1,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            }
+          ],
+          "waves": [
+            [
+              "1.2",
+              "2.1"
+            ],
+            [
+              "1.3",
+              "2.2"
+            ]
+          ],
+          "findings": []
+        },
+        "runs": [
+          {
+            "run_id": "task-1-2-a1",
+            "run_sequence": 0,
+            "ghost_id": "tinker-1",
+            "session_slot": "hh-tinker-1-task-1-2-a1",
+            "phase": "implementation",
+            "task_id": null,
+            "attempt": 1,
+            "can_cancel": true,
+            "cancel_requested": false,
+            "can_retry": false,
+            "session_link": null,
+            "summary": null,
+            "reason_code": null,
+            "claim_paths": [
+              "src/guestbook/store.py"
+            ]
+          }
+        ],
+        "review": null
+      }
+    },
+    {
+      "name": "run_cancel_and_retry",
+      "refused_at": "$.runs[0].can_retry",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 42,
+        "integrity": "valid",
+        "seance_enabled": false,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "size_bytes": 1200
+              },
+              "validated": true,
+              "content": "# Requirements Document\n\n## Introduction\n\nA guest book that keeps entries in the order they were written.\n\n## Requirements\n\n### Requirement 1: Keep entries\n\n1. WHEN a guest signs, THE Guest_Book SHALL store the entry.\n2. THE Guest_Book SHALL keep entries in insertion order.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 2,
+                "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "size_bytes": 4871
+              },
+              "validated": true,
+              "content": "# Design Document\n\n## Overview\n\nOne module, one store.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "size_bytes": 912
+              },
+              "validated": true,
+              "content": "# Implementation Plan: Guest Book\n",
+              "findings": []
+            }
+          }
+        ],
+        "task_plan": {
+          "tasks": [
+            {
+              "task_id": "1.1",
+              "title": "Create the entry model",
+              "optional": false,
+              "complete": true,
+              "requirements": [
+                "1.1",
+                "1.2"
+              ],
+              "writes": [
+                "src/guestbook/model.py"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "1.2",
+              "title": "Implement the entry store",
+              "optional": false,
+              "complete": false,
+              "requirements": [
+                "1.3",
+                "2.1",
+                "2.2",
+                "2.3"
+              ],
+              "writes": [
+                "src/guestbook/store.py"
+              ],
+              "wave": 0,
+              "selected": true,
+              "outcome": {
+                "status": "active",
+                "attempt": 1,
+                "run_id": "task-1-2-a1",
+                "reason_code": null
+              },
+              "backpressure": null
+            },
+            {
+              "task_id": "1.3",
+              "title": "Write the property test for store ordering",
+              "optional": true,
+              "complete": false,
+              "requirements": [
+                "1.3"
+              ],
+              "writes": [
+                "tests/test_store_order.py"
+              ],
+              "wave": 1,
+              "selected": true,
+              "outcome": {
+                "status": "queued",
+                "attempt": 0,
+                "run_id": null,
+                "reason_code": null
+              },
+              "backpressure": null
+            },
+            {
+              "task_id": "2.1",
+              "title": "Implement the page renderer",
+              "optional": false,
+              "complete": false,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "src/guestbook/render.py",
+                "src/guestbook/templates/*.html"
+              ],
+              "wave": 0,
+              "selected": true,
+              "outcome": {
+                "status": "queued",
+                "attempt": 0,
+                "run_id": null,
+                "reason_code": null
+              },
+              "backpressure": {
+                "dispatch_failures": 2,
+                "next_delay_seconds": 4,
+                "last_reason": "crew_capacity"
+              }
+            },
+            {
+              "task_id": "2.2",
+              "title": "Write renderer unit tests",
+              "optional": true,
+              "complete": false,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "tests/render/**"
+              ],
+              "wave": 1,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            }
+          ],
+          "waves": [
+            [
+              "1.2",
+              "2.1"
+            ],
+            [
+              "1.3",
+              "2.2"
+            ]
+          ],
+          "findings": []
+        },
+        "runs": [
+          {
+            "run_id": "task-1-2-a1",
+            "run_sequence": 0,
+            "ghost_id": "tinker-1",
+            "session_slot": "hh-tinker-1-task-1-2-a1",
+            "phase": "implementation",
+            "task_id": "1.2",
+            "attempt": 1,
+            "can_cancel": true,
+            "cancel_requested": false,
+            "can_retry": true,
+            "session_link": null,
+            "summary": null,
+            "reason_code": null,
+            "claim_paths": [
+              "src/guestbook/store.py"
+            ]
+          }
+        ],
+        "review": null
+      }
+    },
+    {
+      "name": "run_retry_after_third_attempt",
+      "refused_at": "$.runs[0].can_retry",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 14,
+        "integrity": "valid",
+        "seance_enabled": false,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "size_bytes": 1200
+              },
+              "validated": false,
+              "content": "# Requirements Document\n\n## Introduction\n\nA guest book that keeps entries in the order they were written.\n\n## Requirements\n\n### Requirement 1: Keep entries\n\n1. WHEN a guest signs, THE Guest_Book SHALL store the entry.\n2. THE Guest_Book SHALL keep entries in insertion order.\n",
+              "findings": [
+                {
+                  "code": "ears_pattern_missing",
+                  "location": "criterion:1.2",
+                  "message": "This criterion matches no EARS pattern."
+                },
+                {
+                  "code": "glossary_term_undefined",
+                  "location": "term:Guest_Book",
+                  "message": "This term is used before the glossary defines it."
+                }
+              ]
+            }
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": null
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": null
+          }
+        ],
+        "task_plan": null,
+        "runs": [
+          {
+            "run_id": "requirements-1",
+            "run_sequence": 0,
+            "ghost_id": "archivist",
+            "session_slot": "hh-archivist-requirements-1",
+            "phase": "requirements",
+            "task_id": null,
+            "attempt": 3,
+            "can_cancel": false,
+            "cancel_requested": false,
+            "can_retry": true,
+            "session_link": null,
+            "summary": "Wrote 2 EARS criteria and a glossary.",
+            "reason_code": "artifact_invalid",
+            "claim_paths": []
+          }
+        ],
+        "review": null
+      }
+    },
+    {
+      "name": "run_session_link_is_a_url",
+      "refused_at": "$.runs[0].session_link",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 42,
+        "integrity": "valid",
+        "seance_enabled": false,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "size_bytes": 1200
+              },
+              "validated": true,
+              "content": "# Requirements Document\n\n## Introduction\n\nA guest book that keeps entries in the order they were written.\n\n## Requirements\n\n### Requirement 1: Keep entries\n\n1. WHEN a guest signs, THE Guest_Book SHALL store the entry.\n2. THE Guest_Book SHALL keep entries in insertion order.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 2,
+                "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "size_bytes": 4871
+              },
+              "validated": true,
+              "content": "# Design Document\n\n## Overview\n\nOne module, one store.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "size_bytes": 912
+              },
+              "validated": true,
+              "content": "# Implementation Plan: Guest Book\n",
+              "findings": []
+            }
+          }
+        ],
+        "task_plan": {
+          "tasks": [
+            {
+              "task_id": "1.1",
+              "title": "Create the entry model",
+              "optional": false,
+              "complete": true,
+              "requirements": [
+                "1.1",
+                "1.2"
+              ],
+              "writes": [
+                "src/guestbook/model.py"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "1.2",
+              "title": "Implement the entry store",
+              "optional": false,
+              "complete": false,
+              "requirements": [
+                "1.3",
+                "2.1",
+                "2.2",
+                "2.3"
+              ],
+              "writes": [
+                "src/guestbook/store.py"
+              ],
+              "wave": 0,
+              "selected": true,
+              "outcome": {
+                "status": "active",
+                "attempt": 1,
+                "run_id": "task-1-2-a1",
+                "reason_code": null
+              },
+              "backpressure": null
+            },
+            {
+              "task_id": "1.3",
+              "title": "Write the property test for store ordering",
+              "optional": true,
+              "complete": false,
+              "requirements": [
+                "1.3"
+              ],
+              "writes": [
+                "tests/test_store_order.py"
+              ],
+              "wave": 1,
+              "selected": true,
+              "outcome": {
+                "status": "queued",
+                "attempt": 0,
+                "run_id": null,
+                "reason_code": null
+              },
+              "backpressure": null
+            },
+            {
+              "task_id": "2.1",
+              "title": "Implement the page renderer",
+              "optional": false,
+              "complete": false,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "src/guestbook/render.py",
+                "src/guestbook/templates/*.html"
+              ],
+              "wave": 0,
+              "selected": true,
+              "outcome": {
+                "status": "queued",
+                "attempt": 0,
+                "run_id": null,
+                "reason_code": null
+              },
+              "backpressure": {
+                "dispatch_failures": 2,
+                "next_delay_seconds": 4,
+                "last_reason": "crew_capacity"
+              }
+            },
+            {
+              "task_id": "2.2",
+              "title": "Write renderer unit tests",
+              "optional": true,
+              "complete": false,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "tests/render/**"
+              ],
+              "wave": 1,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            }
+          ],
+          "waves": [
+            [
+              "1.2",
+              "2.1"
+            ],
+            [
+              "1.3",
+              "2.2"
+            ]
+          ],
+          "findings": []
+        },
+        "runs": [
+          {
+            "run_id": "task-1-2-a1",
+            "run_sequence": 0,
+            "ghost_id": "tinker-1",
+            "session_slot": "hh-tinker-1-task-1-2-a1",
+            "phase": "implementation",
+            "task_id": "1.2",
+            "attempt": 1,
+            "can_cancel": true,
+            "cancel_requested": false,
+            "can_retry": false,
+            "session_link": "/chat?new=1",
+            "summary": null,
+            "reason_code": null,
+            "claim_paths": [
+              "src/guestbook/store.py"
+            ]
+          }
+        ],
+        "review": null
+      }
+    },
+    {
+      "name": "run_summary_with_control_character",
+      "refused_at": "$.runs[0].summary",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 14,
+        "integrity": "valid",
+        "seance_enabled": false,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "size_bytes": 1200
+              },
+              "validated": false,
+              "content": "# Requirements Document\n\n## Introduction\n\nA guest book that keeps entries in the order they were written.\n\n## Requirements\n\n### Requirement 1: Keep entries\n\n1. WHEN a guest signs, THE Guest_Book SHALL store the entry.\n2. THE Guest_Book SHALL keep entries in insertion order.\n",
+              "findings": [
+                {
+                  "code": "ears_pattern_missing",
+                  "location": "criterion:1.2",
+                  "message": "This criterion matches no EARS pattern."
+                },
+                {
+                  "code": "glossary_term_undefined",
+                  "location": "term:Guest_Book",
+                  "message": "This term is used before the glossary defines it."
+                }
+              ]
+            }
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": null
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": null
+          }
+        ],
+        "task_plan": null,
+        "runs": [
+          {
+            "run_id": "requirements-1",
+            "run_sequence": 0,
+            "ghost_id": "archivist",
+            "session_slot": "hh-archivist-requirements-1",
+            "phase": "requirements",
+            "task_id": null,
+            "attempt": 1,
+            "can_cancel": false,
+            "cancel_requested": false,
+            "can_retry": true,
+            "session_link": null,
+            "summary": "ok\u0007",
+            "reason_code": "artifact_invalid",
+            "claim_paths": []
+          }
+        ],
+        "review": null
+      }
+    },
+    {
+      "name": "run_extra_transcript_field",
+      "refused_at": "$.runs[0]",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 42,
+        "integrity": "valid",
+        "seance_enabled": false,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "size_bytes": 1200
+              },
+              "validated": true,
+              "content": "# Requirements Document\n\n## Introduction\n\nA guest book that keeps entries in the order they were written.\n\n## Requirements\n\n### Requirement 1: Keep entries\n\n1. WHEN a guest signs, THE Guest_Book SHALL store the entry.\n2. THE Guest_Book SHALL keep entries in insertion order.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 2,
+                "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "size_bytes": 4871
+              },
+              "validated": true,
+              "content": "# Design Document\n\n## Overview\n\nOne module, one store.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "size_bytes": 912
+              },
+              "validated": true,
+              "content": "# Implementation Plan: Guest Book\n",
+              "findings": []
+            }
+          }
+        ],
+        "task_plan": {
+          "tasks": [
+            {
+              "task_id": "1.1",
+              "title": "Create the entry model",
+              "optional": false,
+              "complete": true,
+              "requirements": [
+                "1.1",
+                "1.2"
+              ],
+              "writes": [
+                "src/guestbook/model.py"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "1.2",
+              "title": "Implement the entry store",
+              "optional": false,
+              "complete": false,
+              "requirements": [
+                "1.3",
+                "2.1",
+                "2.2",
+                "2.3"
+              ],
+              "writes": [
+                "src/guestbook/store.py"
+              ],
+              "wave": 0,
+              "selected": true,
+              "outcome": {
+                "status": "active",
+                "attempt": 1,
+                "run_id": "task-1-2-a1",
+                "reason_code": null
+              },
+              "backpressure": null
+            },
+            {
+              "task_id": "1.3",
+              "title": "Write the property test for store ordering",
+              "optional": true,
+              "complete": false,
+              "requirements": [
+                "1.3"
+              ],
+              "writes": [
+                "tests/test_store_order.py"
+              ],
+              "wave": 1,
+              "selected": true,
+              "outcome": {
+                "status": "queued",
+                "attempt": 0,
+                "run_id": null,
+                "reason_code": null
+              },
+              "backpressure": null
+            },
+            {
+              "task_id": "2.1",
+              "title": "Implement the page renderer",
+              "optional": false,
+              "complete": false,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "src/guestbook/render.py",
+                "src/guestbook/templates/*.html"
+              ],
+              "wave": 0,
+              "selected": true,
+              "outcome": {
+                "status": "queued",
+                "attempt": 0,
+                "run_id": null,
+                "reason_code": null
+              },
+              "backpressure": {
+                "dispatch_failures": 2,
+                "next_delay_seconds": 4,
+                "last_reason": "crew_capacity"
+              }
+            },
+            {
+              "task_id": "2.2",
+              "title": "Write renderer unit tests",
+              "optional": true,
+              "complete": false,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "tests/render/**"
+              ],
+              "wave": 1,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            }
+          ],
+          "waves": [
+            [
+              "1.2",
+              "2.1"
+            ],
+            [
+              "1.3",
+              "2.2"
+            ]
+          ],
+          "findings": []
+        },
+        "runs": [
+          {
+            "run_id": "task-1-2-a1",
+            "run_sequence": 0,
+            "ghost_id": "tinker-1",
+            "session_slot": "hh-tinker-1-task-1-2-a1",
+            "phase": "implementation",
+            "task_id": "1.2",
+            "attempt": 1,
+            "can_cancel": true,
+            "cancel_requested": false,
+            "can_retry": false,
+            "session_link": null,
+            "summary": null,
+            "reason_code": null,
+            "claim_paths": [
+              "src/guestbook/store.py"
+            ],
+            "transcript": []
+          }
+        ],
+        "review": null
+      }
+    },
+    {
+      "name": "review_while_seance_off",
+      "refused_at": "$.review",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 60,
+        "integrity": "valid",
+        "seance_enabled": false,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "size_bytes": 1200
+              },
+              "validated": true,
+              "content": "# Requirements Document\n\n## Introduction\n\nA guest book that keeps entries in the order they were written.\n\n## Requirements\n\n### Requirement 1: Keep entries\n\n1. WHEN a guest signs, THE Guest_Book SHALL store the entry.\n2. THE Guest_Book SHALL keep entries in insertion order.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 2,
+                "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "size_bytes": 4871
+              },
+              "validated": true,
+              "content": "# Design Document\n\n## Overview\n\nOne module, one store.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "size_bytes": 912
+              },
+              "validated": true,
+              "content": "# Implementation Plan: Guest Book\n",
+              "findings": []
+            }
+          }
+        ],
+        "task_plan": {
+          "tasks": [
+            {
+              "task_id": "1.1",
+              "title": "Create the entry model",
+              "optional": false,
+              "complete": true,
+              "requirements": [
+                "1.1",
+                "1.2"
+              ],
+              "writes": [
+                "src/guestbook/model.py"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "1.2",
+              "title": "Implement the entry store",
+              "optional": false,
+              "complete": true,
+              "requirements": [
+                "1.3",
+                "2.1",
+                "2.2",
+                "2.3"
+              ],
+              "writes": [
+                "src/guestbook/store.py"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "1.3",
+              "title": "Write the property test for store ordering",
+              "optional": true,
+              "complete": true,
+              "requirements": [
+                "1.3"
+              ],
+              "writes": [
+                "tests/test_store_order.py"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "2.1",
+              "title": "Implement the page renderer",
+              "optional": false,
+              "complete": true,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "src/guestbook/render.py",
+                "src/guestbook/templates/*.html"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "2.2",
+              "title": "Write renderer unit tests",
+              "optional": true,
+              "complete": true,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "tests/render/**"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            }
+          ],
+          "waves": [],
+          "findings": []
+        },
+        "runs": [],
+        "review": {
+          "cycle": 2,
+          "status": "changes_requested",
+          "ghost_id": "medium",
+          "session_link": null,
+          "findings": [
+            {
+              "finding_id": "f-1",
+              "requirement_ids": [
+                "1.3"
+              ],
+              "paths": [
+                "src/guestbook/store.py"
+              ],
+              "summary": "Entries are sorted by name, not kept in insertion order."
+            }
+          ],
+          "repairs": [
+            {
+              "task_id": "4.1",
+              "finding_id": "f-1",
+              "title": "Keep insertion order in the store",
+              "writes": [
+                "src/guestbook/store.py"
+              ],
+              "status": "proposed"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "review_fourth_cycle",
+      "refused_at": "$.review.cycle",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 60,
+        "integrity": "valid",
+        "seance_enabled": true,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "size_bytes": 1200
+              },
+              "validated": true,
+              "content": "# Requirements Document\n\n## Introduction\n\nA guest book that keeps entries in the order they were written.\n\n## Requirements\n\n### Requirement 1: Keep entries\n\n1. WHEN a guest signs, THE Guest_Book SHALL store the entry.\n2. THE Guest_Book SHALL keep entries in insertion order.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 2,
+                "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "size_bytes": 4871
+              },
+              "validated": true,
+              "content": "# Design Document\n\n## Overview\n\nOne module, one store.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "size_bytes": 912
+              },
+              "validated": true,
+              "content": "# Implementation Plan: Guest Book\n",
+              "findings": []
+            }
+          }
+        ],
+        "task_plan": {
+          "tasks": [
+            {
+              "task_id": "1.1",
+              "title": "Create the entry model",
+              "optional": false,
+              "complete": true,
+              "requirements": [
+                "1.1",
+                "1.2"
+              ],
+              "writes": [
+                "src/guestbook/model.py"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "1.2",
+              "title": "Implement the entry store",
+              "optional": false,
+              "complete": true,
+              "requirements": [
+                "1.3",
+                "2.1",
+                "2.2",
+                "2.3"
+              ],
+              "writes": [
+                "src/guestbook/store.py"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "1.3",
+              "title": "Write the property test for store ordering",
+              "optional": true,
+              "complete": true,
+              "requirements": [
+                "1.3"
+              ],
+              "writes": [
+                "tests/test_store_order.py"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "2.1",
+              "title": "Implement the page renderer",
+              "optional": false,
+              "complete": true,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "src/guestbook/render.py",
+                "src/guestbook/templates/*.html"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "2.2",
+              "title": "Write renderer unit tests",
+              "optional": true,
+              "complete": true,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "tests/render/**"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            }
+          ],
+          "waves": [],
+          "findings": []
+        },
+        "runs": [],
+        "review": {
+          "cycle": 4,
+          "status": "changes_requested",
+          "ghost_id": "medium",
+          "session_link": null,
+          "findings": [
+            {
+              "finding_id": "f-1",
+              "requirement_ids": [
+                "1.3"
+              ],
+              "paths": [
+                "src/guestbook/store.py"
+              ],
+              "summary": "Entries are sorted by name, not kept in insertion order."
+            }
+          ],
+          "repairs": [
+            {
+              "task_id": "4.1",
+              "finding_id": "f-1",
+              "title": "Keep insertion order in the store",
+              "writes": [
+                "src/guestbook/store.py"
+              ],
+              "status": "proposed"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "review_pass_with_findings",
+      "refused_at": "$.review.findings",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 60,
+        "integrity": "valid",
+        "seance_enabled": true,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "size_bytes": 1200
+              },
+              "validated": true,
+              "content": "# Requirements Document\n\n## Introduction\n\nA guest book that keeps entries in the order they were written.\n\n## Requirements\n\n### Requirement 1: Keep entries\n\n1. WHEN a guest signs, THE Guest_Book SHALL store the entry.\n2. THE Guest_Book SHALL keep entries in insertion order.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 2,
+                "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "size_bytes": 4871
+              },
+              "validated": true,
+              "content": "# Design Document\n\n## Overview\n\nOne module, one store.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "size_bytes": 912
+              },
+              "validated": true,
+              "content": "# Implementation Plan: Guest Book\n",
+              "findings": []
+            }
+          }
+        ],
+        "task_plan": {
+          "tasks": [
+            {
+              "task_id": "1.1",
+              "title": "Create the entry model",
+              "optional": false,
+              "complete": true,
+              "requirements": [
+                "1.1",
+                "1.2"
+              ],
+              "writes": [
+                "src/guestbook/model.py"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "1.2",
+              "title": "Implement the entry store",
+              "optional": false,
+              "complete": true,
+              "requirements": [
+                "1.3",
+                "2.1",
+                "2.2",
+                "2.3"
+              ],
+              "writes": [
+                "src/guestbook/store.py"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "1.3",
+              "title": "Write the property test for store ordering",
+              "optional": true,
+              "complete": true,
+              "requirements": [
+                "1.3"
+              ],
+              "writes": [
+                "tests/test_store_order.py"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "2.1",
+              "title": "Implement the page renderer",
+              "optional": false,
+              "complete": true,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "src/guestbook/render.py",
+                "src/guestbook/templates/*.html"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "2.2",
+              "title": "Write renderer unit tests",
+              "optional": true,
+              "complete": true,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "tests/render/**"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            }
+          ],
+          "waves": [],
+          "findings": []
+        },
+        "runs": [],
+        "review": {
+          "cycle": 2,
+          "status": "pass",
+          "ghost_id": "medium",
+          "session_link": null,
+          "findings": [
+            {
+              "finding_id": "f-1",
+              "requirement_ids": [
+                "1.3"
+              ],
+              "paths": [
+                "src/guestbook/store.py"
+              ],
+              "summary": "Entries are sorted by name, not kept in insertion order."
+            }
+          ],
+          "repairs": [
+            {
+              "task_id": "4.1",
+              "finding_id": "f-1",
+              "title": "Keep insertion order in the store",
+              "writes": [
+                "src/guestbook/store.py"
+              ],
+              "status": "proposed"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "review_session_link_is_a_session_key",
+      "refused_at": "$.review.session_link",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 60,
+        "integrity": "valid",
+        "seance_enabled": true,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "size_bytes": 1200
+              },
+              "validated": true,
+              "content": "# Requirements Document\n\n## Introduction\n\nA guest book that keeps entries in the order they were written.\n\n## Requirements\n\n### Requirement 1: Keep entries\n\n1. WHEN a guest signs, THE Guest_Book SHALL store the entry.\n2. THE Guest_Book SHALL keep entries in insertion order.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 2,
+                "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "size_bytes": 4871
+              },
+              "validated": true,
+              "content": "# Design Document\n\n## Overview\n\nOne module, one store.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "size_bytes": 912
+              },
+              "validated": true,
+              "content": "# Implementation Plan: Guest Book\n",
+              "findings": []
+            }
+          }
+        ],
+        "task_plan": {
+          "tasks": [
+            {
+              "task_id": "1.1",
+              "title": "Create the entry model",
+              "optional": false,
+              "complete": true,
+              "requirements": [
+                "1.1",
+                "1.2"
+              ],
+              "writes": [
+                "src/guestbook/model.py"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "1.2",
+              "title": "Implement the entry store",
+              "optional": false,
+              "complete": true,
+              "requirements": [
+                "1.3",
+                "2.1",
+                "2.2",
+                "2.3"
+              ],
+              "writes": [
+                "src/guestbook/store.py"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "1.3",
+              "title": "Write the property test for store ordering",
+              "optional": true,
+              "complete": true,
+              "requirements": [
+                "1.3"
+              ],
+              "writes": [
+                "tests/test_store_order.py"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "2.1",
+              "title": "Implement the page renderer",
+              "optional": false,
+              "complete": true,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "src/guestbook/render.py",
+                "src/guestbook/templates/*.html"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "2.2",
+              "title": "Write renderer unit tests",
+              "optional": true,
+              "complete": true,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "tests/render/**"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            }
+          ],
+          "waves": [],
+          "findings": []
+        },
+        "runs": [],
+        "review": {
+          "cycle": 2,
+          "status": "changes_requested",
+          "ghost_id": "medium",
+          "session_link": "dashboard:hh-medium",
+          "findings": [
+            {
+              "finding_id": "f-1",
+              "requirement_ids": [
+                "1.3"
+              ],
+              "paths": [
+                "src/guestbook/store.py"
+              ],
+              "summary": "Entries are sorted by name, not kept in insertion order."
+            }
+          ],
+          "repairs": [
+            {
+              "task_id": "4.1",
+              "finding_id": "f-1",
+              "title": "Keep insertion order in the store",
+              "writes": [
+                "src/guestbook/store.py"
+              ],
+              "status": "proposed"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "review_repair_for_unknown_finding",
+      "refused_at": "$.review.repairs[0].finding_id",
+      "value": {
+        "schema_version": 1,
+        "mansion_id": "demo-mansion",
+        "spec_name": "demo",
+        "version": 60,
+        "integrity": "valid",
+        "seance_enabled": true,
+        "documents": [
+          {
+            "phase": "requirements",
+            "document_path": ".kiro/specs/demo/requirements.md",
+            "write_scope": [
+              ".kiro/specs/demo/requirements.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "size_bytes": 1200
+              },
+              "validated": true,
+              "content": "# Requirements Document\n\n## Introduction\n\nA guest book that keeps entries in the order they were written.\n\n## Requirements\n\n### Requirement 1: Keep entries\n\n1. WHEN a guest signs, THE Guest_Book SHALL store the entry.\n2. THE Guest_Book SHALL keep entries in insertion order.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "design",
+            "document_path": ".kiro/specs/demo/design.md",
+            "write_scope": [
+              ".kiro/specs/demo/design.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 2,
+                "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "size_bytes": 4871
+              },
+              "validated": true,
+              "content": "# Design Document\n\n## Overview\n\nOne module, one store.\n",
+              "findings": []
+            }
+          },
+          {
+            "phase": "tasks",
+            "document_path": ".kiro/specs/demo/tasks.md",
+            "write_scope": [
+              ".kiro/specs/demo/tasks.md"
+            ],
+            "artifact": {
+              "artifact_revision": {
+                "revision": 1,
+                "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "size_bytes": 912
+              },
+              "validated": true,
+              "content": "# Implementation Plan: Guest Book\n",
+              "findings": []
+            }
+          }
+        ],
+        "task_plan": {
+          "tasks": [
+            {
+              "task_id": "1.1",
+              "title": "Create the entry model",
+              "optional": false,
+              "complete": true,
+              "requirements": [
+                "1.1",
+                "1.2"
+              ],
+              "writes": [
+                "src/guestbook/model.py"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "1.2",
+              "title": "Implement the entry store",
+              "optional": false,
+              "complete": true,
+              "requirements": [
+                "1.3",
+                "2.1",
+                "2.2",
+                "2.3"
+              ],
+              "writes": [
+                "src/guestbook/store.py"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "1.3",
+              "title": "Write the property test for store ordering",
+              "optional": true,
+              "complete": true,
+              "requirements": [
+                "1.3"
+              ],
+              "writes": [
+                "tests/test_store_order.py"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "2.1",
+              "title": "Implement the page renderer",
+              "optional": false,
+              "complete": true,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "src/guestbook/render.py",
+                "src/guestbook/templates/*.html"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            },
+            {
+              "task_id": "2.2",
+              "title": "Write renderer unit tests",
+              "optional": true,
+              "complete": true,
+              "requirements": [
+                "3.1",
+                "3.2"
+              ],
+              "writes": [
+                "tests/render/**"
+              ],
+              "wave": null,
+              "selected": false,
+              "outcome": null,
+              "backpressure": null
+            }
+          ],
+          "waves": [],
+          "findings": []
+        },
+        "runs": [],
+        "review": {
+          "cycle": 2,
+          "status": "changes_requested",
+          "ghost_id": "medium",
+          "session_link": null,
+          "findings": [
+            {
+              "finding_id": "f-1",
+              "requirement_ids": [
+                "1.3"
+              ],
+              "paths": [
+                "src/guestbook/store.py"
+              ],
+              "summary": "Entries are sorted by name, not kept in insertion order."
+            }
+          ],
+          "repairs": [
+            {
+              "task_id": "4.1",
+              "finding_id": "f-9",
+              "title": "Keep insertion order in the store",
+              "writes": [
+                "src/guestbook/store.py"
+              ],
+              "status": "proposed"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -65,3 +65,34 @@ def test_bad_port_raises_a_clear_error(env):
 def test_repr_does_not_show_the_secret():
     settings = Settings.from_env({"PORT": "1", "KIROCREW_PROXY_SECRET": KEY})
     assert KEY not in repr(settings)
+
+
+def test_mansion_paths_default_to_the_verified_workspace_roots():
+    settings = Settings.from_env({"PORT": "8080"})
+
+    assert settings.mansion_root == (
+        settings.approved_roots[0] / "haunted-house" / "mansions"
+    )
+    assert tuple(path.name for path in settings.approved_roots) == (
+        "workspace",
+        "workspaces",
+        "workplace",
+        "workplaces",
+    )
+
+
+def test_mansion_paths_can_be_injected_without_environment_authority(tmp_path):
+    approved = tmp_path / "workspace"
+    root = approved / "test-mansions"
+
+    settings = Settings.from_env(
+        {
+            "PORT": "8080",
+            "MANSION_ROOT": "/client-controlled/path",
+        },
+        mansion_root=root,
+        approved_roots=(approved,),
+    )
+
+    assert settings.mansion_root == root
+    assert settings.approved_roots == (approved,)

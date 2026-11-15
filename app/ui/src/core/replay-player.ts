@@ -1,171 +1,109 @@
-// Pure replay player: parses a recorded event file and plays it back to
-// subscribers keyed by event type. No SDK, React or network. Time comes only
-// from the injected `schedule` function, so tests can drive it by hand or with
-// fake timers. The replay stand-in (src/adapters/sdk-shim) wires it to fetch.
+// Pure replay presentation timing for a canonical Event_Log (Spec 2,
+// Requirements 8.3, 8.6). It replaces the earlier `{t, frame}` player: replay
+// no longer plays raw gateway frames to subscribers. The recording is the
+// canonical App_Event log itself, parsed by core/seance-log.ts and folded by
+// core/ghost-state.ts exactly as in live mode.
+//
+// Time decides only WHEN a record becomes visible. Which records are visible,
+// and in what order, is always a prefix of Canonical_Order (Sequence, then
+// Event_ID), never file arrival order. No SDK, React, network or clock: the
+// caller supplies elapsed milliseconds.
 
-/** One line of a recorded event file. */
-export interface ReplayFrame {
-  /** Recording time, in unix seconds. */
-  readonly t: number
-  readonly frame: {
-    /** Gateway event type, the key subscribers listen on. */
-    readonly type: string
-    /** Event payload, passed to subscribers as is. */
-    readonly data: unknown
-  }
+import type { AppEvent } from './seance-event'
+
+export interface PresentationOptions {
+  /** Playback speed: 2 presents twice as fast as recorded. Default 1. */
+  readonly speed?: number
+  /** Longest wait between two records, in playback milliseconds. Default: no limit. */
+  readonly maxGapMs?: number
 }
 
-/** A line of a recorded event file that isn't a valid frame. */
-export class ReplayParseError extends Error {
-  /** 1-based line number in the file. */
-  readonly line: number
-
-  constructor(line: number, problem: string) {
-    super(`Replay fixture line ${line}: ${problem}`)
-    this.name = 'ReplayParseError'
-    this.line = line
-  }
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value)
-}
-
-function parseLine(raw: string, line: number): ReplayFrame {
-  let value: unknown
-  try {
-    value = JSON.parse(raw)
-  } catch (err) {
-    const reason = err instanceof Error ? err.message : String(err)
-    throw new ReplayParseError(line, `not valid JSON (${reason})`)
-  }
-  if (!isRecord(value)) throw new ReplayParseError(line, 'expected a JSON object')
-  if (typeof value.t !== 'number' || !Number.isFinite(value.t)) {
-    throw new ReplayParseError(line, '"t" must be a number of unix seconds')
-  }
-  const frame = value.frame
-  if (!isRecord(frame)) throw new ReplayParseError(line, '"frame" must be an object')
-  if (typeof frame.type !== 'string' || frame.type === '') {
-    throw new ReplayParseError(line, '"frame.type" must be a non-empty string')
-  }
-  if (!('data' in frame)) throw new ReplayParseError(line, '"frame.data" is missing')
-  return { t: value.t, frame: { type: frame.type, data: frame.data } }
-}
-
-/**
- * Parses a JSONL event file: one `{"t": <seconds>, "frame": {"type", "data"}}`
- * per line. Blank lines are skipped. Throws a ReplayParseError naming the first
- * malformed line.
- */
-export function parseFrames(text: string): ReplayFrame[] {
-  const frames: ReplayFrame[] = []
-  text.split(/\r?\n/).forEach((raw, index) => {
-    if (raw.trim() !== '') frames.push(parseLine(raw, index + 1))
-  })
-  return frames
-}
-
-function checkSpeed(speed: number): void {
+function checkOptions({ speed = 1, maxGapMs = Number.POSITIVE_INFINITY }: PresentationOptions): {
+  speed: number
+  maxGapMs: number
+} {
   if (!Number.isFinite(speed) || speed <= 0) {
     throw new RangeError(`Replay speed must be a positive number, got ${speed}`)
   }
+  if (Number.isNaN(maxGapMs) || maxGapMs < 0) {
+    throw new RangeError(`Replay maxGapMs must be zero or more, got ${maxGapMs}`)
+  }
+  return { speed, maxGapMs }
+}
+
+/** Sequence order, with Event_ID as the tie-breaker for invalid external input. Does not mutate. */
+export function inCanonicalOrder(events: readonly AppEvent[]): AppEvent[] {
+  return [...events].sort(
+    (left, right) =>
+      left.sequence - right.sequence ||
+      (left.event_id < right.event_id ? -1 : left.event_id > right.event_id ? 1 : 0),
+  )
 }
 
 /**
- * When each frame plays, in milliseconds after playback starts: its time since
- * the first frame, divided by `speed`. A frame recorded earlier than the one
- * before it plays together with that one, so playback always keeps file order.
+ * The instant a record is presented at: when the fact occurred, or, for the
+ * many Crew facts that carry no timestamp, when the writer persisted it.
  */
-export function frameDelays(frames: readonly ReplayFrame[], speed = 1): number[] {
-  checkSpeed(speed)
+export function presentationTimeMs(event: AppEvent): number {
+  return event.occurred_at_ms ?? event.persisted_at_ms
+}
+
+/**
+ * When each record becomes visible, in milliseconds after playback starts.
+ * `events` must be in Canonical_Order; the result is parallel to it and never
+ * decreases, so a record stamped earlier than its predecessor appears together
+ * with that predecessor rather than before it.
+ */
+export function presentationDelays(events: readonly AppEvent[], options: PresentationOptions = {}): number[] {
+  const { speed, maxGapMs } = checkOptions(options)
   const delays: number[] = []
-  const start = frames[0]?.t ?? 0
-  let previous = 0
-  for (const { t } of frames) {
-    previous = Math.max(previous, ((t - start) * 1000) / speed)
-    delays.push(previous)
+  let previousTime = events.length === 0 ? 0 : presentationTimeMs(events[0])
+  let previousDelay = 0
+  for (const event of events) {
+    const time = presentationTimeMs(event)
+    const gap = Math.min(Math.max(time - previousTime, 0) / speed, maxGapMs)
+    previousDelay += gap
+    previousTime = Math.max(previousTime, time)
+    delays.push(previousDelay)
   }
   return delays
 }
 
-/** Runs `fn` after `delayMs` milliseconds. Defaults to setTimeout. */
-export type Schedule = (fn: () => void, delayMs: number) => void
-
-export type FrameListener = (data: unknown) => void
-
-export interface PlayerOptions {
-  /** Playback speed: 2 plays twice as fast as recorded. Default 1. */
-  speed?: number
-  schedule?: Schedule
-  /** Gets anything a listener throws, so one bad listener can't stop the replay. Default console.error. */
-  onError?: (err: unknown) => void
+export interface ReplayTimeline {
+  /** Every record of the recording in Canonical_Order. */
+  readonly events: readonly AppEvent[]
+  /** Parallel to `events`: when each becomes visible. */
+  readonly delays: readonly number[]
+  /** How many records are visible `elapsedMs` after playback started: always a prefix of `events`. */
+  visibleCount(elapsedMs: number): number
+  /** Milliseconds from `elapsedMs` until the next record becomes visible, or null when all are. */
+  nextInMs(elapsedMs: number): number | null
 }
 
-export interface ReplayPlayer {
-  /**
-   * Calls `listener` with `frame.data` for every frame of `type` played after
-   * this call. Each call is its own subscription. Returns an unsubscribe function.
-   */
-  subscribe(type: string, listener: FrameListener): () => void
-  /** Plays `frames` once, in file order. Throws if called a second time. */
-  play(frames: readonly ReplayFrame[]): void
-}
+/** Orders `events` canonically and schedules their presentation. */
+export function createTimeline(events: readonly AppEvent[], options: PresentationOptions = {}): ReplayTimeline {
+  const ordered = inCanonicalOrder(events)
+  const delays = presentationDelays(ordered, options)
 
-const defaultSchedule: Schedule = (fn, delayMs) => {
-  setTimeout(fn, delayMs)
-}
-
-export function createPlayer(options: PlayerOptions = {}): ReplayPlayer {
-  const speed = options.speed ?? 1
-  checkSpeed(speed)
-  const schedule = options.schedule ?? defaultSchedule
-  const onError = options.onError ?? ((err: unknown) => console.error('Replay listener failed:', err))
-  // One entry object per subscription, so the same function subscribed twice
-  // is called twice and unsubscribes independently.
-  const listeners = new Map<string, Set<{ listener: FrameListener }>>()
-  let started = false
-
-  function deliver({ frame }: ReplayFrame): void {
-    const entries = listeners.get(frame.type)
-    if (!entries) return
-    // Snapshot: a listener that subscribes during delivery waits for the next frame.
-    for (const { listener } of [...entries]) {
-      try {
-        listener(frame.data)
-      } catch (err) {
-        onError(err)
-      }
+  function visibleCount(elapsedMs: number): number {
+    // Binary search for the first delay greater than elapsedMs.
+    let low = 0
+    let high = delays.length
+    while (low < high) {
+      const middle = (low + high) >>> 1
+      if (delays[middle] <= elapsedMs) low = middle + 1
+      else high = middle
     }
+    return low
   }
 
   return {
-    subscribe(type, listener) {
-      const entry = { listener }
-      const entries = listeners.get(type) ?? new Set()
-      listeners.set(type, entries)
-      entries.add(entry)
-      return () => {
-        entries.delete(entry)
-      }
-    },
-
-    play(frames) {
-      if (started) throw new Error('This replay player has already played its frames.')
-      started = true
-      const queue = [...frames]
-      const delays = frameDelays(queue, speed)
-      let next = 0
-      // One timer at a time: each step plays every frame due at its time, in
-      // file order, then waits for the next one. Timer ordering can't reorder frames.
-      const step = () => {
-        const now = delays[next]
-        while (next < queue.length && delays[next] === now) {
-          deliver(queue[next])
-          next += 1
-        }
-        if (next < queue.length) schedule(step, delays[next] - now)
-      }
-      if (queue.length > 0) schedule(step, delays[0])
+    events: ordered,
+    delays,
+    visibleCount,
+    nextInMs(elapsedMs) {
+      const count = visibleCount(elapsedMs)
+      return count >= delays.length ? null : delays[count] - elapsedMs
     },
   }
 }

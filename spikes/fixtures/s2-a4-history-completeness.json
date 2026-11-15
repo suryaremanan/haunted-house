@@ -1,0 +1,35 @@
+{
+  "assumption_id": "S2-A4",
+  "schema_version": 1,
+  "outcome": "post_restart_completeness_unproved",
+  "evidence": {
+    "baseline": "spikes/fixtures/s6-app-session-approval.jsonl",
+    "baseline_sha256": "63478ad7d2664f15e014a0382902c2c46fb33773a9ce3d800d9cc3b52044258c",
+    "baseline_matching_event_count": 54,
+    "history_probe": "spikes/hh-spike/backend/history_probe.py",
+    "scope": "one_explicit_slot",
+    "request_message_limit": 500,
+    "response_byte_limit": 1048576,
+    "captured_fields": [
+      "declared_slot_count",
+      "message_count",
+      "reported_total",
+      "has_more",
+      "running",
+      "history_shape"
+    ],
+    "captured_values": "shape_only"
+  },
+  "unavailable_fields": [
+    "post_restart_history.complete_fact_recovery"
+  ],
+  "fallback_by_field": {
+    "post_restart_history.complete_fact_recovery": {
+      "policy": "recover_proved_facts_only",
+      "diagnostic": "history_partial",
+      "preserve_latest_replayable_snapshot": true,
+      "invent_missing_facts": false
+    }
+  },
+  "browser_interpretation": false
+}

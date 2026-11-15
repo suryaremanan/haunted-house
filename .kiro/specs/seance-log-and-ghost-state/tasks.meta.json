@@ -1,0 +1,450 @@
+{
+  "pbtResults": {
+    "2.5 Write the property test for identifier boundaries": {
+      "status": "passed",
+      "lastRunTimestamp": 1794744566723
+    },
+    "4.2 Write the property test for recursive redaction": {
+      "status": "passed",
+      "lastRunTimestamp": 1794744554281
+    },
+    "2.4 Write the property test for canonical schema validity": {
+      "status": "passed",
+      "lastRunTimestamp": 1794744559786
+    }
+  },
+  "executionHistory": {
+    "1.1 Add scrubbed S2 callback probes": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379413
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741409530
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794742175890
+      }
+    ],
+    "1.2 Encode spike outcomes and fail-closed fallbacks as fixtures": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379440
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794742818353
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794743202494
+      }
+    ],
+    "2.1 Implement the Python canonical event core": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379464
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741409583
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794742175917
+      }
+    ],
+    "2.2 Implement the TypeScript canonical parser and model": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379481
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741409956
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794742176179
+      }
+    ],
+    "2.3 Add scrubbed cross-language canonical vectors": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379500
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794742818407
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794743202753
+      }
+    ],
+    "2.4 Write the property test for canonical schema validity": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379523
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794742818597
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794743203038
+      }
+    ],
+    "2.5 Write the property test for identifier boundaries": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379548
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794742818641
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794743203317
+      }
+    ],
+    "3.1 Implement the pure Backend_Normalizer": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379565
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794743257555
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794744047085
+      }
+    ],
+    "3.2 Write the property test for deterministic nonterminal normalization": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379581
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794744655403
+      }
+    ],
+    "3.3 Write the property test for invalid envelope rejection": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379602
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794744655670
+      }
+    ],
+    "3.4 Write the property test for equivalent approval identity": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379625
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794744655726
+      }
+    ],
+    "3.5 Add verified-frame and terminal-gate examples": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379647
+      }
+    ],
+    "4.1 Implement recursive JSON redaction": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379668
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794742223325
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794742773657
+      }
+    ],
+    "4.2 Write the property test for recursive redaction": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379689
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794742818712
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794743203379
+      }
+    ],
+    "4.3 Implement persistence transformation and `SeanceLogStore`": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379706
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794744089823
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794744618461
+      }
+    ],
+    "4.4 Write the property test for writer ordering and integrity": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379723
+      }
+    ],
+    "4.5 Add writer filesystem and process-integration tests": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379744
+      }
+    ],
+    "5.1 Implement Spec 2 selection and reduction in Python and TypeScript": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379763
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794743257615
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794744047122
+      }
+    ],
+    "5.2 Write the property test for selection convergence": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379796
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794744655817
+      }
+    ],
+    "5.3 Write the model-based property test for all six states": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379813
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794744655949
+      }
+    ],
+    "5.4 Add cross-language fold parity and state examples": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379830
+      }
+    ],
+    "6.1 Implement canonical parser, integrity result, and read-after paging": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379847
+      }
+    ],
+    "6.2 Write the property test for serialization and integrity parsing": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379864
+      }
+    ],
+    "6.3 Add signed ingest and event-read routes": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379884
+      }
+    ],
+    "6.4 Add bounded session-history reconciliation": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379900
+      }
+    ],
+    "6.5 Add signed route and reconciliation integration tests": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379918
+      }
+    ],
+    "7.1 Implement the Live_Event_Bridge": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379937
+      }
+    ],
+    "7.2 Write the property test for session routing and redelivery": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379954
+      }
+    ],
+    "7.3 Add live bridge acknowledgment and reconnect tests": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379972
+      }
+    ],
+    "8.1 Replace raw replay frames with a canonical fixture and adapter": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379989
+      }
+    ],
+    "8.2 Write the property test for live/replay equivalence": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741380011
+      }
+    ],
+    "8.3 Add replay parser, timing, and transport-boundary tests": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741380046
+      }
+    ],
+    "9.1 Implement canonical live/replay ghost status": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741380064
+      }
+    ],
+    "9.2 Add accessibility and rendered-parity tests": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741380081
+      }
+    ],
+    "10.1 Add cross-spec ownership and structural tests": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741380098
+      }
+    ],
+    "10.2 Update least-privilege manifest contracts": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741380116
+      }
+    ],
+    "10.3 Run all checks and rebuild live/replay artifacts": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741380138
+      }
+    ],
+    "11. Checkpoint: verify canonical writer and fold contracts": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741380156
+      }
+    ],
+    "12. Final checkpoint: verify the complete Spec 2 feature": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741380174
+      }
+    ],
+    "1. Resolve Crew callback and history shape assumptions (MVP)": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794743202518
+      }
+    ],
+    "2. Implement the canonical event schema and identities (MVP)": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794743203337
+      }
+    ]
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "extraEvents": [],
+  "gatewayCalls": [
+    {
+      "coveredBy": [
+        "/api/chat",
+        "/api/chat/*"
+      ],
+      "path": "/api/chat/slots/<slot>/approve",
+      "use": "chat:answer-owned-approval"
+    },
+    {
+      "coveredBy": [
+        "/api/chat",
+        "/api/chat/*"
+      ],
+      "path": "/api/chat/slots",
+      "use": "chat:create-slot"
+    },
+    {
+      "coveredBy": [
+        "/api/chat",
+        "/api/chat/*"
+      ],
+      "path": "/api/chat",
+      "use": "chat:send-turn"
+    },
+    {
+      "coveredBy": [
+        "/api/chat",
+        "/api/chat/*"
+      ],
+      "path": "/api/chat/slots/<slot>",
+      "use": "chat:session-history"
+    },
+    {
+      "coveredBy": [
+        "/api/chat",
+        "/api/chat/*"
+      ],
+      "path": "/api/chat/mode",
+      "use": "chat:set-mode"
+    },
+    {
+      "coveredBy": [
+        "/api/chat",
+        "/api/chat/*"
+      ],
+      "path": "/api/chat/slots/<slot>/project",
+      "use": "chat:set-project"
+    },
+    {
+      "coveredBy": [
+        "/api/version"
+      ],
+      "path": "/api/version",
+      "use": "route:version"
+    },
+    {
+      "coveredBy": [
+        "/apps/haunted-house/api/*"
+      ],
+      "path": "/apps/haunted-house/api/<route>",
+      "use": "ui:own-backend"
+    }
+  ],
+  "inventory": {
+    "api": [
+      "/api/chat",
+      "/api/chat/*",
+      "/api/version",
+      "/apps/haunted-house/api/*"
+    ],
+    "events": [
+      "approval_resolved",
+      "chat_chunk",
+      "chat_done",
+      "chat_error",
+      "chat_message",
+      "chat_message_update",
+      "chat_segment",
+      "chat_status",
+      "shared_crew.decision",
+      "tool_call",
+      "tool_result"
+    ],
+    "lifecycle": "gateway",
+    "minKiroCrewVersion": "0.12.1",
+    "resources": "gateway",
+    "sessionApproval": true,
+    "storage": true
+  },
+  "missingEvents": [],
+  "mutuallyRedundantApiEntries": [
+    "/api/chat",
+    "/api/chat/*"
+  ],
+  "prohibitedReachable": [],
+  "question": "Does the completed MVP code call only the proposed API paths and subscribe only to the proposed event set?",
+  "result": "pass",
+  "schemaVersion": 1,
+  "sources": [
+    "app/backend/haunted_house/adapters/gateway_client.py",
+    "app/backend/haunted_house/core/crew_event_normalizer.py",
+    "app/backend/haunted_house/adapters/mansion_metadata.py",
+    "scripts/install-local.sh",
+    "app/app.json"
+  ],
+  "spike": "RS-S2",
+  "staticReplayConsumes": [],
+  "tokenExchange": {
+    "note": "Authenticated with the app secret header before an app token exists; not a permissions.api grant.",
+    "path": "/api/apps/haunted-house/token"
+  },
+  "uncoveredCalls": [],
+  "unusedApiEntries": []
+}

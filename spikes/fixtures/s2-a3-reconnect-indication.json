@@ -1,0 +1,29 @@
+{
+  "assumption_id": "S2-A3",
+  "schema_version": 1,
+  "outcome": "sdk_signal_unavailable",
+  "evidence": {
+    "sdk_callback": "not_exposed_by_useAppEvents",
+    "probe_indications": [
+      "mount",
+      "browser_online",
+      "visibility_return"
+    ]
+  },
+  "unavailable_fields": [
+    "sdk.reconnect_signal"
+  ],
+  "fallback_by_field": {
+    "sdk.reconnect_signal": {
+      "policy": "canonical_catch_up_triggers",
+      "triggers": [
+        "mount",
+        "visibility_return",
+        "detected_source_gap",
+        "bounded_poll_while_runs_active"
+      ],
+      "browser_online_is_reconnect_proof": false
+    }
+  },
+  "browser_interpretation": false
+}

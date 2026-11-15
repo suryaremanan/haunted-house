@@ -26,7 +26,7 @@
     },
     "10.2 Write property test: replay delivers each frame once, in order": {
       "status": "passed",
-      "lastRunTimestamp": 1794736332824
+      "lastRunTimestamp": 1794744578818
     },
     "5.2 Write property test: unsigned API requests never reach a handler": {
       "status": "passed",

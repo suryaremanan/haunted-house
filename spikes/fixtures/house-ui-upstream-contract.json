@@ -1,0 +1,160 @@
+{
+  "description": "HUI-S0 scrubbed contract: field names and type categories of synthetic values at the upstream seams the House UI composes. No path, credential, or recorded content.",
+  "seams": {
+    "mansion-lifecycle": {
+      "module": "core/mansion-api.ts",
+      "MansionDescriptor": {
+        "displayPath": "string",
+        "name": "string",
+        "projectSpec": "string",
+        "status": "string"
+      }
+    },
+    "seance-log-and-ghost-state": {
+      "module": "core/ghost-state.ts",
+      "GhostSnapshot": {
+        "ghost_id": "string",
+        "latest_event_id": "null",
+        "latest_sequence": "number",
+        "mansion_id": "string",
+        "open_tools": "array",
+        "pending_approvals": "array",
+        "reason": "null",
+        "run_id": "string",
+        "run_sequence": "number",
+        "state": "string"
+      }
+    },
+    "doors-and-guardrails": {
+      "modules": [
+        "core/workflow-projection.ts",
+        "core/house-view.ts",
+        "core/house-reducer.ts"
+      ],
+      "WorkflowProjection": [
+        "integrity",
+        "mansionId",
+        "pendingPermissions",
+        "phases",
+        "readOnly",
+        "riskyProposals",
+        "version",
+        "waitingCount"
+      ],
+      "PhaseView": [
+        "door",
+        "ghostIds",
+        "phase",
+        "status"
+      ],
+      "Authority": {
+        "block": "null",
+        "canDecide": "boolean",
+        "text": "null"
+      },
+      "NeedsYouItem": {
+        "ghostId": "string",
+        "id": "string",
+        "kind": "string",
+        "phase": "string",
+        "room": "string",
+        "text": "string"
+      }
+    },
+    "room-ghosts": {
+      "modules": [
+        "core/room-projection.ts",
+        "core/room-view.ts"
+      ],
+      "RoomProjection": [
+        "documents",
+        "gate",
+        "ghosts",
+        "integrity",
+        "outputNote",
+        "ownsImplementationStart",
+        "phases",
+        "projectionVersion",
+        "room",
+        "runs",
+        "taskBoard"
+      ],
+      "RoomGate": {
+        "allowed": "boolean",
+        "block": "null",
+        "needsRefresh": "boolean",
+        "text": "null"
+      },
+      "RunView": [
+        "attemptText",
+        "cancel",
+        "exhaustedText",
+        "ghostId",
+        "ghostName",
+        "phase",
+        "reasonText",
+        "retry",
+        "runId",
+        "sessionLink",
+        "state",
+        "stateText",
+        "summary",
+        "taskId",
+        "writeScope"
+      ]
+    },
+    "replay": {
+      "module": "core/replay-timeline.ts",
+      "ReplayProjection": [
+        "diagnostics",
+        "ghosts",
+        "integrity",
+        "transitions",
+        "validRecordCount",
+        "workflows"
+      ]
+    }
+  },
+  "houseProjection": {
+    "module": "core/house-projection.ts",
+    "HouseProjection": [
+      "mansionName",
+      "mode",
+      "needsYou",
+      "replay",
+      "rooms"
+    ],
+    "RoomPresentation": [
+      "diagnostic",
+      "door",
+      "doors",
+      "ghost",
+      "ghosts",
+      "integrity",
+      "locked",
+      "mutatingActionsEnabled",
+      "name",
+      "phase",
+      "readOnly",
+      "recoveryActions",
+      "roomId",
+      "waitingItems"
+    ],
+    "NeedsYouItem": {
+      "actionAvailable": "boolean",
+      "ghostId": "string",
+      "id": "string",
+      "kind": "string",
+      "label": "string",
+      "roomId": "string"
+    },
+    "roomOrder": [
+      "foyer",
+      "study",
+      "drafting-room",
+      "workshop",
+      "attic",
+      "seance-room"
+    ]
+  }
+}

@@ -1,0 +1,445 @@
+{
+  "format_version": 1,
+  "vectors": [
+    {
+      "name": "selection-and-six-state-fold",
+      "mansion_id": "demo-mansion",
+      "events": [
+        {
+          "name": "idle-message",
+          "ghost_id": "idle-ghost",
+          "run_id": "idle-run",
+          "run_sequence": 0,
+          "event_type": "message_recorded",
+          "sequence": 1,
+          "identity": "idle-message",
+          "payload": {"text": "No assignment yet."}
+        },
+        {
+          "name": "working-start",
+          "ghost_id": "working-ghost",
+          "run_id": "working-run",
+          "run_sequence": 1,
+          "event_type": "run_started",
+          "sequence": 2,
+          "identity": "working-start",
+          "payload": {"reason": "assigned"},
+          "caused_by": ["working-turn"],
+          "repeat": 2
+        },
+        {
+          "name": "working-progress-old",
+          "ghost_id": "working-ghost",
+          "run_id": "working-run",
+          "run_sequence": 1,
+          "event_type": "ghost_progressed",
+          "sequence": 3,
+          "identity": "working-progress",
+          "revision": 0,
+          "source_sequence": 3,
+          "payload": {"reason": "old", "detail": "verbose but stale"}
+        },
+        {
+          "name": "working-progress-new",
+          "ghost_id": "working-ghost",
+          "run_id": "working-run",
+          "run_sequence": 1,
+          "event_type": "ghost_progressed",
+          "sequence": 4,
+          "identity": "working-progress",
+          "revision": 1,
+          "source_sequence": 3,
+          "payload": {"reason": "new"}
+        },
+        {
+          "name": "working-detail-sparse",
+          "ghost_id": "working-ghost",
+          "run_id": "working-run",
+          "run_sequence": 1,
+          "event_type": "ghost_progressed",
+          "sequence": 5,
+          "identity": "working-detail",
+          "source_sequence": 5,
+          "payload": {"reason": "crafting"}
+        },
+        {
+          "name": "working-detail-rich",
+          "ghost_id": "working-ghost",
+          "run_id": "working-run",
+          "run_sequence": 1,
+          "event_type": "ghost_progressed",
+          "sequence": 6,
+          "identity": "working-detail",
+          "source_sequence": 5,
+          "payload": {"reason": "crafting", "detail": "blueprint"}
+        },
+        {
+          "name": "working-lex-a",
+          "ghost_id": "working-ghost",
+          "run_id": "working-run",
+          "run_sequence": 1,
+          "event_type": "message_updated",
+          "sequence": 7,
+          "identity": "working-lex",
+          "source_sequence": 7,
+          "payload": {"value": "a"}
+        },
+        {
+          "name": "working-lex-b",
+          "ghost_id": "working-ghost",
+          "run_id": "working-run",
+          "run_sequence": 1,
+          "event_type": "message_updated",
+          "sequence": 8,
+          "identity": "working-lex",
+          "source_sequence": 7,
+          "payload": {"value": "b"}
+        },
+        {
+          "name": "working-turn",
+          "ghost_id": "working-ghost",
+          "run_id": "working-run",
+          "run_sequence": 1,
+          "event_type": "crew_turn_ended",
+          "sequence": 9,
+          "identity": "working-turn",
+          "payload": {"continuing": false, "needs_input": false},
+          "caused_by": ["e1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"]
+        },
+        {
+          "name": "working-error",
+          "ghost_id": "working-ghost",
+          "run_id": "working-run",
+          "run_sequence": 1,
+          "event_type": "crew_error_observed",
+          "sequence": 10,
+          "identity": "working-error",
+          "payload": {"category": "transport"}
+        },
+        {
+          "name": "waiting-start",
+          "ghost_id": "waiting-ghost",
+          "run_id": "waiting-run",
+          "run_sequence": 2,
+          "event_type": "run_started",
+          "sequence": 11,
+          "identity": "waiting-start",
+          "payload": {"reason": "assigned"}
+        },
+        {
+          "name": "waiting-request-zeta",
+          "ghost_id": "waiting-ghost",
+          "run_id": "waiting-run",
+          "run_sequence": 2,
+          "event_type": "approval_requested",
+          "sequence": 12,
+          "identity": "approval-zeta-request",
+          "payload": {"mid": "zeta", "reason": "owner input"}
+        },
+        {
+          "name": "waiting-request-alpha",
+          "ghost_id": "waiting-ghost",
+          "run_id": "waiting-run",
+          "run_sequence": 2,
+          "event_type": "approval_requested",
+          "sequence": 13,
+          "identity": "approval-alpha-request",
+          "payload": {"mid": "alpha"}
+        },
+        {
+          "name": "waiting-decide-alpha",
+          "ghost_id": "waiting-ghost",
+          "run_id": "waiting-run",
+          "run_sequence": 2,
+          "event_type": "approval_decided",
+          "sequence": 14,
+          "identity": "approval-alpha-decision",
+          "payload": {"mid": "alpha", "outcome": "approved"}
+        },
+        {
+          "name": "waiting-tool-a-start",
+          "ghost_id": "waiting-ghost",
+          "run_id": "waiting-run",
+          "run_sequence": 2,
+          "event_type": "tool_started",
+          "sequence": 15,
+          "identity": "tool-a-start",
+          "payload": {"tool_call_id": "tool-a"}
+        },
+        {
+          "name": "waiting-tool-b-start",
+          "ghost_id": "waiting-ghost",
+          "run_id": "waiting-run",
+          "run_sequence": 2,
+          "event_type": "tool_started",
+          "sequence": 16,
+          "identity": "tool-b-start",
+          "payload": {"tool_call_id": "tool-b"}
+        },
+        {
+          "name": "waiting-tool-b-partial",
+          "ghost_id": "waiting-ghost",
+          "run_id": "waiting-run",
+          "run_sequence": 2,
+          "event_type": "tool_finished",
+          "sequence": 17,
+          "identity": "tool-b-partial",
+          "payload": {"tool_call_id": "tool-b", "final": false}
+        },
+        {
+          "name": "waiting-tool-b-final",
+          "ghost_id": "waiting-ghost",
+          "run_id": "waiting-run",
+          "run_sequence": 2,
+          "event_type": "tool_finished",
+          "sequence": 18,
+          "identity": "tool-b-final",
+          "payload": {"tool_call_id": "tool-b", "final": true}
+        },
+        {
+          "name": "blocked-start",
+          "ghost_id": "blocked-ghost",
+          "run_id": "blocked-run",
+          "run_sequence": 1,
+          "event_type": "run_started",
+          "sequence": 19,
+          "identity": "blocked-start",
+          "payload": {}
+        },
+        {
+          "name": "blocked-completed",
+          "ghost_id": "blocked-ghost",
+          "run_id": "blocked-run",
+          "run_sequence": 1,
+          "event_type": "run_completed",
+          "sequence": 20,
+          "identity": "blocked-completed",
+          "payload": {"reason": "candidate complete"}
+        },
+        {
+          "name": "blocked-blocked",
+          "ghost_id": "blocked-ghost",
+          "run_id": "blocked-run",
+          "run_sequence": 1,
+          "event_type": "run_blocked",
+          "sequence": 21,
+          "identity": "blocked-blocked",
+          "payload": {"reason": "stalled"}
+        },
+        {
+          "name": "failed-start",
+          "ghost_id": "failed-ghost",
+          "run_id": "failed-run",
+          "run_sequence": 1,
+          "event_type": "run_started",
+          "sequence": 22,
+          "identity": "failed-start",
+          "payload": {}
+        },
+        {
+          "name": "failed-completed",
+          "ghost_id": "failed-ghost",
+          "run_id": "failed-run",
+          "run_sequence": 1,
+          "event_type": "run_completed",
+          "sequence": 23,
+          "identity": "failed-completed",
+          "payload": {}
+        },
+        {
+          "name": "failed-blocked",
+          "ghost_id": "failed-ghost",
+          "run_id": "failed-run",
+          "run_sequence": 1,
+          "event_type": "run_blocked",
+          "sequence": 24,
+          "identity": "failed-blocked",
+          "payload": {"reason": "stalled"}
+        },
+        {
+          "name": "failed-failed",
+          "ghost_id": "failed-ghost",
+          "run_id": "failed-run",
+          "run_sequence": 1,
+          "event_type": "run_failed",
+          "sequence": 25,
+          "identity": "failed-failed",
+          "payload": {"reason": "validation_failed"}
+        },
+        {
+          "name": "done-start",
+          "ghost_id": "done-ghost",
+          "run_id": "done-run",
+          "run_sequence": 1,
+          "event_type": "run_started",
+          "sequence": 26,
+          "identity": "done-start",
+          "payload": {}
+        },
+        {
+          "name": "done-completed",
+          "ghost_id": "done-ghost",
+          "run_id": "done-run",
+          "run_sequence": 1,
+          "event_type": "run_completed",
+          "sequence": 27,
+          "identity": "done-completed",
+          "payload": {"reason": "ready"}
+        },
+        {
+          "name": "higher-run-zero-start",
+          "ghost_id": "higher-ghost",
+          "run_id": "run-zero",
+          "run_sequence": 0,
+          "event_type": "run_started",
+          "sequence": 28,
+          "identity": "higher-run-zero-start",
+          "payload": {}
+        },
+        {
+          "name": "higher-run-zero-failed",
+          "ghost_id": "higher-ghost",
+          "run_id": "run-zero",
+          "run_sequence": 0,
+          "event_type": "run_failed",
+          "sequence": 29,
+          "identity": "higher-run-zero-failed",
+          "payload": {"reason": "old failure"}
+        },
+        {
+          "name": "higher-run-one-start",
+          "ghost_id": "higher-ghost",
+          "run_id": "run-one",
+          "run_sequence": 1,
+          "event_type": "run_started",
+          "sequence": 30,
+          "identity": "higher-run-one-start",
+          "payload": {"reason": "assigned new"}
+        },
+        {
+          "name": "higher-delayed-lower-block",
+          "ghost_id": "higher-ghost",
+          "run_id": "run-zero",
+          "run_sequence": 0,
+          "event_type": "run_blocked",
+          "sequence": 31,
+          "identity": "higher-delayed-lower-block",
+          "payload": {"reason": "stale block"}
+        }
+      ],
+      "expected": {
+        "unique_record_count": 31,
+        "selected_event_count": 28,
+        "revision_winner": "working-progress-new",
+        "completeness_winner": "working-detail-rich",
+        "lexicographic_candidates": ["working-lex-a", "working-lex-b"],
+        "diagnostic_counts": {
+          "conflicting_variant": 3,
+          "missing_predecessor": 2
+        },
+        "snapshots": [
+          {
+            "ghost_id": "blocked-ghost",
+            "run_id": "blocked-run",
+            "run_sequence": 1,
+            "state": "blocked",
+            "pending_approvals": [],
+            "open_tools": [],
+            "latest_event": "blocked-blocked",
+            "latest_sequence": 21,
+            "reason": "stalled"
+          },
+          {
+            "ghost_id": "done-ghost",
+            "run_id": "done-run",
+            "run_sequence": 1,
+            "state": "done",
+            "pending_approvals": [],
+            "open_tools": [],
+            "latest_event": "done-completed",
+            "latest_sequence": 27,
+            "reason": "ready"
+          },
+          {
+            "ghost_id": "failed-ghost",
+            "run_id": "failed-run",
+            "run_sequence": 1,
+            "state": "failed",
+            "pending_approvals": [],
+            "open_tools": [],
+            "latest_event": "failed-failed",
+            "latest_sequence": 25,
+            "reason": "validation_failed"
+          },
+          {
+            "ghost_id": "higher-ghost",
+            "run_id": "run-one",
+            "run_sequence": 1,
+            "state": "working",
+            "pending_approvals": [],
+            "open_tools": [],
+            "latest_event": "higher-run-one-start",
+            "latest_sequence": 30,
+            "reason": "assigned new"
+          },
+          {
+            "ghost_id": "idle-ghost",
+            "run_id": null,
+            "run_sequence": null,
+            "state": "idle",
+            "pending_approvals": [],
+            "open_tools": [],
+            "latest_event": null,
+            "latest_sequence": 0,
+            "reason": null
+          },
+          {
+            "ghost_id": "waiting-ghost",
+            "run_id": "waiting-run",
+            "run_sequence": 2,
+            "state": "waiting",
+            "pending_approvals": ["zeta"],
+            "open_tools": ["tool-a"],
+            "latest_event": "waiting-tool-b-final",
+            "latest_sequence": 18,
+            "reason": "owner input"
+          },
+          {
+            "ghost_id": "working-ghost",
+            "run_id": "working-run",
+            "run_sequence": 1,
+            "state": "working",
+            "pending_approvals": [],
+            "open_tools": [],
+            "latest_event": "working-error",
+            "latest_sequence": 10,
+            "reason": "crafting"
+          }
+        ],
+        "state_changes": [
+          ["working-start", "idle", "working"],
+          ["waiting-start", "idle", "working"],
+          ["waiting-request-zeta", "working", "waiting"],
+          ["blocked-start", "idle", "working"],
+          ["blocked-completed", "working", "done"],
+          ["blocked-blocked", "done", "blocked"],
+          ["failed-start", "idle", "working"],
+          ["failed-completed", "working", "done"],
+          ["failed-blocked", "done", "blocked"],
+          ["failed-failed", "blocked", "failed"],
+          ["done-start", "idle", "working"],
+          ["done-completed", "working", "done"],
+          ["higher-run-zero-start", "idle", "working"],
+          ["higher-run-zero-failed", "working", "failed"],
+          ["higher-run-one-start", "failed", "working"]
+        ],
+        "parity": {
+          "projection_sha256": "f43fbfcac48d0c8df1ea1b93be187418b5d1313248b67ca51c6823af3751bb96",
+          "selected_count": 28,
+          "transition_count": 26,
+          "document_keys": ["diagnostics", "selected", "snapshots", "transitions"]
+        }
+      }
+    }
+  ]
+}

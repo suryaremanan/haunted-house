@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "mansions": [
+    {
+      "name": "demo-mansion",
+      "projectSpec": "demo-mansion",
+      "displayPath": "~/workspace/haunted-house/mansions/demo-mansion",
+      "status": "ready"
+    },
+    {
+      "name": "lighthouse-keeper",
+      "projectSpec": "lighthouse-keeper",
+      "displayPath": "~/workspace/haunted-house/mansions/lighthouse-keeper",
+      "status": "ready"
+    },
+    {
+      "name": "lost-greenhouse",
+      "projectSpec": "lost-greenhouse",
+      "displayPath": "~/workspace/haunted-house/mansions/lost-greenhouse",
+      "status": "missing"
+    },
+    {
+      "name": "weather-station",
+      "projectSpec": "weather-station",
+      "displayPath": "~/workspace/haunted-house/mansions/weather-station",
+      "status": "ready"
+    }
+  ]
+}

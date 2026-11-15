@@ -1,0 +1,47 @@
+{
+  "description": "The Task_Plan model that task-plan-valid.md must parse to, and the acceptance-criterion ids it covers exactly.",
+  "requirement_ids": ["1.1", "1.2", "1.3", "2.1", "2.2", "2.3", "3.1", "3.2"],
+  "leaves": [
+    {
+      "task_id": "1.1",
+      "title": "Create the entry model",
+      "optional": false,
+      "complete": true,
+      "requirements": ["1.1", "1.2"],
+      "writes": ["src/guestbook/model.py"]
+    },
+    {
+      "task_id": "1.2",
+      "title": "Implement the entry store",
+      "optional": false,
+      "complete": false,
+      "requirements": ["1.3", "2.1", "2.2", "2.3"],
+      "writes": ["src/guestbook/store.py"]
+    },
+    {
+      "task_id": "1.3",
+      "title": "Write the property test for store ordering",
+      "optional": true,
+      "complete": false,
+      "requirements": ["1.3"],
+      "writes": ["tests/test_store_order.py"]
+    },
+    {
+      "task_id": "2.1",
+      "title": "Implement the page renderer",
+      "optional": false,
+      "complete": false,
+      "requirements": ["3.1", "3.2"],
+      "writes": ["src/guestbook/render.py", "src/guestbook/templates/*.html"]
+    },
+    {
+      "task_id": "2.2",
+      "title": "Write renderer unit tests",
+      "optional": true,
+      "complete": false,
+      "requirements": ["3.1", "3.2"],
+      "writes": ["tests/render/**"]
+    }
+  ],
+  "waves": [["1.2", "2.1"], ["1.3", "2.2"]]
+}

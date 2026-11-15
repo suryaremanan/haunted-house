@@ -1,63 +1,20 @@
 // Feature: crew-app-foundation, Property 11: Replay delivers each frame once, in order, to the right subscribers
 //
-// For any list of frames with non-decreasing timestamps and any set of
-// subscribed event types, the replay stand-in calls each subscriber exactly
-// once per frame of its type, in file order, with that frame's `data`, and
-// never for a frame of another type.
+// Migrated to the canonical replay contract by seance-log-and-ghost-state task
+// 8.1, which replaced recorded `{t, frame}` gateway frames with the canonical
+// App_Event log. The property keeps its intent under the new contract:
 //
-// **Validates: Requirements 7.2, 7.3**
+// For any canonical Event_Log, any order the records are handed over in, any
+// positive speed and any advancing clock, the replay timeline makes each record
+// visible exactly once, in Canonical_Order (Sequence), never before its
+// presentation time, and all of them by the end.
 //
-// Time comes from a fake clock injected as the player's `schedule`. It runs
-// timers the way setTimeout does (earliest due first, ties in the order they
-// were set), so the checks hold whether the player keeps one timer pending or
-// many.
+// **Validates: crew-app-foundation Requirements 7.2, 7.3; seance-log-and-ghost-state Requirements 8.3, 8.6**
 import fc from 'fast-check'
 import { describe, expect, it } from 'vitest'
-import { createPlayer, type ReplayFrame, type Schedule } from './replay-player'
-
-/** Event types that frames are drawn from. Small, so types repeat often. */
-const FRAME_TYPES = ['approval', 'subagent_chunk', 'notification', 'session_update', '__proto__'] as const
-/** Types a subscriber may listen on that no frame ever has. */
-const UNPLAYED_TYPES = ['never_recorded', 'constructor'] as const
-const ANY_TYPE = [...FRAME_TYPES, ...UNPLAYED_TYPES]
-
-/** What every generated frame carries: its file position, plus arbitrary JSON. */
-interface MarkedData {
-  readonly index: number
-  readonly payload: unknown
-}
-
-/** Seconds between a frame and the one before it: often zero, sometimes a long gap. */
-const deltaArb = fc.oneof(
-  { weight: 3, arbitrary: fc.constant(0) },
-  { weight: 4, arbitrary: fc.double({ min: 0, max: 5, noNaN: true }) },
-  { weight: 1, arbitrary: fc.double({ min: 3_600, max: 1_000_000, noNaN: true }) },
-)
-
-/** 0 to 60 frames whose times are a start time plus cumulative non-negative deltas. */
-const framesArb: fc.Arbitrary<ReplayFrame[]> = fc
-  .record({
-    start: fc.double({ min: 0, max: 2e9, noNaN: true }),
-    steps: fc.array(
-      fc.record({
-        delta: deltaArb,
-        type: fc.constantFrom(...FRAME_TYPES),
-        payload: fc.jsonValue({ maxDepth: 2 }),
-      }),
-      { maxLength: 60 },
-    ),
-  })
-  .map(({ start, steps }) => {
-    let t = start
-    return steps.map(({ delta, type, payload }, index): ReplayFrame => {
-      t += delta
-      const data: MarkedData = { index, payload }
-      return { t, frame: { type, data } }
-    })
-  })
-
-/** A multiset of subscribed types: duplicates and never-played types included. */
-const subscriptionsArb = fc.array(fc.constantFrom(...ANY_TYPE), { maxLength: 12 })
+import { permutationArb, writerLogArb } from '../test/seance-arbitraries'
+import { createTimeline, presentationTimeMs } from './replay-player'
+import type { AppEvent } from './seance-event'
 
 /** Any positive finite speed, weighted towards realistic ones. */
 const speedArb = fc.oneof(
@@ -66,123 +23,103 @@ const speedArb = fc.oneof(
   fc.double({ min: Number.MIN_VALUE, max: Number.MAX_VALUE, noNaN: true }),
 )
 
-/** A fake setTimeout: runs the earliest-due timer first, ties in the order they were set. */
-function fakeClock() {
-  let now = 0
-  let order = 0
-  const timers: { due: number; order: number; fn: () => void }[] = []
-  const schedule: Schedule = (fn, delayMs) => {
-    // Like setTimeout, a negative or NaN delay means "as soon as possible".
-    timers.push({ due: now + (delayMs > 0 ? delayMs : 0), order: order++, fn })
-  }
-  /** Runs timers until none remain. `limit` stops a player that never stops scheduling. */
-  const runAll = (limit: number) => {
-    for (let ran = 0; timers.length > 0; ran += 1) {
-      if (ran >= limit) throw new Error(`Timers still pending after ${limit} ran`)
-      // `||` also breaks ties between two timers due at Infinity, whose difference is NaN.
-      timers.sort((a, b) => a.due - b.due || a.order - b.order)
-      const timer = timers.shift()!
-      now = timer.due
-      timer.fn()
-    }
-  }
-  return { schedule, runAll, pending: () => timers.length }
-}
+/** Gaps between records: often none, sometimes a long silence. */
+const gapArb = fc.oneof(
+  { weight: 3, arbitrary: fc.constant(0) },
+  { weight: 4, arbitrary: fc.integer({ min: 0, max: 5_000 }) },
+  { weight: 1, arbitrary: fc.integer({ min: 3_600_000, max: 1_000_000_000 }) },
+  // A source clock that runs backwards between two records.
+  { weight: 1, arbitrary: fc.integer({ min: -5_000, max: -1 }) },
+)
 
-const indexOf = (data: unknown) => (data as MarkedData).index
+/** A writer log whose records carry generated occurrence or persistence times. */
+const timedLogArb: fc.Arbitrary<AppEvent[]> = writerLogArb({ maxLength: 40 }).chain((events) =>
+  fc
+    .array(fc.tuple(gapArb, fc.boolean()), { minLength: events.length, maxLength: events.length })
+    .map((steps) => {
+      let time = 1_000_000
+      return events.map((event, index): AppEvent => {
+        const [gap, timed] = steps[index]
+        time = Math.max(time + gap, 0)
+        // Occurrence time is not part of what this property checks about identity,
+        // so the record keeps its identifiers and only its presentation time moves.
+        return timed
+          ? { ...event, occurred_at_ms: time, persisted_at_ms: time + 4 }
+          : { ...event, occurred_at_ms: null, persisted_at_ms: time }
+      })
+    }),
+)
 
-/** The data of every frame of `type`, in file order. */
-const dataOfType = (frames: readonly ReplayFrame[], type: string) =>
-  frames.filter((f) => f.frame.type === type).map((f) => f.frame.data)
+const scenarioArb = timedLogArb.chain((events) =>
+  fc.record({
+    events: fc.constant(events),
+    delivered: permutationArb(events),
+    speed: speedArb,
+    maxGapMs: fc.option(fc.integer({ min: 0, max: 10_000 }), { nil: undefined }),
+    // Clock readings: steps forward of zero, small, or huge size.
+    ticks: fc.array(
+      fc.oneof(fc.constant(0), fc.double({ min: 0, max: 10_000, noNaN: true }), fc.constant(1e12)),
+      { maxLength: 60 },
+    ),
+  }),
+)
 
-/** Checks one subscription got exactly `expected`, by identity and in order, and nothing of another type. */
-function expectStream(frames: readonly ReplayFrame[], type: string, got: readonly unknown[], expected: readonly unknown[]) {
-  for (const data of got) expect(frames[indexOf(data)].frame.type).toBe(type)
-  expect(got.map(indexOf)).toEqual(expected.map(indexOf))
-  expect(got).toHaveLength(expected.length)
-  got.forEach((data, i) => {
-    expect(data).toBe(expected[i])
-    expect(data).toEqual(expected[i])
-  })
-}
-
-describe('Property 11: replay delivers each frame once, in order, to the right subscribers', () => {
-  it('calls each subscription once per frame of its type, in file order, with that frame\'s data', () => {
+describe('Property 11: replay presents each canonical record once, in Sequence order', () => {
+  it('reveals a growing prefix of Canonical_Order and every record by the end', () => {
     fc.assert(
-      fc.property(framesArb, subscriptionsArb, speedArb, (frames, subscriptions, speed) => {
-        const clock = fakeClock()
-        const errors: unknown[] = []
-        const player = createPlayer({ speed, schedule: clock.schedule, onError: (err) => errors.push(err) })
-        /** Every call, in the order calls happened, across all subscriptions. */
-        const calls: { subscription: number; data: unknown }[] = []
-        const received = subscriptions.map((type, subscription) => {
-          const got: unknown[] = []
-          player.subscribe(type, (data) => {
-            got.push(data)
-            calls.push({ subscription, data })
-          })
-          return got
-        })
+      fc.property(scenarioArb, ({ events, delivered, speed, maxGapMs, ticks }) => {
+        const timeline = createTimeline(delivered, { speed, maxGapMs })
 
-        player.play(frames)
-        clock.runAll(10 * frames.length + 10)
+        // Canonical_Order, not arrival order: the writer log is already in Sequence order.
+        expect(timeline.events).toEqual(events)
+        expect(timeline.delays).toHaveLength(events.length)
+        if (events.length > 0) expect(timeline.delays[0]).toBe(0)
+        for (let index = 1; index < events.length; index += 1) {
+          const step = timeline.delays[index] - timeline.delays[index - 1]
+          // Never earlier than the predecessor; infinite waits (an extreme speed) are allowed.
+          expect(step >= 0 || Number.isNaN(step)).toBe(true)
+          expect(Number.isNaN(timeline.delays[index])).toBe(false)
+          if (maxGapMs !== undefined) {
+            // Delays are running sums, so a step may exceed the cap by one rounding error.
+            const rounding = Math.abs(timeline.delays[index]) * Number.EPSILON * 4
+            expect(step <= maxGapMs + rounding || Number.isNaN(step)).toBe(true)
+          }
+          // Records that share a presentation instant appear together.
+          if (presentationTimeMs(events[index]) <= presentationTimeMs(events[index - 1])) {
+            expect(timeline.delays[index]).toBe(timeline.delays[index - 1])
+          }
+        }
 
-        expect(clock.pending()).toBe(0)
-        expect(errors).toEqual([])
-        subscriptions.forEach((type, s) => expectStream(frames, type, received[s], dataOfType(frames, type)))
-        const frameIndices = calls.map((call) => indexOf(call.data))
-        expect(frameIndices).toEqual([...frameIndices].sort((a, b) => a - b))
-        const expectedTotal = subscriptions.reduce((sum, type) => sum + dataOfType(frames, type).length, 0)
-        expect(calls).toHaveLength(expectedTotal)
-      }),
-      { numRuns: 200 },
-    )
-  })
+        // Advance a clock. What is visible only ever grows, one prefix at a time,
+        // so each record is presented exactly once and in order.
+        let elapsed = 0
+        let visible = timeline.visibleCount(elapsed)
+        const presented: AppEvent[] = timeline.events.slice(0, visible)
+        for (const tick of ticks) {
+          elapsed += tick
+          const now = timeline.visibleCount(elapsed)
+          expect(now).toBeGreaterThanOrEqual(visible)
+          presented.push(...timeline.events.slice(visible, now))
+          visible = now
 
-  // Companion check, asked for alongside Property 11: unsubscribing ends one
-  // subscription's stream after its k-th frame and leaves the others whole.
-  it('gives a subscription that unsubscribes after its k-th call exactly min(k, n) frames', () => {
-    const specArb = fc.record({
-      type: fc.constantFrom(...ANY_TYPE),
-      // Small k often lands below a type's frame count, larger k often above it.
-      quitAfter: fc.option(fc.oneof(fc.integer({ min: 1, max: 5 }), fc.integer({ min: 1, max: 70 })), {
-        nil: undefined,
-      }),
-    })
-    const specsArb = fc
-      .array(specArb, { minLength: 1, maxLength: 12 })
-      .filter((specs) => specs.some((spec) => spec.quitAfter !== undefined))
+          // Nothing is visible before its time, and everything due is visible.
+          for (let index = 0; index < events.length; index += 1) {
+            expect(index < visible).toBe(timeline.delays[index] <= elapsed)
+          }
+          const next = timeline.nextInMs(elapsed)
+          if (visible === events.length) expect(next).toBeNull()
+          else {
+            expect(next).toBeGreaterThan(0)
+            expect(next).toBe(timeline.delays[visible] - elapsed)
+          }
+        }
+        expect(presented).toEqual(events.slice(0, visible))
+        expect(new Set(presented.map((event) => event.record_id)).size).toBe(presented.length)
 
-    fc.assert(
-      fc.property(framesArb, specsArb, speedArb, (frames, specs, speed) => {
-        const clock = fakeClock()
-        const errors: unknown[] = []
-        const player = createPlayer({ speed, schedule: clock.schedule, onError: (err) => errors.push(err) })
-        let total = 0
-        const received = specs.map(({ type, quitAfter }) => {
-          const got: unknown[] = []
-          let unsubscribe = () => {}
-          unsubscribe = player.subscribe(type, (data) => {
-            got.push(data)
-            total += 1
-            if (got.length === quitAfter) unsubscribe()
-          })
-          return got
-        })
-
-        player.play(frames)
-        clock.runAll(10 * frames.length + 10)
-
-        expect(clock.pending()).toBe(0)
-        expect(errors).toEqual([])
-        let expectedTotal = 0
-        specs.forEach(({ type, quitAfter }, s) => {
-          const all = dataOfType(frames, type)
-          const expected = quitAfter === undefined ? all : all.slice(0, Math.min(quitAfter, all.length))
-          expectStream(frames, type, received[s], expected)
-          expectedTotal += expected.length
-        })
-        expect(total).toBe(expectedTotal)
+        // At the last presentation time everything has been presented.
+        const end = timeline.delays.at(-1) ?? 0
+        expect(timeline.visibleCount(end)).toBe(events.length)
+        expect(timeline.nextInMs(end)).toBeNull()
       }),
       { numRuns: 200 },
     )

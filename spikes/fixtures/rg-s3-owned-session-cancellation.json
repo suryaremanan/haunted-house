@@ -1,0 +1,232 @@
+{
+  "checks": {
+    "confirmedStop": {
+      "bodylessPostRespondsOkOnly": true,
+      "cancelAddressesSlotsOwnSession": true,
+      "completedToolRowsUnchanged": true,
+      "queuedMessagesKept": true,
+      "stopCardFramesAreSystemChatMessages": true,
+      "stopCardIsOneHistoryRow": true,
+      "stopCardKeepsOneIdentity": true,
+      "stopCardOpensAsStopping": true,
+      "stopCardSettlesAsStopped": true,
+      "stopPostureReleased": true
+    },
+    "otherOutcomes": {
+      "chatDoneCarriesNoStopMarker": true,
+      "compactionDeclinesStopAndSaysSo": true,
+      "defaultSoftStopBudgetIsTenSeconds": true,
+      "forceQueryOnFirstPostStaysCooperative": true,
+      "forcedStopKeepsCompletedToolRows": true,
+      "idleSlotAnswersNotRunningWithoutCard": true,
+      "lateAckCannotRelabelForcedStop": true,
+      "secondPostDiscardsQueuedMessages": true,
+      "secondPostWhilePendingForcesHardKill": true,
+      "turnAlreadyEndedAnswersNoActiveTurn": true,
+      "turnAlreadyEndedCardStillReadsStopped": true,
+      "unackedCancelSettlesAsStopFailedReset": true
+    },
+    "ownership": {
+      "callerWithoutAppClaimIsNotGatedHere": true,
+      "missingSlotIsSameNotFound": true,
+      "otherAppsSlotIsNotFound": true,
+      "ownedSlotOnForeignSessionIsNotFound": true,
+      "ownerAppReachesItsOwnSlot": true,
+      "ownersOwnChatIsNotFound": true,
+      "refusedStopChangesNothing": true
+    },
+    "route": {
+      "interruptRouteIsSeparate": true,
+      "noOtherTurnCancelRoute": true,
+      "stopRouteHasNoOtherMethod": true,
+      "stopRoutePolicyIsOwnerApp": true,
+      "stopRouteRegisteredAsPost": true
+    },
+    "scope": {
+      "chatPrefixGrantMatchesStopPath": true,
+      "chatWildcardGrantMatchesStopPath": true,
+      "installedAppWithChatGrantsAllowed": true,
+      "installedAppWithoutChatGrantRefused": true,
+      "unknownAppRefused": true,
+      "unrelatedGrantDoesNotMatch": true
+    }
+  },
+  "contract": {
+    "authorization": "The app that owns the slot, while the slot still runs on its own dashboard:<slot> session. Every other case, a missing slot included, is the same 404.",
+    "completedToolEvents": "The stop appends one system row and edits only that row. Rows already in the slot window, completed tool_call and tool_result rows included, are left byte-identical and queued messages stay queued on a cooperative stop.",
+    "confirmationEvent": {
+      "ambiguity": "When the turn had already ended the card still settles as stopped; only the HTTP reply (info: no active turn) tells the two apart. Require both the reply without info and the settled card.",
+      "confirmed": [
+        {
+          "meaning": "agent acknowledged the cancel",
+          "meta.outcome": "soft",
+          "meta.state": "stopped"
+        },
+        {
+          "meaning": "second stop; session reset",
+          "meta.outcome": "hard",
+          "meta.state": "force_stopped"
+        },
+        {
+          "meaning": "no ack in budget; session reset",
+          "meta.outcome": "hard",
+          "meta.state": "stop_failed_reset"
+        }
+      ],
+      "frame": "chat_message",
+      "frameKeys": [
+        "cls",
+        "content",
+        "meta",
+        "role",
+        "slot",
+        "ts"
+      ],
+      "identity": "meta.id (stop-<hex>): the same id on the opening and the settling frame, and on the one history row. The HTTP reply does not return it.",
+      "match": {
+        "meta.kind": "stop_event",
+        "role": "system",
+        "slot": "<owned slot>"
+      },
+      "metaKeys": [
+        "id",
+        "kind",
+        "mid",
+        "outcome",
+        "state",
+        "ts_end",
+        "ts_start"
+      ],
+      "notAConfirmation": "chat_done has slot, turn, turn_gen, continuing and needs_input only: it ends every turn alike and never says a turn was stopped.",
+      "notConfirmed": [
+        {
+          "meta.outcome": "compacting",
+          "meta.state": "stop_declined_compacting"
+        }
+      ],
+      "pending": {
+        "meta.outcome": null,
+        "meta.state": "stopping"
+      }
+    },
+    "extraApiGrantNeeded": false,
+    "method": "POST",
+    "neverSend": [
+      "force=true",
+      "a second POST while the first is unanswered"
+    ],
+    "refusal": {
+      "bodyKeys": [
+        "code",
+        "error"
+      ],
+      "code": "slot_not_found",
+      "status": 404
+    },
+    "requestBodyKeys": [],
+    "requestQueryKeys": [],
+    "requiredApiGrants": [
+      "/api/chat",
+      "/api/chat/*"
+    ],
+    "routeTemplate": "/api/chat/slots/{slot}/stop",
+    "source": {
+      "frames": "dashboard/state_parts/transcript_rows.py chat_message_note, chat_message_frame; dashboard/chat_utils_completion.py chat_done_payload",
+      "handler": "dashboard/chat_api/turn_stop.py api_chat_slot_stop, stop_slot_turn",
+      "ownership": "dashboard/slot_ownership.py slot_ownership_middleware, slot_route_denial, deny_app_slot_session_access; dashboard/chat_api/app_admission.py _app_cancel_denied",
+      "route": "dashboard/routes/chat.py register",
+      "scope": "dashboard/token_auth_app_scope.py _api_pattern_matches, app_token_path_allowed",
+      "sessionCancel": "session_lifecycle_parts/turn_stop.py stop_turn; acp/session_provider.py cancel",
+      "stopCard": "dashboard/chat_api/turn_stop.py _open_stop_event_card, _resolve_stop_event, _make_stop_resolver"
+    },
+    "successResponse": {
+      "clientTimeoutMustExceedSeconds": 10,
+      "keys": [
+        "ok"
+      ],
+      "nothingWasStopped": {
+        "info": [
+          "not running",
+          "no active turn",
+          "stop already in progress",
+          "compacting"
+        ],
+        "keys": [
+          "ok",
+          "info",
+          "already_stopping",
+          "compacting"
+        ]
+      },
+      "status": 200,
+      "turnWasStopped": "ok is true and there is no info key. The reply is sent only after the cancel settled, by acknowledgement or by Crew resetting the session."
+    }
+  },
+  "crewVersion": "0.12.2",
+  "decision": {
+    "cancelControl": "disabled_contract_unavailable",
+    "cancellationService": "implement_behind_default_off_flag",
+    "flagFlipsOnlyAfter": "the owner's live step reproduces the request, the settled stop_event frame and the preserved tool rows",
+    "liveConfirmationClaimed": false,
+    "summary": "The stop request, its owner-app scope, its replies and the stop_event confirmation frame are proven against Crew's packaged handlers, but not against a live session. The design's fail-closed fallback applies: Cancel stays disabled with contract_unavailable until the owner runs the live step.",
+    "whenUnconfirmedAfter30Seconds": "cancel_unconfirmed_and_retain_claim"
+  },
+  "evidence": {
+    "inferred": [
+      "The token middleware publishes the app claim the checkpoint reads (the probe sets it directly). S6 verified live that the same app token and grants reach /api/chat/slots/{slot}/project, a sibling route under the same owner-app policy.",
+      "An app-token socket on /api/ws receives the stop card frame with its meta: chat_message is a slot-scoped event (dashboard/ws_event_scope.py), and S6 received chat_* frames live.",
+      "After an acknowledged cancel the turn runner appends a done row, pushes a slots frame with running false and sends chat_done (dashboard/chat_turn/queue_cycle.py); partial reply text and completed tool rows stay, as the product documentation for Stop states.",
+      "An unacknowledged cancel makes Crew reset the session and start a fresh agent process (session_lifecycle_parts/turn_stop.py); the transcript rows stay, the agent's context does not.",
+      "A pending tool approval on the stopped turn is rejected by the stop (turn_stop.py _reject_pending_approvals), so an approval card never outlives it."
+    ],
+    "unverified": [
+      {
+        "claim": "A live gateway admits the app token on POST /api/chat/slots/{slot}/stop for a session the app created and answers {ok: true}.",
+        "manual_step": "Owner opt-in, on a throwaway Mansion with the installed and trusted Haunted House app: (1) from the app backend create one disposable session the usual way (POST /api/chat/slots with a fresh name and a read-only Ghost profile, then .../project, then /api/chat/mode normal) and open /api/ws with the app token; (2) POST /api/chat with a harmless waiting task: 'List the files in this folder, then wait for my next message before doing anything else. Do not write or run anything.'; (3) once a tool_result frame for the listing has arrived and the turn is still running, send exactly one bodyless POST /api/chat/slots/<slot>/stop with a 30 second client timeout; (4) record the reply, every chat_message frame whose meta.kind is stop_event, the chat_done frame, and GET /api/chat/slots/<slot>; (5) DELETE the slot. Scrub tokens and paths and store the capture as spikes/fixtures/rg-s3-live-stop.jsonl.",
+        "needs": "owner action on a real gateway"
+      },
+      {
+        "claim": "kiro-cli acknowledges the cancel of a harmless waiting turn inside the 10 second budget, so the card settles as stopped (soft) and not as stop_failed_reset.",
+        "manual_step": "Owner opt-in, on a throwaway Mansion with the installed and trusted Haunted House app: (1) from the app backend create one disposable session the usual way (POST /api/chat/slots with a fresh name and a read-only Ghost profile, then .../project, then /api/chat/mode normal) and open /api/ws with the app token; (2) POST /api/chat with a harmless waiting task: 'List the files in this folder, then wait for my next message before doing anything else. Do not write or run anything.'; (3) once a tool_result frame for the listing has arrived and the turn is still running, send exactly one bodyless POST /api/chat/slots/<slot>/stop with a 30 second client timeout; (4) record the reply, every chat_message frame whose meta.kind is stop_event, the chat_done frame, and GET /api/chat/slots/<slot>; (5) DELETE the slot. Scrub tokens and paths and store the capture as spikes/fixtures/rg-s3-live-stop.jsonl. Expect the last stop_event frame to read state stopped, outcome soft, within 30 seconds of the POST.",
+        "needs": "owner action on a real gateway"
+      },
+      {
+        "claim": "The app-token WebSocket delivers both stop_event chat_message frames with meta.id, meta.state and meta.outcome, followed by chat_done for the slot.",
+        "manual_step": "Owner opt-in, on a throwaway Mansion with the installed and trusted Haunted House app: (1) from the app backend create one disposable session the usual way (POST /api/chat/slots with a fresh name and a read-only Ghost profile, then .../project, then /api/chat/mode normal) and open /api/ws with the app token; (2) POST /api/chat with a harmless waiting task: 'List the files in this folder, then wait for my next message before doing anything else. Do not write or run anything.'; (3) once a tool_result frame for the listing has arrived and the turn is still running, send exactly one bodyless POST /api/chat/slots/<slot>/stop with a 30 second client timeout; (4) record the reply, every chat_message frame whose meta.kind is stop_event, the chat_done frame, and GET /api/chat/slots/<slot>; (5) DELETE the slot. Scrub tokens and paths and store the capture as spikes/fixtures/rg-s3-live-stop.jsonl. Expect two chat_message frames with one shared meta.id (stopping, then stopped) and one chat_done for the slot.",
+        "needs": "owner action on a real gateway"
+      },
+      {
+        "claim": "After a live stop the slot history still holds the tool_call and tool_result rows completed before it, plus exactly one stop_event row.",
+        "manual_step": "Owner opt-in, on a throwaway Mansion with the installed and trusted Haunted House app: (1) from the app backend create one disposable session the usual way (POST /api/chat/slots with a fresh name and a read-only Ghost profile, then .../project, then /api/chat/mode normal) and open /api/ws with the app token; (2) POST /api/chat with a harmless waiting task: 'List the files in this folder, then wait for my next message before doing anything else. Do not write or run anything.'; (3) once a tool_result frame for the listing has arrived and the turn is still running, send exactly one bodyless POST /api/chat/slots/<slot>/stop with a 30 second client timeout; (4) record the reply, every chat_message frame whose meta.kind is stop_event, the chat_done frame, and GET /api/chat/slots/<slot>; (5) DELETE the slot. Scrub tokens and paths and store the capture as spikes/fixtures/rg-s3-live-stop.jsonl. Expect the listing's tool rows captured in step 3 to be present and unchanged in the step 4 history, with one stop_event row after them.",
+        "needs": "owner action on a real gateway"
+      }
+    ],
+    "verified": [
+      "Crew's packaged chat route table registers POST /api/chat/slots/{slot}/stop on api_chat_slot_stop, with POST only, next to a separate /interrupt route.",
+      "Crew's packaged scope matcher admits the stop path for an installed app whose manifest grants /api/chat and /api/chat/*, and refuses an installed app without them.",
+      "Through the packaged router and slot-ownership checkpoint, an app caller stops only a slot it owns that still runs on its own session; another app's slot, the owner's own chat, an owned slot linked to a foreign session and a missing slot all answer the same 404 slot_not_found, and a refused stop changes nothing.",
+      "The packaged stop handler takes no body, asks the session manager for a cooperative cancel of dashboard:<slot> with the queue preserved, and answers {ok: true} after that call returns.",
+      "The stop appends one system row whose meta is {kind: stop_event, id, state, outcome, ts_start}; it is broadcast as a chat_message frame in state stopping and again, same id, in state stopped with outcome soft once the cancel is acknowledged.",
+      "Rows already in the slot window (user, tool_call, tool_result) are byte-identical after the stop, cooperative or forced.",
+      "A stop on an idle slot answers info: not running with no card; a turn that already ended answers info: no active turn; a compacting session answers info: compacting and is not stopped.",
+      "A second POST while the first is still pending makes the handler ask for a forced stop and empties the slot's queue; ?force=true on a first POST stays cooperative.",
+      "The packaged chat_done payload has no stop or cancel marker.",
+      "The default soft-stop budget in Crew's packaged config is 10 seconds."
+    ]
+  },
+  "failedChecks": [],
+  "guidance": {
+    "afterwards": "Never reuse a stopped slot for the retry; the design already requires a fresh slot and a higher Run_Sequence.",
+    "confirm": "Treat cancellation as confirmed only when the reply is {ok: true} with no info key and a stop_event frame for the bound slot reached stopped, force_stopped or stop_failed_reset. Then submit run_blocked with reason cancelled.",
+    "manifest": "No change. The existing /api/chat and /api/chat/* grants cover the route.",
+    "ownerStop": "The owner's own Stop on the same slot produces the same card. A settled stop_event on a bound slot with an active run is a cancellation whoever asked.",
+    "request": "Send one bodyless POST per cancellation with a client timeout of at least 30 seconds (the owner can raise Crew's soft-stop budget from 10 up to 60 seconds; a reply later than 30 seconds is cancel_unconfirmed by design). Never retry it and never send force=true: a repeat while the first is pending is a forced stop that resets the session and discards its queue.",
+    "unconfirmed": "A reply carrying info, a 404, a transport error, a declined (compacting) card or no settled card within 30 seconds is cancel_unconfirmed: keep the claim."
+  },
+  "isolatedHome": true,
+  "liveGatewayExercised": false,
+  "outcome": "request_contract_verified_in_isolation_live_confirmation_unverified",
+  "schema_version": 1,
+  "spike": "RG-S3",
+  "task": "room-ghosts 1.3"
+}

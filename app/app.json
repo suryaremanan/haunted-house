@@ -7,6 +7,62 @@
   "license": "MIT",
   "minKiroCrewVersion": "0.12.1",
   "iconPath": "assets/icon.png",
+  "resources": "gateway",
+  "lifecycle": "gateway",
+  "agents": [
+    "agents/hh-archivist.json",
+    "agents/hh-draughtsman.json",
+    "agents/hh-foreman.json",
+    "agents/hh-tinker.json"
+  ],
+  "skills": [
+    "skills/ears-requirements",
+    "skills/correctness-design",
+    "skills/executable-tasks",
+    "skills/scoped-implementation"
+  ],
+  "mcpServers": {
+    "room-archivist": {
+      "command": "python3",
+      "args": [
+        "mcp/server.py"
+      ],
+      "env": {
+        "HH_ROOM": "archivist"
+      },
+      "x-kirocrew-session-label": true
+    },
+    "room-draughtsman": {
+      "command": "python3",
+      "args": [
+        "mcp/server.py"
+      ],
+      "env": {
+        "HH_ROOM": "draughtsman"
+      },
+      "x-kirocrew-session-label": true
+    },
+    "room-foreman": {
+      "command": "python3",
+      "args": [
+        "mcp/server.py"
+      ],
+      "env": {
+        "HH_ROOM": "foreman"
+      },
+      "x-kirocrew-session-label": true
+    },
+    "room-tinker": {
+      "command": "python3",
+      "args": [
+        "mcp/server.py"
+      ],
+      "env": {
+        "HH_ROOM": "tinker"
+      },
+      "x-kirocrew-session-label": true
+    }
+  },
   "backend": {
     "entryPoint": "backend/main.py",
     "type": "python",
@@ -26,7 +82,24 @@
   "permissions": {
     "api": [
       "/api/version",
+      "/api/chat",
+      "/api/chat/*",
       "/apps/haunted-house/api/*"
-    ]
+    ],
+    "events": [
+      "approval_resolved",
+      "chat_chunk",
+      "chat_done",
+      "chat_error",
+      "chat_message",
+      "chat_message_update",
+      "chat_segment",
+      "chat_status",
+      "shared_crew.decision",
+      "tool_call",
+      "tool_result"
+    ],
+    "sessionApproval": true,
+    "storage": true
   }
 }

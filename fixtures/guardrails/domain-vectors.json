@@ -1,0 +1,1805 @@
+{
+  "actions": [
+    {
+      "action_digest": "58ec2ed0a57ae5ce83509d0e003c00eec8a51b03f1c0273387cc4eb360624ee3",
+      "canonical": "{\"arguments\":{\"path\":\"src/old.py\",\"target\":\"file\"},\"kind\":\"delete_path\",\"mansion_id\":\"demo-mansion\",\"path_intents\":[{\"access\":\"delete\",\"path\":\"src/old.py\"}],\"room\":\"workshop\",\"schema_version\":1,\"session_slot\":\"workshop-slot-1\",\"working_directory\":\"\"}",
+      "descriptor": {
+        "arguments": {
+          "path": "src/old.py",
+          "target": "file"
+        },
+        "kind": "delete_path",
+        "mansion_id": "demo-mansion",
+        "path_intents": [
+          {
+            "access": "delete",
+            "path": "src/old.py"
+          }
+        ],
+        "room": "workshop",
+        "schema_version": 1,
+        "session_slot": "workshop-slot-1",
+        "working_directory": ""
+      }
+    },
+    {
+      "action_digest": "383dd683b1e33658645acd8250fa58a93b664d57c1df37b7659ef862f1920191",
+      "canonical": "{\"arguments\":{\"argv\":[\"pytest\",\"-q\"],\"timeout_seconds\":60},\"kind\":\"run_command\",\"mansion_id\":\"demo-mansion\",\"path_intents\":[{\"access\":\"command_read\",\"path\":\"tests\"},{\"access\":\"command_write\",\"path\":\"build\"}],\"room\":\"workshop\",\"schema_version\":1,\"session_slot\":\"workshop-slot-1\",\"working_directory\":\"\"}",
+      "descriptor": {
+        "arguments": {
+          "argv": [
+            "pytest",
+            "-q"
+          ],
+          "timeout_seconds": 60
+        },
+        "kind": "run_command",
+        "mansion_id": "demo-mansion",
+        "path_intents": [
+          {
+            "access": "command_read",
+            "path": "tests"
+          },
+          {
+            "access": "command_write",
+            "path": "build"
+          }
+        ],
+        "room": "workshop",
+        "schema_version": 1,
+        "session_slot": "workshop-slot-1",
+        "working_directory": ""
+      }
+    },
+    {
+      "action_digest": "c97259344c1263dd204eacd883f179aaee85059d76ac0eb9862c0b4d3af7aca0",
+      "canonical": "{\"arguments\":{\"argv\":[\"python\",\"-m\",\"pytest\",\"tests/café\"],\"timeout_seconds\":60},\"kind\":\"run_command\",\"mansion_id\":\"demo-mansion\",\"path_intents\":[{\"access\":\"command_read\",\"path\":\"tests\"},{\"access\":\"command_write\",\"path\":\"build\"}],\"room\":\"workshop\",\"schema_version\":1,\"session_slot\":\"workshop-slot-1\",\"working_directory\":\"src\"}",
+      "descriptor": {
+        "arguments": {
+          "argv": [
+            "python",
+            "-m",
+            "pytest",
+            "tests/café"
+          ],
+          "timeout_seconds": 60
+        },
+        "kind": "run_command",
+        "mansion_id": "demo-mansion",
+        "path_intents": [
+          {
+            "access": "command_read",
+            "path": "tests"
+          },
+          {
+            "access": "command_write",
+            "path": "build"
+          }
+        ],
+        "room": "workshop",
+        "schema_version": 1,
+        "session_slot": "workshop-slot-1",
+        "working_directory": "src"
+      }
+    },
+    {
+      "action_digest": "3a1f5535c6cf0e63cfa56b5aa6701a1f801bceefa332c74e978aec41f642c2a8",
+      "canonical": "{\"arguments\":{\"operation\":\"add\",\"pathspecs\":[\"src/b.py\",\"src/a.py\"]},\"kind\":\"git_write\",\"mansion_id\":\"demo-mansion\",\"path_intents\":[{\"access\":\"git_write\",\"path\":\"src/a.py\"},{\"access\":\"git_write\",\"path\":\"src/b.py\"}],\"room\":\"workshop\",\"schema_version\":1,\"session_slot\":\"workshop-slot-1\",\"working_directory\":\"\"}",
+      "descriptor": {
+        "arguments": {
+          "operation": "add",
+          "pathspecs": [
+            "src/b.py",
+            "src/a.py"
+          ]
+        },
+        "kind": "git_write",
+        "mansion_id": "demo-mansion",
+        "path_intents": [
+          {
+            "access": "git_write",
+            "path": "src/b.py"
+          },
+          {
+            "access": "git_write",
+            "path": "src/a.py"
+          }
+        ],
+        "room": "workshop",
+        "schema_version": 1,
+        "session_slot": "workshop-slot-1",
+        "working_directory": ""
+      }
+    },
+    {
+      "action_digest": "690c88c150602396320bc4f73944ec944227aaa836f61325dd46559425809b38",
+      "canonical": "{\"arguments\":{\"message\":\"Add app module\",\"operation\":\"commit\",\"pathspecs\":[]},\"kind\":\"git_write\",\"mansion_id\":\"demo-mansion\",\"path_intents\":[],\"room\":\"workshop\",\"schema_version\":1,\"session_slot\":\"workshop-slot-1\",\"working_directory\":\"\"}",
+      "descriptor": {
+        "arguments": {
+          "message": "Add app module",
+          "operation": "commit",
+          "pathspecs": []
+        },
+        "kind": "git_write",
+        "mansion_id": "demo-mansion",
+        "path_intents": [],
+        "room": "workshop",
+        "schema_version": 1,
+        "session_slot": "workshop-slot-1",
+        "working_directory": ""
+      }
+    }
+  ],
+  "checkpoints": [
+    {
+      "label": "requirements_starting",
+      "projection": {
+        "diagnostics": [],
+        "documents": [],
+        "integrity": "valid",
+        "pending_permissions": [],
+        "pending_writes": [],
+        "phases": [
+          {
+            "door": "sealed",
+            "failure_code": null,
+            "last_revision": 0,
+            "phase": "requirements",
+            "proposal": null,
+            "session_slot": null,
+            "status": "starting"
+          },
+          {
+            "door": "sealed",
+            "failure_code": null,
+            "last_revision": 0,
+            "phase": "design",
+            "proposal": null,
+            "session_slot": null,
+            "status": "not_started"
+          },
+          {
+            "door": "sealed",
+            "failure_code": null,
+            "last_revision": 0,
+            "phase": "tasks",
+            "proposal": null,
+            "session_slot": null,
+            "status": "not_started"
+          },
+          {
+            "door": "sealed",
+            "failure_code": null,
+            "last_revision": 0,
+            "phase": "implementation",
+            "proposal": null,
+            "session_slot": null,
+            "status": "not_started"
+          }
+        ],
+        "risky_proposals": [],
+        "version": 2,
+        "waiting_count": 0
+      },
+      "through_sequence": 2
+    },
+    {
+      "label": "requirements_write_pending",
+      "projection": {
+        "diagnostics": [
+          {
+            "code": "predecessor_door_sealed",
+            "kind": "phase_start_reserved",
+            "sequence": 5
+          }
+        ],
+        "documents": [],
+        "integrity": "valid",
+        "pending_permissions": [],
+        "pending_writes": [
+          {
+            "document_path": ".kiro/specs/demo-feature/requirements.md",
+            "phase": "requirements",
+            "uncertain": false,
+            "write_id": "write-1"
+          }
+        ],
+        "phases": [
+          {
+            "door": "sealed",
+            "failure_code": null,
+            "last_revision": 0,
+            "phase": "requirements",
+            "proposal": null,
+            "session_slot": "study-slot",
+            "status": "working"
+          },
+          {
+            "door": "sealed",
+            "failure_code": null,
+            "last_revision": 0,
+            "phase": "design",
+            "proposal": null,
+            "session_slot": null,
+            "status": "not_started"
+          },
+          {
+            "door": "sealed",
+            "failure_code": null,
+            "last_revision": 0,
+            "phase": "tasks",
+            "proposal": null,
+            "session_slot": null,
+            "status": "not_started"
+          },
+          {
+            "door": "sealed",
+            "failure_code": null,
+            "last_revision": 0,
+            "phase": "implementation",
+            "proposal": null,
+            "session_slot": null,
+            "status": "not_started"
+          }
+        ],
+        "risky_proposals": [],
+        "version": 5,
+        "waiting_count": 0
+      },
+      "through_sequence": 5
+    },
+    {
+      "label": "requirements_waiting",
+      "projection": {
+        "diagnostics": [
+          {
+            "code": "predecessor_door_sealed",
+            "kind": "phase_start_reserved",
+            "sequence": 5
+          }
+        ],
+        "documents": [
+          {
+            "document_path": ".kiro/specs/demo-feature/requirements.md",
+            "revision": 1,
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "size_bytes": 512
+          }
+        ],
+        "integrity": "valid",
+        "pending_permissions": [],
+        "pending_writes": [],
+        "phases": [
+          {
+            "door": "waiting",
+            "failure_code": null,
+            "last_revision": 1,
+            "phase": "requirements",
+            "proposal": {
+              "created_sequence": 7,
+              "decision_actor": null,
+              "decision_event_id": null,
+              "document_path": ".kiro/specs/demo-feature/requirements.md",
+              "phase": "requirements",
+              "proposal_id": "door-1",
+              "revision": 1,
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size_bytes": 512,
+              "status": "pending"
+            },
+            "session_slot": "study-slot",
+            "status": "waiting"
+          },
+          {
+            "door": "sealed",
+            "failure_code": null,
+            "last_revision": 0,
+            "phase": "design",
+            "proposal": null,
+            "session_slot": null,
+            "status": "not_started"
+          },
+          {
+            "door": "sealed",
+            "failure_code": null,
+            "last_revision": 0,
+            "phase": "tasks",
+            "proposal": null,
+            "session_slot": null,
+            "status": "not_started"
+          },
+          {
+            "door": "sealed",
+            "failure_code": null,
+            "last_revision": 0,
+            "phase": "implementation",
+            "proposal": null,
+            "session_slot": null,
+            "status": "not_started"
+          }
+        ],
+        "risky_proposals": [],
+        "version": 7,
+        "waiting_count": 1
+      },
+      "through_sequence": 7
+    },
+    {
+      "label": "requirements_approved",
+      "projection": {
+        "diagnostics": [
+          {
+            "code": "predecessor_door_sealed",
+            "kind": "phase_start_reserved",
+            "sequence": 5
+          },
+          {
+            "code": "stale_revision",
+            "kind": "door_approved",
+            "sequence": 8
+          }
+        ],
+        "documents": [
+          {
+            "document_path": ".kiro/specs/demo-feature/requirements.md",
+            "revision": 1,
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "size_bytes": 512
+          }
+        ],
+        "integrity": "valid",
+        "pending_permissions": [],
+        "pending_writes": [],
+        "phases": [
+          {
+            "door": "open",
+            "failure_code": null,
+            "last_revision": 1,
+            "phase": "requirements",
+            "proposal": {
+              "created_sequence": 7,
+              "decision_actor": "operator",
+              "decision_event_id": "e1:f7ff0fb4a90dde4e59fc143bf54c0cf52e4d0f1be1e6b21b273b35f8ea5b3e9d",
+              "document_path": ".kiro/specs/demo-feature/requirements.md",
+              "phase": "requirements",
+              "proposal_id": "door-1",
+              "revision": 1,
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size_bytes": 512,
+              "status": "approved"
+            },
+            "session_slot": "study-slot",
+            "status": "approved"
+          },
+          {
+            "door": "sealed",
+            "failure_code": null,
+            "last_revision": 0,
+            "phase": "design",
+            "proposal": null,
+            "session_slot": null,
+            "status": "ready"
+          },
+          {
+            "door": "sealed",
+            "failure_code": null,
+            "last_revision": 0,
+            "phase": "tasks",
+            "proposal": null,
+            "session_slot": null,
+            "status": "not_started"
+          },
+          {
+            "door": "sealed",
+            "failure_code": null,
+            "last_revision": 0,
+            "phase": "implementation",
+            "proposal": null,
+            "session_slot": null,
+            "status": "not_started"
+          }
+        ],
+        "risky_proposals": [],
+        "version": 9,
+        "waiting_count": 0
+      },
+      "through_sequence": 9
+    },
+    {
+      "label": "design_failed",
+      "projection": {
+        "diagnostics": [
+          {
+            "code": "predecessor_door_sealed",
+            "kind": "phase_start_reserved",
+            "sequence": 5
+          },
+          {
+            "code": "stale_revision",
+            "kind": "door_approved",
+            "sequence": 8
+          }
+        ],
+        "documents": [
+          {
+            "document_path": ".kiro/specs/demo-feature/requirements.md",
+            "revision": 1,
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "size_bytes": 512
+          }
+        ],
+        "integrity": "valid",
+        "pending_permissions": [],
+        "pending_writes": [],
+        "phases": [
+          {
+            "door": "open",
+            "failure_code": null,
+            "last_revision": 1,
+            "phase": "requirements",
+            "proposal": {
+              "created_sequence": 7,
+              "decision_actor": "operator",
+              "decision_event_id": "e1:f7ff0fb4a90dde4e59fc143bf54c0cf52e4d0f1be1e6b21b273b35f8ea5b3e9d",
+              "document_path": ".kiro/specs/demo-feature/requirements.md",
+              "phase": "requirements",
+              "proposal_id": "door-1",
+              "revision": 1,
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size_bytes": 512,
+              "status": "approved"
+            },
+            "session_slot": "study-slot",
+            "status": "approved"
+          },
+          {
+            "door": "sealed",
+            "failure_code": "crew_unavailable",
+            "last_revision": 0,
+            "phase": "design",
+            "proposal": null,
+            "session_slot": null,
+            "status": "failed"
+          },
+          {
+            "door": "sealed",
+            "failure_code": null,
+            "last_revision": 0,
+            "phase": "tasks",
+            "proposal": null,
+            "session_slot": null,
+            "status": "not_started"
+          },
+          {
+            "door": "sealed",
+            "failure_code": null,
+            "last_revision": 0,
+            "phase": "implementation",
+            "proposal": null,
+            "session_slot": null,
+            "status": "not_started"
+          }
+        ],
+        "risky_proposals": [
+          {
+            "action_digest": "58ec2ed0a57ae5ce83509d0e003c00eec8a51b03f1c0273387cc4eb360624ee3",
+            "claim_id": null,
+            "consumed_sequence": null,
+            "created_sequence": 12,
+            "decision": null,
+            "descriptor": {
+              "arguments": {
+                "path": "src/old.py",
+                "target": "file"
+              },
+              "kind": "delete_path",
+              "mansion_id": "demo-mansion",
+              "path_intents": [
+                {
+                  "access": "delete",
+                  "path": "src/old.py"
+                }
+              ],
+              "room": "workshop",
+              "schema_version": 1,
+              "session_slot": "workshop-slot-1",
+              "working_directory": ""
+            },
+            "displayable": true,
+            "outcome_code": null,
+            "proposal_id": "act-delete",
+            "session_slot": "workshop-slot-1",
+            "status": "pending"
+          }
+        ],
+        "version": 12,
+        "waiting_count": 1
+      },
+      "through_sequence": 12
+    },
+    {
+      "label": "risky_pending",
+      "projection": {
+        "diagnostics": [
+          {
+            "code": "predecessor_door_sealed",
+            "kind": "phase_start_reserved",
+            "sequence": 5
+          },
+          {
+            "code": "stale_revision",
+            "kind": "door_approved",
+            "sequence": 8
+          }
+        ],
+        "documents": [
+          {
+            "document_path": ".kiro/specs/demo-feature/requirements.md",
+            "revision": 1,
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "size_bytes": 512
+          }
+        ],
+        "integrity": "valid",
+        "pending_permissions": [
+          {
+            "mid": "m-1",
+            "sequence": 15,
+            "slot": "workshop-slot-1"
+          }
+        ],
+        "pending_writes": [],
+        "phases": [
+          {
+            "door": "open",
+            "failure_code": null,
+            "last_revision": 1,
+            "phase": "requirements",
+            "proposal": {
+              "created_sequence": 7,
+              "decision_actor": "operator",
+              "decision_event_id": "e1:f7ff0fb4a90dde4e59fc143bf54c0cf52e4d0f1be1e6b21b273b35f8ea5b3e9d",
+              "document_path": ".kiro/specs/demo-feature/requirements.md",
+              "phase": "requirements",
+              "proposal_id": "door-1",
+              "revision": 1,
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size_bytes": 512,
+              "status": "approved"
+            },
+            "session_slot": "study-slot",
+            "status": "approved"
+          },
+          {
+            "door": "sealed",
+            "failure_code": "crew_unavailable",
+            "last_revision": 0,
+            "phase": "design",
+            "proposal": null,
+            "session_slot": null,
+            "status": "failed"
+          },
+          {
+            "door": "sealed",
+            "failure_code": null,
+            "last_revision": 0,
+            "phase": "tasks",
+            "proposal": null,
+            "session_slot": null,
+            "status": "not_started"
+          },
+          {
+            "door": "sealed",
+            "failure_code": null,
+            "last_revision": 0,
+            "phase": "implementation",
+            "proposal": null,
+            "session_slot": null,
+            "status": "not_started"
+          }
+        ],
+        "risky_proposals": [
+          {
+            "action_digest": "50f61c22cf2621796600efc9726cabefa5fda133e361821437484996dde10244",
+            "claim_id": null,
+            "consumed_sequence": null,
+            "created_sequence": 14,
+            "decision": null,
+            "descriptor": null,
+            "displayable": false,
+            "outcome_code": null,
+            "proposal_id": "act-blocked",
+            "session_slot": "workshop-slot-1",
+            "status": "pending"
+          },
+          {
+            "action_digest": "383dd683b1e33658645acd8250fa58a93b664d57c1df37b7659ef862f1920191",
+            "claim_id": null,
+            "consumed_sequence": null,
+            "created_sequence": 13,
+            "decision": null,
+            "descriptor": {
+              "arguments": {
+                "argv": [
+                  "pytest",
+                  "-q"
+                ],
+                "timeout_seconds": 60
+              },
+              "kind": "run_command",
+              "mansion_id": "demo-mansion",
+              "path_intents": [
+                {
+                  "access": "command_read",
+                  "path": "tests"
+                },
+                {
+                  "access": "command_write",
+                  "path": "build"
+                }
+              ],
+              "room": "workshop",
+              "schema_version": 1,
+              "session_slot": "workshop-slot-1",
+              "working_directory": ""
+            },
+            "displayable": true,
+            "outcome_code": null,
+            "proposal_id": "act-command",
+            "session_slot": "workshop-slot-1",
+            "status": "pending"
+          },
+          {
+            "action_digest": "58ec2ed0a57ae5ce83509d0e003c00eec8a51b03f1c0273387cc4eb360624ee3",
+            "claim_id": null,
+            "consumed_sequence": null,
+            "created_sequence": 12,
+            "decision": null,
+            "descriptor": {
+              "arguments": {
+                "path": "src/old.py",
+                "target": "file"
+              },
+              "kind": "delete_path",
+              "mansion_id": "demo-mansion",
+              "path_intents": [
+                {
+                  "access": "delete",
+                  "path": "src/old.py"
+                }
+              ],
+              "room": "workshop",
+              "schema_version": 1,
+              "session_slot": "workshop-slot-1",
+              "working_directory": ""
+            },
+            "displayable": true,
+            "outcome_code": null,
+            "proposal_id": "act-delete",
+            "session_slot": "workshop-slot-1",
+            "status": "pending"
+          }
+        ],
+        "version": 15,
+        "waiting_count": 4
+      },
+      "through_sequence": 15
+    },
+    {
+      "label": "risky_consumed",
+      "projection": {
+        "diagnostics": [
+          {
+            "code": "predecessor_door_sealed",
+            "kind": "phase_start_reserved",
+            "sequence": 5
+          },
+          {
+            "code": "stale_revision",
+            "kind": "door_approved",
+            "sequence": 8
+          },
+          {
+            "code": "not_approved",
+            "kind": "risky_action_consumed",
+            "sequence": 19
+          }
+        ],
+        "documents": [
+          {
+            "document_path": ".kiro/specs/demo-feature/requirements.md",
+            "revision": 1,
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "size_bytes": 512
+          }
+        ],
+        "integrity": "valid",
+        "pending_permissions": [
+          {
+            "mid": "m-1",
+            "sequence": 15,
+            "slot": "workshop-slot-1"
+          }
+        ],
+        "pending_writes": [],
+        "phases": [
+          {
+            "door": "open",
+            "failure_code": null,
+            "last_revision": 1,
+            "phase": "requirements",
+            "proposal": {
+              "created_sequence": 7,
+              "decision_actor": "operator",
+              "decision_event_id": "e1:f7ff0fb4a90dde4e59fc143bf54c0cf52e4d0f1be1e6b21b273b35f8ea5b3e9d",
+              "document_path": ".kiro/specs/demo-feature/requirements.md",
+              "phase": "requirements",
+              "proposal_id": "door-1",
+              "revision": 1,
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "size_bytes": 512,
+              "status": "approved"
+            },
+            "session_slot": "study-slot",
+            "status": "approved"
+          },
+          {
+            "door": "sealed",
+            "failure_code": "crew_unavailable",
+            "last_revision": 0,
+            "phase": "design",
+            "proposal": null,
+            "session_slot": null,
+            "status": "failed"
+          },
+          {
+            "door": "sealed",
+            "failure_code": null,
+            "last_revision": 0,
+            "phase": "tasks",
+            "proposal": null,
+            "session_slot": null,
+            "status": "not_started"
+          },
+          {
+            "door": "sealed",
+            "failure_code": null,
+            "last_revision": 0,
+            "phase": "implementation",
+            "proposal": null,
+            "session_slot": null,
+            "status": "not_started"
+          }
+        ],
+        "risky_proposals": [
+          {
+            "action_digest": "50f61c22cf2621796600efc9726cabefa5fda133e361821437484996dde10244",
+            "claim_id": null,
+            "consumed_sequence": null,
+            "created_sequence": 14,
+            "decision": null,
+            "descriptor": null,
+            "displayable": false,
+            "outcome_code": null,
+            "proposal_id": "act-blocked",
+            "session_slot": "workshop-slot-1",
+            "status": "pending"
+          },
+          {
+            "action_digest": "383dd683b1e33658645acd8250fa58a93b664d57c1df37b7659ef862f1920191",
+            "claim_id": null,
+            "consumed_sequence": null,
+            "created_sequence": 13,
+            "decision": {
+              "actor": "crew",
+              "command_id": "ext-1",
+              "event_id": "e1:e8a903ce62594ea90668dc5665975b83d2b6626511c74939a9b1b84117d8d812",
+              "outcome": "rejected",
+              "sequence": 17
+            },
+            "descriptor": {
+              "arguments": {
+                "argv": [
+                  "pytest",
+                  "-q"
+                ],
+                "timeout_seconds": 60
+              },
+              "kind": "run_command",
+              "mansion_id": "demo-mansion",
+              "path_intents": [
+                {
+                  "access": "command_read",
+                  "path": "tests"
+                },
+                {
+                  "access": "command_write",
+                  "path": "build"
+                }
+              ],
+              "room": "workshop",
+              "schema_version": 1,
+              "session_slot": "workshop-slot-1",
+              "working_directory": ""
+            },
+            "displayable": true,
+            "outcome_code": null,
+            "proposal_id": "act-command",
+            "session_slot": "workshop-slot-1",
+            "status": "rejected"
+          },
+          {
+            "action_digest": "58ec2ed0a57ae5ce83509d0e003c00eec8a51b03f1c0273387cc4eb360624ee3",
+            "claim_id": "claim-1",
+            "consumed_sequence": 18,
+            "created_sequence": 12,
+            "decision": {
+              "actor": "operator",
+              "command_id": "cmd-risky-1",
+              "event_id": "e1:2a2b9803759c427f2c2761a467bb29ddedde5a5ce8f1c8ea422363ecc7cbafab",
+              "outcome": "approved",
+              "sequence": 16
+            },
+            "descriptor": {
+              "arguments": {
+                "path": "src/old.py",
+                "target": "file"
+              },
+              "kind": "delete_path",
+              "mansion_id": "demo-mansion",
+              "path_intents": [
+                {
+                  "access": "delete",
+                  "path": "src/old.py"
+                }
+              ],
+              "room": "workshop",
+              "schema_version": 1,
+              "session_slot": "workshop-slot-1",
+              "working_directory": ""
+            },
+            "displayable": true,
+            "outcome_code": "not_found",
+            "proposal_id": "act-delete",
+            "session_slot": "workshop-slot-1",
+            "status": "failed"
+          }
+        ],
+        "version": 21,
+        "waiting_count": 2
+      },
+      "through_sequence": 21
+    }
+  ],
+  "description": "Doors-and-guardrails vectors: Spec 2 canonical records, the Spec 4 workflow projection after each checkpoint, and Action_Descriptor digests.",
+  "domain": "doors_and_guardrails",
+  "events": [
+    {
+      "caused_by": [],
+      "event_id": "e1:3bcb5543360c4b0e9bb6e31f9f53fa398fd285603426e4a50b671e59ec2eaa51",
+      "event_type": "domain_event_recorded",
+      "occurred_at_ms": null,
+      "payload": {
+        "data": {
+          "command_id": "cmd-start-1",
+          "phase": "requirements",
+          "reservation_id": "res-1"
+        },
+        "domain": "doors_and_guardrails",
+        "entity_id": "requirements",
+        "kind": "phase_start_reserved"
+      },
+      "persisted_at_ms": 1731400000000,
+      "record_id": "r1:023966ca30ff9ba32d57dc74d27b35f16f591fccf909074270372e6186d5934f",
+      "schema_version": 1,
+      "scope": {
+        "ghost_id": "house-operator",
+        "mansion_id": "demo-mansion",
+        "run_id": "workflow",
+        "run_sequence": 0,
+        "session_slot": "house-operator"
+      },
+      "sequence": 1,
+      "source": {
+        "generation": "",
+        "identity_parts": [
+          "phase_start_reserved",
+          "requirements",
+          "res-1"
+        ],
+        "origin": "house",
+        "revision": 0,
+        "source_sequence": 0,
+        "source_type": "guardrail"
+      }
+    },
+    {
+      "caused_by": [],
+      "event_id": "e1:2266968c203b2e1ebf9a197c4e5adea87ee9492e81e560e9aed244715cdae649",
+      "event_type": "message_recorded",
+      "occurred_at_ms": null,
+      "payload": {
+        "role": "assistant"
+      },
+      "persisted_at_ms": 1731400000000,
+      "record_id": "r1:cc26d86fe27eba1fbcca8a355735289889cf70d5b1932a443c072130ebd5ec06",
+      "schema_version": 1,
+      "scope": {
+        "ghost_id": "tinker-1",
+        "mansion_id": "demo-mansion",
+        "run_id": "implementation-1",
+        "run_sequence": 1,
+        "session_slot": "workshop-slot-1"
+      },
+      "sequence": 2,
+      "source": {
+        "generation": "",
+        "identity_parts": [
+          "chat-1"
+        ],
+        "origin": "crew",
+        "revision": 0,
+        "source_sequence": 0,
+        "source_type": "chat_message"
+      }
+    },
+    {
+      "caused_by": [],
+      "event_id": "e1:ade067cfc7d05e35158f21abc4e722228c523c91467d9288cead8961e4544c96",
+      "event_type": "domain_event_recorded",
+      "occurred_at_ms": null,
+      "payload": {
+        "data": {
+          "phase": "requirements",
+          "reservation_id": "res-1",
+          "session_slot": "study-slot"
+        },
+        "domain": "doors_and_guardrails",
+        "entity_id": "requirements",
+        "kind": "phase_started"
+      },
+      "persisted_at_ms": 1731400000000,
+      "record_id": "r1:71085dff126e5798608a52bf917571763ca9e30d5c1e0b275608326dad435fda",
+      "schema_version": 1,
+      "scope": {
+        "ghost_id": "house-operator",
+        "mansion_id": "demo-mansion",
+        "run_id": "workflow",
+        "run_sequence": 0,
+        "session_slot": "house-operator"
+      },
+      "sequence": 3,
+      "source": {
+        "generation": "",
+        "identity_parts": [
+          "phase_started",
+          "requirements",
+          "res-1"
+        ],
+        "origin": "house",
+        "revision": 0,
+        "source_sequence": 0,
+        "source_type": "guardrail"
+      }
+    },
+    {
+      "caused_by": [],
+      "event_id": "e1:12cefd0a0ded4eb58b5b5b4b595a3da51499c1f9012d45c0d9f18725ba114992",
+      "event_type": "domain_event_recorded",
+      "occurred_at_ms": null,
+      "payload": {
+        "data": {
+          "base_revision": 0,
+          "base_sha256": null,
+          "document_path": ".kiro/specs/demo-feature/requirements.md",
+          "phase": "requirements",
+          "revision": 1,
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "size_bytes": 512,
+          "write_id": "write-1"
+        },
+        "domain": "doors_and_guardrails",
+        "entity_id": "write-1",
+        "kind": "spec_write_prepared"
+      },
+      "persisted_at_ms": 1731400000000,
+      "record_id": "r1:2e6ca015409647e8dcf89c1115a759fee95a55bfe84b0949471f25757df4cb05",
+      "schema_version": 1,
+      "scope": {
+        "ghost_id": "tinker-1",
+        "mansion_id": "demo-mansion",
+        "run_id": "implementation-1",
+        "run_sequence": 1,
+        "session_slot": "workshop-slot-1"
+      },
+      "sequence": 4,
+      "source": {
+        "generation": "",
+        "identity_parts": [
+          "spec_write_prepared",
+          "write-1",
+          "write-1"
+        ],
+        "origin": "house",
+        "revision": 0,
+        "source_sequence": 0,
+        "source_type": "guardrail"
+      }
+    },
+    {
+      "caused_by": [],
+      "event_id": "e1:b7a5f32d755ebf0dfdfde7416a758ce8465a1b5afdf9527325898039b1aa3f53",
+      "event_type": "domain_event_recorded",
+      "occurred_at_ms": null,
+      "payload": {
+        "data": {
+          "command_id": "cmd-skip",
+          "phase": "design",
+          "reservation_id": "res-skip"
+        },
+        "domain": "doors_and_guardrails",
+        "entity_id": "design",
+        "kind": "phase_start_reserved"
+      },
+      "persisted_at_ms": 1731400000000,
+      "record_id": "r1:3766b5e1ff95ba248388695a357203345a3bb3f92d55743918ac2e678bc1626c",
+      "schema_version": 1,
+      "scope": {
+        "ghost_id": "house-operator",
+        "mansion_id": "demo-mansion",
+        "run_id": "workflow",
+        "run_sequence": 0,
+        "session_slot": "house-operator"
+      },
+      "sequence": 5,
+      "source": {
+        "generation": "",
+        "identity_parts": [
+          "phase_start_reserved",
+          "design",
+          "res-skip"
+        ],
+        "origin": "house",
+        "revision": 0,
+        "source_sequence": 0,
+        "source_type": "guardrail"
+      }
+    },
+    {
+      "caused_by": [],
+      "event_id": "e1:d009d07008865a003a51b4ff9a2868a38fbc38f468edf2d391e7d020a09cff8e",
+      "event_type": "domain_event_recorded",
+      "occurred_at_ms": null,
+      "payload": {
+        "data": {
+          "document_path": ".kiro/specs/demo-feature/requirements.md",
+          "phase": "requirements",
+          "revision": 1,
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "size_bytes": 512,
+          "write_id": "write-1"
+        },
+        "domain": "doors_and_guardrails",
+        "entity_id": "write-1",
+        "kind": "spec_document_written"
+      },
+      "persisted_at_ms": 1731400000000,
+      "record_id": "r1:ff90ba2588cc0e83ed94f5fabd9e117929c7fe2e97aae3d77af3193cda03956d",
+      "schema_version": 1,
+      "scope": {
+        "ghost_id": "tinker-1",
+        "mansion_id": "demo-mansion",
+        "run_id": "implementation-1",
+        "run_sequence": 1,
+        "session_slot": "workshop-slot-1"
+      },
+      "sequence": 6,
+      "source": {
+        "generation": "",
+        "identity_parts": [
+          "spec_document_written",
+          "write-1",
+          "write-1"
+        ],
+        "origin": "house",
+        "revision": 0,
+        "source_sequence": 0,
+        "source_type": "guardrail"
+      }
+    },
+    {
+      "caused_by": [],
+      "event_id": "e1:19a0df293897edb814affea790a3d7359b08288c10b57409c5a4bd2f0eb32200",
+      "event_type": "domain_event_recorded",
+      "occurred_at_ms": null,
+      "payload": {
+        "data": {
+          "document_path": ".kiro/specs/demo-feature/requirements.md",
+          "phase": "requirements",
+          "proposal_id": "door-1",
+          "revision": 1,
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "size_bytes": 512
+        },
+        "domain": "doors_and_guardrails",
+        "entity_id": "door-1",
+        "kind": "phase_output_ready"
+      },
+      "persisted_at_ms": 1731400000000,
+      "record_id": "r1:2f7bcee973859274af9e6e05fc7daf45246f400a8af650d6840a54414e19f300",
+      "schema_version": 1,
+      "scope": {
+        "ghost_id": "tinker-1",
+        "mansion_id": "demo-mansion",
+        "run_id": "implementation-1",
+        "run_sequence": 1,
+        "session_slot": "workshop-slot-1"
+      },
+      "sequence": 7,
+      "source": {
+        "generation": "",
+        "identity_parts": [
+          "phase_output_ready",
+          "door-1",
+          "door-1"
+        ],
+        "origin": "house",
+        "revision": 0,
+        "source_sequence": 0,
+        "source_type": "guardrail"
+      }
+    },
+    {
+      "caused_by": [],
+      "event_id": "e1:135cfad2deab62df573e21f77177ee10cd6772a06e0602fec24e98547cb41312",
+      "event_type": "domain_event_recorded",
+      "occurred_at_ms": null,
+      "payload": {
+        "data": {
+          "actor": "operator",
+          "command_id": "cmd-stale",
+          "document_path": ".kiro/specs/demo-feature/requirements.md",
+          "phase": "requirements",
+          "proposal_id": "door-1",
+          "revision": 2,
+          "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "size_bytes": 512
+        },
+        "domain": "doors_and_guardrails",
+        "entity_id": "door-1",
+        "kind": "door_approved"
+      },
+      "persisted_at_ms": 1731400000000,
+      "record_id": "r1:a2183052e16c3d4828a63e190564a29fb306f7eaf00a2322e9d87c51bd8685b3",
+      "schema_version": 1,
+      "scope": {
+        "ghost_id": "house-operator",
+        "mansion_id": "demo-mansion",
+        "run_id": "workflow",
+        "run_sequence": 0,
+        "session_slot": "house-operator"
+      },
+      "sequence": 8,
+      "source": {
+        "generation": "",
+        "identity_parts": [
+          "door_approved",
+          "door-1",
+          "cmd-stale"
+        ],
+        "origin": "house",
+        "revision": 0,
+        "source_sequence": 0,
+        "source_type": "guardrail"
+      }
+    },
+    {
+      "caused_by": [],
+      "event_id": "e1:f7ff0fb4a90dde4e59fc143bf54c0cf52e4d0f1be1e6b21b273b35f8ea5b3e9d",
+      "event_type": "domain_event_recorded",
+      "occurred_at_ms": null,
+      "payload": {
+        "data": {
+          "actor": "operator",
+          "command_id": "cmd-door-1",
+          "document_path": ".kiro/specs/demo-feature/requirements.md",
+          "phase": "requirements",
+          "proposal_id": "door-1",
+          "revision": 1,
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "size_bytes": 512
+        },
+        "domain": "doors_and_guardrails",
+        "entity_id": "door-1",
+        "kind": "door_approved"
+      },
+      "persisted_at_ms": 1731400000000,
+      "record_id": "r1:685851c04df7ef32e73c05c901b9ba80da93122eeba2ca9a22eaac9913921f4f",
+      "schema_version": 1,
+      "scope": {
+        "ghost_id": "house-operator",
+        "mansion_id": "demo-mansion",
+        "run_id": "workflow",
+        "run_sequence": 0,
+        "session_slot": "house-operator"
+      },
+      "sequence": 9,
+      "source": {
+        "generation": "",
+        "identity_parts": [
+          "door_approved",
+          "door-1",
+          "cmd-door-1"
+        ],
+        "origin": "house",
+        "revision": 0,
+        "source_sequence": 0,
+        "source_type": "guardrail"
+      }
+    },
+    {
+      "caused_by": [],
+      "event_id": "e1:cb3d68f6d52eef41624ef98f5d483c3b3d86e039502b1e7210cc73ab4daca9b8",
+      "event_type": "domain_event_recorded",
+      "occurred_at_ms": null,
+      "payload": {
+        "data": {
+          "command_id": "cmd-start-2",
+          "phase": "design",
+          "reservation_id": "res-2"
+        },
+        "domain": "doors_and_guardrails",
+        "entity_id": "design",
+        "kind": "phase_start_reserved"
+      },
+      "persisted_at_ms": 1731400000000,
+      "record_id": "r1:035dffa30f95ec8fabf1e1c8e40aead8d5f3eef77627a8481a7a43dc5fd58f13",
+      "schema_version": 1,
+      "scope": {
+        "ghost_id": "house-operator",
+        "mansion_id": "demo-mansion",
+        "run_id": "workflow",
+        "run_sequence": 0,
+        "session_slot": "house-operator"
+      },
+      "sequence": 10,
+      "source": {
+        "generation": "",
+        "identity_parts": [
+          "phase_start_reserved",
+          "design",
+          "res-2"
+        ],
+        "origin": "house",
+        "revision": 0,
+        "source_sequence": 0,
+        "source_type": "guardrail"
+      }
+    },
+    {
+      "caused_by": [],
+      "event_id": "e1:54446e2e04fecb7604f70678de76acbf57ce52c504f8629da8e1a59564d9e2f1",
+      "event_type": "domain_event_recorded",
+      "occurred_at_ms": null,
+      "payload": {
+        "data": {
+          "code": "crew_unavailable",
+          "phase": "design",
+          "reservation_id": "res-2"
+        },
+        "domain": "doors_and_guardrails",
+        "entity_id": "design",
+        "kind": "phase_start_failed"
+      },
+      "persisted_at_ms": 1731400000000,
+      "record_id": "r1:9ec58f35f664f9c043e03887e846fb2650d46c920f4811dd7bdd836ff27266cb",
+      "schema_version": 1,
+      "scope": {
+        "ghost_id": "house-operator",
+        "mansion_id": "demo-mansion",
+        "run_id": "workflow",
+        "run_sequence": 0,
+        "session_slot": "house-operator"
+      },
+      "sequence": 11,
+      "source": {
+        "generation": "",
+        "identity_parts": [
+          "phase_start_failed",
+          "design",
+          "res-2"
+        ],
+        "origin": "house",
+        "revision": 0,
+        "source_sequence": 0,
+        "source_type": "guardrail"
+      }
+    },
+    {
+      "caused_by": [],
+      "event_id": "e1:a241929ac98bd3c41294a74c372abd620758985a66ca5ea54505d3da404afb80",
+      "event_type": "domain_event_recorded",
+      "occurred_at_ms": null,
+      "payload": {
+        "data": {
+          "action_digest": "58ec2ed0a57ae5ce83509d0e003c00eec8a51b03f1c0273387cc4eb360624ee3",
+          "descriptor": {
+            "arguments": {
+              "path": "src/old.py",
+              "target": "file"
+            },
+            "kind": "delete_path",
+            "mansion_id": "demo-mansion",
+            "path_intents": [
+              {
+                "access": "delete",
+                "path": "src/old.py"
+              }
+            ],
+            "room": "workshop",
+            "schema_version": 1,
+            "session_slot": "workshop-slot-1",
+            "working_directory": ""
+          },
+          "proposal_id": "act-delete"
+        },
+        "domain": "doors_and_guardrails",
+        "entity_id": "act-delete",
+        "kind": "risky_action_proposed"
+      },
+      "persisted_at_ms": 1731400000000,
+      "record_id": "r1:41122407ddf1dd9ee6dc116ad0ad9bb06be5205b24aebb1426982d317992e155",
+      "schema_version": 1,
+      "scope": {
+        "ghost_id": "tinker-1",
+        "mansion_id": "demo-mansion",
+        "run_id": "implementation-1",
+        "run_sequence": 1,
+        "session_slot": "workshop-slot-1"
+      },
+      "sequence": 12,
+      "source": {
+        "generation": "",
+        "identity_parts": [
+          "risky_action_proposed",
+          "act-delete",
+          "act-delete"
+        ],
+        "origin": "house",
+        "revision": 0,
+        "source_sequence": 0,
+        "source_type": "guardrail"
+      }
+    },
+    {
+      "caused_by": [],
+      "event_id": "e1:555a6bab1e81c75918bc1f1f92f392e12a2dda243d2f475f2d0761d9ceee6210",
+      "event_type": "domain_event_recorded",
+      "occurred_at_ms": null,
+      "payload": {
+        "data": {
+          "action_digest": "383dd683b1e33658645acd8250fa58a93b664d57c1df37b7659ef862f1920191",
+          "descriptor": {
+            "arguments": {
+              "argv": [
+                "pytest",
+                "-q"
+              ],
+              "timeout_seconds": 60
+            },
+            "kind": "run_command",
+            "mansion_id": "demo-mansion",
+            "path_intents": [
+              {
+                "access": "command_read",
+                "path": "tests"
+              },
+              {
+                "access": "command_write",
+                "path": "build"
+              }
+            ],
+            "room": "workshop",
+            "schema_version": 1,
+            "session_slot": "workshop-slot-1",
+            "working_directory": ""
+          },
+          "proposal_id": "act-command"
+        },
+        "domain": "doors_and_guardrails",
+        "entity_id": "act-command",
+        "kind": "risky_action_proposed"
+      },
+      "persisted_at_ms": 1731400000000,
+      "record_id": "r1:7924f74768ead9d9ab80a28ac230a3cf5440d4c5fc666ae776993333a3cbfdc2",
+      "schema_version": 1,
+      "scope": {
+        "ghost_id": "tinker-1",
+        "mansion_id": "demo-mansion",
+        "run_id": "implementation-1",
+        "run_sequence": 1,
+        "session_slot": "workshop-slot-1"
+      },
+      "sequence": 13,
+      "source": {
+        "generation": "",
+        "identity_parts": [
+          "risky_action_proposed",
+          "act-command",
+          "act-command"
+        ],
+        "origin": "house",
+        "revision": 0,
+        "source_sequence": 0,
+        "source_type": "guardrail"
+      }
+    },
+    {
+      "caused_by": [],
+      "event_id": "e1:45320843ccb0d4c49ddbb38af213b64a3d880e46566ef6820b407289cd6616a8",
+      "event_type": "domain_event_recorded",
+      "occurred_at_ms": null,
+      "payload": {
+        "data": {
+          "action_digest": "50f61c22cf2621796600efc9726cabefa5fda133e361821437484996dde10244",
+          "descriptor": {
+            "arguments": {
+              "argv": [
+                "echo",
+                "[redacted]"
+              ],
+              "timeout_seconds": 60
+            },
+            "kind": "run_command",
+            "mansion_id": "demo-mansion",
+            "path_intents": [
+              {
+                "access": "command_read",
+                "path": "tests"
+              },
+              {
+                "access": "command_write",
+                "path": "build"
+              }
+            ],
+            "room": "workshop",
+            "schema_version": 1,
+            "session_slot": "workshop-slot-1",
+            "working_directory": ""
+          },
+          "proposal_id": "act-blocked"
+        },
+        "domain": "doors_and_guardrails",
+        "entity_id": "act-blocked",
+        "kind": "risky_action_proposed"
+      },
+      "persisted_at_ms": 1731400000000,
+      "record_id": "r1:be3d272c56f1655619cb4b2807b6d4abd9d97503f68e0cff014e933366d160cc",
+      "schema_version": 1,
+      "scope": {
+        "ghost_id": "tinker-1",
+        "mansion_id": "demo-mansion",
+        "run_id": "implementation-1",
+        "run_sequence": 1,
+        "session_slot": "workshop-slot-1"
+      },
+      "sequence": 14,
+      "source": {
+        "generation": "",
+        "identity_parts": [
+          "risky_action_proposed",
+          "act-blocked",
+          "act-blocked"
+        ],
+        "origin": "house",
+        "revision": 0,
+        "source_sequence": 0,
+        "source_type": "guardrail"
+      }
+    },
+    {
+      "caused_by": [],
+      "event_id": "e1:4da7ca8b14704555ffe86296afeafd3feac9a71e4aa9d74181193a61d20d7dd6",
+      "event_type": "approval_requested",
+      "occurred_at_ms": null,
+      "payload": {
+        "mid": "m-1"
+      },
+      "persisted_at_ms": 1731400000000,
+      "record_id": "r1:4a7e67817ff82aeb7d5b69ec6eaaf4e0f34913a07e3d0f9168f4f3a35c07b301",
+      "schema_version": 1,
+      "scope": {
+        "ghost_id": "tinker-1",
+        "mansion_id": "demo-mansion",
+        "run_id": "implementation-1",
+        "run_sequence": 1,
+        "session_slot": "workshop-slot-1"
+      },
+      "sequence": 15,
+      "source": {
+        "generation": "",
+        "identity_parts": [
+          "permission-1"
+        ],
+        "origin": "crew",
+        "revision": 0,
+        "source_sequence": 0,
+        "source_type": "crew_approval"
+      }
+    },
+    {
+      "caused_by": [],
+      "event_id": "e1:2a2b9803759c427f2c2761a467bb29ddedde5a5ce8f1c8ea422363ecc7cbafab",
+      "event_type": "domain_event_recorded",
+      "occurred_at_ms": null,
+      "payload": {
+        "data": {
+          "action_digest": "58ec2ed0a57ae5ce83509d0e003c00eec8a51b03f1c0273387cc4eb360624ee3",
+          "actor": "operator",
+          "command_id": "cmd-risky-1",
+          "crew_mid": null,
+          "crew_slot": null,
+          "proposal_id": "act-delete"
+        },
+        "domain": "doors_and_guardrails",
+        "entity_id": "act-delete",
+        "kind": "risky_action_approved"
+      },
+      "persisted_at_ms": 1731400000000,
+      "record_id": "r1:acdd4474fe20a9d9d97b89cf20621a0ee7287888fd20efff6b0358cf67f30f02",
+      "schema_version": 1,
+      "scope": {
+        "ghost_id": "house-operator",
+        "mansion_id": "demo-mansion",
+        "run_id": "workflow",
+        "run_sequence": 0,
+        "session_slot": "house-operator"
+      },
+      "sequence": 16,
+      "source": {
+        "generation": "",
+        "identity_parts": [
+          "risky_action_approved",
+          "act-delete",
+          "cmd-risky-1"
+        ],
+        "origin": "house",
+        "revision": 0,
+        "source_sequence": 0,
+        "source_type": "guardrail"
+      }
+    },
+    {
+      "caused_by": [],
+      "event_id": "e1:e8a903ce62594ea90668dc5665975b83d2b6626511c74939a9b1b84117d8d812",
+      "event_type": "domain_event_recorded",
+      "occurred_at_ms": null,
+      "payload": {
+        "data": {
+          "action_digest": "383dd683b1e33658645acd8250fa58a93b664d57c1df37b7659ef862f1920191",
+          "actor": "crew",
+          "command_id": "ext-1",
+          "crew_mid": "m-1",
+          "crew_slot": "workshop-slot-1",
+          "proposal_id": "act-command"
+        },
+        "domain": "doors_and_guardrails",
+        "entity_id": "act-command",
+        "kind": "risky_action_rejected"
+      },
+      "persisted_at_ms": 1731400000000,
+      "record_id": "r1:ce54ff792ea99995b60770e34d612d6c7a923ba1704d75cd8801bbc6fa028121",
+      "schema_version": 1,
+      "scope": {
+        "ghost_id": "house-operator",
+        "mansion_id": "demo-mansion",
+        "run_id": "workflow",
+        "run_sequence": 0,
+        "session_slot": "house-operator"
+      },
+      "sequence": 17,
+      "source": {
+        "generation": "",
+        "identity_parts": [
+          "risky_action_rejected",
+          "act-command",
+          "ext-1"
+        ],
+        "origin": "house",
+        "revision": 0,
+        "source_sequence": 0,
+        "source_type": "guardrail"
+      }
+    },
+    {
+      "caused_by": [],
+      "event_id": "e1:b1a95975b220d0c0b33a6ae235f7cb386f97d75844882af3e5eceeae0d387425",
+      "event_type": "domain_event_recorded",
+      "occurred_at_ms": null,
+      "payload": {
+        "data": {
+          "action_digest": "58ec2ed0a57ae5ce83509d0e003c00eec8a51b03f1c0273387cc4eb360624ee3",
+          "claim_id": "claim-1",
+          "proposal_id": "act-delete",
+          "session_slot": "workshop-slot-1"
+        },
+        "domain": "doors_and_guardrails",
+        "entity_id": "act-delete",
+        "kind": "risky_action_consumed"
+      },
+      "persisted_at_ms": 1731400000000,
+      "record_id": "r1:2ae7f740652c9186e08f767a7d8d348f519a37f2276b4f74ecec1242326cff66",
+      "schema_version": 1,
+      "scope": {
+        "ghost_id": "tinker-1",
+        "mansion_id": "demo-mansion",
+        "run_id": "implementation-1",
+        "run_sequence": 1,
+        "session_slot": "workshop-slot-1"
+      },
+      "sequence": 18,
+      "source": {
+        "generation": "",
+        "identity_parts": [
+          "risky_action_consumed",
+          "act-delete",
+          "claim-1"
+        ],
+        "origin": "house",
+        "revision": 0,
+        "source_sequence": 0,
+        "source_type": "guardrail"
+      }
+    },
+    {
+      "caused_by": [],
+      "event_id": "e1:147e92ae95f72b6bdbe9faaad8ca280e63215c27cb932264b91ef69ec09982c1",
+      "event_type": "domain_event_recorded",
+      "occurred_at_ms": null,
+      "payload": {
+        "data": {
+          "action_digest": "58ec2ed0a57ae5ce83509d0e003c00eec8a51b03f1c0273387cc4eb360624ee3",
+          "claim_id": "claim-2",
+          "proposal_id": "act-delete",
+          "session_slot": "workshop-slot-1"
+        },
+        "domain": "doors_and_guardrails",
+        "entity_id": "act-delete",
+        "kind": "risky_action_consumed"
+      },
+      "persisted_at_ms": 1731400000000,
+      "record_id": "r1:c8b816c690292373174a96b7d8210d08b6529aaac40e67887dd644ab55c674cb",
+      "schema_version": 1,
+      "scope": {
+        "ghost_id": "tinker-1",
+        "mansion_id": "demo-mansion",
+        "run_id": "implementation-1",
+        "run_sequence": 1,
+        "session_slot": "workshop-slot-1"
+      },
+      "sequence": 19,
+      "source": {
+        "generation": "",
+        "identity_parts": [
+          "risky_action_consumed",
+          "act-delete",
+          "claim-2"
+        ],
+        "origin": "house",
+        "revision": 0,
+        "source_sequence": 0,
+        "source_type": "guardrail"
+      }
+    },
+    {
+      "caused_by": [],
+      "event_id": "e1:ed9eb74dca9de18957e63469000eb64f207fec8a3c053c1fdcd6093b4c5ea787",
+      "event_type": "domain_event_recorded",
+      "occurred_at_ms": null,
+      "payload": {
+        "data": {
+          "access": "write",
+          "code": "protected_path",
+          "denial_id": "deny-1",
+          "path": ".env",
+          "room": "workshop",
+          "session_slot": "workshop-slot-1"
+        },
+        "domain": "doors_and_guardrails",
+        "entity_id": "deny-1",
+        "kind": "path_denied"
+      },
+      "persisted_at_ms": 1731400000000,
+      "record_id": "r1:675ea3962ab719b941c25e61af77c300197ebab67cf9ccdcc9ed9e8c52ccb7f2",
+      "schema_version": 1,
+      "scope": {
+        "ghost_id": "tinker-1",
+        "mansion_id": "demo-mansion",
+        "run_id": "implementation-1",
+        "run_sequence": 1,
+        "session_slot": "workshop-slot-1"
+      },
+      "sequence": 20,
+      "source": {
+        "generation": "",
+        "identity_parts": [
+          "path_denied",
+          "deny-1",
+          "deny-1"
+        ],
+        "origin": "house",
+        "revision": 0,
+        "source_sequence": 0,
+        "source_type": "guardrail"
+      }
+    },
+    {
+      "caused_by": [],
+      "event_id": "e1:eb77b466a6fc7e2002ea24696fc80e2123a2f4a58b07f2b1c07e8fa48c297c5b",
+      "event_type": "domain_event_recorded",
+      "occurred_at_ms": null,
+      "payload": {
+        "data": {
+          "action_digest": "58ec2ed0a57ae5ce83509d0e003c00eec8a51b03f1c0273387cc4eb360624ee3",
+          "claim_id": "claim-1",
+          "code": "not_found",
+          "exit_code": null,
+          "output_bytes": 0,
+          "proposal_id": "act-delete"
+        },
+        "domain": "doors_and_guardrails",
+        "entity_id": "act-delete",
+        "kind": "risky_action_failed"
+      },
+      "persisted_at_ms": 1731400000000,
+      "record_id": "r1:fffedc06f44e95e814b10a2038850f5522758768af92fefe1725f0897f495522",
+      "schema_version": 1,
+      "scope": {
+        "ghost_id": "tinker-1",
+        "mansion_id": "demo-mansion",
+        "run_id": "implementation-1",
+        "run_sequence": 1,
+        "session_slot": "workshop-slot-1"
+      },
+      "sequence": 21,
+      "source": {
+        "generation": "",
+        "identity_parts": [
+          "risky_action_failed",
+          "act-delete",
+          "claim-1"
+        ],
+        "origin": "house",
+        "revision": 0,
+        "source_sequence": 0,
+        "source_type": "guardrail"
+      }
+    }
+  ],
+  "kinds": [
+    "phase_start_reserved",
+    "phase_started",
+    "phase_start_failed",
+    "phase_start_denied",
+    "phase_output_ready",
+    "revision_started",
+    "door_superseded",
+    "door_approved",
+    "door_rejected",
+    "risky_action_proposed",
+    "risky_action_approved",
+    "risky_action_rejected",
+    "risky_action_superseded",
+    "risky_action_consumed",
+    "risky_action_denied",
+    "risky_action_succeeded",
+    "risky_action_failed",
+    "approval_resolution_ignored",
+    "path_denied",
+    "spec_write_prepared",
+    "spec_document_written",
+    "spec_write_recovered",
+    "spec_write_uncertain"
+  ],
+  "mansion_id": "demo-mansion"
+}

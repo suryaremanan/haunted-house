@@ -7,7 +7,7 @@ Implement the final Haunted House presentation in React and TypeScript after ver
 ## Tasks
 
 - [ ] 1. Verify upstream, SDK, and rendered-layout contracts (MVP)
-  - [ ] 1.1 Build the HUI-S0 upstream composition harness
+  - [x] 1.1 Build the HUI-S0 upstream composition harness
     - Create an executable characterization harness under `spikes/house-ui-upstream-contract/` that imports the implemented public seams from `mansion-lifecycle`, `seance-log-and-ghost-state`, `doors-and-guardrails`, and `room-ghosts`.
     - Prove one active-Mansion identity, one canonical GhostSnapshot source, one workflow/Door/waiting projection, one joined artifact/task projection, one replay fold, and existing exact decision callbacks; record only bounded synthetic field/type metadata in a scrubbed fixture.
     - Fail closed if an upstream module is absent, if two modules claim the same authoritative state, or if room success can appear before acknowledged terminal validation. Do not add a substitute reducer, store, approval function, or endpoint.
@@ -28,62 +28,62 @@ Implement the final Haunted House presentation in React and TypeScript after ver
     - _Writes: `spikes/house-ui-reflow/**`, `spikes/fixtures/house-ui-reflow-contract.json`_
     - _Requirements: 6.1, 6.2, 6.3, 6.5, 10.8_
 
-- [ ] 2. Implement pure house interaction and policy modules (MVP)
-  - [ ] 2.1 Implement the static room registry and arrow navigation
+- [x] 2. Implement pure house interaction and policy modules (MVP)
+  - [x] 2.1 Implement the static room registry and arrow navigation
     - Add `app/ui/src/core/house-registry.ts` with typed Room identifiers, names, phases, MVP/stretch scope, stable Room order, fixed geometric neighbors, visible-room filtering, and total `nextRoom` behavior.
     - Keep the module free of React, DOM, Crew SDK, network, filesystem, and clock access; responsive layout must not enter navigation decisions.
     - _Writes: `app/ui/src/core/house-registry.ts`_
     - _Requirements: 1.3, 1.4, 1.5, 3.2, 3.3, 6.4_
 
-  - [ ] 2.2 Implement authoritative House projection, labels, and Needs You selection
+  - [x] 2.2 Implement authoritative House projection, labels, and Needs You selection
     - Add `app/ui/src/core/house-projection.ts` against the exact HUI-S0 contract. Preserve upstream Door and Ghost enums, use `not_applicable` only for registry entities without those concepts, and disable mutation with bounded diagnostics for uncertain, corrupt, incompatible, or malformed inputs.
     - Implement `roomAccessibleName` and `selectNeedsYouItems`; deduplicate authoritative actions, include actionable failed-run recovery, exclude ambient/non-actionable blocked state, and order results by Room order then upstream action order.
     - _Writes: `app/ui/src/core/house-projection.ts`_
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.8, 3.7, 3.8, 4.2, 8.7, 8.8, 8.9, 8.10_
 
-  - [ ] 2.3 Implement the pure Motion Policy
+  - [x] 2.3 Implement the pure Motion Policy
     - Add `app/ui/src/core/motion-policy.ts` with `none` and `low-frequency` as the complete output set; either Still House or reduced motion must select `none`.
     - Keep media-query observation and React state outside the core function.
     - _Writes: `app/ui/src/core/motion-policy.ts`_
     - _Requirements: 7.2, 7.3, 7.5, 7.8_
 
-  - [ ] 2.4 Implement the pure Interruption Policy
+  - [x] 2.4 Implement the pure Interruption Policy
     - Add `app/ui/src/core/interruption-policy.ts` with canonical event-ID deduplication, waiting/blocked/failed eligibility, routine-event rejection, injected observation time, trailing 10-second burst state, deterministic Room-ordered Ghost grouping, latest-state summaries, event-ID evidence, and a 240-code-point copy limit.
     - Export pure reduce and flush functions; read no clock, start no timer, call no host hook, and include no tool input, artifact content, path, or raw model text in a summary.
     - _Writes: `app/ui/src/core/interruption-policy.ts`_
     - _Requirements: 4.5, 4.6, 4.7, 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.11_
 
-  - [ ]* 2.5 Write the property test for authoritative House projection
+  - [x]* 2.5 Write the property test for authoritative House projection
     - Add at least 200 fast-check runs with a small independent reference mapper and the exact feature/property comment.
     - **Property 1: House projection preserves authority and fails closed**
     - **Validates: Requirements 2.1, 2.2, 2.3, 2.4, 2.8**
     - _Writes: `app/ui/src/core/house-projection.property.test.ts`_
 
-  - [ ]* 2.6 Write the property test for complete room labels
+  - [x]* 2.6 Write the property test for complete room labels
     - Generate every room, Phase, Door state, Ghost state, not-applicable combination, and bounded Unicode names; assert exact labelled fields without visual implementation terms.
     - **Property 2: Every room label states the complete nonvisual model**
     - **Validates: Requirements 4.2**
     - _Writes: `app/ui/src/core/room-label.property.test.ts`_
 
-  - [ ]* 2.7 Write the property test for arrow navigation
+  - [x]* 2.7 Write the property test for arrow navigation
     - Generate non-empty visible room sets, all four directions, locked/hidden Séance options, and every responsive mode; compare with the fixed reference graph for at least 200 runs.
     - **Property 3: Arrow navigation is valid, bounded, and layout-independent**
     - **Validates: Requirements 3.2, 3.3, 6.4**
     - _Writes: `app/ui/src/core/house-navigation.property.test.ts`_
 
-  - [ ]* 2.8 Write the property test for Needs You selection
+  - [x]* 2.8 Write the property test for Needs You selection
     - Generate duplicate and resolved proposals, waiting items, failed runs with and without recovery, blocked non-actions, and arbitrary source order for at least 200 runs.
     - **Property 4: Needs You selection is exact, unique, and ordered**
     - **Validates: Requirements 3.7, 3.8, 8.7, 8.8, 8.9, 8.10**
     - _Writes: `app/ui/src/core/needs-you.property.test.ts`_
 
-  - [ ]* 2.9 Write the property test for Motion Policy suppression
+  - [x]* 2.9 Write the property test for Motion Policy suppression
     - Exercise the complete input truth table inside at least 200 generated/repeated cases and assert deterministic output.
     - **Property 5: Either motion preference suppresses optional motion**
     - **Validates: Requirements 7.2, 7.3, 7.5**
     - _Writes: `app/ui/src/core/motion-policy.property.test.ts`_
 
-  - [ ]* 2.10 Write the state-machine property test for Interruption Policy
+  - [x]* 2.10 Write the state-machine property test for Interruption Policy
     - Generate canonical and routine event sequences, duplicate IDs, multiple Ghosts, Unicode labels, summary overflow, and flush times around 9,999, 10,000, and 10,001 milliseconds for at least 200 runs; compare with an independent burst reference model.
     - **Property 6: Interruption filtering, deduplication, and burst summaries follow the reference policy**
     - **Validates: Requirements 8.1, 8.2, 8.3, 8.4, 8.5, 8.6**
@@ -108,21 +108,21 @@ Implement the final Haunted House presentation in React and TypeScript after ver
     - _Writes: `app/ui/src/adapters/sdk-boundary.test.ts`, `app/ui/src/adapters/sdk-shim/index.test.ts`, `app/ui/src/adapters/host-effects.test.tsx`_
     - _Requirements: 4.4, 4.5, 5.4, 8.6, 8.7, 8.9, 9.5, 10.10_
 
-- [ ] 4. Build the original visual system (MVP)
-  - [ ] 4.1 Implement semantic fallback palettes and inline house CSS
+- [x] 4. Build the original visual system (MVP)
+  - [x] 4.1 Implement semantic fallback palettes and inline house CSS
     - Add `app/ui/src/components/house-palette.ts` with light/dark fallback tokens and the complete 4.5:1 text and 3:1 component/focus contrast-pair matrix.
     - Add `app/ui/src/components/house-styles.ts` with HUI-S1-verified Crew variables, fallbacks, wide/compact/linear layouts, long-content wrapping, visible focus rules, state shape/border cues, and motion gated by both `data-motion` and `prefers-reduced-motion`.
     - Keep every optional animation cycle at least two seconds; add no parallax, pointer tracking, perspective movement, shake, or rapid flash; emit no required standalone CSS artifact.
     - _Writes: `app/ui/src/components/house-palette.ts`, `app/ui/src/components/house-styles.ts`_
     - _Requirements: 5.4, 5.5, 5.6, 5.7, 5.8, 5.9, 6.1, 6.2, 6.3, 6.5, 6.6, 7.2, 7.3, 7.5, 7.6, 7.7_
 
-  - [ ] 4.2 Create original decorative house, room, Door, and Ghost SVG
+  - [x] 4.2 Create original decorative house, room, Door, and Ghost SVG
     - Add repository-authored inline SVG primitives in `app/ui/src/components/house-art.tsx` for the cutaway frame, roof, floors, stairs, Foyer, Study, Drafting Room, Workshop, Attic, optional Séance Room, friendly Ghost silhouettes/poses, Doors, candles, dust, and furniture.
     - Mark all art `aria-hidden="true"` and `focusable="false"`; use no SVG image, external use, script, animation element, raster data URI, remote URL, copied character, gore, jump scare, audio, or copyrighted mark.
     - _Writes: `app/ui/src/components/house-art.tsx`_
     - _Requirements: 1.3, 1.4, 1.5, 2.5, 2.6, 2.7, 5.1, 5.2, 5.3, 5.8_
 
-  - [ ]* 4.3 Add palette, CSS, art-origin, and prohibited-feature tests
+  - [x]* 4.3 Add palette, CSS, art-origin, and prohibited-feature tests
     - Calculate every fallback contrast pair using WCAG relative luminance; inspect CSS for required breakpoints, wrapping/focus/motion gates and forbidden effects; inspect SVG/source/bundle inputs for inaccessible or external art and all MVP audio APIs/assets.
     - Assert no Tailwind dependency, directive, or runtime import and no required separate stylesheet.
     - _Writes: `app/ui/src/components/house-palette.test.ts`, `app/ui/src/components/house-styles.test.ts`, `app/ui/src/components/house-art.test.tsx`_

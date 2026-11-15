@@ -1,0 +1,271 @@
+{
+  "description": "Real Mansion_API responses recorded by app/backend/tests/integration/test_mansion_lifecycle_acceptance.py over temporary roots. Do not edit by hand.",
+  "exchanges": [
+    {
+      "step": "list-empty",
+      "method": "GET",
+      "path": "/api/mansions",
+      "request": null,
+      "status": 200,
+      "body": {
+        "schemaVersion": 1,
+        "mansions": []
+      }
+    },
+    {
+      "step": "create",
+      "method": "POST",
+      "path": "/api/mansions",
+      "request": {
+        "name": "weather-station"
+      },
+      "status": 201,
+      "body": {
+        "outcome": "created",
+        "mansion": {
+          "name": "weather-station",
+          "projectSpec": "weather-station",
+          "displayPath": "~/workspace/haunted-house/mansions/weather-station",
+          "status": "ready"
+        }
+      }
+    },
+    {
+      "step": "list-after-create",
+      "method": "GET",
+      "path": "/api/mansions",
+      "request": null,
+      "status": 200,
+      "body": {
+        "schemaVersion": 1,
+        "mansions": [
+          {
+            "name": "weather-station",
+            "projectSpec": "weather-station",
+            "displayPath": "~/workspace/haunted-house/mansions/weather-station",
+            "status": "ready"
+          }
+        ]
+      }
+    },
+    {
+      "step": "open",
+      "method": "POST",
+      "path": "/api/mansions/open",
+      "request": {
+        "name": "weather-station"
+      },
+      "status": 200,
+      "body": {
+        "mansion": {
+          "name": "weather-station",
+          "projectSpec": "weather-station",
+          "displayPath": "~/workspace/haunted-house/mansions/weather-station",
+          "status": "ready"
+        }
+      }
+    },
+    {
+      "step": "list-after-restart",
+      "method": "GET",
+      "path": "/api/mansions",
+      "request": null,
+      "status": 200,
+      "body": {
+        "schemaVersion": 1,
+        "mansions": [
+          {
+            "name": "weather-station",
+            "projectSpec": "weather-station",
+            "displayPath": "~/workspace/haunted-house/mansions/weather-station",
+            "status": "ready"
+          }
+        ]
+      }
+    },
+    {
+      "step": "open-after-restart",
+      "method": "POST",
+      "path": "/api/mansions/open",
+      "request": {
+        "name": "weather-station"
+      },
+      "status": 200,
+      "body": {
+        "mansion": {
+          "name": "weather-station",
+          "projectSpec": "weather-station",
+          "displayPath": "~/workspace/haunted-house/mansions/weather-station",
+          "status": "ready"
+        }
+      }
+    },
+    {
+      "step": "create-repeat",
+      "method": "POST",
+      "path": "/api/mansions",
+      "request": {
+        "name": "weather-station"
+      },
+      "status": 200,
+      "body": {
+        "outcome": "existing_compatible",
+        "mansion": {
+          "name": "weather-station",
+          "projectSpec": "weather-station",
+          "displayPath": "~/workspace/haunted-house/mansions/weather-station",
+          "status": "ready"
+        }
+      }
+    },
+    {
+      "step": "open-unregistered",
+      "method": "POST",
+      "path": "/api/mansions/open",
+      "request": {
+        "name": "adopted-project"
+      },
+      "status": 404,
+      "body": {
+        "error": {
+          "code": "mansion_not_registered",
+          "message": "This mansion is not registered. Refresh the list and try again."
+        }
+      }
+    },
+    {
+      "step": "adopt",
+      "method": "POST",
+      "path": "/api/mansions",
+      "request": {
+        "name": "adopted-project"
+      },
+      "status": 200,
+      "body": {
+        "outcome": "existing_compatible",
+        "mansion": {
+          "name": "adopted-project",
+          "projectSpec": "adopted-project",
+          "displayPath": "~/workspace/haunted-house/mansions/adopted-project",
+          "status": "ready"
+        }
+      }
+    },
+    {
+      "step": "open-adopted",
+      "method": "POST",
+      "path": "/api/mansions/open",
+      "request": {
+        "name": "adopted-project"
+      },
+      "status": 200,
+      "body": {
+        "mansion": {
+          "name": "adopted-project",
+          "projectSpec": "adopted-project",
+          "displayPath": "~/workspace/haunted-house/mansions/adopted-project",
+          "status": "ready"
+        }
+      }
+    },
+    {
+      "step": "create-conflict",
+      "method": "POST",
+      "path": "/api/mansions",
+      "request": {
+        "name": "legacy-code"
+      },
+      "status": 409,
+      "body": {
+        "error": {
+          "code": "mansion_conflict",
+          "message": "Existing content conflicts with this mansion. Nothing was changed."
+        }
+      }
+    },
+    {
+      "step": "open-conflict",
+      "method": "POST",
+      "path": "/api/mansions/open",
+      "request": {
+        "name": "legacy-code"
+      },
+      "status": 404,
+      "body": {
+        "error": {
+          "code": "mansion_not_registered",
+          "message": "This mansion is not registered. Refresh the list and try again."
+        }
+      }
+    },
+    {
+      "step": "invalid-name",
+      "method": "POST",
+      "path": "/api/mansions",
+      "request": {
+        "name": "../escape"
+      },
+      "status": 422,
+      "body": {
+        "error": {
+          "code": "invalid_mansion_name",
+          "message": "Use 1-40 lowercase letters, numbers, and single hyphens."
+        }
+      }
+    },
+    {
+      "step": "invalid-request",
+      "method": "POST",
+      "path": "/api/mansions",
+      "request": {
+        "path": "/tmp/x"
+      },
+      "status": 400,
+      "body": {
+        "error": {
+          "code": "invalid_request",
+          "message": "The mansion request was not understood."
+        }
+      }
+    },
+    {
+      "step": "list-final",
+      "method": "GET",
+      "path": "/api/mansions",
+      "request": null,
+      "status": 200,
+      "body": {
+        "schemaVersion": 1,
+        "mansions": [
+          {
+            "name": "adopted-project",
+            "projectSpec": "adopted-project",
+            "displayPath": "~/workspace/haunted-house/mansions/adopted-project",
+            "status": "conflict"
+          },
+          {
+            "name": "weather-station",
+            "projectSpec": "weather-station",
+            "displayPath": "~/workspace/haunted-house/mansions/weather-station",
+            "status": "ready"
+          }
+        ]
+      }
+    },
+    {
+      "step": "open-broken",
+      "method": "POST",
+      "path": "/api/mansions/open",
+      "request": {
+        "name": "adopted-project"
+      },
+      "status": 409,
+      "body": {
+        "error": {
+          "code": "mansion_conflict",
+          "message": "Existing content conflicts with this mansion. Nothing was changed."
+        }
+      }
+    }
+  ]
+}

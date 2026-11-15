@@ -9,7 +9,7 @@ Milestone targets are canonical Replay Engine by 2026-11-22, Attic and Pages can
 ## Tasks
 
 - [ ] 1. Resolve upstream and publication assumptions (MVP)
-  - [ ] 1.1 Implement the RS-S0 canonical replay composition harness
+  - [x] 1.1 Implement the RS-S0 canonical replay composition harness
     - Import the implemented public seams from `seance-log-and-ghost-state`, `doors-and-guardrails`, `room-ghosts`, and `house-ui-and-accessibility`; exercise one synthetic Door, tool approval, terminal result, failure/denial, and multi-Ghost history.
     - Prove one spec 2 Event Log, one Canonical Parser/selector, one live/replay fold contract, equal full projections, and no alternate Attic authority store. Return `contract_unavailable` when any seam is absent or incompatible.
     - Record only scrubbed schema/version/type metadata in a machine-readable spike result; do not create a compatibility log, parser, reducer, or state snapshot.
@@ -30,44 +30,44 @@ Milestone targets are canonical Replay Engine by 2026-11-22, Attic and Pages can
     - _Writes: `spikes/replay-media-capture/**`, `spikes/fixtures/replay-media-capture.json`_
     - _Requirements: 9.7, 10.1, 10.2, 10.6, 12.6_
 
-- [ ] 2. Implement the pure canonical Replay Engine (MVP, due 2026-11-22)
-  - [ ] 2.1 Implement canonical Replay Model and safe Timeline construction
+- [x] 2. Implement the pure canonical Replay Engine (MVP, due 2026-11-22)
+  - [x] 2.1 Implement canonical Replay Model and safe Timeline construction
     - Add `app/ui/src/core/replay-timeline.ts` against the RS-S0 public port. Build one Timeline entry per selected Canonical Record, retain Canonical Order, calculate bounded deterministic Presentation Times, and construct only allowlisted 160-code-point actor/outcome summaries.
     - Remove raw Crew-frame normalization and raw-payload fallback from the production replay model. Keep the module free of React, DOM, SDK, timer, network, filesystem, and clock access.
     - _Writes: `app/ui/src/core/replay-timeline.ts`_
     - _Requirements: 1.1, 1.2, 1.3, 2.11, 3.2, 5.3_
 
-  - [ ] 2.2 Implement immutable replay command reduction and prefix folding
+  - [x] 2.2 Implement immutable replay command reduction and prefix folding
     - Add `app/ui/src/core/replay-reducer.ts` with paused/playing/complete states, Cursor bounds, speed values `0.5`, `1`, and `2`, generation invalidation, play/pause/resume/restart/seek/step commands, typed errors, and projection recomputation through the approved prefix fold.
     - Make stale-generation steps no-ops, restart idempotent, invalid commands state-preserving, and every final Cursor equal the complete fold.
     - _Writes: `app/ui/src/core/replay-reducer.ts`_
     - _Requirements: 2.1–2.11_
 
-  - [ ]* 2.3 Write the property test for canonical replay and live-fold parity
+  - [x]* 2.3 Write the property test for canonical replay and live-fold parity
     - Add at least 200 fast-check runs over multi-Mansion, multi-Ghost canonical records, variants, duplicates, and permutations using the RS-S0 in-memory public folds.
     - **Property 1: Canonical replay and live folding agree**
     - **Validates: Requirements 1.2, 1.3, 1.6, 2.9, 11.3**
     - _Writes: `app/ui/src/core/replay-live-parity.property.test.ts`_
 
-  - [ ]* 2.4 Write the property test for Cursor and prefix-fold equality
+  - [x]* 2.4 Write the property test for Cursor and prefix-fold equality
     - Generate empty/non-empty models, every valid Cursor, invalid non-integer/out-of-range Cursors, step generations, and repeated restarts for at least 200 runs.
     - **Property 2: Every cursor is exactly a canonical prefix fold**
     - **Validates: Requirements 2.3, 2.6, 2.7, 2.8, 2.9**
     - _Writes: `app/ui/src/core/replay-prefix.property.test.ts`_
 
-  - [ ]* 2.5 Write the state-machine property test for playback command convergence
+  - [x]* 2.5 Write the state-machine property test for playback command convergence
     - Generate valid command sequences with pauses, resumes, current/stale steps, speed changes, seeks, and restarts; constrain one branch to finish and compare the final full projection.
     - **Property 3: Playback command sequences converge without spontaneous progress**
     - **Validates: Requirements 2.2, 2.4, 2.5, 2.10**
     - _Writes: `app/ui/src/core/replay-commands.property.test.ts`_
 
-  - [ ]* 2.6 Write the property test for deterministic disclosure-safe Timeline construction
+  - [x]* 2.6 Write the property test for deterministic disclosure-safe Timeline construction
     - Generate Canonical Records with null, backward, equal, and extreme times plus arbitrary Unicode payloads containing sensitive markers; compare order, offsets, interval bounds, summary bounds, and allowed fields.
     - **Property 4: Timeline construction is deterministic, ordered, and disclosure-safe**
     - **Validates: Requirements 1.3, 3.2, 5.3**
     - _Writes: `app/ui/src/core/replay-timeline.property.test.ts`_
 
-  - [ ]* 2.7 Add Replay Engine example and boundary tests
+  - [x]* 2.7 Add Replay Engine example and boundary tests
     - Cover empty logs; initial state; every command; 250/4,000 millisecond timing clamps; null/backward times; current and stale generations; start/middle/final seek; 0.5×/1×/2× delay scaling; unknown event fallback; and Unicode copy limits.
     - _Writes: `app/ui/src/core/replay-timeline.test.ts`, `app/ui/src/core/replay-reducer.test.ts`_
     - _Requirements: 1.4, 1.5, 2.1–2.9, 3.2_
@@ -116,26 +116,26 @@ Milestone targets are canonical Replay Engine by 2026-11-22, Attic and Pages can
     - _Writes: `app/ui/src/rooms/attic/AtticPanel.test.tsx`, `app/ui/src/attic-live-replay.test.tsx`_
     - _Requirements: 3.1–3.9, 4.1, 11.4_
 
-- [ ] 5. Create canonical fixture and fail-closed publication logic (MVP)
-  - [ ] 5.1 Implement deterministic synthetic Event Log fixture generation
+- [x] 5. Create canonical fixture and fail-closed publication logic (MVP)
+  - [x] 5.1 Implement deterministic synthetic Event Log fixture generation
     - Add a fixture builder through the spec 2 canonical serializer with fixed synthetic Mansion/run identities, occurrence times, and events for two Ghosts, tool start/finish, approval request/decision, Door decision, completion, and blocked/failed outcome.
     - Generate `fixtures/replay/demo.jsonl`, compare committed bytes on check, and emit expected selected Record IDs and full Replay Projection as test-only evidence rather than runtime snapshot input.
     - _Writes: `scripts/build-replay-fixture.py`, `fixtures/replay/demo.jsonl`, `fixtures/replay/demo.expected.json`_
     - _Requirements: 5.1, 5.2, 5.4, 5.6_
 
-  - [ ] 5.2 Implement the pure publication classifier and artifact inventory
+  - [x] 5.2 Implement the pure publication classifier and artifact inventory
     - Add pure Python logic for canonical fixture findings, credential/Home Path categories, local asset graph containment, regular-file/link metadata, localhost Gateway origins, remote runtime assets, live transport constructs, and category-only diagnostics.
     - Reuse the foundation secret rule table rather than copying patterns; never store or print a matched sensitive value.
     - _Writes: `scripts/lib/publication_contract.py`, `scripts/check-replay-publication.py`_
     - _Requirements: 4.9, 5.3, 5.5, 11.5_
 
-  - [ ]* 5.3 Write the property test for publication fail-closed behavior
+  - [x]* 5.3 Write the property test for publication fail-closed behavior
     - Use at least 200 Hypothesis examples with planted raw/encoded credentials, macOS/Linux/Windows Home Paths, localhost origins, remote references, path escapes, transport constructs, symlinks, and hard-link facts; assert clean synthetic graphs pass and findings do not echo planted data.
     - **Property 5: Publication classification rejects every prohibited disclosure or transport**
     - **Validates: Requirements 4.9, 5.3, 5.5, 11.5**
     - _Writes: `scripts/tests/property/test_publication_contract.py`_
 
-  - [ ]* 5.4 Add fixture generation, canonicality, narrative, and regression tests
+  - [x]* 5.4 Add fixture generation, canonicality, narrative, and regression tests
     - Parse every line with the real Canonical Parser, compare a second generation byte-for-byte, assert narrative coverage and expected final projection, inject malformed/unsupported/unrelated-session cases, and run the existing secret/Home Path scanner over source and generated copies.
     - _Writes: `scripts/tests/test_build_replay_fixture.py`, `scripts/tests/test_replay_fixture_contract.py`_
     - _Requirements: 1.4, 5.1–5.6_
