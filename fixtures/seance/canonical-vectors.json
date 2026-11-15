@@ -1,0 +1,404 @@
+{
+  "format_version": 1,
+  "canonical_vectors": [
+    {
+      "name": "crew-message-redacted",
+      "candidate": {
+        "schema_version": 1,
+        "event_type": "message_recorded",
+        "scope": {
+          "mansion_id": "demo-mansion",
+          "ghost_id": "archivist",
+          "session_slot": "study-slot",
+          "run_id": "requirements-1",
+          "run_sequence": 2
+        },
+        "source": {
+          "origin": "crew",
+          "source_type": "chat_message",
+          "identity_parts": ["message-7", "assistant"],
+          "revision": 3,
+          "generation": "generation-2",
+          "source_sequence": 7
+        },
+        "caused_by": [
+          "e1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        ],
+        "occurred_at_ms": 1731400000123,
+        "payload": {
+          "api_key": "[redacted]",
+          "nested": {
+            "a": [true, null, 1.5],
+            "z": "candle notes"
+          },
+          "text": "Requirements are ready.",
+          "workspace": "[home]/workspace/demo-mansion"
+        }
+      },
+      "redacted_event": {
+        "schema_version": 1,
+        "event_id": "e1:949370febb076eff82a6ae6f9a624feba67077a21bc482c1b038d989447e75ae",
+        "record_id": "r1:3f4aeae14f1fb2b7d6ce69cb98306a35a881d4455f37d81ca8969506ffbe13eb",
+        "sequence": 7,
+        "event_type": "message_recorded",
+        "scope": {
+          "mansion_id": "demo-mansion",
+          "ghost_id": "archivist",
+          "session_slot": "study-slot",
+          "run_id": "requirements-1",
+          "run_sequence": 2
+        },
+        "source": {
+          "origin": "crew",
+          "source_type": "chat_message",
+          "identity_parts": ["message-7", "assistant"],
+          "revision": 3,
+          "generation": "generation-2",
+          "source_sequence": 7
+        },
+        "caused_by": [
+          "e1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        ],
+        "occurred_at_ms": 1731400000123,
+        "persisted_at_ms": 1731400001000,
+        "payload": {
+          "api_key": "[redacted]",
+          "nested": {
+            "a": [true, null, 1.5],
+            "z": "candle notes"
+          },
+          "text": "Requirements are ready.",
+          "workspace": "[home]/workspace/demo-mansion"
+        },
+        "prev_hash": "h1:0000000000000000000000000000000000000000000000000000000000000000",
+        "hash": "h1:1111111111111111111111111111111111111111111111111111111111111111"
+      },
+      "expected": {
+        "event_id": "e1:949370febb076eff82a6ae6f9a624feba67077a21bc482c1b038d989447e75ae",
+        "record_id": "r1:3f4aeae14f1fb2b7d6ce69cb98306a35a881d4455f37d81ca8969506ffbe13eb",
+        "sequence": 7,
+        "integrity": {
+          "prev_hash": "h1:0000000000000000000000000000000000000000000000000000000000000000",
+          "hash": "h1:1111111111111111111111111111111111111111111111111111111111111111"
+        },
+        "domain_payload": null,
+        "canonical_jsonl_utf8_hex": "7b226361757365645f6279223a5b2265313a61616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161225d2c226576656e745f6964223a2265313a39343933373066656262303736656666383261366165366639613632346665626136373037376132316263343832633162303338643938393434376537356165222c226576656e745f74797065223a226d6573736167655f7265636f72646564222c2268617368223a2268313a31313131313131313131313131313131313131313131313131313131313131313131313131313131313131313131313131313131313131313131313131313131222c226f636375727265645f61745f6d73223a313733313430303030303132332c227061796c6f6164223a7b226170695f6b6579223a225b72656461637465645d222c226e6573746564223a7b2261223a5b747275652c6e756c6c2c312e355d2c227a223a2263616e646c65206e6f746573227d2c2274657874223a22526571756972656d656e7473206172652072656164792e222c22776f726b7370616365223a225b686f6d655d2f776f726b73706163652f64656d6f2d6d616e73696f6e227d2c227065727369737465645f61745f6d73223a313733313430303030313030302c22707265765f68617368223a2268313a30303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030222c227265636f72645f6964223a2272313a33663461656165313466316662326237643663653639636239383330366133356138383164343435356633376438316361383936393530366666626531336562222c22736368656d615f76657273696f6e223a312c2273636f7065223a7b2267686f73745f6964223a22617263686976697374222c226d616e73696f6e5f6964223a2264656d6f2d6d616e73696f6e222c2272756e5f6964223a22726571756972656d656e74732d31222c2272756e5f73657175656e6365223a322c2273657373696f6e5f736c6f74223a2273747564792d736c6f74227d2c2273657175656e6365223a372c22736f75726365223a7b2267656e65726174696f6e223a2267656e65726174696f6e2d32222c226964656e746974795f7061727473223a5b226d6573736167652d37222c22617373697374616e74225d2c226f726967696e223a2263726577222c227265766973696f6e223a332c22736f757263655f73657175656e6365223a372c22736f757263655f74797065223a22636861745f6d657373616765227d7d0a"
+      }
+    },
+    {
+      "name": "house-domain-event-redacted",
+      "candidate": {
+        "schema_version": 1,
+        "event_type": "domain_event_recorded",
+        "scope": {
+          "mansion_id": "demo-mansion",
+          "ghost_id": "draughtsman",
+          "session_slot": "drafting-slot",
+          "run_id": "design-1",
+          "run_sequence": 0
+        },
+        "source": {
+          "origin": "house",
+          "source_type": "door_decision",
+          "identity_parts": ["design-door", "decision-1"],
+          "revision": 0,
+          "generation": "",
+          "source_sequence": 0
+        },
+        "caused_by": [],
+        "occurred_at_ms": null,
+        "payload": {
+          "domain": "doors",
+          "kind": "door_approved",
+          "entity_id": "design-door",
+          "data": {
+            "actor": "owner",
+            "approved": true,
+            "note": "[redacted]",
+            "project": "[home]/workspace/demo-mansion"
+          }
+        }
+      },
+      "redacted_event": {
+        "schema_version": 1,
+        "event_id": "e1:5454a9154f88edb3387eb50d7f58dc10cb0f5cb791a8720f67b480340e1190e0",
+        "record_id": "r1:bc15b68298aba4b6b4a83c4859fc6667fe856b146a177abdbd1cbce17f6edb1b",
+        "sequence": 8,
+        "event_type": "domain_event_recorded",
+        "scope": {
+          "mansion_id": "demo-mansion",
+          "ghost_id": "draughtsman",
+          "session_slot": "drafting-slot",
+          "run_id": "design-1",
+          "run_sequence": 0
+        },
+        "source": {
+          "origin": "house",
+          "source_type": "door_decision",
+          "identity_parts": ["design-door", "decision-1"],
+          "revision": 0,
+          "generation": "",
+          "source_sequence": 0
+        },
+        "caused_by": [],
+        "occurred_at_ms": null,
+        "persisted_at_ms": 1731400002000,
+        "payload": {
+          "domain": "doors",
+          "kind": "door_approved",
+          "entity_id": "design-door",
+          "data": {
+            "actor": "owner",
+            "approved": true,
+            "note": "[redacted]",
+            "project": "[home]/workspace/demo-mansion"
+          }
+        }
+      },
+      "expected": {
+        "event_id": "e1:5454a9154f88edb3387eb50d7f58dc10cb0f5cb791a8720f67b480340e1190e0",
+        "record_id": "r1:bc15b68298aba4b6b4a83c4859fc6667fe856b146a177abdbd1cbce17f6edb1b",
+        "sequence": 8,
+        "integrity": null,
+        "domain_payload": {
+          "domain": "doors",
+          "kind": "door_approved",
+          "entity_id": "design-door",
+          "data": {
+            "actor": "owner",
+            "approved": true,
+            "note": "[redacted]",
+            "project": "[home]/workspace/demo-mansion"
+          }
+        },
+        "canonical_jsonl_utf8_hex": "7b226361757365645f6279223a5b5d2c226576656e745f6964223a2265313a35343534613931353466383865646233333837656235306437663538646331306362306635636237393161383732306636376234383033343065313139306530222c226576656e745f74797065223a22646f6d61696e5f6576656e745f7265636f72646564222c226f636375727265645f61745f6d73223a6e756c6c2c227061796c6f6164223a7b2264617461223a7b226163746f72223a226f776e6572222c22617070726f766564223a747275652c226e6f7465223a225b72656461637465645d222c2270726f6a656374223a225b686f6d655d2f776f726b73706163652f64656d6f2d6d616e73696f6e227d2c22646f6d61696e223a22646f6f7273222c22656e746974795f6964223a2264657369676e2d646f6f72222c226b696e64223a22646f6f725f617070726f766564227d2c227065727369737465645f61745f6d73223a313733313430303030323030302c227265636f72645f6964223a2272313a62633135623638323938616261346236623461383363343835396663363636376665383536623134366131373761626462643163626365313766366564623162222c22736368656d615f76657273696f6e223a312c2273636f7065223a7b2267686f73745f6964223a2264726175676874736d616e222c226d616e73696f6e5f6964223a2264656d6f2d6d616e73696f6e222c2272756e5f6964223a2264657369676e2d31222c2272756e5f73657175656e6365223a302c2273657373696f6e5f736c6f74223a226472616674696e672d736c6f74227d2c2273657175656e6365223a382c22736f75726365223a7b2267656e65726174696f6e223a22222c226964656e746974795f7061727473223a5b2264657369676e2d646f6f72222c226465636973696f6e2d31225d2c226f726967696e223a22686f757365222c227265766973696f6e223a302c22736f757263655f73657175656e6365223a302c22736f757263655f74797065223a22646f6f725f6465636973696f6e227d7d0a"
+      }
+    }
+  ],
+  "validation_errors": [
+    {
+      "name": "unsupported-candidate-schema",
+      "target": "candidate",
+      "base": "crew-message-redacted",
+      "mutation": {
+        "operation": "replace",
+        "path": ["schema_version"],
+        "value": 2
+      },
+      "expected": {
+        "python": {
+          "code": "unsupported_schema",
+          "field": "schema_version",
+          "reason": "unsupported_value"
+        },
+        "typescript": {
+          "code": "unsupported_schema",
+          "path": "$.schema_version",
+          "safe_detail": "Schema version is not supported."
+        }
+      }
+    },
+    {
+      "name": "unknown-event-type",
+      "target": "candidate",
+      "base": "crew-message-redacted",
+      "mutation": {
+        "operation": "replace",
+        "path": ["event_type"],
+        "value": "message_created"
+      },
+      "expected": {
+        "python": {
+          "code": "invalid_candidate",
+          "field": "event_type",
+          "reason": "unsupported_value"
+        },
+        "typescript": {
+          "code": "invalid_candidate",
+          "path": "$.event_type",
+          "safe_detail": "must be a supported Event_Type"
+        }
+      }
+    },
+    {
+      "name": "invalid-mansion-id",
+      "target": "candidate",
+      "base": "crew-message-redacted",
+      "mutation": {
+        "operation": "replace",
+        "path": ["scope", "mansion_id"],
+        "value": "Demo Mansion"
+      },
+      "expected": {
+        "python": {
+          "code": "invalid_candidate",
+          "field": "scope.mansion_id",
+          "reason": "invalid_identifier"
+        },
+        "typescript": {
+          "code": "invalid_candidate",
+          "path": "$.scope.mansion_id",
+          "safe_detail": "must be a kebab-case Mansion_ID of at most 40 characters"
+        }
+      }
+    },
+    {
+      "name": "invalid-domain-payload",
+      "target": "candidate",
+      "base": "house-domain-event-redacted",
+      "mutation": {
+        "operation": "delete",
+        "path": ["payload", "data"]
+      },
+      "expected": {
+        "python": {
+          "code": "invalid_candidate",
+          "field": "payload",
+          "reason": "missing_field"
+        },
+        "typescript": {
+          "code": "invalid_candidate",
+          "path": "$.payload",
+          "safe_detail": "has missing or unexpected fields"
+        }
+      }
+    },
+    {
+      "name": "invalid-sequence",
+      "target": "event",
+      "base": "crew-message-redacted",
+      "mutation": {
+        "operation": "replace",
+        "path": ["sequence"],
+        "value": 0
+      },
+      "expected": {
+        "python": {
+          "code": "invalid_record",
+          "field": "sequence",
+          "reason": "out_of_range"
+        },
+        "typescript": {
+          "code": "invalid_record",
+          "path": "$.sequence",
+          "safe_detail": "must be an integer greater than or equal to 1"
+        }
+      }
+    },
+    {
+      "name": "malformed-record-id",
+      "target": "event",
+      "base": "crew-message-redacted",
+      "mutation": {
+        "operation": "replace",
+        "path": ["record_id"],
+        "value": "r1:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      },
+      "expected": {
+        "python": {
+          "code": "invalid_record",
+          "field": "record_id",
+          "reason": "invalid_identifier"
+        },
+        "typescript": {
+          "code": "invalid_record",
+          "path": "$.record_id",
+          "safe_detail": "must be a lowercase r1 SHA-256 identifier"
+        }
+      }
+    },
+    {
+      "name": "unpaired-integrity-field",
+      "target": "event",
+      "base": "crew-message-redacted",
+      "mutation": {
+        "operation": "delete",
+        "path": ["hash"]
+      },
+      "expected": {
+        "python": {
+          "code": "invalid_record",
+          "field": "prev_hash/hash",
+          "reason": "hash_pair_required"
+        },
+        "typescript": {
+          "code": "invalid_record",
+          "path": "$",
+          "safe_detail": "prev_hash and hash must be present together"
+        }
+      }
+    },
+    {
+      "name": "event-id-content-mismatch",
+      "target": "event",
+      "base": "crew-message-redacted",
+      "mutation": {
+        "operation": "replace",
+        "path": ["event_id"],
+        "value": "e1:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      "expected": {
+        "python": {
+          "code": "invalid_record",
+          "field": "event_id",
+          "reason": "identifier_mismatch"
+        },
+        "typescript": {
+          "code": "invalid_record",
+          "path": "$.event_id",
+          "safe_detail": "does not match canonical event content"
+        }
+      }
+    },
+    {
+      "name": "record-id-content-mismatch",
+      "target": "event",
+      "base": "crew-message-redacted",
+      "mutation": {
+        "operation": "replace",
+        "path": ["record_id"],
+        "value": "r1:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+      },
+      "expected": {
+        "python": {
+          "code": "invalid_record",
+          "field": "record_id",
+          "reason": "identifier_mismatch"
+        },
+        "typescript": {
+          "code": "invalid_record",
+          "path": "$.record_id",
+          "safe_detail": "does not match canonical event content"
+        }
+      }
+    }
+  ],
+  "canonical_json_vectors": [
+    {
+      "name": "small-exponent",
+      "value": {"fraction": 1e-7},
+      "expected": "{\"fraction\":1e-7}"
+    },
+    {
+      "name": "fixed-lower-bound",
+      "value": {"fraction": 1e-6},
+      "expected": "{\"fraction\":0.000001}"
+    },
+    {
+      "name": "fixed-upper-range",
+      "value": {"number": 1e20},
+      "expected": "{\"number\":100000000000000000000}"
+    },
+    {
+      "name": "negative-zero",
+      "value": {"number": -0.0},
+      "expected": "{\"number\":0}"
+    },
+    {
+      "name": "integral-float",
+      "value": {"number": 1.0},
+      "expected": "{\"number\":1}"
+    }
+  ],
+  "parity_disagreements": []
+}

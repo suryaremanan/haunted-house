@@ -1,0 +1,214 @@
+{
+  "spike": "RS-S0",
+  "schemaVersion": 1,
+  "result": "pass",
+  "eventSchemaVersion": 1,
+  "eventTypes": [
+    "run_started",
+    "ghost_progressed",
+    "message_recorded",
+    "message_updated",
+    "response_segment_started",
+    "response_chunk_recorded",
+    "crew_turn_ended",
+    "crew_error_observed",
+    "run_completed",
+    "run_blocked",
+    "run_failed",
+    "tool_started",
+    "tool_updated",
+    "tool_finished",
+    "approval_requested",
+    "approval_decided",
+    "decision_recorded",
+    "domain_event_recorded",
+    "source_event_observed"
+  ],
+  "guardrailKinds": [
+    "phase_start_reserved",
+    "phase_started",
+    "phase_start_failed",
+    "phase_start_denied",
+    "phase_output_ready",
+    "revision_started",
+    "door_superseded",
+    "door_approved",
+    "door_rejected",
+    "risky_action_proposed",
+    "risky_action_approved",
+    "risky_action_rejected",
+    "risky_action_superseded",
+    "risky_action_consumed",
+    "risky_action_denied",
+    "risky_action_succeeded",
+    "risky_action_failed",
+    "approval_resolution_ignored",
+    "path_denied",
+    "spec_write_prepared",
+    "spec_document_written",
+    "spec_write_recovered",
+    "spec_write_uncertain"
+  ],
+  "ghostStates": [
+    "idle",
+    "working",
+    "waiting",
+    "blocked",
+    "failed",
+    "done"
+  ],
+  "eventLog": {
+    "file": "events.v1.jsonl",
+    "owners": [
+      "app/backend/haunted_house/adapters/seance_log_store.py"
+    ]
+  },
+  "seams": {
+    "app/ui/src/core/seance-event.ts": [
+      "EVENT_TYPES",
+      "SCHEMA_VERSION",
+      "parseAppEventLine",
+      "serializeAppEvent",
+      "canonicalJson"
+    ],
+    "app/ui/src/core/seance-log.ts": [
+      "parseEventLog",
+      "projectEvents",
+      "projectLog",
+      "mergeAcknowledged",
+      "EMPTY_LOG"
+    ],
+    "app/ui/src/core/ghost-state.ts": [
+      "selectEvents",
+      "foldGhostEvents",
+      "GHOST_STATES"
+    ],
+    "app/ui/src/core/workflow-fold.ts": [
+      "foldWorkflow",
+      "readDomainRecord",
+      "GUARDRAIL_KINDS",
+      "GUARDRAIL_DOMAIN"
+    ],
+    "app/ui/src/core/workflow-projection.ts": [
+      "workflowProjectionToJson",
+      "PHASES"
+    ],
+    "app/ui/src/core/house-view.ts": [
+      "needsYou",
+      "houseRooms",
+      "ROOMS"
+    ],
+    "app/ui/src/core/ghost-status.ts": [
+      "ghostRows"
+    ],
+    "app/ui/src/core/replay-timeline.ts": [
+      "CANONICAL_REPLAY_PORT",
+      "buildReplayModel",
+      "parseCanonicalLog",
+      "foldReplay",
+      "foldLive",
+      "replayFoldFor",
+      "workflowOf"
+    ],
+    "app/ui/src/core/replay-reducer.ts": [
+      "initialReplayState",
+      "reduceReplayCommand",
+      "nextDelayMs",
+      "REPLAY_SPEEDS"
+    ]
+  },
+  "projectionFields": [
+    "diagnostics",
+    "ghosts",
+    "integrity",
+    "transitions",
+    "validRecordCount",
+    "workflows"
+  ],
+  "replayStateFields": [
+    "commandError",
+    "cursor",
+    "generation",
+    "projection",
+    "speed",
+    "status"
+  ],
+  "checks": [
+    {
+      "id": "every_public_seam_is_present",
+      "pass": true
+    },
+    {
+      "id": "one_canonical_event_log",
+      "pass": true
+    },
+    {
+      "id": "one_canonical_parser",
+      "pass": true
+    },
+    {
+      "id": "one_event_selector",
+      "pass": true
+    },
+    {
+      "id": "one_fold_per_projection",
+      "pass": true
+    },
+    {
+      "id": "no_alternate_attic_authority_store",
+      "pass": true
+    },
+    {
+      "id": "fixture_parses_through_the_canonical_parser",
+      "pass": true
+    },
+    {
+      "id": "selection_equals_the_backend_selection",
+      "pass": true
+    },
+    {
+      "id": "history_has_a_door_decision",
+      "pass": true
+    },
+    {
+      "id": "history_has_a_tool_approval",
+      "pass": true
+    },
+    {
+      "id": "history_has_a_terminal_result",
+      "pass": true
+    },
+    {
+      "id": "history_has_a_failure_and_a_denial",
+      "pass": true
+    },
+    {
+      "id": "history_has_several_ghosts",
+      "pass": true
+    },
+    {
+      "id": "live_and_replay_projections_are_equal",
+      "pass": true
+    },
+    {
+      "id": "every_prefix_equals_the_backend_workflow",
+      "pass": true
+    },
+    {
+      "id": "final_projection_equals_the_backend_projection",
+      "pass": true
+    },
+    {
+      "id": "engine_final_cursor_equals_the_full_fold",
+      "pass": true
+    },
+    {
+      "id": "house_view_reads_the_replay_projection",
+      "pass": true
+    },
+    {
+      "id": "seams_compose_without_error",
+      "pass": true
+    }
+  ]
+}

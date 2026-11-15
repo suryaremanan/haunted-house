@@ -16,14 +16,32 @@ fires. It checks:
 - Requirement 3.3: `permissions.api` is exactly the gateway client's ROUTES
   paths plus the app's own backend prefix, which the dashboard's
   `useAppApi()` needs;
+- Mansion Lifecycle Requirement 6.1: `permissions.storage` is exactly `true`
+  because the backend stores durable metadata in Crew's app-scoped data
+  directory;
 - Requirement 3.4: no `autoApprove` key at any depth or in any spelling, in
   the manifest or in agent files under app/agents/;
-- the manifest asks for nothing spec 1 does not use (only `permissions.api`)
-  and has no unknown top-level keys. Crew keeps unknown keys without
-  complaint, so a typo would otherwise go unnoticed.
+- Séance Requirements 11.5 and 12.2: `permissions.api` also holds `/api/chat/*`
+  for bounded session-history reads, `permissions.events` is exactly the Crew
+  event names the backend normalizer maps, and there is no spawn, global
+  approval or WebSocket grant;
+- Doors and Guardrails Requirements 6.1, 7.2–7.4 and 11.3–11.4 (task 12.1):
+  gateway-managed resources, exactly the four ghost agent files, exactly the
+  four per-room stdio MCP entries in the S9 launch shape, `/api/chat` for the
+  app-owned session turn, and `permissions.sessionApproval: true` so the app
+  may answer prompts of sessions it owns. Every gateway path the client
+  builds is covered by a declared prefix and every declared prefix is used;
+- Room Ghosts Requirements 1.1–1.8 (task 4.5): `skills` is exactly the four MVP
+  Room_Skill directories, each holding a `SKILL.md`. The stretch Medium's
+  profile and skill ship in the tree but are declared only when the Séance
+  Room is enabled, so the default manifest names neither;
+- the manifest asks only for the grants currently used (`permissions.api`,
+  `permissions.events`, `permissions.sessionApproval` and
+  `permissions.storage`) and has no unknown top-level keys. Crew keeps unknown
+  keys without complaint, so a typo would otherwise go unnoticed.
 
-A later spec that adds a grant updates UNUSED_GRANT_KEYS and the expected
-`permissions.api` set here.
+A later spec that adds a grant updates the allowed permission keys and the
+expected `permissions.api` set here.
 """
 from __future__ import annotations
 
@@ -37,7 +55,18 @@ from typing import Any
 
 import pytest
 
-from haunted_house.adapters.gateway_client import ROUTES
+from haunted_house.adapters.gateway_client import (
+    CHAT_GRANT,
+    CHAT_MODE_PATH,
+    CHAT_SEND_PATH,
+    CHAT_SLOTS_PATH,
+    ROUTES,
+    SESSION_HISTORY_GRANT,
+    SESSION_HISTORY_PATH_PREFIX,
+)
+from haunted_house.core.crew_event_normalizer import MAPPED_CREW_TYPES
+from haunted_house.core.profile_contracts import expected_skill_paths
+from haunted_house.core.room_catalog import ROLES, ROOM_ENV, SERVER_BY_ROLE, SESSION_LABEL_ENV
 
 # tests/unit/ -> tests/ -> backend/ -> app/
 APP_ROOT = Path(__file__).resolve().parents[3]
@@ -67,20 +96,92 @@ DOCUMENTED_TOP_LEVEL_KEYS = frozenset(
     }
 )  # fmt: skip
 
-# Top-level fields that ask Crew to register, run or expose something spec 1
-# does not use. `sessionApproval` is not in the manifest reference; it is
-# listed so it gets this message rather than "unknown key".
+# Top-level fields that ask Crew to register, run or expose something the app
+# does not use. `sessionApproval` is not in the manifest reference and belongs
+# under `permissions`; it is listed so it gets this message rather than
+# "unknown key". `agents` and `mcpServers` are used since Doors and Guardrails
+# and are checked exactly below; `skills` is used since Room Ghosts and is
+# checked exactly too.
 UNUSED_GRANT_KEYS = frozenset(
     {
-        "agents", "contributes", "crons", "dependencies", "mcpServers",
-        "openCommand", "sessionApproval", "setup", "skills", "sops",
+        "contributes", "crons", "dependencies",
+        "openCommand", "sessionApproval", "setup", "sops",
     }
 )  # fmt: skip
 
+# Doors and Guardrails task 12.1 (S9): one stdio server per room, launched
+# app-relative, with the room as its only static env and the session-label
+# marker. Crew rewrites `python3 mcp/server.py` to its own interpreter and the
+# installed launcher path.
+MCP_LAUNCHER = "mcp/server.py"
+EXPECTED_AGENTS = [f"agents/hh-{role}.json" for role in ROLES]
+# Room Ghosts task 4.5: one Room_Skill directory per declared agent. The
+# Medium's `skills/bounded-review` is not declared while the Séance Room is off.
+EXPECTED_SKILLS = expected_skill_paths(seance_enabled=False)
+
+
+def expected_mcp_servers() -> dict[str, Any]:
+    return {
+        SERVER_BY_ROLE[role]: {
+            "command": "python3",
+            "args": [MCP_LAUNCHER],
+            "env": {ROOM_ENV: role},
+            "x-kirocrew-session-label": True,
+        }
+        for role in ROLES
+    }
+
+
+# Every gateway path the client builds for an app-owned session. Each must be
+# covered by a declared `permissions.api` entry (the route-template check).
+CHAT_ROUTE_TEMPLATES = (
+    CHAT_SEND_PATH,
+    CHAT_SLOTS_PATH,
+    CHAT_MODE_PATH,
+    SESSION_HISTORY_PATH_PREFIX + "<slot>",
+    SESSION_HISTORY_PATH_PREFIX + "<slot>/project",
+    SESSION_HISTORY_PATH_PREFIX + "<slot>/approve",
+)
+
+
+def api_entry_covers(entry: str, path: str) -> bool:
+    """Crew's `permissions.api` match: exact, `p/` children, `p/*`, trailing `*`."""
+    if entry.endswith("/*"):
+        base = entry[:-2]
+        return path == base or path.startswith(base + "/")
+    if entry.endswith("*"):
+        return path.startswith(entry[:-1])
+    return path == entry or path.startswith(entry + "/")
+
 
 def expected_api_prefixes() -> set[str]:
-    """The gateway paths the backend calls, plus the app's own backend prefix."""
-    return {path for (_method, path) in ROUTES.values()} | {OWN_BACKEND_PREFIX}
+    """The gateway paths the backend calls, plus the app's own backend prefix.
+
+    Séance Requirement 11.5 adds one prefix: bounded session-history reads
+    for server-registered slots (`GatewayClient.session_history`). Doors and
+    Guardrails Requirement 7.3 names `/api/chat` (the session turn) beside
+    `/api/chat/*` (slot, project, mode and exact approve routes).
+    """
+    return (
+        {path for (_method, path) in ROUTES.values()}
+        | {SESSION_HISTORY_GRANT, CHAT_GRANT, CHAT_SEND_PATH}
+        | {OWN_BACKEND_PREFIX}
+    )
+
+
+def expected_events() -> list[str]:
+    """The exact Crew event names the raw bridge may subscribe to: the names
+    the backend normalizer maps, and nothing broader."""
+    return sorted(MAPPED_CREW_TYPES)
+
+
+# Permission keys that would widen what the app needs: it answers prompts only
+# for sessions it owns (`sessionApproval`), never the global approval queue,
+# never spawns, and the backend opens no Crew WebSocket.
+FORBIDDEN_PERMISSION_KEYS = frozenset(
+    {"approvals", "spawn", "websocket", "ws", "mcpTools", "cron", "network"}
+)
+ALLOWED_PERMISSION_KEYS = frozenset({"api", "events", "sessionApproval", "storage"})
 
 
 class ManifestError(AssertionError):
@@ -128,6 +229,24 @@ def validate_manifest(data: Any, app_root: Path) -> list[str]:
         if data.get(key) != want:
             errors.append(f"{key}: must be {want!r}, got {data.get(key)!r}")
 
+    # Gateway-managed resources: Crew registers the agents and MCP servers.
+    for key in ("resources", "lifecycle"):
+        if data.get(key) != "gateway":
+            errors.append(f"{key}: must be 'gateway', got {data.get(key)!r}")
+    agents = data.get("agents")
+    if agents != EXPECTED_AGENTS:
+        errors.append(f"agents: must be exactly {EXPECTED_AGENTS}, got {agents!r}")
+    for index, agent_path in enumerate(agents if isinstance(agents, list) else []):
+        _check_path(errors, f"agents[{index}]", agent_path, app_root, app_root)
+    skills = data.get("skills")
+    if skills != EXPECTED_SKILLS:
+        errors.append(f"skills: must be exactly {EXPECTED_SKILLS}, got {skills!r}")
+    for index, skill_path in enumerate(skills if isinstance(skills, list) else []):
+        # A skill is a directory; Crew links it whole. Its SKILL.md must exist.
+        joined = f"{skill_path}/SKILL.md" if isinstance(skill_path, str) else skill_path
+        _check_path(errors, f"skills[{index}]", joined, app_root, app_root)
+    _check_mcp_servers(errors, data.get("mcpServers"), app_root)
+
     # Top-level keys: nothing spec 1 does not use, nothing undocumented.
     for key in sorted(data):
         if key in UNUSED_GRANT_KEYS:
@@ -163,12 +282,26 @@ def validate_manifest(data: Any, app_root: Path) -> list[str]:
         if "entryPoint" in page:
             _check_path(errors, f"{where}.entryPoint", page["entryPoint"], ui_root, app_root)
 
-    # Permissions: only `api`, and exactly the paths the app calls.
+    # Permissions: exactly `api`, `events` and `storage`, with only called API
+    # paths, only the mapped advisory event names, and app-scoped storage
+    # enabled for durable mansion metadata.
     permissions = _section(errors, data, "permissions")
-    unused = sorted(set(permissions) - {"api"})
+    unused = sorted(set(permissions) - ALLOWED_PERMISSION_KEYS)
     if unused:
-        errors.append(f"permissions: spec 1 uses only 'api', also found {unused}")
+        errors.append(
+            "permissions: app uses only 'api', 'events', 'sessionApproval' and 'storage', "
+            f"also found {unused}"
+        )
+    for key in sorted(set(permissions) & FORBIDDEN_PERMISSION_KEYS):
+        errors.append(f"permissions.{key}: not granted to this app (Séance Requirement 12.2)")
+    if permissions.get("sessionApproval") is not True:
+        errors.append(
+            "permissions.sessionApproval: must be true to answer prompts of app-owned sessions"
+        )
     _check_api(errors, permissions.get("api"))
+    _check_events(errors, permissions.get("events"))
+    if permissions.get("storage") is not True:
+        errors.append("permissions.storage: must be true for app-scoped mansion metadata")
 
     # No autoApprove anywhere, in the manifest or in agent files.
     errors.extend(_auto_approve_errors(data, "app.json"))
@@ -219,6 +352,31 @@ def _check_path(errors: list[str], label: str, value: Any, root: Path, app_root:
         errors.append(f"{label}: {value!r} is not a file under {root}")
 
 
+def _check_mcp_servers(errors: list[str], servers: Any, app_root: Path) -> None:
+    """Exactly the four room entries in the S9 launch shape."""
+    want = expected_mcp_servers()
+    if not isinstance(servers, dict):
+        errors.append("mcpServers: must declare the four room servers")
+        return
+    missing, extra = sorted(set(want) - set(servers)), sorted(set(servers) - set(want))
+    if missing:
+        errors.append(f"mcpServers: missing {missing}")
+    if extra:
+        errors.append(f"mcpServers: {extra} is not a room server")
+    for name in sorted(set(want) & set(servers)):
+        entry = servers[name]
+        if entry != want[name]:
+            errors.append(f"mcpServers.{name}: must be exactly {want[name]}")
+        env = entry.get("env") if isinstance(entry, dict) else None
+        for key, value in (env.items() if isinstance(env, dict) else ()):
+            # Either form makes Crew withhold the session label (S9).
+            if isinstance(value, str) and ("${" in value or "secret://" in value):
+                errors.append(f"mcpServers.{name}.env.{key}: no ${{...}} or secret:// values")
+            if key == SESSION_LABEL_ENV:
+                errors.append(f"mcpServers.{name}.env.{key}: only Crew sets the session label")
+    _check_path(errors, "mcpServers launcher", MCP_LAUNCHER, app_root, app_root)
+
+
 def _check_api(errors: list[str], api: Any) -> None:
     if not isinstance(api, list) or not all(isinstance(entry, str) for entry in api):
         errors.append("permissions.api: must be a list of strings")
@@ -235,6 +393,28 @@ def _check_api(errors: list[str], api: Any) -> None:
         errors.append(f"permissions.api: missing {missing}, which the app calls")
     if extra:
         errors.append(f"permissions.api: {extra} not called by the app (not in ROUTES or the own-backend prefix)")
+    # Route templates: every path the client builds is covered by an entry.
+    for template in CHAT_ROUTE_TEMPLATES + tuple(path for (_m, path) in ROUTES.values()):
+        if not any(api_entry_covers(entry, template) for entry in api):
+            errors.append(f"permissions.api: no entry covers {template!r}, which the app calls")
+
+
+def _check_events(errors: list[str], events: Any) -> None:
+    if not isinstance(events, list) or not all(isinstance(entry, str) for entry in events):
+        errors.append("permissions.events: must be a list of strings")
+        return
+    duplicates = sorted({entry for entry in events if events.count(entry) > 1})
+    if duplicates:
+        errors.append(f"permissions.events: duplicate entries {duplicates}")
+    for entry in events:
+        if "*" in entry or entry in ("chat", "chat_"):
+            errors.append(f"permissions.events: {entry!r} must be an exact event name")
+    want = set(expected_events())
+    missing, extra = sorted(want - set(events)), sorted(set(events) - want)
+    if missing:
+        errors.append(f"permissions.events: missing {missing}, which the bridge forwards")
+    if extra:
+        errors.append(f"permissions.events: {extra} not mapped by the backend normalizer")
 
 
 def _auto_approve_errors(node: Any, where: str) -> Iterator[str]:
@@ -266,7 +446,10 @@ def test_the_app_manifest_is_json_with_a_trailing_newline():
 
 # Empty stand-ins for the files the manifest names, so a copy in tmp_path
 # passes before it is mutated.
-STAND_IN_FILES = ("backend/main.py", "assets/icon.png", "ui/dist/index.mjs")
+STAND_IN_FILES = (
+    "backend/main.py", "assets/icon.png", "ui/dist/index.mjs", MCP_LAUNCHER, *EXPECTED_AGENTS,
+    *(f"{skill}/SKILL.md" for skill in EXPECTED_SKILLS),
+)  # fmt: skip
 
 
 @pytest.fixture
@@ -276,7 +459,10 @@ def app_copy(tmp_path: Path) -> Path:
     shutil.copy2(MANIFEST, root / "app.json")
     for rel in STAND_IN_FILES:
         (root / rel).parent.mkdir(parents=True, exist_ok=True)
-        (root / rel).touch()
+        if rel.startswith("agents/"):
+            (root / rel).write_text("{}\n", encoding="utf-8")
+        else:
+            (root / rel).touch()
     return root
 
 
@@ -285,9 +471,13 @@ def test_the_unmutated_copy_passes(app_copy: Path):
 
 
 def _write_agent_with_auto_approve(data: dict[str, Any], root: Path) -> None:
-    (root / "agents").mkdir()
+    (root / "agents").mkdir(exist_ok=True)
     agent = {"name": "ghost", "mcpServers": {"x": {"command": "x", "autoApprove": ["*"]}}}
     (root / "agents" / "ghost.json").write_text(json.dumps(agent), encoding="utf-8")
+
+
+def _remove_skill_document(data: dict[str, Any], root: Path) -> None:
+    (root / EXPECTED_SKILLS[0] / "SKILL.md").unlink()
 
 
 def _symlink_icon_outside(data: dict[str, Any], root: Path) -> None:
@@ -312,6 +502,202 @@ MUTATIONS: list[tuple[str, Mutation, str]] = [
         "is absolute",
     ),
     ("extra-api-path", lambda d, r: d["permissions"]["api"].append("/api/agents"), "['/api/agents'] not called"),
+    (
+        "missing-storage",
+        lambda d, r: d["permissions"].pop("storage"),
+        "permissions.storage: must be true for app-scoped mansion metadata",
+    ),
+    (
+        "disabled-storage",
+        lambda d, r: d["permissions"].update(storage=False),
+        "permissions.storage: must be true for app-scoped mansion metadata",
+    ),
+    (
+        "extra-permission",
+        lambda d, r: d["permissions"].update(filesystem=True),
+        "permissions: app uses only 'api', 'events', 'sessionApproval' and 'storage', "
+        "also found ['filesystem']",
+    ),
+    (
+        "missing-history-grant",
+        lambda d, r: d["permissions"]["api"].remove("/api/chat/*"),
+        "permissions.api: missing ['/api/chat/*'], which the app calls",
+    ),
+    (
+        "missing-chat-turn-grant",
+        lambda d, r: d["permissions"]["api"].remove("/api/chat"),
+        "permissions.api: missing ['/api/chat'], which the app calls",
+    ),
+    (
+        "broad-api-grant",
+        lambda d, r: d["permissions"]["api"].append("/api/*"),
+        "['/api/*'] not called",
+    ),
+    (
+        "slots-api-grant",
+        lambda d, r: d["permissions"]["api"].append("/api/slots"),
+        "['/api/slots'] not called",
+    ),
+    (
+        "approval-api-grant",
+        lambda d, r: d["permissions"]["api"].append("/api/approvals"),
+        "['/api/approvals'] not called",
+    ),
+    (
+        "spawn-api-grant",
+        lambda d, r: d["permissions"]["api"].append("/api/spawn"),
+        "['/api/spawn'] not called",
+    ),
+    (
+        "websocket-api-grant",
+        lambda d, r: d["permissions"]["api"].append("/api/ws"),
+        "['/api/ws'] not called",
+    ),
+    (
+        "missing-events",
+        lambda d, r: d["permissions"].pop("events"),
+        "permissions.events: must be a list of strings",
+    ),
+    (
+        "missing-event-name",
+        lambda d, r: d["permissions"]["events"].remove("chat_done"),
+        "permissions.events: missing ['chat_done'], which the bridge forwards",
+    ),
+    (
+        "unmapped-event-name",
+        lambda d, r: d["permissions"]["events"].append("subagent_done"),
+        "permissions.events: ['subagent_done'] not mapped by the backend normalizer",
+    ),
+    (
+        "wildcard-event-name",
+        lambda d, r: d["permissions"]["events"].append("chat_*"),
+        "permissions.events: 'chat_*' must be an exact event name",
+    ),
+    (
+        "duplicate-event-name",
+        lambda d, r: d["permissions"]["events"].append("chat_done"),
+        "permissions.events: duplicate entries ['chat_done']",
+    ),
+    (
+        "missing-session-approval",
+        lambda d, r: d["permissions"].pop("sessionApproval"),
+        "permissions.sessionApproval: must be true",
+    ),
+    (
+        "truthy-session-approval",
+        lambda d, r: d["permissions"].update(sessionApproval="yes"),
+        "permissions.sessionApproval: must be true",
+    ),
+    (
+        "top-level-session-approval",
+        lambda d, r: d.update(sessionApproval=True),
+        "sessionApproval: spec 1 does not use this",
+    ),
+    (
+        "global-approvals-permission",
+        lambda d, r: d["permissions"].update(approvals=True),
+        "permissions.approvals: not granted to this app",
+    ),
+    (
+        "spawn-permission",
+        lambda d, r: d["permissions"].update(spawn=True),
+        "permissions.spawn: not granted to this app",
+    ),
+    (
+        "mcp-tools-permission",
+        lambda d, r: d["permissions"].update(mcpTools=["*"]),
+        "permissions.mcpTools: not granted to this app",
+    ),
+    ("app-managed-resources", lambda d, r: d.update(resources="app"), "resources: must be 'gateway'"),
+    ("missing-lifecycle", lambda d, r: d.pop("lifecycle"), "lifecycle: must be 'gateway'"),
+    ("missing-agent", lambda d, r: d["agents"].pop(), "agents: must be exactly"),
+    (
+        "extra-agent",
+        lambda d, r: d["agents"].append("agents/hh-poltergeist.json"),
+        "agents: must be exactly",
+    ),
+    ("missing-agents", lambda d, r: d.pop("agents"), "agents: must be exactly"),
+    (
+        "undeclared-medium-agent",
+        lambda d, r: d["agents"].append("agents/hh-medium.json"),
+        "agents: must be exactly",
+    ),
+    ("missing-skills", lambda d, r: d.pop("skills"), "skills: must be exactly"),
+    ("missing-skill", lambda d, r: d["skills"].pop(), "skills: must be exactly"),
+    (
+        "extra-skill",
+        lambda d, r: d["skills"].append("skills/poltergeist-tricks"),
+        "skills: must be exactly",
+    ),
+    (
+        "undeclared-medium-skill",
+        lambda d, r: d["skills"].append("skills/bounded-review"),
+        "skills: must be exactly",
+    ),
+    (
+        "skill-outside-app",
+        lambda d, r: d["skills"].__setitem__(0, "../skills/ears-requirements"),
+        "skills[0]: '../skills/ears-requirements/SKILL.md' uses '..'",
+    ),
+    ("skill-without-document", _remove_skill_document, "skills[0]: 'skills/ears-requirements/SKILL.md' is not a file"),
+    ("missing-mcp-servers", lambda d, r: d.pop("mcpServers"), "mcpServers: must declare"),
+    (
+        "missing-room-server",
+        lambda d, r: d["mcpServers"].pop("room-tinker"),
+        "mcpServers: missing ['room-tinker']",
+    ),
+    (
+        "extra-mcp-server",
+        lambda d, r: d["mcpServers"].update(helper={"command": "python3", "args": ["x.py"]}),
+        "mcpServers: ['helper'] is not a room server",
+    ),
+    (
+        "mcp-autoApprove",
+        lambda d, r: d["mcpServers"]["room-tinker"].update(autoApprove=["write_room_file"]),
+        "app.json.mcpServers.room-tinker.autoApprove:",
+    ),
+    (
+        "mcp-wrong-room",
+        lambda d, r: d["mcpServers"]["room-archivist"]["env"].update(HH_ROOM="tinker"),
+        "mcpServers.room-archivist: must be exactly",
+    ),
+    (
+        "mcp-no-session-label-marker",
+        lambda d, r: d["mcpServers"]["room-tinker"].pop("x-kirocrew-session-label"),
+        "mcpServers.room-tinker: must be exactly",
+    ),
+    (
+        "mcp-absolute-launcher",
+        lambda d, r: d["mcpServers"]["room-tinker"].update(args=["/opt/hh/mcp/server.py"]),
+        "mcpServers.room-tinker: must be exactly",
+    ),
+    (
+        "mcp-shell-command",
+        lambda d, r: d["mcpServers"]["room-tinker"].update(command="sh"),
+        "mcpServers.room-tinker: must be exactly",
+    ),
+    (
+        "mcp-template-env",
+        lambda d, r: d["mcpServers"]["room-tinker"]["env"].update(HH_TOKEN="${HH_TOKEN}"),
+        "mcpServers.room-tinker.env.HH_TOKEN: no ${...} or secret:// values",
+    ),
+    (
+        "mcp-secret-env",
+        lambda d, r: d["mcpServers"]["room-tinker"]["env"].update(HH_KEY="secret://hh/key"),
+        "mcpServers.room-tinker.env.HH_KEY: no ${...} or secret:// values",
+    ),
+    (
+        "mcp-preset-session-label",
+        lambda d, r: d["mcpServers"]["room-tinker"]["env"].update(
+            KIROCREW_SESSION_LABEL="dashboard:forged"
+        ),
+        "mcpServers.room-tinker.env.KIROCREW_SESSION_LABEL: only Crew sets the session label",
+    ),
+    (
+        "websocket-permission",
+        lambda d, r: d["permissions"].update(websocket=True),
+        "permissions.websocket: not granted to this app",
+    ),
     ("nested-autoApprove", lambda d, r: d["backend"].update(autoApprove=[]), "app.json.backend.autoApprove:"),
     (
         "auto_approve-variant",
@@ -337,3 +723,39 @@ def test_a_broken_rule_is_reported(app_copy: Path, mutate: Mutation, message: st
 
     with pytest.raises(ManifestError, match=re.escape(message)):
         check_manifest(load_manifest(path), app_copy)
+
+
+# --- route templates ---------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    ("entry", "path", "covered"),
+    [
+        ("/api/chat", "/api/chat", True),
+        ("/api/chat/*", "/api/chat/slots", True),
+        ("/api/chat/*", "/api/chat/slots/abc/approve", True),
+        ("/api/chat/*", "/api/chatter", False),
+        ("/api/version", "/api/versions", False),
+        ("/api/version", "/api/spawn", False),
+        ("/apps/haunted-house/api/*", "/apps/other/api/x", False),
+    ],
+)
+def test_api_entry_matching_follows_crew(entry: str, path: str, covered: bool):
+    assert api_entry_covers(entry, path) is covered
+
+
+def test_no_declared_api_entry_reaches_spawn_global_approvals_or_the_websocket():
+    """Requirements 7.2 and 7.4: the declared prefixes cover none of them."""
+    api = load_manifest(MANIFEST)["permissions"]["api"]
+    for forbidden in ("/api/spawn", "/api/spawn/x", "/api/approvals", "/api/approvals/1/approved", "/api/ws"):
+        assert not any(api_entry_covers(entry, forbidden) for entry in api), forbidden
+
+
+def test_every_client_route_template_is_covered_and_every_grant_is_used():
+    api = load_manifest(MANIFEST)["permissions"]["api"]
+    templates = CHAT_ROUTE_TEMPLATES + tuple(path for (_m, path) in ROUTES.values())
+    for template in templates:
+        assert any(api_entry_covers(entry, template) for entry in api), template
+    gateway_entries = [entry for entry in api if entry != OWN_BACKEND_PREFIX]
+    for entry in gateway_entries:
+        assert any(api_entry_covers(entry, template) for template in templates), entry

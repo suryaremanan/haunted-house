@@ -1,4 +1,5 @@
-// Replay DOM test (Requirements 7.3, 7.4). Renders the replay entry,
+// Replay DOM test (crew-app-foundation Requirements 7.3, 7.4;
+// seance-log-and-ghost-state Requirements 8.3 to 8.6). Renders the replay entry,
 // replay/main.tsx, with the SDK mapped to the replay stand-in as
 // vite.replay.config.ts maps it, and the recorded fixture served by a fetch
 // stub. Every other way out of the page is stubbed to throw and recorded.
@@ -7,6 +8,8 @@ import { isValidElement } from 'react'
 import type { Root } from 'react-dom/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import demo from '../../../fixtures/replay/demo.jsonl?raw'
+import { ghostRows } from './core/ghost-status'
+import { parseEventLog, projectEvents } from './core/seance-log'
 
 // replay/main.tsx doesn't export its root. This pass-through keeps each root
 // and what it rendered, so the test can check the root component and unmount it.
@@ -52,15 +55,12 @@ function isFixture(url: string): boolean {
   }
 }
 
-/** The `data` of every recorded frame of `type`, in file order, parsed without the player. */
-function recorded(type: string): unknown[] {
-  return demo
-    .split('\n')
-    .filter((line) => line.trim() !== '')
-    .map((line) => JSON.parse(line) as { frame: { type: string; data: unknown } })
-    .filter(({ frame }) => frame.type === type)
-    .map(({ frame }) => frame.data)
-}
+/** The canonical records of the recording, parsed without the stand-in. */
+const LOG = parseEventLog(demo).events
+
+/** What the fixture request answers with. Tests may swap it for a damaged or missing recording. */
+let fixtureResponse = (): Response =>
+  new Response(demo, { status: 200, headers: { 'Content-Type': 'application/x-ndjson' } })
 
 // Requests the page tried that it must not make. Checked by each test.
 let unexpected: string[] = []
@@ -71,7 +71,7 @@ const fetchSpy = vi.fn(async (input: RequestInfo | URL, _init?: RequestInit): Pr
     unexpected.push(`fetch ${url}`)
     throw new TypeError(`The replay must not request ${url}.`)
   }
-  return new Response(demo, { status: 200, headers: { 'Content-Type': 'application/x-ndjson' } })
+  return fixtureResponse()
 })
 
 function blocked(name: string) {
@@ -89,6 +89,7 @@ beforeEach(() => {
   // would hand every test the first test's stand-in (its player and fetch state).
   vi.doMock('@kirocrew/app-sdk', () => import('./adapters/sdk-shim'))
   unexpected = []
+  fixtureResponse = () => new Response(demo, { status: 200, headers: { 'Content-Type': 'application/x-ndjson' } })
   fetchSpy.mockClear()
   vi.stubGlobal('fetch', fetchSpy)
   vi.stubGlobal('XMLHttpRequest', blocked('XMLHttpRequest'))
@@ -142,45 +143,136 @@ describe('replay page', () => {
     expect(unexpected).toEqual([])
   })
 
-  it('fetches ./fixture.jsonl once for all subscriptions and delivers its recorded frames', async () => {
-    // Only timers are faked: the fixture Response is read with real microtasks.
-    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] })
+  /** Name, state text, pending text and reason of every ghost row on the page. */
+  function shownRows(container: HTMLElement) {
+    return Array.from(container.querySelectorAll('.hh-ghost'), (row) => ({
+      name: row.querySelector('.hh-ghost-name')?.textContent ?? null,
+      stateText: row.querySelector('.hh-ghost-state-text')?.textContent ?? null,
+      pendingText: row.querySelector('.hh-ghost-pending')?.textContent ?? null,
+      reason: row.querySelector('.hh-ghost-reason')?.textContent ?? null,
+    }))
+  }
+
+  /** The rows the Spec 2 fold gives for the first `count` records of the recording. */
+  function foldedRows(count: number) {
+    return ghostRows(projectEvents(LOG.slice(0, count)).snapshots).map(({ name, stateText, pendingText, reason }) => ({
+      name,
+      stateText,
+      pendingText,
+      reason,
+    }))
+  }
+
+  /** Mounts the canonical ghost status for the recorded mansion on the replay stand-in. */
+  async function mountReplayStatus() {
+    // Timers and the clock are faked together; the fixture Response is read with real microtasks.
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'Date'] })
     const shim = await import('./adapters/sdk-shim')
     const adapter = await import('./adapters/sdk')
     // The adapter the UI imports hands out the stand-in's hooks.
     expect(adapter.useAppEvents).toBe(shim.useAppEvents)
     expect(adapter.useAppApi).toBe(shim.useAppApi)
+    const { MansionGhostStatus } = await import('./components/GhostStatusView')
+    const announcements: string[] = []
+    const view = render(<MansionGhostStatus mansionId="demo-mansion" onAnnounce={(message) => announcements.push(message)} />)
+    const advance = (ms: number) =>
+      act(async () => {
+        await vi.advanceTimersByTimeAsync(ms)
+      })
+    return { view, announcements, advance }
+  }
 
-    const chunks: unknown[] = []
-    const approvals: unknown[] = []
-    // Stable callbacks, so the hook subscribes once per mount.
-    const onChunk = (data: unknown) => {
-      chunks.push(data)
-    }
-    const onApproval = (data: unknown) => {
-      approvals.push(data)
-    }
-    const { useAppEvents } = shim
-    function Probe() {
-      useAppEvents('subagent_chunk', onChunk)
-      useAppEvents('approval', onApproval)
-      return null
-    }
-    render(<Probe />)
+  it('fetches ./fixture.jsonl once and folds its canonical records into ghost states in Sequence order', async () => {
+    const { view, announcements, advance } = await mountReplayStatus()
+    expect(view.getByText('Loading the séance log…')).toBeInTheDocument()
 
-    // Playback starts once the fixture is fetched and parsed; then run it to the end.
-    await vi.waitFor(() => expect(vi.getTimerCount()).toBeGreaterThan(0))
-    await vi.runAllTimersAsync()
+    // Playback: what is shown is always the fold of a prefix of the canonical
+    // log, the prefix only grows, and it ends as the whole log.
+    const prefixes = Array.from({ length: LOG.length + 1 }, (_, count) => JSON.stringify(foldedRows(count)))
+    let shownPrefix = 0
+    const stateSeries = new Map<string, string[]>()
+    for (let step = 0; step < 400; step += 1) {
+      await advance(250)
+      const shown = shownRows(view.container)
+      const text = JSON.stringify(shown)
+      // The page shows the fold of a prefix at or after the one shown before:
+      // records never appear out of order and never disappear.
+      const prefix = prefixes.indexOf(text, shownPrefix)
+      expect(prefix).toBeGreaterThanOrEqual(shownPrefix)
+      shownPrefix = prefix
+      for (const row of shown) {
+        const series = stateSeries.get(row.name!) ?? []
+        if (series.at(-1) !== row.stateText) series.push(row.stateText!)
+        stateSeries.set(row.name!, series)
+      }
+    }
+    expect(shownRows(view.container)).toEqual(foldedRows(LOG.length))
+    expect(view.queryByText('Loading the séance log…')).not.toBeInTheDocument()
+    expect(view.queryByText(/Catching up/)).not.toBeInTheDocument()
 
+    // The story played out over time, not in one jump, and in canonical order.
+    expect(stateSeries.get('Archivist')).toEqual(['Working', 'Waiting', 'Working', 'Done'])
+    expect(stateSeries.get('Foreman')).toEqual(['Working', 'Failed', 'Working'])
+    expect(stateSeries.get('Tinker 1')).toEqual(['Working', 'Blocked'])
+    expect(stateSeries.get('Tinker 3')).toEqual(['Working', 'Failed'])
+    expect(new Set(shownRows(view.container).map((row) => row.stateText))).toEqual(
+      new Set(['Idle', 'Working', 'Waiting', 'Blocked', 'Failed', 'Done']),
+    )
+    // Only waiting, blocked and failed were announced, each once.
+    expect(announcements).toEqual([
+      'Archivist is waiting for your approval.',
+      'Foreman failed: Artifact invalid',
+      'Tinker 1 is blocked: A door upstream is still sealed.',
+      'Tinker 2 is waiting for your approval.',
+      'Tinker 3 failed: Crew error',
+    ])
+
+    // One request in all: the recording. No backend, gateway or socket.
     expect(fetchSpy).toHaveBeenCalledTimes(1)
     expect(urlOf(fetchSpy.mock.calls[0][0])).toBe(FIXTURE_URL)
-
-    const expectedChunks = recorded('subagent_chunk')
-    const expectedApprovals = recorded('approval')
-    expect(expectedChunks.length).toBeGreaterThan(0)
-    expect(expectedApprovals.length).toBeGreaterThan(0)
-    expect(chunks).toEqual(expectedChunks)
-    expect(approvals).toEqual(expectedApprovals)
     expect(unexpected).toEqual([])
+
+    view.unmount()
+    expect(vi.getTimerCount()).toBe(0)
+  })
+
+  it('shows the safe diagnostic and folds only the valid prefix of a damaged recording', async () => {
+    const lines = demo.split('\n').filter((line) => line !== '')
+    lines[11] = lines[11].replace(/"persisted_at_ms":\d+/, '"persisted_at_ms":1')
+    fixtureResponse = () => new Response(`${lines.join('\n')}\n`, { status: 200 })
+    const { view, advance } = await mountReplayStatus()
+    await advance(120_000)
+
+    expect(
+      view.getByText('The séance log failed its integrity check at line 12. Showing only the records before it.'),
+    ).toBeInTheDocument()
+    expect(shownRows(view.container)).toEqual(foldedRows(11))
+    expect(fetchSpy).toHaveBeenCalledTimes(1)
+    expect(unexpected).toEqual([])
+  })
+
+  it('shows a diagnostic and makes no other request when the recording cannot be loaded', async () => {
+    fixtureResponse = () => new Response('missing', { status: 404 })
+    const { view, advance } = await mountReplayStatus()
+    await advance(120_000)
+
+    expect(view.getByText('Could not read the séance log. Showing the last confirmed state.')).toBeInTheDocument()
+    expect(shownRows(view.container)).toEqual([])
+    expect(view.queryByText(/No ghost has stirred/)).not.toBeInTheDocument()
+    // The failure is kept: no retry storm, no fallback to a backend or gateway.
+    expect(fetchSpy).toHaveBeenCalledTimes(1)
+    expect(unexpected).toEqual([])
+  })
+
+  it('shows an empty mansion for an empty recording', async () => {
+    fixtureResponse = () => new Response('', { status: 200 })
+    const { view, advance } = await mountReplayStatus()
+    await advance(1_000)
+
+    expect(view.getByText('No ghost has stirred in this mansion yet.')).toBeInTheDocument()
+    expect(fetchSpy).toHaveBeenCalledTimes(1)
+    expect(unexpected).toEqual([])
+    view.unmount()
+    expect(vi.getTimerCount()).toBe(0)
   })
 })

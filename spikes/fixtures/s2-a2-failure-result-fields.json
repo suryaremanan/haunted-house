@@ -1,0 +1,50 @@
+{
+  "assumption_id": "S2-A2",
+  "schema_version": 1,
+  "outcome": "partially_observed",
+  "evidence": {
+    "baseline": "spikes/fixtures/s6-app-session-approval.jsonl",
+    "baseline_sha256": "63478ad7d2664f15e014a0382902c2c46fb33773a9ce3d800d9cc3b52044258c",
+    "tool_result_final": {
+      "status": "observed",
+      "shape": {
+        "slot": "string",
+        "tool_call_id": "string",
+        "output": "string",
+        "final": "boolean"
+      },
+      "reported_final": true
+    },
+    "tool_result_non_final": {
+      "status": "not_observed"
+    },
+    "chat_error": {
+      "status": "not_observed"
+    }
+  },
+  "unavailable_fields": [
+    "chat_error.category_and_detail",
+    "tool_result.non_final_shape"
+  ],
+  "fallback_by_field": {
+    "chat_error.category_and_detail": {
+      "policy": "stable_identifiers_and_safe_categories_only",
+      "stable_identifier_fields": [
+        "slot"
+      ],
+      "safe_category": "unknown",
+      "omit_unavailable_values": true
+    },
+    "tool_result.non_final_shape": {
+      "policy": "stable_identifiers_and_safe_categories_only",
+      "stable_identifier_fields": [
+        "slot",
+        "tool_call_id"
+      ],
+      "safe_category": "unknown",
+      "accept_only_reported_finality": true,
+      "omit_unavailable_values": true
+    }
+  },
+  "browser_interpretation": false
+}

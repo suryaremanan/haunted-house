@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "assets": [
+    {
+      "path": "app/assets/icon.png",
+      "kind": "icon",
+      "provenance": "original",
+      "creator": "Haunted House contributors",
+      "sourceUrl": null,
+      "licenseName": "Original",
+      "licenseUrl": null,
+      "modifications": "",
+      "altText": "A small amber house with a rust-red roof and a round attic window; a smiling pale ghost stands in the glowing arched doorway."
+    }
+  ]
+}

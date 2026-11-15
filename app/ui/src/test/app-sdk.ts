@@ -2,7 +2,7 @@
 // Crew dashboard, so vitest.config.ts points the SDK specifier here. Tests that
 // render the real adapter replace this module with vi.mock and a factory.
 // Calling it unmocked fails loudly, so no test runs against a client by accident.
-import type { AppApiClient } from '../adapters/sdk'
+import type { AppApiClient, AppTheme } from '../adapters/sdk'
 
 function notMocked(name: string): never {
   throw new Error(
@@ -16,4 +16,20 @@ export function useAppApi(): AppApiClient {
 
 export function useAppEvents(_event: string, _cb: (data: unknown) => void): () => void {
   return notMocked('useAppEvents')
+}
+
+export function useTheme(): AppTheme {
+  return notMocked('useTheme')
+}
+
+export function useNotify(): (text: string, opts?: Record<string, unknown>) => void {
+  return notMocked('useNotify')
+}
+
+export function useNavBadge(): (count: number) => void {
+  return notMocked('useNavBadge')
+}
+
+export function useChatLauncher(): { openChat(options?: { slotKey?: string }): void } {
+  return notMocked('useChatLauncher')
 }

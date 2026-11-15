@@ -1,0 +1,145 @@
+{
+  "checks": {
+    "label": {
+      "onlyOwnRoomServerIsLabelledPerSession": true
+    },
+    "launchView": {
+      "exclusionStopsInheritedSkills": true,
+      "skillUriIsDroppedAndReplacedBySearchTool": true,
+      "skillUriWithExclusionRefusesTheView": true,
+      "viewIsNotASkillSearchAgent": true,
+      "viewKeepsSteeringResource": true,
+      "viewMountsNoCrewSkillServer": true,
+      "viewToolsAreExactlyTheRoomCatalog": true,
+      "withoutExclusionCrewAddsSkillSearchTool": true
+    },
+    "registration": {
+      "authoredProfileFieldsCarriedVerbatim": true,
+      "declaredSkillsAlsoLinkedFlat": true,
+      "exactlyDeclaredAgentsRegistered": true,
+      "exactlyDeclaredSkillsLinked": true,
+      "noAutoApproveWritten": true,
+      "noSkillUriInRegisteredProfile": true,
+      "skillLinksResolveInsideInstalledApp": true,
+      "steeringResourceStaysRelative": true,
+      "undeclaredMediumProfileNotRegistered": true,
+      "undeclaredMediumSkillNotLinked": true,
+      "untrustedAppRegistersNoAgentOrSkill": true
+    },
+    "resourceForms": {
+      "homeSkillUriNamesTheInstalledSkill": true,
+      "noAppRelativeSkillUriForm": true,
+      "relativeSkillUriResolvesInSessionProject": true
+    }
+  },
+  "contract": {
+    "declaredAgents": [
+      "agents/hh-archivist.json",
+      "agents/hh-draughtsman.json",
+      "agents/hh-foreman.json",
+      "agents/hh-tinker.json"
+    ],
+    "declaredSkills": [
+      "skills/ears-requirements",
+      "skills/correctness-design",
+      "skills/executable-tasks",
+      "skills/scoped-implementation"
+    ],
+    "excludedTools": [
+      "@kirocrew-core"
+    ],
+    "installedSkillUriForm": "skill://~/.kiro/crew/skills/haunted-house/<skill>/SKILL.md",
+    "skillDelivery": "bounded_prompt_block",
+    "skillResourceInProfile": false,
+    "steeringResource": "file://.kiro/steering/**/*.md",
+    "visibleTools": {
+      "archivist": [
+        "@haunted-house:room-archivist/list_room_files",
+        "@haunted-house:room-archivist/read_room_file",
+        "@haunted-house:room-archivist/write_spec_document",
+        "@haunted-house:room-archivist/submit_phase_output"
+      ],
+      "draughtsman": [
+        "@haunted-house:room-draughtsman/list_room_files",
+        "@haunted-house:room-draughtsman/read_room_file",
+        "@haunted-house:room-draughtsman/write_spec_document",
+        "@haunted-house:room-draughtsman/submit_phase_output"
+      ],
+      "foreman": [
+        "@haunted-house:room-foreman/list_room_files",
+        "@haunted-house:room-foreman/read_room_file",
+        "@haunted-house:room-foreman/write_spec_document",
+        "@haunted-house:room-foreman/submit_phase_output"
+      ],
+      "tinker": [
+        "@haunted-house:room-tinker/list_room_files",
+        "@haunted-house:room-tinker/read_room_file",
+        "@haunted-house:room-tinker/submit_phase_output",
+        "@haunted-house:room-tinker/write_room_file",
+        "@haunted-house:room-tinker/propose_risky_action",
+        "@haunted-house:room-tinker/execute_approved_action"
+      ]
+    }
+  },
+  "crewVersion": "0.12.2",
+  "decision": {
+    "implicitInheritance": "disabled_by_excluding_crew_skill_server",
+    "liveAcceptanceRequiredBeforeDemo": true,
+    "mediumRegisteredByDefault": false,
+    "skill": "skill_uri_rejected_use_bounded_immutable_prompt_injection",
+    "steering": "explicit_relative_file_resource",
+    "whenResourceContractUnproved": "start_no_room_ghost_report_contract_unavailable"
+  },
+  "evidence": {
+    "inferred": [
+      "kiro-cli resolves the relative file:// steering resource in the session's working folder, the Mansion the app set as the slot project (Crew 0.12.2 apps/agent_launch.py and the Kiro custom-agent reference; not exercised).",
+      "An app-owned chat slot is launched through the same projection as every Kiro launch (acp/skill_projection_parts/preparation.py project_agent_view; read, not exercised live).",
+      "kiro-cli applies excludedTools and the skill, power, shell, fs_write, web and subagent deny rules of the registered profile (Kiro permissions reference; S4 observed one deny rule live)."
+    ],
+    "unverified": [
+      {
+        "claim": "In a live app-owned session each Room Ghost receives the Mansion steering files as context.",
+        "manual_step": "Install and trust this Haunted House build, create a disposable Mansion whose .kiro/steering/probe.md holds one unusual marker word, start an Archivist run from the app with the brief 'Put the steering marker word in the Introduction', and confirm the written requirements.md contains that word.",
+        "needs": "owner action on a real gateway"
+      },
+      {
+        "claim": "In that live session the Ghost's tool list is exactly its room catalog: no kirocrew-core tool, no built-in tool, no other room's tool.",
+        "manual_step": "After that run ends, open the Ghost's session from the Crew sidebar and send 'List the exact name of every tool you can call, one per line, and call none'; confirm only the four room-archivist tools are named and no skill_search, file, shell or web tool. Record the list, scrubbed, as spikes/fixtures/rg-s2-live-tools.json.",
+        "needs": "owner action on a real gateway"
+      },
+      {
+        "claim": "A denied built-in or out-of-room attempt is refused live by the profile rules.",
+        "manual_step": "In that opened session send 'Create a file named bypass.txt with your own file tool, not a room tool'; confirm the reply reports a permission rule or a missing tool and that bypass.txt does not exist in the Mansion.",
+        "needs": "owner action on a real gateway"
+      },
+      {
+        "claim": "The Room_Skill block delivered at the front of the assignment prompt is followed by the model (document shape and final Ghost_Result).",
+        "manual_step": "The Archivist run above ends with one Ghost_Result JSON object and the house's validator accepts requirements.md without a repair round.",
+        "needs": "owner action on a real gateway"
+      }
+    ],
+    "verified": [
+      "Crew's packaged register_app registers no agent and links no skill for an untrusted app.",
+      "For the trusted app it registers exactly the manifest's four agent files and links exactly the manifest's four skill directories, namespaced under the app name and also flat; the undeclared Medium profile and bounded-review skill that ship in the tree are left alone.",
+      "A registered profile keeps its authored tools, allowedTools, excludedTools, includeMcpJson, includePowers, resources, permissions and prompt unchanged; the steering resource stays the relative file://.kiro/steering/**/*.md and no autoApprove is written.",
+      "Crew's packaged launch projection (native_skill_view) of each registered profile lists exactly that room's @haunted-house:room-<role>/<tool> selectors, mounts no kirocrew-core server, keeps the steering resource, and is not a skill-search agent.",
+      "The same projection of a profile without excludedTools [@kirocrew-core] adds the tool @kirocrew-core/skill_search and the kirocrew-core server (inherited skill trees).",
+      "The same projection drops a skill:// resource and substitutes that skill_search tool; a profile that both maps a skill:// resource and excludes @kirocrew-core gets no launch view.",
+      "Crew expands a relative skill:// URI in the session project and a skill://~/ URI in the home folder; there is no form relative to the installed app.",
+      "Crew's session-label builder re-declares only the profile's own room server per session."
+    ]
+  },
+  "failedChecks": [],
+  "guidance": {
+    "medium": "The Medium profile and bounded-review skill ship in the tree but stay out of the manifest while the S\u00e9ance Room is disabled, so Crew registers neither.",
+    "owner_visibility": "A declared skill also appears in the owner's own Crew skill catalog under its plain name; that is Crew's flat link and gives no Ghost any tool.",
+    "profiles": "resources is exactly [file://.kiro/steering/**/*.md]; excludedTools is exactly [@kirocrew-core]; includeMcpJson and includePowers are false; no skill:// entry, because Crew replaces it with a tool outside the room catalog and refuses the view when that tool is excluded.",
+    "skills": "Declare each enabled role's skill directory in the manifest so it is installed and reviewable. The backend reads <app root>/skills/<skill>/SKILL.md (adapters/room_skills.read_room_skill_block) and puts the delimited block at the front of the assignment prompt; nothing is inherited from the owner's or the Mansion's skill folders."
+  },
+  "isolatedHome": true,
+  "liveGatewayExercised": false,
+  "outcome": "isolated_contract_verified_live_loading_unverified",
+  "schema_version": 1,
+  "spike": "RG-S2",
+  "task": "room-ghosts 1.2"
+}

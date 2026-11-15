@@ -1,0 +1,429 @@
+{
+  "acceptedSignals": [
+    {
+      "evidence": "inferred",
+      "meaning": "Turn accepted. With default settings this is the answer even when the turn then waits behind the unattended-turn cap.",
+      "signal": {
+        "code_or_field": "body.ok=true, body.slot",
+        "status": 200,
+        "where": "http"
+      }
+    },
+    {
+      "evidence": "inferred",
+      "meaning": "Fair admission accepted the turn into its queue (up to 300 s). Crew starts it; a second send would be a duplicate.",
+      "signal": {
+        "code_or_field": "body.admission.state=queued",
+        "status": 202,
+        "where": "http"
+      }
+    },
+    {
+      "evidence": "inferred",
+      "meaning": "Crew is retrying inside a running turn. Informational.",
+      "signal": {
+        "code_or_field": "meta.notice=capacity_retrying | session_busy_retrying",
+        "status": null,
+        "where": "ws"
+      }
+    }
+  ],
+  "checks": {
+    "admission": {
+      "containmentUnavailableIs503": true,
+      "disabledGateNeverRefusesSessionCreate": true,
+      "exactlyFiveReasonsMapTo429": true,
+      "fairAdmissionOffByDefault": true,
+      "fullQueueIsRefused": true,
+      "overActiveLimitIsQueuedNotRefused": true,
+      "pressureRefusalsAre429WithRetryAfter": true,
+      "requestTooLargeIs413": true,
+      "sessionCreateRateRefusedOnlyWhenEnabled": true,
+      "storageLimitIs507": true,
+      "storeUnavailableIs503WithoutRetryAfter": true,
+      "thirdTurnAtCrewWidthTwoIsQueued": true
+    },
+    "background": {
+      "abandonedTurnLeavesNoticeRow": true,
+      "abandonedTurnNeverRan": true,
+      "attendedSlotBypassesBackgroundCap": true,
+      "backgroundCapReleasedAfterTurns": true,
+      "defaultBackgroundTurnCapIsFour": true,
+      "turnOverBackgroundCapQueuesSilently": true
+    },
+    "ownership": {
+      "foreignSlotConflictIsUniform404": true,
+      "ownSlotConflictIs409WithoutCode": true
+    },
+    "sizing": {
+      "startWidthCapped": true,
+      "startWidthNeverBelowFloor": true
+    }
+  },
+  "classification": [
+    {
+      "class": "retryable_pressure",
+      "evidence": "verified",
+      "note": "Fair-admission refusal with a Retry-After header and a capacity body; nothing was accepted. A turn over the active limit is queued and accepted instead; only a full queue (or work that cannot wait) is refused.",
+      "signal": {
+        "code_or_field": "code=principal_active_limit",
+        "status": 429,
+        "where": "http"
+      },
+      "source": "shared_crew/admission.py REASON_HTTP_STATUS; shared_crew/admission_gate.py Admission.refusal_response"
+    },
+    {
+      "class": "retryable_pressure",
+      "evidence": "verified",
+      "note": "Fair-admission refusal with a Retry-After header and a capacity body; nothing was accepted. A turn over the active limit is queued and accepted instead; only a full queue (or work that cannot wait) is refused.",
+      "signal": {
+        "code_or_field": "code=principal_queue_full",
+        "status": 429,
+        "where": "http"
+      },
+      "source": "shared_crew/admission.py REASON_HTTP_STATUS; shared_crew/admission_gate.py Admission.refusal_response"
+    },
+    {
+      "class": "retryable_pressure",
+      "evidence": "verified",
+      "note": "Fair-admission refusal with a Retry-After header and a capacity body; nothing was accepted. A turn over the active limit is queued and accepted instead; only a full queue (or work that cannot wait) is refused.",
+      "signal": {
+        "code_or_field": "code=crew_active_limit",
+        "status": 429,
+        "where": "http"
+      },
+      "source": "shared_crew/admission.py REASON_HTTP_STATUS; shared_crew/admission_gate.py Admission.refusal_response"
+    },
+    {
+      "class": "retryable_pressure",
+      "evidence": "verified",
+      "note": "Fair-admission refusal with a Retry-After header and a capacity body; nothing was accepted. A turn over the active limit is queued and accepted instead; only a full queue (or work that cannot wait) is refused.",
+      "signal": {
+        "code_or_field": "code=crew_queue_full",
+        "status": 429,
+        "where": "http"
+      },
+      "source": "shared_crew/admission.py REASON_HTTP_STATUS; shared_crew/admission_gate.py Admission.refusal_response"
+    },
+    {
+      "class": "retryable_pressure",
+      "evidence": "verified",
+      "note": "Fair-admission refusal with a Retry-After header and a capacity body; nothing was accepted. On POST /api/chat/slots it is answered before the slot is minted, so no slot is left.",
+      "signal": {
+        "code_or_field": "code=session_create_rate",
+        "status": 429,
+        "where": "http"
+      },
+      "source": "shared_crew/admission.py REASON_HTTP_STATUS; shared_crew/admission_gate.py Admission.refusal_response"
+    },
+    {
+      "class": "retryable_pressure",
+      "evidence": "verified",
+      "note": "An error row on the slot after the turn waited 30 minutes behind the unattended-turn cap. The send was already answered 200; the turn never ran. Also readable from the slot's history.",
+      "signal": {
+        "code_or_field": "meta.notice=background_turn_abandoned",
+        "status": null,
+        "where": "ws"
+      },
+      "source": "dashboard/state_parts/dashboard_services.py run_background_turn; dashboard/turn_dispatch.py finish_turn_task"
+    },
+    {
+      "class": "terminal",
+      "evidence": "verified",
+      "note": "Crew's durable work queue is down. No Retry-After. A Crew fault, not capacity.",
+      "signal": {
+        "code_or_field": "code=task_store_unavailable",
+        "status": 503,
+        "where": "http"
+      },
+      "source": "shared_crew/admission_gate.py Admission.refusal_body"
+    },
+    {
+      "class": "terminal",
+      "evidence": "verified",
+      "note": "The host cannot enforce the limits its owner required. Carries Retry-After 30 but clears only when the owner changes the host or the setting.",
+      "signal": {
+        "code_or_field": "code=containment_unavailable",
+        "status": 503,
+        "where": "http"
+      },
+      "source": "shared_crew/admission.py REASON_HTTP_STATUS; shared_crew/admission_gate.py Admission.refusal_response"
+    },
+    {
+      "class": "terminal",
+      "evidence": "verified",
+      "note": "The caller's storage budget is spent. Retry-After 300; waiting a few seconds cannot help.",
+      "signal": {
+        "code_or_field": "code=storage_limit",
+        "status": 507,
+        "where": "http"
+      },
+      "source": "shared_crew/admission.py REASON_HTTP_STATUS; shared_crew/admission_gate.py Admission.refusal_response"
+    },
+    {
+      "class": "caller_error",
+      "evidence": "verified",
+      "note": "The message is larger than Crew accepts.",
+      "signal": {
+        "code_or_field": "code=request_too_large",
+        "status": 413,
+        "where": "http"
+      },
+      "source": "shared_crew/admission.py REASON_HTTP_STATUS; shared_crew/admission_gate.py Admission.refusal_response"
+    },
+    {
+      "class": "caller_error",
+      "evidence": "verified",
+      "note": "The one answer an app gets for a slot it does not own, a reserved or colliding name, a closed slot, or a conflict on someone else's slot. It never means capacity.",
+      "signal": {
+        "code_or_field": "code=slot_not_found",
+        "status": 404,
+        "where": "http"
+      },
+      "source": "dashboard/slot_ownership.py slot_not_found; dashboard/chat_api/app_admission.py _app_acquisition_conflict"
+    },
+    {
+      "class": "caller_error",
+      "evidence": "verified",
+      "note": "A conflict on the app's own live slot (still being built, memory-mode mismatch). Use a fresh slot name per run.",
+      "signal": {
+        "code_or_field": "error text, no code",
+        "status": 409,
+        "where": "http"
+      },
+      "source": "dashboard/chat_api/app_admission.py _app_acquisition_conflict"
+    },
+    {
+      "class": "caller_error",
+      "evidence": "inferred",
+      "note": "The slot already has a turn; Crew parked this message behind it. Accepted, not refused: treat as a second dispatch to a busy slot, never as a started run.",
+      "signal": {
+        "code_or_field": "body.queued=true",
+        "status": 200,
+        "where": "http"
+      },
+      "source": "dashboard/chat_api/chat_send.py api_chat (busy-slot branch)"
+    },
+    {
+      "class": "caller_error",
+      "evidence": "inferred",
+      "note": "A malformed request to slot create, project, mode or send.",
+      "signal": {
+        "code_or_field": "any 400 (message_required, message_too_long, invalid_mode, folder_not_found, slot_required, ...)",
+        "status": 400,
+        "where": "http"
+      },
+      "source": "dashboard/chat_api/chat_send.py; slot_create.py; session_relaunch.py; slot_approval.py"
+    },
+    {
+      "class": "caller_error",
+      "evidence": "inferred",
+      "note": "The app asked for something an app token may not do, or a project folder outside the allowed roots.",
+      "signal": {
+        "code_or_field": "code=app_session_settings_forbidden | app_yolo_forbidden | Access denied",
+        "status": 403,
+        "where": "http"
+      },
+      "source": "dashboard/chat_api/app_admission.py; dashboard/chat_api/session_relaunch.py"
+    },
+    {
+      "class": "terminal",
+      "evidence": "inferred",
+      "note": "The app token or its permission grant is gone; the owner must re-enable or approve the app.",
+      "signal": {
+        "code_or_field": "any 401, or 403 again after one token refresh",
+        "status": 401,
+        "where": "http"
+      },
+      "source": "app token auth middleware"
+    },
+    {
+      "class": "terminal",
+      "evidence": "inferred",
+      "note": "The slot was closed or rebound while the request ran. That slot is finished for this run.",
+      "signal": {
+        "code_or_field": "code=slot_closed | session_rebound",
+        "status": 409,
+        "where": "http"
+      },
+      "source": "dashboard/chat_api/chat_send.py; slot_create.py; session_relaunch.py"
+    },
+    {
+      "class": "terminal",
+      "evidence": "inferred",
+      "note": "The requested agent cannot be used for the slot.",
+      "signal": {
+        "code_or_field": "code=agent_choice_unavailable",
+        "status": 409,
+        "where": "http"
+      },
+      "source": "dashboard/chat_api/slot_create.py api_chat_slot_create"
+    },
+    {
+      "class": "terminal",
+      "evidence": "inferred",
+      "note": "Crew could not save the slot or conversation. A slot create that fails after the mint retracts the new slot itself.",
+      "signal": {
+        "code_or_field": "code=store_unavailable | app_agent_owner_unpersisted | worker_unpersisted | history_unavailable",
+        "status": 503,
+        "where": "http"
+      },
+      "source": "dashboard/chat_api/slot_create.py; dashboard/chat_api/chat_send.py"
+    },
+    {
+      "class": "terminal",
+      "evidence": "inferred",
+      "note": "The app's agent file is missing, untrusted or not the one registered: the turn is refused.",
+      "signal": {
+        "code_or_field": "meta.kind=app_agent_refused",
+        "status": null,
+        "where": "ws"
+      },
+      "source": "dashboard/chat_turn/turn_admission.py _turn_admit"
+    },
+    {
+      "class": "terminal",
+      "evidence": "inferred",
+      "note": "The turn started and Crew spent its own model-capacity retries. The attempt was used.",
+      "signal": {
+        "code_or_field": "meta.notice=capacity_retries_spent",
+        "status": null,
+        "where": "ws"
+      },
+      "source": "dashboard/chat_turn/turn_ending.py"
+    },
+    {
+      "class": "terminal",
+      "evidence": "inferred",
+      "note": "The agent session stayed busy through Crew's own retries. The attempt was used.",
+      "signal": {
+        "code_or_field": "meta.notice=session_busy_give_up",
+        "status": null,
+        "where": "ws"
+      },
+      "source": "dashboard/chat_turn/acp_recovery.py; dashboard/chat_turn/recovery.py"
+    },
+    {
+      "class": "terminal",
+      "evidence": "inferred",
+      "note": "The turn hit Crew's wall-clock ceiling and was stopped.",
+      "signal": {
+        "code_or_field": "meta.kind=turn_timeout",
+        "status": null,
+        "where": "ws"
+      },
+      "source": "dashboard/turn_dispatch.py finish_turn_task"
+    }
+  ],
+  "crewVersion": "0.12.2",
+  "decision": {
+    "knownRetryable": {
+      "http": [
+        {
+          "code": "principal_active_limit",
+          "status": 429
+        },
+        {
+          "code": "principal_queue_full",
+          "status": 429
+        },
+        {
+          "code": "crew_active_limit",
+          "status": 429
+        },
+        {
+          "code": "crew_queue_full",
+          "status": 429
+        },
+        {
+          "code": "session_create_rate",
+          "status": 429
+        }
+      ],
+      "notice": [
+        "background_turn_abandoned"
+      ]
+    },
+    "liveAcceptanceRequiredBeforeDemo": true,
+    "manualStep": "Owner, on the real gateway, once: from the enabled Haunted House backend create three disposable app-owned slots with fresh names, set project and mode normal on each, send 'Reply with the single word ok. Use no tools.' to all three together, record per call the HTTP status, body code and Retry-After, poll each slot until its turn ends and record any error row's meta.notice or meta.kind, then DELETE /api/chat/slots/{slot} for every slot that was accepted. At most three turns; no other route.",
+    "refusedSlotCreateLeavesSlot": false,
+    "retryConsumesAttempt": false,
+    "retryableRefusalExpectedOnDefaultHost": false,
+    "rule": "retry only known signals; classify any unknown refusal as blocked",
+    "unknownRefusal": "blocked"
+  },
+  "evidence": {
+    "inferred": [
+      "POST /api/chat/slots charges the session-create rate before minting the slot, and POST /api/chat asks the admission gate before recording the user row, so a 429 leaves no slot and no message behind (read: dashboard/chat_api/slot_create.py, chat_send.py).",
+      "An app token is charged to its own budget key by the gate (read: shared_crew/admission_gate.py actor_budget).",
+      "A slot is unattended when an app created it and its owner has not opened it (read: dashboard/state_parts/chat_slot.py unattended).",
+      "POST /api/chat/slots/{slot}/project and POST /api/chat/mode have no capacity refusal (read: dashboard/chat_api/session_relaunch.py, slot_approval.py).",
+      "POST /api/chat/slots does not test the 500-slot ceiling or the per-creator ceiling of 50; those bind session import, fork and the agent-facing session tool.",
+      "Error rows reach an app's WebSocket and GET /api/chat/slots/{slot} with their meta intact.",
+      "The classification rows marked inferred, each read from the file named in its source."
+    ],
+    "unverified": [
+      {
+        "claim": "On a real host with default settings, three concurrent Haunted House turns in three app-owned slots are all accepted with 200 and start without any refusal.",
+        "manual_step": "With Haunted House installed, trusted and enabled, have the backend create three disposable app-owned slots (create, project, mode normal), send each the turn 'Reply with the single word ok. Use no tools.' at the same moment, record each call's HTTP status, code and Retry-After, poll each slot until its turn ends, record any error row's meta.notice or meta.kind, then DELETE /api/chat/slots/{slot} for all three.",
+        "needs": "owner action on a real gateway"
+      },
+      {
+        "claim": "Through the real HTTP handlers an app token receives the 429 bodies above, and the refused request leaves no slot, user row or queued message.",
+        "manual_step": "Optional and only on a disposable Crew home: turn on Shared Crew fair admission with Active Work Crew-Wide 1, run the same three harmless turns, and confirm the second and third sends answer 202 with admission.state queued rather than 429, then close all three slots and turn the setting off.",
+        "needs": "owner action on a real gateway with fair admission turned on (a Feature Preview the Workshop does not depend on)"
+      },
+      {
+        "claim": "The background_turn_abandoned row and the other error rows arrive on the app's WebSocket and in slot history with the meta fields listed here.",
+        "manual_step": "During the three-turn run above, keep one /api/ws connection open with the app token and compare each error row's meta with GET /api/chat/slots/{slot}. No abandonment is expected within the run; record 'not observed' if none appears.",
+        "needs": "owner action on a real gateway"
+      }
+    ],
+    "verified": [
+      "Fair admission (dashboard.shared_crew.admission_enabled) is off by default; a disabled gate never refuses a session create.",
+      "Crew's packaged scheduler admits work up to the active limit, queues the next and refuses only when the queue is full; at an automatic Crew width of 2 a third concurrent turn is queued.",
+      "Exactly five refusal reasons map to HTTP 429, each with body {error, code, capacity} and a Retry-After header equal to capacity.retry_after_seconds (10 s for the four limit reasons; the seconds until the per-minute window frees for session_create_rate).",
+      "task_store_unavailable is 503 with no Retry-After; containment_unavailable is 503 with Retry-After 30; storage_limit is 507 with Retry-After 300; request_too_large is 413.",
+      "An unattended (app-owned) turn runs under a cap of 4 by default (configurable 1 to 16). A turn over the cap queues with no signal to its sender; an attended slot bypasses the cap.",
+      "A turn that waits out the cap (30 minutes as packaged) never runs and leaves one error row whose meta.notice is background_turn_abandoned; the cap's permits are returned afterwards.",
+      "The session start gate's automatic width is clamped to 2..16: a small host narrows it, never to zero, and that module raises no refusal.",
+      "For an app, a conflict on a slot it was not judged to own is the uniform 404 slot_not_found; a conflict on its own live slot is 409 with an error text and no code."
+    ]
+  },
+  "failedChecks": [],
+  "guidance": {
+    "cleanup": "A refused slot create leaves nothing to close. A refused send leaves the slot the app already created: close it, or reuse it for the re-dispatch only if no user row was added.",
+    "clientGap": "GatewayError keeps status and code but drops Retry-After and the capacity body, and falls back to the error text when code is absent. CrewChatError then collapses every failure to crew_timeout or crew_failed, which loses the status and code the predicate needs. The send's success body must also be checked for queued=true and a 202 admission receipt.",
+    "defaultHost": "With fair admission off there is no retryable HTTP refusal at all. Pressure shows as an accepted turn that has not started, so the Workshop needs its own start deadline; capacity_unavailable from five refusals is reachable only with fair admission on.",
+    "delay": "Use the design's 1, 2, 4, 8, 15 s. Crew's Retry-After is 10 s for the limit reasons and up to 60 s for session_create_rate, so honour max(own delay, Retry-After) when the header is available.",
+    "predicate": "retryable = (HTTP status 429 and body code in the five known codes) or (an error row on the run's slot whose meta.notice is background_turn_abandoned). Read the code from the body's code field only, never from its error text."
+  },
+  "isolatedHome": true,
+  "liveGatewayExercised": false,
+  "observed": {
+    "admission": {
+      "defaultCrewQueueDepth": 64,
+      "defaultPrincipalActive": 4,
+      "defaultPrincipalQueueDepth": 16,
+      "queueExpirySeconds": 300,
+      "retryAfterSeconds": {
+        "containment_unavailable": 30,
+        "crew_active_limit": 10,
+        "crew_queue_full": 10,
+        "principal_active_limit": 10,
+        "principal_queue_full": 10,
+        "storage_limit": 300
+      }
+    },
+    "background": {
+      "abandonedNotice": "background_turn_abandoned",
+      "capCeiling": 16,
+      "defaultCap": 4,
+      "queueWaitSeconds": 1800
+    }
+  },
+  "outcome": "isolated_contract_verified_live_pressure_unverified",
+  "schema_version": 1,
+  "spike": "RG-S5",
+  "task": "room-ghosts 1.5"
+}

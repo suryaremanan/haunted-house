@@ -1,0 +1,238 @@
+{
+  "description": "Normative Ghost_Result schema-version-1 vectors. 'canonical' is the exact printed text of 'value'; every 'invalid' text must be refused with 'code'.",
+  "valid": [
+    {
+      "name": "archivist_ready",
+      "value": {
+        "schema_version": 1,
+        "run_id": "requirements-1",
+        "status": "ready",
+        "summary": "Wrote 12 EARS criteria and a glossary.",
+        "artifacts": [
+          {
+            "path": ".kiro/specs/demo-feature/requirements.md",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ],
+        "task_id": null,
+        "reason_code": null
+      },
+      "canonical": "{\"artifacts\":[{\"path\":\".kiro/specs/demo-feature/requirements.md\",\"sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}],\"reason_code\":null,\"run_id\":\"requirements-1\",\"schema_version\":1,\"status\":\"ready\",\"summary\":\"Wrote 12 EARS criteria and a glossary.\",\"task_id\":null}"
+    },
+    {
+      "name": "tinker_ready_unicode",
+      "value": {
+        "schema_version": 1,
+        "run_id": "implementation-7",
+        "status": "ready",
+        "summary": "Added the \"codec\" \\ parser — façade 漢字 ✓",
+        "artifacts": [
+          {
+            "path": "src/codec.py",
+            "sha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+          },
+          {
+            "path": "tests/test_codec.py",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ],
+        "task_id": "2.1",
+        "reason_code": null
+      },
+      "canonical": "{\"artifacts\":[{\"path\":\"src/codec.py\",\"sha256\":\"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\"},{\"path\":\"tests/test_codec.py\",\"sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}],\"reason_code\":null,\"run_id\":\"implementation-7\",\"schema_version\":1,\"status\":\"ready\",\"summary\":\"Added the \\\"codec\\\" \\\\ parser — façade 漢字 ✓\",\"task_id\":\"2.1\"}"
+    },
+    {
+      "name": "tinker_blocked",
+      "value": {
+        "schema_version": 1,
+        "run_id": "implementation-8",
+        "status": "blocked",
+        "summary": "The operator rejected the delete proposal.",
+        "artifacts": [],
+        "task_id": "3.2",
+        "reason_code": "approval_rejected"
+      },
+      "canonical": "{\"artifacts\":[],\"reason_code\":\"approval_rejected\",\"run_id\":\"implementation-8\",\"schema_version\":1,\"status\":\"blocked\",\"summary\":\"The operator rejected the delete proposal.\",\"task_id\":\"3.2\"}"
+    },
+    {
+      "name": "foreman_failed",
+      "value": {
+        "schema_version": 1,
+        "run_id": "tasks-2",
+        "status": "failed",
+        "summary": "Could not cover criterion 4.2.",
+        "artifacts": [
+          {
+            "path": ".kiro/specs/demo-feature/tasks.md",
+            "sha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+          }
+        ],
+        "task_id": null,
+        "reason_code": "coverage_incomplete"
+      },
+      "canonical": "{\"artifacts\":[{\"path\":\".kiro/specs/demo-feature/tasks.md\",\"sha256\":\"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\"}],\"reason_code\":\"coverage_incomplete\",\"run_id\":\"tasks-2\",\"schema_version\":1,\"status\":\"failed\",\"summary\":\"Could not cover criterion 4.2.\",\"task_id\":null}"
+    }
+  ],
+  "invalid": [
+    {
+      "name": "prose_prefix",
+      "text": "Done. {\"artifacts\":[{\"path\":\".kiro/specs/demo-feature/requirements.md\",\"sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}],\"reason_code\":null,\"run_id\":\"requirements-1\",\"schema_version\":1,\"status\":\"ready\",\"summary\":\"Wrote 12 EARS criteria and a glossary.\",\"task_id\":null}",
+      "code": "invalid_json"
+    },
+    {
+      "name": "prose_suffix",
+      "text": "{\"artifacts\":[{\"path\":\".kiro/specs/demo-feature/requirements.md\",\"sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}],\"reason_code\":null,\"run_id\":\"requirements-1\",\"schema_version\":1,\"status\":\"ready\",\"summary\":\"Wrote 12 EARS criteria and a glossary.\",\"task_id\":null}\nAll finished.",
+      "code": "invalid_json"
+    },
+    {
+      "name": "markdown_fence",
+      "text": "```json\n{\"artifacts\":[{\"path\":\".kiro/specs/demo-feature/requirements.md\",\"sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}],\"reason_code\":null,\"run_id\":\"requirements-1\",\"schema_version\":1,\"status\":\"ready\",\"summary\":\"Wrote 12 EARS criteria and a glossary.\",\"task_id\":null}\n```",
+      "code": "invalid_json"
+    },
+    {
+      "name": "two_objects",
+      "text": "{\"artifacts\":[{\"path\":\".kiro/specs/demo-feature/requirements.md\",\"sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}],\"reason_code\":null,\"run_id\":\"requirements-1\",\"schema_version\":1,\"status\":\"ready\",\"summary\":\"Wrote 12 EARS criteria and a glossary.\",\"task_id\":null}{\"artifacts\":[{\"path\":\".kiro/specs/demo-feature/requirements.md\",\"sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}],\"reason_code\":null,\"run_id\":\"requirements-1\",\"schema_version\":1,\"status\":\"ready\",\"summary\":\"Wrote 12 EARS criteria and a glossary.\",\"task_id\":null}",
+      "code": "invalid_json"
+    },
+    {
+      "name": "array",
+      "text": "[{\"artifacts\":[{\"path\":\".kiro/specs/demo-feature/requirements.md\",\"sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}],\"reason_code\":null,\"run_id\":\"requirements-1\",\"schema_version\":1,\"status\":\"ready\",\"summary\":\"Wrote 12 EARS criteria and a glossary.\",\"task_id\":null}]",
+      "code": "not_object"
+    },
+    {
+      "name": "empty",
+      "text": "",
+      "code": "invalid_json"
+    },
+    {
+      "name": "duplicate_key",
+      "text": "{\"artifacts\":[{\"path\":\".kiro/specs/demo-feature/requirements.md\",\"sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}],\"reason_code\":null,\"run_id\":\"requirements-1\",\"schema_version\":1,\"status\":\"ready\",\"summary\":\"Wrote 12 EARS criteria and a glossary.\",\"task_id\":null,\"run_id\":\"requirements-1\"}",
+      "code": "duplicate_key"
+    },
+    {
+      "name": "unknown_key",
+      "text": "{\"artifacts\":[{\"path\":\".kiro/specs/demo-feature/requirements.md\",\"sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}],\"reason_code\":null,\"run_id\":\"requirements-1\",\"schema_version\":1,\"status\":\"ready\",\"summary\":\"Wrote 12 EARS criteria and a glossary.\",\"task_id\":null,\"transcript\":\"hello\"}",
+      "code": "unknown_key"
+    },
+    {
+      "name": "missing_key",
+      "text": "{\"artifacts\": [{\"path\": \".kiro/specs/demo-feature/requirements.md\", \"sha256\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}], \"reason_code\": null, \"run_id\": \"requirements-1\", \"schema_version\": 1, \"status\": \"ready\", \"summary\": \"Wrote 12 EARS criteria and a glossary.\"}",
+      "code": "missing_key"
+    },
+    {
+      "name": "unknown_status",
+      "text": "{\"artifacts\": [{\"path\": \".kiro/specs/demo-feature/requirements.md\", \"sha256\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}], \"reason_code\": null, \"run_id\": \"requirements-1\", \"schema_version\": 1, \"status\": \"done\", \"summary\": \"Wrote 12 EARS criteria and a glossary.\", \"task_id\": null}",
+      "code": "unknown_status"
+    },
+    {
+      "name": "status_not_text",
+      "text": "{\"artifacts\": [{\"path\": \".kiro/specs/demo-feature/requirements.md\", \"sha256\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}], \"reason_code\": null, \"run_id\": \"requirements-1\", \"schema_version\": 1, \"status\": 1, \"summary\": \"Wrote 12 EARS criteria and a glossary.\", \"task_id\": null}",
+      "code": "unknown_status"
+    },
+    {
+      "name": "schema_version_2",
+      "text": "{\"artifacts\": [{\"path\": \".kiro/specs/demo-feature/requirements.md\", \"sha256\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}], \"reason_code\": null, \"run_id\": \"requirements-1\", \"schema_version\": 2, \"status\": \"ready\", \"summary\": \"Wrote 12 EARS criteria and a glossary.\", \"task_id\": null}",
+      "code": "unsupported_schema_version"
+    },
+    {
+      "name": "schema_version_float",
+      "text": "{\"artifacts\":[{\"path\":\".kiro/specs/demo-feature/requirements.md\",\"sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}],\"reason_code\":null,\"run_id\":\"requirements-1\",\"schema_version\":1.0,\"status\":\"ready\",\"summary\":\"Wrote 12 EARS criteria and a glossary.\",\"task_id\":null}",
+      "code": "unsupported_schema_version"
+    },
+    {
+      "name": "schema_version_bool",
+      "text": "{\"artifacts\": [{\"path\": \".kiro/specs/demo-feature/requirements.md\", \"sha256\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}], \"reason_code\": null, \"run_id\": \"requirements-1\", \"schema_version\": true, \"status\": \"ready\", \"summary\": \"Wrote 12 EARS criteria and a glossary.\", \"task_id\": null}",
+      "code": "unsupported_schema_version"
+    },
+    {
+      "name": "run_id_empty",
+      "text": "{\"artifacts\": [{\"path\": \".kiro/specs/demo-feature/requirements.md\", \"sha256\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}], \"reason_code\": null, \"run_id\": \"\", \"schema_version\": 1, \"status\": \"ready\", \"summary\": \"Wrote 12 EARS criteria and a glossary.\", \"task_id\": null}",
+      "code": "invalid_run_id"
+    },
+    {
+      "name": "run_id_space",
+      "text": "{\"artifacts\": [{\"path\": \".kiro/specs/demo-feature/requirements.md\", \"sha256\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}], \"reason_code\": null, \"run_id\": \"requirements 1\", \"schema_version\": 1, \"status\": \"ready\", \"summary\": \"Wrote 12 EARS criteria and a glossary.\", \"task_id\": null}",
+      "code": "invalid_run_id"
+    },
+    {
+      "name": "summary_blank",
+      "text": "{\"artifacts\": [{\"path\": \".kiro/specs/demo-feature/requirements.md\", \"sha256\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}], \"reason_code\": null, \"run_id\": \"requirements-1\", \"schema_version\": 1, \"status\": \"ready\", \"summary\": \"   \", \"task_id\": null}",
+      "code": "invalid_summary"
+    },
+    {
+      "name": "summary_control",
+      "text": "{\"artifacts\": [{\"path\": \".kiro/specs/demo-feature/requirements.md\", \"sha256\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}], \"reason_code\": null, \"run_id\": \"requirements-1\", \"schema_version\": 1, \"status\": \"ready\", \"summary\": \"line one\\nline two\", \"task_id\": null}",
+      "code": "invalid_summary"
+    },
+    {
+      "name": "summary_too_long",
+      "text": "{\"artifacts\": [{\"path\": \".kiro/specs/demo-feature/requirements.md\", \"sha256\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}], \"reason_code\": null, \"run_id\": \"requirements-1\", \"schema_version\": 1, \"status\": \"ready\", \"summary\": \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\", \"task_id\": null}",
+      "code": "invalid_summary"
+    },
+    {
+      "name": "artifacts_not_list",
+      "text": "{\"artifacts\": {}, \"reason_code\": null, \"run_id\": \"requirements-1\", \"schema_version\": 1, \"status\": \"ready\", \"summary\": \"Wrote 12 EARS criteria and a glossary.\", \"task_id\": null}",
+      "code": "invalid_artifacts"
+    },
+    {
+      "name": "artifact_traversal",
+      "text": "{\"artifacts\": [{\"path\": \"src/../../outside.py\", \"sha256\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}], \"reason_code\": null, \"run_id\": \"requirements-1\", \"schema_version\": 1, \"status\": \"ready\", \"summary\": \"Wrote 12 EARS criteria and a glossary.\", \"task_id\": null}",
+      "code": "invalid_artifact_path"
+    },
+    {
+      "name": "artifact_absolute",
+      "text": "{\"artifacts\": [{\"path\": \"/etc/hosts\", \"sha256\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}], \"reason_code\": null, \"run_id\": \"requirements-1\", \"schema_version\": 1, \"status\": \"ready\", \"summary\": \"Wrote 12 EARS criteria and a glossary.\", \"task_id\": null}",
+      "code": "invalid_artifact_path"
+    },
+    {
+      "name": "artifact_backslash",
+      "text": "{\"artifacts\": [{\"path\": \"src\\\\a.py\", \"sha256\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}], \"reason_code\": null, \"run_id\": \"requirements-1\", \"schema_version\": 1, \"status\": \"ready\", \"summary\": \"Wrote 12 EARS criteria and a glossary.\", \"task_id\": null}",
+      "code": "invalid_artifact_path"
+    },
+    {
+      "name": "artifact_hash_uppercase",
+      "text": "{\"artifacts\": [{\"path\": \"src/a.py\", \"sha256\": \"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\"}], \"reason_code\": null, \"run_id\": \"requirements-1\", \"schema_version\": 1, \"status\": \"ready\", \"summary\": \"Wrote 12 EARS criteria and a glossary.\", \"task_id\": null}",
+      "code": "invalid_artifact_hash"
+    },
+    {
+      "name": "artifact_hash_short",
+      "text": "{\"artifacts\": [{\"path\": \"src/a.py\", \"sha256\": \"abc\"}], \"reason_code\": null, \"run_id\": \"requirements-1\", \"schema_version\": 1, \"status\": \"ready\", \"summary\": \"Wrote 12 EARS criteria and a glossary.\", \"task_id\": null}",
+      "code": "invalid_artifact_hash"
+    },
+    {
+      "name": "artifact_duplicate_case",
+      "text": "{\"artifacts\": [{\"path\": \"src/a.py\", \"sha256\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}, {\"path\": \"SRC/A.py\", \"sha256\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}], \"reason_code\": null, \"run_id\": \"requirements-1\", \"schema_version\": 1, \"status\": \"ready\", \"summary\": \"Wrote 12 EARS criteria and a glossary.\", \"task_id\": null}",
+      "code": "duplicate_artifact"
+    },
+    {
+      "name": "artifact_unknown_key",
+      "text": "{\"artifacts\": [{\"path\": \"src/a.py\", \"sha256\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\", \"content\": \"x\"}], \"reason_code\": null, \"run_id\": \"requirements-1\", \"schema_version\": 1, \"status\": \"ready\", \"summary\": \"Wrote 12 EARS criteria and a glossary.\", \"task_id\": null}",
+      "code": "unknown_key"
+    },
+    {
+      "name": "task_id_group",
+      "text": "{\"artifacts\": [{\"path\": \".kiro/specs/demo-feature/requirements.md\", \"sha256\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}], \"reason_code\": null, \"run_id\": \"requirements-1\", \"schema_version\": 1, \"status\": \"ready\", \"summary\": \"Wrote 12 EARS criteria and a glossary.\", \"task_id\": \"2\"}",
+      "code": "invalid_task_id"
+    },
+    {
+      "name": "task_id_leading_zero",
+      "text": "{\"artifacts\": [{\"path\": \".kiro/specs/demo-feature/requirements.md\", \"sha256\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}], \"reason_code\": null, \"run_id\": \"requirements-1\", \"schema_version\": 1, \"status\": \"ready\", \"summary\": \"Wrote 12 EARS criteria and a glossary.\", \"task_id\": \"02.1\"}",
+      "code": "invalid_task_id"
+    },
+    {
+      "name": "reason_code_uppercase",
+      "text": "{\"artifacts\": [{\"path\": \".kiro/specs/demo-feature/requirements.md\", \"sha256\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}], \"reason_code\": \"Bad Thing\", \"run_id\": \"requirements-1\", \"schema_version\": 1, \"status\": \"failed\", \"summary\": \"Wrote 12 EARS criteria and a glossary.\", \"task_id\": null}",
+      "code": "invalid_reason_code"
+    },
+    {
+      "name": "ready_with_reason",
+      "text": "{\"artifacts\": [{\"path\": \".kiro/specs/demo-feature/requirements.md\", \"sha256\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}], \"reason_code\": \"oops\", \"run_id\": \"requirements-1\", \"schema_version\": 1, \"status\": \"ready\", \"summary\": \"Wrote 12 EARS criteria and a glossary.\", \"task_id\": null}",
+      "code": "reason_mismatch"
+    },
+    {
+      "name": "failed_without_reason",
+      "text": "{\"artifacts\": [{\"path\": \".kiro/specs/demo-feature/requirements.md\", \"sha256\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}], \"reason_code\": null, \"run_id\": \"requirements-1\", \"schema_version\": 1, \"status\": \"failed\", \"summary\": \"Wrote 12 EARS criteria and a glossary.\", \"task_id\": null}",
+      "code": "reason_mismatch"
+    }
+  ]
+}

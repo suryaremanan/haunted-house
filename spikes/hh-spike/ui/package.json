@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "test": "node --test src/s2-callback-contract.test.ts"
   },
   "dependencies": {
     "react": "^18.2.0",

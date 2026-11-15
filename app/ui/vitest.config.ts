@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   // Tests may import the recorded replay fixtures (`?raw`), which live outside app/ui.
-  server: { fs: { allow: ['.', '../../fixtures/replay'] } },
+  server: { fs: { allow: ['.', '../../fixtures/replay', '../../fixtures/room-ghosts'] } },
   resolve: {
     // The Crew app SDK exists only inside the dashboard. Tests resolve it to a
     // double that throws unless the test replaces it with vi.mock and a factory.

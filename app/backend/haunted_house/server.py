@@ -36,8 +36,25 @@ from haunted_house.adapters.gateway_client import (
     load_allowed_prefixes,
 )
 from haunted_house.adapters.settings import Settings, SettingsError
+from haunted_house.adapters.mansion_service import MansionService
 from haunted_house.core.proxy_signature import Verdict, verify
 from haunted_house.core.redact import redact
+from haunted_house.adapters.seance_service import SeanceService
+from haunted_house.mansion_routes import (
+    MansionServiceProvider,
+    live_mansion_service,
+    register_mansion_routes,
+)
+from haunted_house.adapters.workflow_service import WorkflowService
+from haunted_house.seance_routes import (
+    MansionGate,
+    SeanceServiceProvider,
+    live_seance_service,
+    mansion_service_gate,
+    register_seance_routes,
+)
+from haunted_house.workflow_routes import WorkflowServiceProvider, register_workflow_routes
+from haunted_house.workflow_wiring import live_workflow
 
 __all__ = [
     "GATEWAY_ERRORS",
@@ -142,6 +159,10 @@ def build_app(
     *,
     clock: Clock = time.time,
     gateway_probe: GatewayProbe | None = None,
+    mansion_service: MansionService | MansionServiceProvider | None = None,
+    seance_service: SeanceService | SeanceServiceProvider | None = None,
+    seance_mansion_gate: MansionGate | None = None,
+    workflow_service: WorkflowService | WorkflowServiceProvider | None = None,
 ) -> web.Application:
     """Build the backend application.
 
@@ -194,6 +215,17 @@ def build_app(
     app = web.Application(middlewares=[check_proxy_signature])
     app.router.add_get("/health", health)
     app.router.add_get("/api/whoami", whoami)
+    if mansion_service is not None:
+        # Mansion_API: list, create and open, behind the same signature check.
+        register_mansion_routes(app, mansion_service)
+    if seance_service is not None:
+        # Canonical_Event_API: ingest, read and reconcile, same signature check.
+        register_seance_routes(
+            app, seance_service, mansion_gate=seance_mansion_gate
+        )
+    if workflow_service is not None:
+        # Workflow, Door and risky-decision API, behind the same signature check.
+        register_workflow_routes(app, workflow_service)
     return app
 
 
@@ -234,8 +266,23 @@ def build_live_app(
             client, timeout=gateway_timeout, secret=settings.secret
         )
 
-    app = build_app(settings, clock=clock, gateway_probe=probe)
+    mansions = live_mansion_service(settings)
+    seance = live_seance_service(settings, lambda: client)
+    # Phases, Doors, risky approvals and the room MCP gate share one writer.
+    workflow = live_workflow(
+        settings, gateway=lambda: client, mansions=mansions, seance=seance
+    )
+    app = build_app(
+        settings,
+        clock=clock,
+        gateway_probe=probe,
+        mansion_service=mansions,
+        seance_service=seance,
+        seance_mansion_gate=mansion_service_gate(mansions),
+        workflow_service=workflow.provider,
+    )
     app.cleanup_ctx.append(gateway_session)
+    app.cleanup_ctx.append(workflow.lifecycle)
     return app
 
 

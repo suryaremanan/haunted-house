@@ -1,0 +1,106 @@
+{
+  "checks": {
+    "environment": {
+      "onlyFixedEnvironmentVisible": true,
+      "parentEnvironmentNotInherited": true
+    },
+    "files": {
+      "cwdOutsideMansionRefusedBeforeStart": true,
+      "listRealHomeDenied": true,
+      "readCredentialShapedPathDenied": true,
+      "readInsideMansionAllowed": true,
+      "readPrivateStateInsideMansionDenied": true,
+      "readSiblingMansionDenied": true,
+      "writeInsideMansionAllowed": true,
+      "writePrivateStateInsideMansionDenied": true,
+      "writeSiblingMansionDenied": true,
+      "writeTempDirDenied": true
+    },
+    "git": {
+      "gitAddRefusedWithoutGitWrite": true,
+      "gitAddWorksWithoutFork": true,
+      "gitBinaryResolved": true,
+      "gitCommitWorksWithoutFork": true,
+      "gitInitWorksWithoutFork": true,
+      "gitPushToSiblingRepositoryFails": true,
+      "plantedFsmonitorBlockedByNoForkAlone": true,
+      "plantedFsmonitorRunsInUnconfinedControl": true,
+      "plantedHookDidNotRun": true
+    },
+    "links": {
+      "createHardLinkToOutsideDenied": true,
+      "hardLinkTargetUnchangedAfterRefusal": true,
+      "preexistingHardLinkDefeatsSandboxAlone": true,
+      "readThroughEscapingSymlinkDenied": true,
+      "startRefusedWhileHardLinkPresent": true,
+      "writeThroughEscapingSymlinkDenied": true
+    },
+    "network": {
+      "loopbackBindDenied": true,
+      "loopbackConnectDenied": true
+    },
+    "process": {
+      "childInheritsSandboxWhenForkAllowed": true,
+      "detachImpossibleWithoutFork": true,
+      "detachedChildOutlivesRunnerWhenForkAllowed": true,
+      "detachedChildStaysConfined": true,
+      "forkDeniedByDefault": true,
+      "nestedSandboxCannotLoosen": true,
+      "spawnDeniedByDefault": true,
+      "timeoutKillsProcessGroup": true
+    }
+  },
+  "decision": {
+    "delete_path": "enabled_independent_of_confinement",
+    "forkAllowedMode": "never_offered",
+    "git_write": "enabled_add_commit_no_fork_profile_only",
+    "otherPlatforms": "disabled_confinement_unavailable",
+    "requiresStartupCanary": true,
+    "run_command": "enabled_no_fork_profile_only"
+  },
+  "evidence": {
+    "inferred": [
+      "Outbound connections to real hosts are refused by the same deny-default network rule that refused loopback; no real host was contacted.",
+      "Keychain and other system services are unreachable because the profile allows no mach-lookup; no keychain call was made.",
+      "sandbox-exec is deprecated by Apple but present; Crew 0.12.2 ships its own Seatbelt launcher, so the mechanism is in use on this platform.",
+      "Crew's default agent.sandbox setting wraps kiro-cli in sandbox-exec on macOS, so an MCP server it starts is already sandboxed and cannot apply this profile itself (Crew's own setting text: nested seatbelt causes EPERM)."
+    ],
+    "unverified": [
+      {
+        "claim": "The installed Haunted House backend can apply a sandbox, i.e. Crew does not already run it inside one (a nested sandbox-exec fails).",
+        "manual_step": "With the app installed and trusted, call the backend's startup confinement canary (run_confined on /usr/bin/touch outside the Mansion must be refused, inside must succeed) and read the result from the signed status route.",
+        "needs": "owner action on a real gateway"
+      },
+      {
+        "claim": "Any confinement on Linux or Windows hosts.",
+        "manual_step": "Run this probe there; without sandbox-exec it reports confinement_unavailable and both actions stay disabled.",
+        "needs": "a non-macOS host"
+      }
+    ],
+    "verified": [
+      "A deny-default Seatbelt profile lets one exact argv read and write below the Mansion and refuses reads and writes of a sibling Mansion, a credential-shaped file, the real home listing, and Protected_Paths inside the Mansion.",
+      "Loopback connect and bind are refused inside the sandbox and succeed in the control.",
+      "Without process-fork the command cannot create any child, so nothing can outlive it.",
+      "A nested sandbox-exec cannot loosen the policy; it fails to apply.",
+      "Reads and writes through a symbolic link that leaves the Mansion are refused.",
+      "A hard link that already sits inside the Mansion defeats the path-based sandbox; the runner's pre-start scan refuses to start, and the sandbox refuses to create such a link.",
+      "The child sees only the runner's fixed environment; the working directory is validated before start; a timeout kills the command's process group.",
+      "With process-fork allowed, a child that calls setsid outlives the runner, although it stays inside the same sandbox."
+    ]
+  },
+  "failedChecks": [],
+  "guidance": {
+    "delete_path": "Independent of S10: an in-process Path_Guard operation, no child process.",
+    "fallback": "On a host without sandbox-exec, or when the startup canary fails, command and git return confinement_unavailable without starting a process.",
+    "git_write": "Only add and commit through the no-fork profile with the real git binary, -c core.hooksPath=/dev/null, -c core.fsmonitor=false, -c gc.auto=0, -c commit.gpgsign=false, identity from trusted configuration, and .git writable only for this action kind. Enabled only when the git checks below are true on the host.",
+    "hard_links": "Refuse to start while any regular file below the Mansion has more than one link, in addition to Path_Guard's per-file check.",
+    "run_command": "Only through the no-fork profile: absolute allowlisted executable, exact argv, fixed environment, guarded cwd, timeout, bounded output. A command that must spawn children returns confinement_unavailable; do not offer a fork-allowed mode.",
+    "runner_location": "Run confined actions from the app backend process, behind a startup canary. A process that is already sandboxed cannot apply a second sandbox, so an MCP server started by a sandboxed kiro-cli must ask the backend through the capability-bound operation instead of spawning the command itself."
+  },
+  "mechanism": "sandbox-exec deny-default profile, no process-fork",
+  "outcome": "single_process_confinement_verified",
+  "platform": "darwin",
+  "schema_version": 1,
+  "spike": "S10",
+  "task": "doors-and-guardrails 1.2"
+}

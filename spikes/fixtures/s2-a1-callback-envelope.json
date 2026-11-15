@@ -1,0 +1,145 @@
+{
+  "assumption_id": "S2-A1",
+  "schema_version": 1,
+  "outcome": "callback_contract_verified",
+  "evidence": {
+    "probe": "spikes/hh-spike/ui/src/s2-callback-contract.ts",
+    "unsubscribe_result": "passed",
+    "callbacks_after_unmount": 0
+  },
+  "callback_cases": [
+    {
+      "type": "chat_append",
+      "data": {
+        "slot": "[target-slot]",
+        "content": "[scrubbed]",
+        "seq": 1,
+        "gen": "generation-a"
+      }
+    },
+    {
+      "type": "chat_chunk",
+      "data": {
+        "slot": "[target-slot]",
+        "content": "[scrubbed]",
+        "seq": 2,
+        "gen": "generation-a"
+      }
+    },
+    {
+      "type": "chat_done",
+      "data": {
+        "slot": "[target-slot]",
+        "turn": 1,
+        "turn_gen": "generation-a",
+        "continuing": false,
+        "needs_input": false
+      }
+    },
+    {
+      "type": "chat_error",
+      "data": {
+        "slot": "[target-slot]",
+        "code": "provider_error",
+        "message": "[scrubbed]"
+      }
+    },
+    {
+      "type": "chat_message",
+      "data": {
+        "slot": "[target-slot]",
+        "role": "user",
+        "content": "[scrubbed]",
+        "meta": {
+          "mid": "message-a"
+        }
+      }
+    },
+    {
+      "type": "chat_message_update",
+      "data": {
+        "slot": "[target-slot]",
+        "tool_call_id": "tool-a",
+        "content": "[scrubbed]"
+      }
+    },
+    {
+      "type": "chat_segment",
+      "data": {
+        "slot": "[target-slot]"
+      }
+    },
+    {
+      "type": "chat_status",
+      "data": {
+        "slot": "[target-slot]",
+        "status": "working"
+      }
+    },
+    {
+      "type": "chat_thinking",
+      "data": {
+        "slot": "[target-slot]",
+        "content": "[scrubbed]"
+      }
+    },
+    {
+      "type": "chat_variant_switch",
+      "data": {
+        "slot": "[target-slot]",
+        "id": "variant-a",
+        "revision": 1
+      }
+    },
+    {
+      "type": "tool_call",
+      "data": {
+        "slot": "[target-slot]",
+        "tool_call_id": "tool-a",
+        "tool": "Read File",
+        "kind": "read",
+        "is_shell": false,
+        "is_update": false
+      }
+    },
+    {
+      "type": "tool_result",
+      "data": {
+        "slot": "[target-slot]",
+        "tool_call_id": "tool-a",
+        "output": "[scrubbed]",
+        "final": true
+      }
+    },
+    {
+      "type": "shared_crew.decision",
+      "data": {
+        "type": "shared_crew.decision",
+        "schema_version": 1,
+        "decision": {
+          "decision_id": "decision-a",
+          "kind": "approval",
+          "session_key": "[target-slot]",
+          "state": "resolved",
+          "revision": 2,
+          "outcome": "approved"
+        }
+      }
+    },
+    {
+      "type": "approval_resolved",
+      "data": {
+        "slot": "[target-slot]",
+        "id": "approval-a",
+        "approved": true,
+        "mid": "message-a"
+      }
+    }
+  ],
+  "unavailable_fields": [],
+  "fallback_by_field": {},
+  "fallback_if_contract_unavailable": {
+    "policy": "block_event_subscription",
+    "browser_normalization": false
+  }
+}

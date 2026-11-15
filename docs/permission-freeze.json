@@ -1,0 +1,30 @@
+{
+  "appVersion": "0.1.0",
+  "frozenOn": "2026-11-29",
+  "manifestSha256": "b8acd4b90d6864f21230572e1aa7d039d5224711062d76d2842777dbfddacb99",
+  "permissions": {
+    "api": [
+      "/api/chat",
+      "/api/chat/*",
+      "/api/version",
+      "/apps/haunted-house/api/*"
+    ],
+    "events": [
+      "approval_resolved",
+      "chat_chunk",
+      "chat_done",
+      "chat_error",
+      "chat_message",
+      "chat_message_update",
+      "chat_segment",
+      "chat_status",
+      "shared_crew.decision",
+      "tool_call",
+      "tool_result"
+    ],
+    "sessionApproval": true,
+    "storage": true
+  },
+  "permissionsSha256": "c05e28e482d28305b126d33739f014f8037f57257c28ecf891660634d7f148d8",
+  "schemaVersion": 1
+}

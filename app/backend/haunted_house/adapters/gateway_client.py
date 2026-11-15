@@ -49,12 +49,25 @@ from haunted_house.core.scope import path_allowed
 from haunted_house.core.urls import with_token
 
 __all__ = [
+    "CHAT_APPROVAL_ACTIONS",
+    "CHAT_GRANT",
+    "CHAT_MEMORY_MODE",
+    "CHAT_MODE",
+    "CHAT_SEND_PATH",
+    "CHAT_SLOTS_PATH",
+    "CHAT_MODE_PATH",
+    "MAX_CHAT_MESSAGE_BYTES",
+    "DEFAULT_HISTORY_MESSAGES",
     "DEFAULT_TIMEOUT",
     "ERROR_KINDS",
     "LOGGER_NAME",
     "MANIFEST_PATH",
+    "MAX_HISTORY_MESSAGES",
+    "MAX_HISTORY_RESPONSE_BYTES",
     "ROUTES",
     "SECRET_HEADER",
+    "SESSION_HISTORY_GRANT",
+    "SESSION_HISTORY_PATH_PREFIX",
     "GatewayClient",
     "GatewayError",
     "load_allowed_prefixes",
@@ -66,6 +79,33 @@ __all__ = [
 ROUTES: dict[str, tuple[str, str]] = {
     "version": ("GET", "/api/version"),
 }
+
+# Session history is one read per server-registered slot. Its path carries the
+# slot, so it is not a fixed ROUTES entry: the manifest grants the prefix and
+# ``GatewayClient.session_history`` builds the percent-encoded path itself.
+SESSION_HISTORY_GRANT = "/api/chat/*"
+SESSION_HISTORY_PATH_PREFIX = "/api/chat/slots/"
+MAX_HISTORY_MESSAGES = 500
+DEFAULT_HISTORY_MESSAGES = 200
+MAX_HISTORY_RESPONSE_BYTES = 1024 * 1024
+
+# App-owned chat sessions (Doors and Guardrails, S6). These are the only
+# session routes the app calls: create a slot, set its project folder, keep it
+# in interactive approval mode, queue one turn, and answer one exact
+# permission prompt. Like session history they carry dynamic values, so each
+# has a typed method that builds its own path instead of a ROUTES entry, and
+# every path is covered by the same ``/api/chat/*`` grant (which also covers
+# ``/api/chat`` itself). There is no spawn route, no global approval route and
+# no WebSocket.
+CHAT_GRANT = SESSION_HISTORY_GRANT
+CHAT_SEND_PATH = "/api/chat"
+CHAT_SLOTS_PATH = "/api/chat/slots"
+CHAT_MODE_PATH = "/api/chat/mode"
+CHAT_MODE = "normal"  # interactive: Crew asks before each tool call
+CHAT_MEMORY_MODE = "temporary"
+CHAT_APPROVAL_ACTIONS = frozenset({"approved", "rejected"})
+MAX_CHAT_MESSAGE_BYTES = 16 * 1024
+_MAX_PROJECT_BYTES = 1024
 
 DEFAULT_TIMEOUT = 30.0
 SECRET_HEADER = "X-App-Secret"
@@ -82,6 +122,14 @@ _REFUSED = frozenset({401, 403})
 _QUERY = re.compile(r"\?\S*")
 _MAX_CODE_CHARS = 100
 _NOT_JSON = object()
+_TOO_LARGE = object()
+# One Crew session slot, as the gateway names app-owned sessions.
+_SLOT = re.compile(r"[A-Za-z0-9][A-Za-z0-9._:-]{0,159}")
+# A session name or an agent's short name.
+_NAME = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,63}")
+# A Crew approval request id or permission message id.
+_REQUEST = re.compile(r"[A-Za-z0-9][A-Za-z0-9._:@-]{0,127}")
+_UNSAFE_TEXT = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]")
 
 
 class GatewayError(Exception):
@@ -179,6 +227,183 @@ class GatewayClient:
         if spec is None:
             raise self._fail(state, "config", f"unknown gateway route {route!r}")
         method, path = spec
+        return await self._run(state, method, path, path, body, timeout)
+
+    async def session_history(
+        self,
+        slot: str,
+        *,
+        limit: int = DEFAULT_HISTORY_MESSAGES,
+        timeout: float = DEFAULT_TIMEOUT,
+    ) -> dict[str, Any]:
+        """Read bounded history of one app-owned session slot.
+
+        Sends ``GET /api/chat/slots/<slot>?limit=<limit>`` with the slot
+        percent-encoded as one path segment. The caller passes only slots the
+        server registered; ``slot`` is still checked here, so a value with a
+        path separator, a dot segment or a control character is a ``config``
+        error and sends nothing. ``limit`` must be a whole number from 1 to
+        ``MAX_HISTORY_MESSAGES``. A response larger than
+        ``MAX_HISTORY_RESPONSE_BYTES`` is an ``http`` error and is dropped.
+
+        Token handling, the single retry, the deadline, redaction and the
+        ``permissions.api`` check are those of ``call``. Raises
+        ``GatewayError``.
+        """
+        state = _CallState(self._settings.secret, self._token)
+        if type(slot) is not str or _SLOT.fullmatch(slot) is None or slot in (".", ".."):
+            raise self._fail(state, "config", "session history needs one valid slot name")
+        if type(limit) is not int or not 1 <= limit <= MAX_HISTORY_MESSAGES:
+            raise self._fail(
+                state,
+                "config",
+                f"session history limit must be 1 to {MAX_HISTORY_MESSAGES}",
+            )
+        path = SESSION_HISTORY_PATH_PREFIX + quote(slot, safe="")
+        return await self._run(
+            state,
+            "GET",
+            path,
+            f"{path}?limit={limit}",
+            None,
+            timeout,
+            max_bytes=MAX_HISTORY_RESPONSE_BYTES,
+        )
+
+    # --- app-owned chat sessions -------------------------------------------------
+
+    async def create_chat_slot(
+        self, name: str, agent: str, *, timeout: float = DEFAULT_TIMEOUT
+    ) -> dict[str, Any]:
+        """Create one app-owned session slot: ``POST /api/chat/slots``.
+
+        Sends exactly ``{"name", "agent", "memory_mode"}``. ``name`` and
+        ``agent`` (the agent's short name) must be plain labels; anything else
+        is a ``config`` error and sends nothing. The gateway answers with the
+        slot ``key``. Raises ``GatewayError``.
+        """
+        state = _CallState(self._settings.secret, self._token)
+        if not _is_name(name) or not _is_name(agent):
+            raise self._fail(state, "config", "a chat slot needs a plain name and agent")
+        body = {"name": name, "agent": agent, "memory_mode": CHAT_MEMORY_MODE}
+        return await self._run(state, "POST", CHAT_SLOTS_PATH, CHAT_SLOTS_PATH, body, timeout)
+
+    async def set_chat_slot_project(
+        self, slot: str, project: str, *, timeout: float = DEFAULT_TIMEOUT
+    ) -> dict[str, Any]:
+        """Set a slot's working folder: ``POST /api/chat/slots/<slot>/project``.
+
+        ``project`` is the server-resolved absolute Mansion directory, never
+        request input. Sends exactly ``{"project": project}``.
+        """
+        state = _CallState(self._settings.secret, self._token)
+        path = self._slot_path(state, slot, "/project")
+        if (
+            type(project) is not str
+            or not project.startswith("/")
+            or len(project.encode("utf-8", "replace")) > _MAX_PROJECT_BYTES
+            or _UNSAFE_TEXT.search(project) is not None
+            or "\n" in project
+            or "\r" in project
+            or ".." in project.split("/")
+        ):
+            raise self._fail(state, "config", "a slot project must be one absolute folder")
+        return await self._run(state, "POST", path, path, {"project": project}, timeout)
+
+    async def set_chat_slot_interactive(
+        self, slot: str, *, timeout: float = DEFAULT_TIMEOUT
+    ) -> dict[str, Any]:
+        """Keep a slot in interactive approval mode: ``POST /api/chat/mode``.
+
+        Sends exactly ``{"mode": "normal", "slot": slot}``. No other mode can
+        be requested through this client.
+        """
+        state = _CallState(self._settings.secret, self._token)
+        self._slot_path(state, slot, "")
+        body = {"mode": CHAT_MODE, "slot": slot}
+        return await self._run(state, "POST", CHAT_MODE_PATH, CHAT_MODE_PATH, body, timeout)
+
+    async def send_chat_turn(
+        self, slot: str, message: str, *, timeout: float = DEFAULT_TIMEOUT
+    ) -> dict[str, Any]:
+        """Queue one user turn on a slot: ``POST /api/chat?ws=1``.
+
+        Sends exactly ``{"slot": slot, "message": message}``. With ``ws=1``
+        the gateway answers with a receipt as soon as the message is accepted
+        instead of streaming the reply. ``message`` is house-authored text of
+        at most ``MAX_CHAT_MESSAGE_BYTES``.
+        """
+        state = _CallState(self._settings.secret, self._token)
+        self._slot_path(state, slot, "")
+        if (
+            type(message) is not str
+            or not message.strip()
+            or len(message.encode("utf-8", "replace")) > MAX_CHAT_MESSAGE_BYTES
+            or _UNSAFE_TEXT.search(message) is not None
+        ):
+            raise self._fail(state, "config", "a chat turn needs bounded plain text")
+        body = {"slot": slot, "message": message}
+        return await self._run(
+            state, "POST", CHAT_SEND_PATH, f"{CHAT_SEND_PATH}?ws=1", body, timeout
+        )
+
+    async def resolve_chat_approval(
+        self,
+        slot: str,
+        request_id: str,
+        request_mid: str,
+        action: str,
+        *,
+        timeout: float = DEFAULT_TIMEOUT,
+    ) -> dict[str, Any]:
+        """Answer one exact permission prompt:
+        ``POST /api/chat/slots/<slot>/approve``.
+
+        Sends exactly ``{"action", "request_id", "request_mid", "origin":
+        "native"}``. ``request_id`` repeats across turns, so the gateway is
+        told the permission message (``request_mid``) too and refuses a
+        prompt that is no longer that one. ``action`` is ``approved`` or
+        ``rejected``; no trust or session-wide grant can be sent.
+        """
+        state = _CallState(self._settings.secret, self._token)
+        path = self._slot_path(state, slot, "/approve")
+        if (
+            action not in CHAT_APPROVAL_ACTIONS
+            or type(request_id) is not str
+            or _REQUEST.fullmatch(request_id) is None
+            or type(request_mid) is not str
+            or _REQUEST.fullmatch(request_mid) is None
+        ):
+            raise self._fail(state, "config", "an approval answer needs its request id and mid")
+        body = {
+            "action": action,
+            "request_id": request_id,
+            "request_mid": request_mid,
+            "origin": "native",
+        }
+        return await self._run(state, "POST", path, path, body, timeout)
+
+    def _slot_path(self, state: _CallState, slot: object, suffix: str) -> str:
+        if type(slot) is not str or _SLOT.fullmatch(slot) is None or slot in (".", ".."):
+            raise self._fail(state, "config", "a chat call needs one valid slot name")
+        return SESSION_HISTORY_PATH_PREFIX + quote(slot, safe="") + suffix
+
+    async def _run(
+        self,
+        state: _CallState,
+        method: str,
+        path: str,
+        target: str,
+        body: dict[str, Any] | None,
+        timeout: float,
+        *,
+        max_bytes: int | None = None,
+    ) -> dict[str, Any]:
+        """Check that the call is safe, then make it under one deadline.
+
+        ``path`` is checked against ``permissions.api`` and named in logs;
+        ``target`` is ``path`` plus any query the request carries.
+        """
         origin = self._settings.gateway_origin
         if origin is None or not is_loopback_origin(origin):
             raise self._fail(
@@ -200,7 +425,9 @@ class GatewayClient:
 
         try:
             async with asyncio.timeout(timeout):
-                return await self._call(state, method, path, body)
+                return await self._call(
+                    state, method, path, target, body, max_bytes
+                )
         except TimeoutError:  # also aiohttp's own timeouts, which subclass it
             kind, message = "timeout", f"{state.last} got no answer within {timeout:g} s"
         except (aiohttp.ClientError, OSError) as exc:
@@ -216,16 +443,18 @@ class GatewayClient:
         state: _CallState,
         method: str,
         path: str,
+        target: str,
         body: dict[str, Any] | None,
+        max_bytes: int | None,
     ) -> dict[str, Any]:
-        status, data = await self._target(state, method, path, body)
+        status, data = await self._target(state, method, target, body, max_bytes)
         if status in _REFUSED:
             self._log(
                 logging.INFO,
                 state,
                 f"{method} {path} got {status}; getting a new app token and retrying once",
             )
-            status, data = await self._target(state, method, path, body)
+            status, data = await self._target(state, method, target, body, max_bytes)
             if status in _REFUSED:
                 raise self._fail(
                     state,
@@ -241,6 +470,13 @@ class GatewayClient:
                 f"{method} {path} returned {status}",
                 status=status,
                 code=_error_code(data),
+            )
+        if data is _TOO_LARGE:
+            raise self._fail(
+                state,
+                "http",
+                f"{method} {path} returned more than {max_bytes} bytes",
+                status=status,
             )
         if not isinstance(data, dict):
             raise self._fail(
@@ -260,14 +496,21 @@ class GatewayClient:
         self,
         state: _CallState,
         method: str,
-        path: str,
+        target: str,
         body: dict[str, Any] | None,
+        max_bytes: int | None = None,
     ) -> tuple[int, Any]:
         """Send one target request with a token, getting one first if needed.
         On 401 or 403 the token is dropped (unless another call already
         replaced it)."""
         token = self._token or await self._exchange(state)
-        status, data = await self._send(state, method, with_token(path, token), json_body=body)
+        status, data = await self._send(
+            state,
+            method,
+            with_token(target, token),
+            json_body=body,
+            max_bytes=max_bytes,
+        )
         if status in _REFUSED and self._token == token:
             self._token = None
         return status, data
@@ -310,8 +553,10 @@ class GatewayClient:
         *,
         headers: Mapping[str, str] | None = None,
         json_body: dict[str, Any] | None = None,
+        max_bytes: int | None = None,
     ) -> tuple[int, Any]:
-        """Send one request and return (status, parsed JSON or _NOT_JSON)."""
+        """Send one request and return (status, parsed JSON or _NOT_JSON).
+        A body longer than ``max_bytes`` is returned as ``_TOO_LARGE``."""
         state.last = f"{method} {_path_only(path_and_query)}"
         kwargs: dict[str, Any] = {"allow_redirects": False}
         if headers:
@@ -324,6 +569,8 @@ class GatewayClient:
             status = response.status
             raw = await response.read()
         self._log(logging.DEBUG, state, f"{state.last} -> {status}")
+        if max_bytes is not None and len(raw) > max_bytes:
+            return status, _TOO_LARGE
         return status, _parse_json(raw)
 
     def _fail(
@@ -364,6 +611,10 @@ def load_allowed_prefixes(app_json_path: Path) -> list[str]:
         log.warning("%s has no permissions.api list; gateway calls will be refused", app_json_path)
         return []
     return [entry for entry in api if isinstance(entry, str) and entry]
+
+
+def _is_name(value: object) -> bool:
+    return type(value) is str and _NAME.fullmatch(value) is not None
 
 
 def _clean(text: str, secrets: Iterable[str | None]) -> str:

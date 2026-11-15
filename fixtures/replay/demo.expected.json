@@ -1,0 +1,873 @@
+{
+ "mansion_id": "demo-mansion",
+ "narrative": {
+  "approval_decided": 1,
+  "approval_requested": 2,
+  "door_decisions": 2,
+  "ghost_ids": [
+   "archivist",
+   "draughtsman",
+   "foreman",
+   "medium",
+   "tinker-1",
+   "tinker-2",
+   "tinker-3"
+  ],
+  "run_blocked": 1,
+  "run_completed": 2,
+  "run_failed": 2,
+  "tool_finished": 3,
+  "tool_started": 5
+ },
+ "projection": {
+  "ghosts": [
+   {
+    "ghost_id": "archivist",
+    "latest_event_id": "e1:36126a9b9ecb2d5e98d7578f743b37ead4cc4d299a1cad99b6f14e50c5c0b509",
+    "latest_sequence": 20,
+    "mansion_id": "demo-mansion",
+    "open_tools": [],
+    "pending_approvals": [],
+    "reason": "requirements.md is ready for review",
+    "run_id": "requirements-1",
+    "run_sequence": 0,
+    "state": "done"
+   },
+   {
+    "ghost_id": "draughtsman",
+    "latest_event_id": "e1:e97ed7b6a3d6599213c7a8e2a061ae5daf61094920e4a5d9fdd9c94a8ee196f2",
+    "latest_sequence": 37,
+    "mansion_id": "demo-mansion",
+    "open_tools": [],
+    "pending_approvals": [],
+    "reason": "design.md is ready for review",
+    "run_id": "design-1",
+    "run_sequence": 0,
+    "state": "done"
+   },
+   {
+    "ghost_id": "foreman",
+    "latest_event_id": "e1:1c7befd274f073ab1d8ae02c5e767938b0aca611f3a19a969242ef8075f412da",
+    "latest_sequence": 54,
+    "mansion_id": "demo-mansion",
+    "open_tools": [
+     "tool-workshop-2"
+    ],
+    "pending_approvals": [],
+    "reason": null,
+    "run_id": "tasks-2",
+    "run_sequence": 1,
+    "state": "working"
+   },
+   {
+    "ghost_id": "medium",
+    "latest_event_id": null,
+    "latest_sequence": 0,
+    "mansion_id": "demo-mansion",
+    "open_tools": [],
+    "pending_approvals": [],
+    "reason": null,
+    "run_id": null,
+    "run_sequence": null,
+    "state": "idle"
+   },
+   {
+    "ghost_id": "tinker-1",
+    "latest_event_id": "e1:13f199d3070ac1cc0de06abfa865cd6b7fb1eb38683edb7397d5839ef5e471a5",
+    "latest_sequence": 57,
+    "mansion_id": "demo-mansion",
+    "open_tools": [],
+    "pending_approvals": [],
+    "reason": "locked_door",
+    "run_id": "task-1",
+    "run_sequence": 0,
+    "state": "blocked"
+   },
+   {
+    "ghost_id": "tinker-2",
+    "latest_event_id": "e1:62f6c40bf1009d5eae33a7d7c0fd7bcdcfff4399280c9347404db0dab134af82",
+    "latest_sequence": 61,
+    "mansion_id": "demo-mansion",
+    "open_tools": [
+     "tool-tinker-2"
+    ],
+    "pending_approvals": [
+     "mid-tinker-2"
+    ],
+    "reason": null,
+    "run_id": "task-2",
+    "run_sequence": 0,
+    "state": "waiting"
+   },
+   {
+    "ghost_id": "tinker-3",
+    "latest_event_id": "e1:a52b88e151b14c7a1bf08d721398af3493753bb4d6d3d25191819302c3263871",
+    "latest_sequence": 64,
+    "mansion_id": "demo-mansion",
+    "open_tools": [],
+    "pending_approvals": [],
+    "reason": "crew_error",
+    "run_id": "task-3",
+    "run_sequence": 0,
+    "state": "failed"
+   }
+  ],
+  "transitions": [
+   {
+    "causing_event_id": "e1:34b94e1e4faf2c54eb33df5523cff686d01f2358ea5dd4a150631ce191284230",
+    "causing_sequence": 2,
+    "from_state": "idle",
+    "ghost_id": "archivist",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:2bf716cafba0ad07bef6ee48287a62dfd43807628558f85c738bbfead4df2d84"
+   },
+   {
+    "causing_event_id": "e1:4567e8aa12439c737c75036e24b4bc346a38e20632c031c1c132960554c41560",
+    "causing_sequence": 3,
+    "from_state": "working",
+    "ghost_id": "archivist",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:9495aecf796180d40a54398a2d7e1d23e4e48ce6276dcb210634bfb5065e3b7f"
+   },
+   {
+    "causing_event_id": "e1:5ffa77e744ddc3ff303e940e2a8475c5dca8fd6fd7ee8ef232c3695a0a82cc4e",
+    "causing_sequence": 4,
+    "from_state": "working",
+    "ghost_id": "archivist",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:e78404c33d044227e20d9ae84cb45ec1c194be230e9f49a800776170380f71dc"
+   },
+   {
+    "causing_event_id": "e1:4edd761f7e5524d264c1877d2b0357fdecf28a585c2ed8a8b0be84ba8086ac97",
+    "causing_sequence": 5,
+    "from_state": "working",
+    "ghost_id": "archivist",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:7340cb35d79619885a099e8956bafe8b54b4e15a703fed2f64732503bb886166"
+   },
+   {
+    "causing_event_id": "e1:1e4aedf366bbe4f1d8062ce01a18773fd7e088149d971fefedd05ce4cb1dd5f2",
+    "causing_sequence": 6,
+    "from_state": "working",
+    "ghost_id": "archivist",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:998df80fa5f6fe4174625761c37479ea2812812134e0745d20f56c71a1bc6cc8"
+   },
+   {
+    "causing_event_id": "e1:8821cf2e6e841c1c6c09eaaf2350c216bc085e9713d12238e98972aba7ef8d80",
+    "causing_sequence": 7,
+    "from_state": "working",
+    "ghost_id": "archivist",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:b0f727a919382e106b70c1ce85ff4d639da7bb8bdb2bd8be04a4c0210c9c8ff7"
+   },
+   {
+    "causing_event_id": "e1:2a0e4214b2cc0780394c299a92cd4cdd2d3ad337326933e99094956552ac9647",
+    "causing_sequence": 8,
+    "from_state": "working",
+    "ghost_id": "archivist",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:1ba5e5bf23b96e755b26dcdd9ff9daae72f78f5bda94b101aafe954278f08671"
+   },
+   {
+    "causing_event_id": "e1:6813aca2bf9dd42a9a563774b1ac936800874fcc73cc543ce81f426e705e8b01",
+    "causing_sequence": 9,
+    "from_state": "working",
+    "ghost_id": "archivist",
+    "mansion_id": "demo-mansion",
+    "to_state": "waiting",
+    "transition_id": "t1:151a843aa1497fb3091f6f96387673c6dc0edee777cfc6bc6f634285b8098b59"
+   },
+   {
+    "causing_event_id": "e1:05e45fdfa1279b7820cf8cfc46c3b47b65e015d782f2db37695c30e1f5712088",
+    "causing_sequence": 10,
+    "from_state": "waiting",
+    "ghost_id": "archivist",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:a8c79f420a8ee5dec2955c1daff032aed159f41a1dd10584fa3b92e9533d4f9e"
+   },
+   {
+    "causing_event_id": "e1:3665a07b99e54b36887c230c320e83a57ad453d988ce40f85492c2ce9e039690",
+    "causing_sequence": 11,
+    "from_state": "working",
+    "ghost_id": "archivist",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:846e375f254896192b5906943afcd5352aed8dc6a24793a780d0dbe6ac880c7d"
+   },
+   {
+    "causing_event_id": "e1:0b331c9b305051171583d2cc994dc264c6b5b14710c74953c3998a0446cef9c2",
+    "causing_sequence": 12,
+    "from_state": "working",
+    "ghost_id": "archivist",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:e20d75df92e5c6094c4d864927aa7edcd46f55788ea34aa6911c1a1a88485c10"
+   },
+   {
+    "causing_event_id": "e1:d2ca5a21797e578ad2490506db0614d1bf7232c9e4a20abbca5598b66edc561d",
+    "causing_sequence": 13,
+    "from_state": "working",
+    "ghost_id": "archivist",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:0e0ac6c84a794cbae7f82b78d75729c1f9a2485c5e3e4b2db60c64fcbe5be28b"
+   },
+   {
+    "causing_event_id": "e1:a03f98b8b4369bbf864f174fdb8c9e287275d1e7f64284351d2da0d36a22366b",
+    "causing_sequence": 14,
+    "from_state": "working",
+    "ghost_id": "archivist",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:e89c211cd4eeb56f34d71a56c20988e940ff4fa9620d2ed2acf89572a3a41b50"
+   },
+   {
+    "causing_event_id": "e1:4fc3caf2686c236b44f3613c8c0d34c3541a75f0258795e1dbe91e3367c4f66f",
+    "causing_sequence": 15,
+    "from_state": "working",
+    "ghost_id": "archivist",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:432658375220e48c2de64f7b86241fc2925b33f659c7f1acdffda33b159790ab"
+   },
+   {
+    "causing_event_id": "e1:817bc35929093ff9e1db8033f8811255a7a48c4569dc0e39e78f54e2e4681266",
+    "causing_sequence": 16,
+    "from_state": "working",
+    "ghost_id": "archivist",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:89a8963251862325d967a0fc277ffc3c5e965e5749088a9c6ff8a615e7b04a5e"
+   },
+   {
+    "causing_event_id": "e1:439306173fb7b24e2b9b208138e8d1af20ba6a3cff4eaa1d388b05b25357836f",
+    "causing_sequence": 17,
+    "from_state": "working",
+    "ghost_id": "archivist",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:a7041d026bb0a9b39c6dd46f3385c0ea1253e2317f1462aaa99fe2e7fbd588db"
+   },
+   {
+    "causing_event_id": "e1:a98b9f53f076fb212b2ece222eac18fd1944f06f81f966287f416a055f893a7d",
+    "causing_sequence": 18,
+    "from_state": "working",
+    "ghost_id": "archivist",
+    "mansion_id": "demo-mansion",
+    "to_state": "done",
+    "transition_id": "t1:474b06e25975315020a2fb3b3134e563fbac5629192c9cadf686ef81292f7dd1"
+   },
+   {
+    "causing_event_id": "e1:05c23f090799bb091ddfa5690e64ccf32af6e1ef0513cb63e43cdbc856eae673",
+    "causing_sequence": 19,
+    "from_state": "done",
+    "ghost_id": "archivist",
+    "mansion_id": "demo-mansion",
+    "to_state": "done",
+    "transition_id": "t1:791ff817d6239f1f7e3e6591162d04a41c6dbc4d2a8750d48e67a64897e52a3c"
+   },
+   {
+    "causing_event_id": "e1:36126a9b9ecb2d5e98d7578f743b37ead4cc4d299a1cad99b6f14e50c5c0b509",
+    "causing_sequence": 20,
+    "from_state": "done",
+    "ghost_id": "archivist",
+    "mansion_id": "demo-mansion",
+    "to_state": "done",
+    "transition_id": "t1:11013753f0786f1859afbbe4d80d47ca202fa0b13a55fc90720c85844ba8d736"
+   },
+   {
+    "causing_event_id": "e1:832b22f6c25388a95cedc739dbafddade3764925bb64ec3ea5ca43dfca8be199",
+    "causing_sequence": 21,
+    "from_state": "idle",
+    "ghost_id": "draughtsman",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:d3638d73a16722845158b5895b224328cb02f5278233268b5f9fcf3955b9012d"
+   },
+   {
+    "causing_event_id": "e1:40782d7ae567535a5bfeccdcbc2d7ff930587ebfca2c448f903df84a96bb0e09",
+    "causing_sequence": 22,
+    "from_state": "working",
+    "ghost_id": "draughtsman",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:f9c1ecae55142687687f40988cdf1ead1a998200066146adec20d1f427074cbc"
+   },
+   {
+    "causing_event_id": "e1:93a5bfe8a0099215afa2f5807725b0e9fe0143f97c5e906844aa91ff243931df",
+    "causing_sequence": 23,
+    "from_state": "working",
+    "ghost_id": "draughtsman",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:af257cab97933f72e9dc930ce41abd518ce971fd2528807d0825d8be5a42689c"
+   },
+   {
+    "causing_event_id": "e1:f0f51aa6d21c70abe59387616a87f8e30d710d28c3db87e688b18e1a63beea4c",
+    "causing_sequence": 24,
+    "from_state": "working",
+    "ghost_id": "draughtsman",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:dedbfc271af6f1c1a2d5ea782edc3fd2b2662feeb4f16ea9316836a37823a3f4"
+   },
+   {
+    "causing_event_id": "e1:89be7dbed97acaa2f3d718af23efe136fc0ffacd04a89c453241c0b425d2b273",
+    "causing_sequence": 25,
+    "from_state": "working",
+    "ghost_id": "draughtsman",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:1fc517021c2f697c427d2a2b3142d42dcfbe52dcfebe71ee219ad6cb0081fc40"
+   },
+   {
+    "causing_event_id": "e1:dbbfd78a2b91a98d2ebe8d003fea7f8c9e597937dcf369a31c71aadd172f94df",
+    "causing_sequence": 26,
+    "from_state": "working",
+    "ghost_id": "draughtsman",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:e05607a5ca8fc6da2fa4269b4413271304633df693606769549d49dad458dabf"
+   },
+   {
+    "causing_event_id": "e1:a5096b2f658f832e25e9edbeae14e98bd666b7bd78fb24674430ec58b197d660",
+    "causing_sequence": 27,
+    "from_state": "working",
+    "ghost_id": "draughtsman",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:91cd2beee29c160d4444e21ae4695cffbedd7df93c2a760ead317cb3befdd387"
+   },
+   {
+    "causing_event_id": "e1:13a18cb94417cf482974789e15d82c2012b23ce197ee3972dfe7536ac7ed63f2",
+    "causing_sequence": 28,
+    "from_state": "working",
+    "ghost_id": "draughtsman",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:ed1076115c8a29b6417ad2d31606b45670df6e7f610ac4e4f095641fc3b8d9ba"
+   },
+   {
+    "causing_event_id": "e1:a80db3742a195790a11911fa44a12f702583aa42e3a001435994d2daabdaa81d",
+    "causing_sequence": 29,
+    "from_state": "working",
+    "ghost_id": "draughtsman",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:fde7c4c934da76c6bf41059c86530adf1f9b59b53b1b4ad63e3f994e2776c13e"
+   },
+   {
+    "causing_event_id": "e1:6a1cc7415f85d6c8199428a8d1de48301628c30332175b587ad5fab4de10b5a8",
+    "causing_sequence": 30,
+    "from_state": "working",
+    "ghost_id": "draughtsman",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:e4fb7a2ce034e2f918ae175ac5fb44beaeac079d04e36c858ea86367d647ace2"
+   },
+   {
+    "causing_event_id": "e1:b05b55691a10c3e3c76d3d85ce4615ce8eb7f300c9e77e8247561dd23ebe834a",
+    "causing_sequence": 31,
+    "from_state": "working",
+    "ghost_id": "draughtsman",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:2801458704d7c68ea068847b6edcc150af5088fc80a7a82e415e46d14983d2d8"
+   },
+   {
+    "causing_event_id": "e1:858977735b4f5a85134942a847e0e90a4ba3b835843b17faa98d961d30746bc6",
+    "causing_sequence": 32,
+    "from_state": "working",
+    "ghost_id": "draughtsman",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:ec4a3742bdd8f5db9d0d45dc4dbf3f36fcb2dba68fcc409c5c973bdf283b0429"
+   },
+   {
+    "causing_event_id": "e1:c8e5f92e33ceaf23120727ec8b2b7aa0a2a3db44f1257ad625e9532bb0ccebde",
+    "causing_sequence": 33,
+    "from_state": "working",
+    "ghost_id": "draughtsman",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:52220c4a6134bfde8bbd122d2b0c06340a2a8703612557d49d208baf8a473c33"
+   },
+   {
+    "causing_event_id": "e1:0b398be7a8336f76b3dadd2c1b543a222f919d07bf261a19b693b227e6615436",
+    "causing_sequence": 34,
+    "from_state": "working",
+    "ghost_id": "draughtsman",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:46356a018cb15585c4715af28f18b308d12552bca4d6deb2c7ee19a8fa346612"
+   },
+   {
+    "causing_event_id": "e1:23db51f0dcec70423d94353ca76dbd5d09d71438e1da8e76ce5ef28453de9a2b",
+    "causing_sequence": 35,
+    "from_state": "working",
+    "ghost_id": "draughtsman",
+    "mansion_id": "demo-mansion",
+    "to_state": "done",
+    "transition_id": "t1:48c367adfa2cc2ba5a4a8be302e75a94e4d4321b031eccde7f7dd15ec8466491"
+   },
+   {
+    "causing_event_id": "e1:ba29de96ea2c27fdd48ae212e214cafeaaf2db2483355c6b62e40f121c2008d0",
+    "causing_sequence": 36,
+    "from_state": "done",
+    "ghost_id": "draughtsman",
+    "mansion_id": "demo-mansion",
+    "to_state": "done",
+    "transition_id": "t1:2b4e3bce9949fbec4718040634e1b484ae3c1f2fe6ebfee8d97feee8d35a9049"
+   },
+   {
+    "causing_event_id": "e1:e97ed7b6a3d6599213c7a8e2a061ae5daf61094920e4a5d9fdd9c94a8ee196f2",
+    "causing_sequence": 37,
+    "from_state": "done",
+    "ghost_id": "draughtsman",
+    "mansion_id": "demo-mansion",
+    "to_state": "done",
+    "transition_id": "t1:2717a4b0600fdafa0a8b1c19791f445393b981515c68aab7d19142d08d54cc2f"
+   },
+   {
+    "causing_event_id": "e1:7ea67b3216946316642aee2cb17d0e3d2ccc7c4bbce829c0205002891eb58c03",
+    "causing_sequence": 38,
+    "from_state": "idle",
+    "ghost_id": "foreman",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:51173b5371c53979297580169e81dc9fdae0d8cd4a3c381a632177dc893c61e9"
+   },
+   {
+    "causing_event_id": "e1:814ada23f80c72047cccfc1f85c96501b99168a79ddb470c41f0eeffe77f8302",
+    "causing_sequence": 39,
+    "from_state": "working",
+    "ghost_id": "foreman",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:9afb5ad619915081ff3ee4427ad38e482384251297191c6ee0643e64b97c7760"
+   },
+   {
+    "causing_event_id": "e1:b1507f04d320390fd18879c70b7b87901503486f29383d94443136f486c49860",
+    "causing_sequence": 40,
+    "from_state": "working",
+    "ghost_id": "foreman",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:b55512ed2f01386ab2804c86e697ccd575473314e51b64ae4f0a40b61c682185"
+   },
+   {
+    "causing_event_id": "e1:a6eabc06dbc41b0601311bd1855eb1d69d5fb17172c73299b17a3d8dc0e340fb",
+    "causing_sequence": 41,
+    "from_state": "working",
+    "ghost_id": "foreman",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:c775b049991074c177a41d300354291481fdded4bdd2c1aa6d2469eb2edc260b"
+   },
+   {
+    "causing_event_id": "e1:9144f22d45ce6f6471766859e7cdef4f2bc1aba1b759582cd32e59a809a53df3",
+    "causing_sequence": 42,
+    "from_state": "working",
+    "ghost_id": "foreman",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:6985ff3ef1fb8fbab8ff9e7fae6ab811713a57502ee260047ecb4d7f68c3527d"
+   },
+   {
+    "causing_event_id": "e1:9e7a935ff7c05c6097e5c1394a8d710a575bc2e599579274a598200533cc92e3",
+    "causing_sequence": 43,
+    "from_state": "working",
+    "ghost_id": "foreman",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:919b17c4214d4bcebbeb042e7c83b217fe6a32a8f3e237f06cdb5c9ce5306a3c"
+   },
+   {
+    "causing_event_id": "e1:5f89c57ef3e7305dad29518a33c32727bf72f74500ad0a6e1018ee8b11d48dba",
+    "causing_sequence": 44,
+    "from_state": "working",
+    "ghost_id": "foreman",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:a39612e2231f5ae7e09277b37f1997fa252d248bc5b1ffb653c055eb1f96b28f"
+   },
+   {
+    "causing_event_id": "e1:3df2b233ac27700238be11e18f342178f90e31de430d83c5f7bac9d27c124986",
+    "causing_sequence": 45,
+    "from_state": "working",
+    "ghost_id": "foreman",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:97993abb68134e311c058bcb15af783a70e71474b5057e48b4dc7157ace4237d"
+   },
+   {
+    "causing_event_id": "e1:f611b9b8cce771d691028adbe9c7656c0e34f8a19cd41683c0bc5efe694b6138",
+    "causing_sequence": 46,
+    "from_state": "working",
+    "ghost_id": "foreman",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:92203e45d82e6dda0b52f0688cbb061199be546bd3e5c6370101adcd7746f65c"
+   },
+   {
+    "causing_event_id": "e1:1c1e5ce7cc7c61fcae2a69dd4eb0a9488a7aeb3d5d64f998fa20618ac4878782",
+    "causing_sequence": 47,
+    "from_state": "working",
+    "ghost_id": "foreman",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:984d3d5a10c06c58e5edaa1c8f3ad0c280ea8e893409b5aba3503a7559ef24d6"
+   },
+   {
+    "causing_event_id": "e1:09234ff0ac2117fc5c016930ac055bd78995387b6d8f50a05ec9677b884f115c",
+    "causing_sequence": 48,
+    "from_state": "working",
+    "ghost_id": "foreman",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:668797af21e71362b390672dd1601cb1d40c35306f0b6f324cb4c3d2ff28171d"
+   },
+   {
+    "causing_event_id": "e1:1762e6fb1fc351036b5f1511fc8a82a82b9957461d83df3550f2a5aebc4a2c80",
+    "causing_sequence": 49,
+    "from_state": "working",
+    "ghost_id": "foreman",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:5d10b3a8db32604d7465ff359b7ea2e1e6c7a958e36966d9f03d6747675d807d"
+   },
+   {
+    "causing_event_id": "e1:2a9ce2b292aa51c50d2c5fe8fc984dcf1557f857113504f10e26d1ca501bba2b",
+    "causing_sequence": 50,
+    "from_state": "working",
+    "ghost_id": "foreman",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:d926d7d98c4e4b8d0a71ca2d7c9e4703143f5fb6f1e587c2c5d75fa27b3f3986"
+   },
+   {
+    "causing_event_id": "e1:0e238f4d6ad90b14befdf0a57aee1b0ee640f64df08dc40ca4b2e25a541a298d",
+    "causing_sequence": 51,
+    "from_state": "working",
+    "ghost_id": "foreman",
+    "mansion_id": "demo-mansion",
+    "to_state": "failed",
+    "transition_id": "t1:45419b910d5e710610dbf7ff3e3c244e26b80bc9465958b212a256120a2c0fd4"
+   },
+   {
+    "causing_event_id": "e1:90f8e90365aff82951a232a9619d9bde9ab11646f05025163c18ab1f482f2885",
+    "causing_sequence": 52,
+    "from_state": "failed",
+    "ghost_id": "foreman",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:30aa063fd0dbece953e6cfaf5a4d44cecff5d76817c0f5984ffcba993a7e04e8"
+   },
+   {
+    "causing_event_id": "e1:dbd4a0e0bbe3ef48d7fd0959488a11fbc6576cecebe33f52f6b2ad219e8bf8fb",
+    "causing_sequence": 53,
+    "from_state": "working",
+    "ghost_id": "foreman",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:fd771c253903d977b9fcbc37e0b9501d01fe487928e0a964183ad6d2f558b09c"
+   },
+   {
+    "causing_event_id": "e1:1c7befd274f073ab1d8ae02c5e767938b0aca611f3a19a969242ef8075f412da",
+    "causing_sequence": 54,
+    "from_state": "working",
+    "ghost_id": "foreman",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:e7e2dfad81c9691348646ab1bf1d731e8ea57d491a8eaaa7d352521ef6712aff"
+   },
+   {
+    "causing_event_id": "e1:804b2529cf9705f9149e1c569adcc16cab1bcc04bf1e20bd87fc66fc716b4fd6",
+    "causing_sequence": 56,
+    "from_state": "idle",
+    "ghost_id": "tinker-1",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:81a6aacf93d240f744c5ea7b77bda9b40948203e15557028cad77a48cdbf7f70"
+   },
+   {
+    "causing_event_id": "e1:13f199d3070ac1cc0de06abfa865cd6b7fb1eb38683edb7397d5839ef5e471a5",
+    "causing_sequence": 57,
+    "from_state": "working",
+    "ghost_id": "tinker-1",
+    "mansion_id": "demo-mansion",
+    "to_state": "blocked",
+    "transition_id": "t1:8abafc3e91ee7140d5a34c854f763ba76a03bac74621c385473558c80bfdf9e7"
+   },
+   {
+    "causing_event_id": "e1:2085e9572c24473a234385e039306f7a4eed4a8a67cf380d20d139c3b0ddaf7c",
+    "causing_sequence": 58,
+    "from_state": "idle",
+    "ghost_id": "tinker-2",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:a20c862f26e87d422406a543e4d6a27df1d77bf7645038fcf4cbb030aaa0197d"
+   },
+   {
+    "causing_event_id": "e1:d48cbdeb9db2d5d7cc9a20968869b581a649419e1295720e6f6ca6dad0340a25",
+    "causing_sequence": 59,
+    "from_state": "working",
+    "ghost_id": "tinker-2",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:6f2a2a0c8940f1d01602bd3fda131f1de33124f3d704f9fa64be0ae6986de7f8"
+   },
+   {
+    "causing_event_id": "e1:768f553e05cd5b88059c9c483f20688398601395c7898a1a9266d763b1a1a42f",
+    "causing_sequence": 60,
+    "from_state": "working",
+    "ghost_id": "tinker-2",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:742744291eadd50960904939e5ca1fb3b53446ba91d315669e7ce6d79a312922"
+   },
+   {
+    "causing_event_id": "e1:62f6c40bf1009d5eae33a7d7c0fd7bcdcfff4399280c9347404db0dab134af82",
+    "causing_sequence": 61,
+    "from_state": "working",
+    "ghost_id": "tinker-2",
+    "mansion_id": "demo-mansion",
+    "to_state": "waiting",
+    "transition_id": "t1:c5848430ee65c9b0140ecc641cdd4f81ae407e2e12fd8f0aea10f232f94285d4"
+   },
+   {
+    "causing_event_id": "e1:253d2393ab86423485e825d451ec192861a6172a80497988a276aa9ca7f3b593",
+    "causing_sequence": 62,
+    "from_state": "idle",
+    "ghost_id": "tinker-3",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:b1aa952851a2fcc703eefba5acf5c0b2de42ec2039db743a567ba9fffd0c0810"
+   },
+   {
+    "causing_event_id": "e1:b4f43a580186e280b512c7e9ee056e693b1464a8ab5c6213477242b06e391703",
+    "causing_sequence": 63,
+    "from_state": "working",
+    "ghost_id": "tinker-3",
+    "mansion_id": "demo-mansion",
+    "to_state": "working",
+    "transition_id": "t1:6c4760e2178a4d41ad91e04889b21a53bd42e03d56f94503b0c46cabc2c24a10"
+   },
+   {
+    "causing_event_id": "e1:a52b88e151b14c7a1bf08d721398af3493753bb4d6d3d25191819302c3263871",
+    "causing_sequence": 64,
+    "from_state": "working",
+    "ghost_id": "tinker-3",
+    "mansion_id": "demo-mansion",
+    "to_state": "failed",
+    "transition_id": "t1:3306d983522dab85ef127a933953eb5e02df1fe72c89ab5dc8654869d6b84114"
+   }
+  ],
+  "workflow": {
+   "integrity": "valid",
+   "mansion_id": "demo-mansion",
+   "pending_permissions": [
+    {
+     "action_digest": null,
+     "mid": "mid-tinker-2",
+     "proposal_id": null,
+     "requested_sequence": 61,
+     "slot": "hh-tinker-2-task-2",
+     "tool_name": null
+    }
+   ],
+   "phases": [
+    {
+     "door": {
+      "proposal": {
+       "artifact_revision": {
+        "revision": 1,
+        "sha256": "91e4ab7f9c3038bbc5487608837b77ca976433c837023b20c849a281acd13058",
+        "size_bytes": 2314
+       },
+       "created_sequence": 17,
+       "decision": {
+        "actor": "operator",
+        "event_id": "e1:36126a9b9ecb2d5e98d7578f743b37ead4cc4d299a1cad99b6f14e50c5c0b509",
+        "outcome": "approved",
+        "sequence": 20
+       },
+       "document_path": ".kiro/specs/demo/requirements.md",
+       "phase": "requirements",
+       "proposal_id": "door-requirements-1",
+       "status": "approved"
+      },
+      "status": "open"
+     },
+     "ghost_ids": [
+      "archivist"
+     ],
+     "phase": "requirements",
+     "status": "approved"
+    },
+    {
+     "door": {
+      "proposal": {
+       "artifact_revision": {
+        "revision": 1,
+        "sha256": "2df809882cb69d5e16622148af14a8bf5d8a9bca449cf396d0ce5cf3900a1af7",
+        "size_bytes": 4871
+       },
+       "created_sequence": 34,
+       "decision": {
+        "actor": "operator",
+        "event_id": "e1:e97ed7b6a3d6599213c7a8e2a061ae5daf61094920e4a5d9fdd9c94a8ee196f2",
+        "outcome": "approved",
+        "sequence": 37
+       },
+       "document_path": ".kiro/specs/demo/design.md",
+       "phase": "design",
+       "proposal_id": "door-design-1",
+       "status": "approved"
+      },
+      "status": "open"
+     },
+     "ghost_ids": [
+      "draughtsman"
+     ],
+     "phase": "design",
+     "status": "approved"
+    },
+    {
+     "door": {
+      "proposal": null,
+      "status": "sealed"
+     },
+     "ghost_ids": [
+      "foreman"
+     ],
+     "phase": "tasks",
+     "status": "working"
+    },
+    {
+     "door": {
+      "proposal": null,
+      "status": "sealed"
+     },
+     "ghost_ids": [],
+     "phase": "implementation",
+     "status": "not_started"
+    }
+   ],
+   "risky_proposals": [
+    {
+     "action_digest": "f2a138d9773eb65a857a80591a3e9079b92ceea5c5b52771e9bfc7253efccb82",
+     "created_sequence": 60,
+     "decision": null,
+     "descriptor": {
+      "arguments": {
+       "argv": [
+        "bun",
+        "test"
+       ],
+       "timeout_seconds": 120
+      },
+      "kind": "run_command",
+      "mansion_id": "demo-mansion",
+      "path_intents": [
+       {
+        "access": "command_read",
+        "path": "src"
+       }
+      ],
+      "room": "workshop",
+      "schema_version": 1,
+      "session_slot": "hh-tinker-2-task-2",
+      "working_directory": ""
+     },
+     "ghost_id": "tinker-2",
+     "proposal_id": "risky-run-tests-1",
+     "room": "workshop",
+     "session_slot": "hh-tinker-2-task-2",
+     "status": "pending"
+    }
+   ],
+   "schema_version": 1,
+   "version": 64,
+   "waiting_count": 2
+  }
+ },
+ "record_count": 64,
+ "selected_record_ids": [
+  "r1:569c6e500e4dfee417837f7afca30c6332bf3bda4d981a1a35c15abf4c51ea8e",
+  "r1:2367a396331a0f80e85637ae6c4015a49c2a7ca5b19031446cf8ae37cec63025",
+  "r1:f0731246cd982e36ca0aa20d2cb83568e96c6f1e7994e6993140de93bb7c5be7",
+  "r1:2ed7a9f48e0e34596ecb54748f152266d53dda857de76f898ed98687fb548482",
+  "r1:1b5b49c1a27050647a0d0bf6de10ddeebb846c3c1103ad90ce80b3d055bdad22",
+  "r1:155f4a8fa508a2b0f671138714e05d2381581cc007735640ab6e644c42cf5b8a",
+  "r1:c3c71b91c5cb8a4abb1a637c825b46b56ee7db05f2e4ded8da23036f1957e510",
+  "r1:93c4733d488b39008df184d9018ba122c431c0941b9c680857a78dea59bf19b8",
+  "r1:d34cee27783b67114085d5cf336da8526b1873f06794c3feceb0dd1ea9775856",
+  "r1:2741ef827cef44779d1040ccaa2d2c2a6ef410d49c31e2d7378b66246415e013",
+  "r1:d16945d794af5001f69b5959c2e0a781488e7affd6468358448557d8e79a4c54",
+  "r1:43371146f9807e16f49150d16e5105feb324c369d1daa3e98754c5e8b489688e",
+  "r1:b87202ad3e5356832179f357869f485492aa28f2122ad41db77784436d927e5c",
+  "r1:9d50a2f59b3a39208e2cf51425d8a370587286ea17c58ac5de3981b2139d844b",
+  "r1:b504e44bc36f93df4a8a43fd8854e48c61c846b27e6e378655bb71c5910fc910",
+  "r1:7ff22a8f480030cc1027158913c7691d045fbddfb9e77000ed420bce4807bc0d",
+  "r1:1fae71be3b26addbdea93e9e0ec2b5b5b3d9d5fdae2de573eeda5a641a6211ac",
+  "r1:928da625eff016aff90e7ed5ff9a8bfb46ad94b592a2b424444e93bd065e43e4",
+  "r1:99963a80b1b987675a354bb9df4e05f25d24f8257e26669db1b2ed0cc3d2d433",
+  "r1:d848c5b647a1958e7e4aa6f6db170dadf1353a3d19604929038c5d6ce5f76512",
+  "r1:cec1f8ac2dbdcb31998eaf9428692935bc93fba6e3fe0733323397a2e7ea7a1c",
+  "r1:12a27109026599b2cf7b41e32b1cdde9d8e7b0f3a66abb630c86c80afe364604",
+  "r1:16c9d513e4671be7dac20673a01ebfdf3c82e1f89e0d89b0e0ad2e6837358938",
+  "r1:81f77958f911e1eec814f891e8e04e0309217eeec9b6f1d649ccac3247c2b6c2",
+  "r1:2cf159b397037d830f72cd3ba4a4740b9264fcdbddf23b15fd5be9f47eb75308",
+  "r1:667c08fe7d875b4cf22fd8ec2846da6ae06a46740e1e9e91704c9f2b0277dc20",
+  "r1:8af9a29758b5865d47a5e39a98ba63bd4d130a69c50e7423174bb68c5c5fcc30",
+  "r1:3697b264b3235e6c7e1ebc6bdf57290207f4c07eaea930beb80c2dd239a73339",
+  "r1:c5e39567a1511086559eb7f7b09e42cc6dcc0af4dfdc8754f9c9d6188b689be1",
+  "r1:94654636fc9df61f5ccdeb83b86537d512d420162f77195c4d22fbf9380930d2",
+  "r1:7d02f7c7f7d32fb3511880d7e2df0b5528fddff70f90d13a4b6de2fa36485a98",
+  "r1:151726d473ab6fd4c767390ecf9f62c93b2c1cac880886338338802fd9ccbe35",
+  "r1:946ab83a27b605a984fbfecc25dfddb841bf07c20121f14393819098de4b4c9b",
+  "r1:ff0c58f5903ea54e8e28d7ee5897726ebcaa83d8fdd5aa04621d96abc547b4b5",
+  "r1:4f8a80dd018a90be123a44f927bb97a285ab77b28b1668715bbb2a08142fdca9",
+  "r1:9622ed307586f5af3c4e420f6f589614ba40ad0989f34fa5f6a48d41b0bc8614",
+  "r1:9302f521de0dc10746b51649037af013d280d67c0d2a05e5b74976e14da34a8d",
+  "r1:4f91540caffb87ed55db266955ef8d90f4c2fb85a84d3a22474dba26e631cc8c",
+  "r1:f5aa705b92c836b58616e31eb76007582bdbb5942cd163cf320af2b07ce0997a",
+  "r1:57aca48cf0cb94242cc04cede13a5a1c27b55aae51df0be5dd77377414e1f10b",
+  "r1:7e9bbf77af8648249b2612fd2573ee78aff1bf95f6f6f7a3992bc6fe726060f5",
+  "r1:5baa16c5f775c42be28dfdf004cfe9f8825925de8a277c7ab6d34935fd34482e",
+  "r1:72564628f0b6705e09a324c1da230ca6e5ace0af9e49b48e24e3a897255b746f",
+  "r1:d4e5c2e515f9c456a97eecdb9bf9c12dffbda53c61d90670ff0b630fec82bef8",
+  "r1:495d0dd44041f2d2e94a95319d173254b0a996544fd574d3ba42a9b77a2af689",
+  "r1:d491feb10bfdfbc6739392978989aa451ce96f41ecd290430d421f8ff7997a9a",
+  "r1:1b26c407a56309a5e22ce6b4c1675298ee47fc3dbe228347f29e383fa9998aaf",
+  "r1:23d4cd1638881787df06d713598d30b652f37a86b1e90f08bbda93326e767092",
+  "r1:13e044d350cc6a4e8ad5c909e55973b8065201bcce518098a40b918d04835b77",
+  "r1:71037819df672826969ba237b996173a30f64f6b944b2fc35819f92cd9e9a3cf",
+  "r1:1262e44f5e32e972d2a9dc432df08802f8e73c9659b48f6a0fa8e76202323dd9",
+  "r1:b53a71a8f02f5798a50c2039573879c9aab8e873f35cd359c5f2018460d58e7a",
+  "r1:81bb8d9b7f2e69e0d444c405f1948c946a153439df57506b3327b8c244359fc8",
+  "r1:b5dfffbe573f148403ec4cf08ea7e0ce46eb40045dd78c65ced71002a6466383",
+  "r1:58adedbf12c4d0849b36789e7243c1018b439bcd2991290cb0a7694e2c00fcdc",
+  "r1:383a293465543505214e8f750a4043a9f8ee03698993fd57e22fa0f239817106",
+  "r1:19a7b91d2f77e1ecf507f2fc4837ac545fdfde49d41be96416dffdd799f83909",
+  "r1:1e7878004e17679fff9b98212f1341f9de7a9198fc605dd51e62851168a8263c",
+  "r1:60373a9d23618ad7fc099c5d078ecc1e75d4fb6b441c88a5a0a18e8d4cd06fd0",
+  "r1:58c64c69882b834b7cac009b63e9b235e0adcca08d8a08e66ffc57b6ae6b2dc2",
+  "r1:3887bed7f52f09fc6111cc194431a81472722caae9c3e30723be9b65eef9dda7",
+  "r1:4c5c61f0e415934984f084f6a54cfcf56fd352e43e63adffb642129551400c0e",
+  "r1:070da2468c20013600acfa4e97a0dc8ff6e4354b8f01ff90a95c65b77469e9d1",
+  "r1:24ead731eceb22a3d5a151743994852f741c42675a8d91a9126311d5f965db52"
+ ],
+ "selection_diagnostics": 0,
+ "source": "fixtures/replay/demo.jsonl"
+}

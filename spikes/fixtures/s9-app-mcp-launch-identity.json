@@ -1,0 +1,108 @@
+{
+  "checks": {
+    "identity": {
+      "absentLabelExposesNoTools": true,
+      "boundArchivistSeesExactCatalog": true,
+      "boundTinkerSeesExactCatalog": true,
+      "boundWriteLandsInBoundMansion": true,
+      "crossRoomSessionExposesNoTools": true,
+      "forgedCallerMetaIgnored": true,
+      "hardLinkedBindingRejected": true,
+      "linkedBindingRejected": true,
+      "looseBindingPermissionsRejected": true,
+      "malformedLabelExposesNoTools": true,
+      "missingProfileRoomExposesNoTools": true,
+      "modelSuppliedAuthorityArgumentsRejected": true,
+      "mutationsAfterFailuresAbsent": true,
+      "otherMansionUntouched": true,
+      "processCwdCarriesNoAuthority": true,
+      "tinkerWritesOnlyInsideBoundMansion": true,
+      "toolOutsideProfileCatalogRefused": true,
+      "unboundSessionExposesNoTools": true
+    },
+    "label": {
+      "elementCarriesAnchoredLauncher": true,
+      "labelEqualsSessionKey": true,
+      "manifestDeclaredLabelCannotShadow": true,
+      "noSessionKeyMeansNoLabel": true,
+      "onlyToolGrantedServerIsLabelled": true
+    },
+    "launch": {
+      "agentLevelOverrideLauncherAnchored": false,
+      "commandIsGatewayInterpreter": true,
+      "everyAgentFileCarriesEveryAppServer": true,
+      "exactToolSelectorsPreserved": true,
+      "launcherAnchoredToInstalledAppRoot": true,
+      "legacyAllowedToolsEmpty": true,
+      "noAutoApproveWritten": true,
+      "perRoomStaticEnvPreserved": true,
+      "sessionLabelMarkerPreserved": true,
+      "untrustedAppRegistersNoServerOrAgent": true,
+      "userSiteIsolationFlagAdded": true
+    }
+  },
+  "crewVersion": "0.12.2",
+  "decision": {
+    "liveAcceptanceRequiredBeforeDemo": true,
+    "modelSuppliedAuthority": "never_accepted",
+    "mutationTools": "enabled_only_with_label_and_binding",
+    "perAgentServerOverride": "do_not_use",
+    "whenLabelOrBindingMissing": "expose_no_tool_and_report_ghost_blocked"
+  },
+  "evidence": {
+    "inferred": [
+      "Crew's gateway hands kiro-cli the labelled element for an app-owned chat slot (read from Crew 0.12.2 acp/session_label.py and acp/runtime_session_setup.py).",
+      "The session key of an app-created slot is dashboard:<slot key> (dashboard/chat_utils_slots.py).",
+      "A server kiro-cli starts natively from the agent file (unlabelled) may start in kiro-cli's process directory instead (apps/agent_launch.py); only the session/new element path was observed.",
+      "kiro-cli mounts only the tools named by exact @server/tool selectors."
+    ],
+    "unverified": [
+      {
+        "claim": "A live Crew session (gateway and agent sandbox) delivers KIROCREW_SESSION_LABEL to the app server and kiro-cli enforces the exact selectors.",
+        "manual_step": "Install and trust a Haunted House build whose manifest declares the per-room servers with x-kirocrew-session-label, start one Archivist session from the app, and confirm the Ghost lists exactly the archivist catalog while a chat the owner opens with the same agent lists no room tools.",
+        "needs": "owner action on a real gateway"
+      },
+      {
+        "claim": "Inside Crew's default agent sandbox (agent.sandbox auto) the server process can read its binding under <app-root>/data and write the bound Mansion.",
+        "manual_step": "Same live session as above: the Archivist writes requirements.md through write_spec_document and the file appears in the Mansion. An unreadable binding shows as a blocked Ghost with no room tools.",
+        "needs": "owner action on a real gateway"
+      }
+    ],
+    "verified": [
+      "Crew's packaged register_app registers nothing for an untrusted third-party app.",
+      "A manifest stdio entry {command: python3, args: [mcp/server.py]} is rewritten to the gateway interpreter, -s, and the launcher's real path under the installed app root.",
+      "The x-kirocrew-session-label marker and per-server static env survive registration.",
+      "Crew's packaged session-label builder emits one per-session element only for the server the agent's tools grant, with KIROCREW_SESSION_LABEL set last to the session key.",
+      "An mcpServers entry declared inside an agent file is copied unresolved (bare interpreter, relative launcher), so it is not a portable way to vary env per agent.",
+      "Over real MCP stdio the reference server exposes the exact room catalog only when label, profile room and backend binding agree, and nothing otherwise.",
+      "Tool arguments, _meta and process cwd cannot select session, Ghost, Mansion or Room.",
+      "kiro-cli 3.3.0, driven directly over ACP with no prompt (one run by the team lead, recorded under kiroCliDirectObservation): a session/new stdio element is started at session/new, receives its declared env including KIROCREW_SESSION_LABEL, also inherits kiro-cli's own environment, and starts in the session cwd."
+    ]
+  },
+  "failedChecks": [],
+  "guidance": {
+    "binding": "The backend picks an unguessable slot name, writes the owner-only binding record for dashboard:<slot> under <app-root>/data before sending the first turn, and removes it when the session ends.",
+    "manifest": "Declare one stdio server per room (room-archivist, room-draughtsman, room-foreman, room-tinker), each {command: python3, args: [mcp/server.py], env: {HH_ROOM: <room>}, x-kirocrew-session-label: true}. No autoApprove, no ${...} or secret:// env values: either one silently withholds the label.",
+    "profiles": "Each Ghost profile lists exact @haunted-house:room-<room>/<tool> selectors for its own room server only, allowedTools [], and no mcpServers block of its own.",
+    "server": "Derive app root from the launcher's real path, session from KIROCREW_SESSION_LABEL, room from HH_ROOM, and Ghost/Mansion/spec from the binding. Never read cwd, tool arguments or _meta for authority, and trust no environment variable other than the Crew-set label and HH_ROOM: the process also inherits kiro-cli's own environment. List no tools when any input is missing or disagrees, and report the Ghost blocked."
+  },
+  "isolatedHome": true,
+  "kiroCliDirectObservation": {
+    "command": "python3 spikes/doors-runtime-contracts/s9_kiro_cli_live.py --real-login",
+    "elementEnvDelivered": true,
+    "elementStartedAtSessionNew": true,
+    "environmentNameCount": 16,
+    "kiroCliEnvironmentInherited": true,
+    "kiroCliVersion": "3.3.0",
+    "promptSent": false,
+    "recorded": "2026-11-16",
+    "serverProcessCwd": "session_cwd",
+    "sessionLabelDelivered": true,
+    "throughCrewGateway": false
+  },
+  "liveGatewayExercised": false,
+  "outcome": "isolated_contract_verified_live_delivery_unverified",
+  "schema_version": 1,
+  "spike": "S9",
+  "task": "doors-and-guardrails 1.1"
+}

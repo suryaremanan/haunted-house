@@ -1,0 +1,158 @@
+{
+  "checks": {
+    "host": {
+      "appPageLoadedAsModuleInDashboardDocument": true,
+      "chatPageCreatesOnlyOnNewFlag": true,
+      "chatPageReadsSidOrSlotQuery": true,
+      "chatPageSwitchesToHandedSlot": true,
+      "chatRouteRegistered": true,
+      "hostBindsUseChatLauncher": true,
+      "launcherReturnsOpenChat": true,
+      "missingTargetHasUnavailableMessage": true,
+      "openChatHandsSlotKeyToChatPage": true,
+      "openChatWithSlotKeyNavigatesToSidRoute": true,
+      "openChatWithoutSlotKeyCanRequestNewChat": true,
+      "switchAndCreateAreSeparateOperations": true,
+      "useNavigateIsHostRouterNavigate": true
+    },
+    "python": {
+      "safeSlotNameIsItsOwnSlotKey": true,
+      "sessionKeyFoldsBackToSlotKey": true,
+      "sessionKeyIsDashboardPrefixedSlotKey": true,
+      "slotCreateAndDetailRoutesRegistered": true,
+      "slotRowCarriesOwnerApp": true
+    },
+    "sdk": {
+      "importMapServesSdkFromHostStub": true,
+      "packagedSdkLevelIsOne": true,
+      "stubExportsSdkLevel": true,
+      "stubExportsUseChatLauncher": true,
+      "stubExportsUseNavigate": true,
+      "stubReadsHostModuleRegistry": true
+    }
+  },
+  "contract": {
+    "argument": {
+      "notTheSessionKey": "do not pass dashboard:<slot key>; the chat page compares the value with slot keys",
+      "notTheTitle": "the slot title and the Ghost name are display text, never an address",
+      "slotKey": "the slot key: the `key` of the slot the backend created with POST /api/chat/slots"
+    },
+    "call": "useChatLauncher().openChat({ slotKey })",
+    "neverCall": [
+      "openChat() with no slotKey: it opens /chat or /chat?new=1, and ?new=1 creates a chat",
+      "openChat({ slotKey, message }): the message is sent into the Ghost's session as a turn",
+      "openChat with agent, autoSend, memoryMode or sessionFolder: those are new-chat options",
+      "useNavigate()('/chat?new=1') or a bare '/chat' as a stand-in for the session",
+      "POST /api/chat/slots from the UI to make a session to link to"
+    ],
+    "pageModel": "the app page is a module imported into the dashboard document, so the hook drives the host router directly; there is no frame or postMessage bridge to cross",
+    "resolvesToRoute": "/chat?sid=<encodeURIComponent(slot key)>",
+    "routeAlias": "/chat?slot=<slot key> is read as the same query",
+    "routeOnlyEquivalent": "useNavigate()('/chat?sid=' + encodeURIComponent(slotKey))",
+    "sdkExport": "useChatLauncher",
+    "sdkLevelGate": "none found: useChatLauncher is a plain export at APP_SDK_LEVEL 1",
+    "sdkModule": "@kirocrew/app-sdk",
+    "status": "candidate_from_shipped_assets_not_observed_live",
+    "whenSlotKeyUnknownToTheUi": "render the link disabled; never fall back to any call above"
+  },
+  "crewVersion": "0.12.2",
+  "decision": {
+    "candidateToImplementBehindDisabledDefault": "useChatLauncher().openChat({ slotKey })",
+    "disabledCode": "contract_unavailable",
+    "enableOnlyAfter": "every manual step under evidence.unverified passes on the Crew version the demo runs on",
+    "result": "cannot be proven without a live dashboard -> the design's documented fail-closed fallback applies: Session_Link stays disabled with `contract_unavailable`; never substitute a new chat",
+    "sessionLink": "disabled",
+    "substituteNewChat": "never"
+  },
+  "evidence": {
+    "inferred": [
+      "A match in a minified bundle shows the code is shipped, not how a running dashboard behaves: the call shape { slotKey } and the route it resolves to are read from that text.",
+      "Opening by sid dispatches the dashboard's switch operation, which loads the slot's history and rejects on a missing slot; the create operation is a separate one reached through new=1 (static/dist/assets, App and chatSlice chunks).",
+      "The app page is loaded by module import of /apps/<name>/ui/<ui.entry> into the dashboard document; Crew's sandboxed frames (apps/app_frame.py) serve contribution points, not the page.",
+      "useNavigate is the host router's navigate, so the route-only form reaches the same chat page.",
+      "The owner's dashboard is not refused an app-owned slot: the ownership checkpoint (dashboard/slot_ownership.py) leaves callers with no app claim untouched, and the slot row sent to the dashboard carries the owner app (dashboard/slot_projection.py).",
+      "Chunk names carry a build hash and the hook's internals are not a documented interface, so any other Crew version needs this probe run again."
+    ],
+    "unverified": [
+      {
+        "claim": "In a running dashboard, useChatLauncher().openChat({ slotKey }) called from the Haunted House page opens that same app-owned slot.",
+        "manual_step": "With a Haunted House build installed and trusted and one Room Ghost run started, note the run's slot key in the room panel, activate its Session_Link (built with the link enabled), and confirm the address shows /chat?sid=<that slot key> and the transcript shown is that Ghost's own first turn.",
+        "needs": "owner action in a real Crew dashboard"
+      },
+      {
+        "claim": "Opening the link creates no chat.",
+        "manual_step": "Count the sessions in the dashboard sidebar before and after activating the Session_Link in the step above; the count is unchanged and no empty session appears.",
+        "needs": "owner action in a real Crew dashboard"
+      },
+      {
+        "claim": "An app-owned slot is listed for, and can be opened by, the dashboard owner.",
+        "manual_step": "After the Ghost run starts, find the session named with the run's slot key in the dashboard sidebar and open it by hand; it shows the Ghost's transcript and no not-found notice.",
+        "needs": "owner action in a real Crew dashboard"
+      },
+      {
+        "claim": "A slotKey whose slot is gone reports the target as unavailable and creates nothing.",
+        "manual_step": "Close the Ghost's session in the dashboard, go back to the Haunted House page, activate the stale Session_Link, and confirm an unavailable notice with the session count unchanged.",
+        "needs": "owner action in a real Crew dashboard"
+      }
+    ],
+    "verified": [
+      "Crew's shipped dashboard index maps @kirocrew/app-sdk to static/dist/vendor/kirocrew-app-sdk.mjs, which re-exports the host's module registry entry.",
+      "That stub exports useChatLauncher and useNavigate next to the hooks the app already uses; the full export list is recorded under sdkExports.",
+      "Crew's packaged apps/app_sdk_level.py reports APP_SDK_LEVEL 1.",
+      "Crew's packaged slot-key helpers, called in the isolated home: a name already in the safe charset is its own slot key, the session key is dashboard:<slot key>, and that session key folds back to the same slot key.",
+      "Text presence in the shipped dashboard chunk that implements the SDK (static/dist/assets, App chunk): openChat with a slotKey builds /chat?sid=<slot key> and hands the slotKey to the chat page; the same expression yields /chat?new=1 only when no slotKey is given.",
+      "Text presence in the same chunk: the chat page switches to the handed slotKey when it equals the sid query, has a target-unavailable message, and guards creation behind new=1."
+    ]
+  },
+  "failedChecks": [],
+  "guidance": {
+    "backend": "Create slots with a name already in the charset [A-Za-z0-9-] so the name is the slot key, and return the `key` from the create response as the link target.",
+    "disabledDefault": "Ship the link disabled with contract_unavailable until the four live steps pass; also disabled when the hook is absent, the slot key is empty, or the page is the replay.",
+    "replayShim": "The replay stand-in exports useChatLauncher returning an openChat that does nothing and records the call, so a test can assert it is never reached in replay.",
+    "sdkAdapter": "Add useChatLauncher to app/ui/src/adapters/sdk.ts and its typing (useChatLauncher(): { openChat(opts?: { slotKey?: string }): void }). Read it defensively: the stub destructures the host registry, so on a host without the hook the binding is undefined.",
+    "sessionLink": "SessionLink receives the slot key from Session_Link metadata in the room-ghosts read route, never from user input, and calls openChat({ slotKey }) with that one property."
+  },
+  "isolatedHome": true,
+  "liveGatewayExercised": false,
+  "outcome": "candidate_contract_found_live_behaviour_unverified",
+  "schema_version": 1,
+  "sdkExports": [
+    "APP_SDK_LEVEL",
+    "AppApiProvider",
+    "ChatEmbed",
+    "ChatMessageList",
+    "ChatPanel",
+    "GROUPED_ROLES",
+    "ToolCallPill",
+    "activeLocale",
+    "checkSubscribeAllowed",
+    "compareText",
+    "defaultMessageRenderers",
+    "deriveFollowUpOptions",
+    "extractSteeringAcks",
+    "fmtCurrency",
+    "fmtDate",
+    "fmtDateTime",
+    "fmtNumber",
+    "fmtRelative",
+    "fmtTime",
+    "mergeRenderers",
+    "parseOptions",
+    "resolveRenderer",
+    "stripPartialOptionMarker",
+    "useAppApi",
+    "useAppEvents",
+    "useAppInfo",
+    "useChatLauncher",
+    "useChatSession",
+    "useImeGuard",
+    "useLanguageGeneration",
+    "useNavBadge",
+    "useNavigate",
+    "useNotify",
+    "useTheme"
+  ],
+  "sdkLevel": 1,
+  "spike": "RG-S4",
+  "task": "room-ghosts 1.4"
+}

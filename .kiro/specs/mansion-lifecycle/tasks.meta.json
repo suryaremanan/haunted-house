@@ -1,0 +1,395 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 Add an automated Crew app-data persistence probe": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379414
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741409960
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794742176183
+      }
+    ],
+    "2.1 Create mansion value types, exact name validation, and request-shape parsing": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379441
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794742223330
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794742773664
+      }
+    ],
+    "2.2 Write the property test for exact mansion name validation": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379468
+      }
+    ],
+    "2.3 Implement component-aware path policy over explicit path facts": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379485
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794742223561
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794742773698
+      }
+    ],
+    "2.4 Write the property test for path confinement": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379506
+      }
+    ],
+    "2.5 Implement project classification and the pure create transition model": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379527
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794742223825
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794742773889
+      }
+    ],
+    "2.6 Write the property test for invalid-name no-op behavior": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379551
+      }
+    ],
+    "2.7 Write the property test for existing project preservation": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379568
+      }
+    ],
+    "2.8 Write the property test for exact idempotent creation": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379587
+      }
+    ],
+    "2.9 Implement the strict versioned metadata registry codec": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379608
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794742224150
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794742773920
+      }
+    ],
+    "2.10 Write the property test for canonical registry round trips": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379630
+      }
+    ],
+    "2.11 Implement pure Mansion_Record-to-descriptor projection": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379651
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794744090088
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794744618461
+      }
+    ],
+    "2.12 Write the property test for descriptor projection": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379672
+      }
+    ],
+    "2.13 Write the property test for strict request parsing": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379692
+      }
+    ],
+    "3.1 Add configured root resolution and filesystem snapshot collection": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379710
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794744090363
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794744618516
+      }
+    ],
+    "3.2 Implement exact checked directory creation and guarded rollback": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379730
+      }
+    ],
+    "3.3 Add filesystem adapter safety tests": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379748
+      }
+    ],
+    "4.1 Add the atomic mansion metadata store": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379766
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794744090410
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794744618702
+      }
+    ],
+    "4.2 Add metadata adapter tests": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379800
+      }
+    ],
+    "5.1 Implement listing and revalidated opening": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379816
+      }
+    ],
+    "5.2 Implement serialized create, compatible adoption, and retry convergence": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379834
+      }
+    ],
+    "5.3 Add Mansion_Service unit and concurrency tests": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379851
+      }
+    ],
+    "6.1 Add list, create, and open routes to `server.py`": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379868
+      }
+    ],
+    "6.2 Add API contract and trust-boundary tests": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379888
+      }
+    ],
+    "7.1 Add typed mansion API parsers and the Foyer reducer": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379905
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741410207
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794742176238
+      }
+    ],
+    "7.2 Write the property test for coherent Foyer transitions": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379923
+      }
+    ],
+    "7.3 Add example and edge tests for Foyer core parsing": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379940
+      }
+    ],
+    "8.1 Extend the SDK boundary with mansion operations and theme state": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379958
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794744090637
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794744618725
+      }
+    ],
+    "8.2 Create the Foyer room components and styles": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379976
+      }
+    ],
+    "8.3 Wire `App.tsx` from backend status into the Foyer": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741379995
+      }
+    ],
+    "8.4 Add Foyer DOM, keyboard, accessibility, and theme tests": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741380027
+      }
+    ],
+    "9.1 Implement fixture-backed replay list, create, and open operations": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741380050
+      }
+    ],
+    "9.2 Write the property test for deterministic isolated replay": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741380068
+      }
+    ],
+    "9.3 Add replay DOM parity tests": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741380085
+      }
+    ],
+    "10.1 Declare app-scoped storage and test the permission set": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741380102
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794743257817
+      },
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794744047343
+      }
+    ],
+    "10.2 Build and verify live and replay bundles": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741380121
+      }
+    ],
+    "11.1 Add automated cross-layer acceptance tests with temporary roots": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741380143
+      }
+    ],
+    "11.2 Run the complete automated validation set": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741380162
+      }
+    ],
+    "12. Checkpoint: ensure all tests pass": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794741380179
+      }
+    ],
+    "1. Verify the app-data persistence assumption (MVP spike)": [
+      {
+        "executionId": "c833d441-12d9-423d-8c71-8bb571ec28f0",
+        "chatSessionId": "sess_39f61d3d-3722-47d1-a2af-77562d0e6d89",
+        "timestamp": 1794742176209
+      }
+    ]
+  }
+}
