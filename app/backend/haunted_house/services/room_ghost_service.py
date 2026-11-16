@@ -110,6 +110,9 @@ log = logging.getLogger(__name__)
 K = RoomGhostEventKind
 SPEC_PHASES = DOCUMENT_PHASES
 # A validation failure the same Ghost can repair from deterministic findings.
+# Crew's ``error`` row kind when the Kiro account has reached its usage limit
+# (observed live on Crew 0.12.2, Nov 16).
+CREW_USAGE_LIMIT = "usage_limit"
 CORRECTABLE_CODES = frozenset({"artifact_invalid", "ghost_result_invalid"})
 START_UNCONFIRMED = "start_unconfirmed"
 _MAX_SUMMARIES = 256
@@ -412,6 +415,16 @@ class RoomGhostService:
         elif turn.final_text is None and CREW_CAPACITY_NOTICE in turn.notices:
             outcome = await self._gate.settle_blocked(
                 binding, "crew_capacity", caused_by=(turn_ended.event_id,)
+            )
+        elif turn.final_text is None and turn.error == CREW_USAGE_LIMIT:
+            # Crew refused the turn because the Kiro account is out of quota:
+            # nothing the Ghost did is wrong, and a retry waits on the owner.
+            outcome = await self._gate.settle_blocked(
+                binding, "crew_usage_limit", caused_by=(turn_ended.event_id,)
+            )
+        elif turn.final_text is None and turn.error is not None:
+            outcome = await self._gate.settle_failed(
+                binding, "crew_error", caused_by=(turn_ended.event_id,)
             )
         else:
             outcome = await self._gate.settle_turn(binding, turn_ended, turn.final_text or "")

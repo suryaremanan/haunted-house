@@ -131,12 +131,16 @@ class SessionTurn:
     ``meta.notice`` values Crew left after that message (RG-S5) and
     ``stop_state`` the state of the latest ``stop_event`` row (RG-S3).
     ``activity`` says the session did anything at all after that message.
+    ``error`` is the ``meta.kind`` of the latest ``error`` row Crew left after
+    that message (``usage_limit`` when the account is out of quota), or
+    ``"error"`` when the row names no kind.
     """
 
     final_text: str | None = None
     notices: tuple[str, ...] = ()
     stop_state: str | None = None
     activity: bool = False
+    error: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -329,6 +333,7 @@ def _latest_turn(messages: object) -> SessionTurn:
     notices: list[str] = []
     stop_state: str | None = None
     activity = False
+    error: str | None = None
     for raw in cast(list[object], messages):
         if type(raw) is not dict:
             continue
@@ -338,8 +343,11 @@ def _latest_turn(messages: object) -> SessionTurn:
         fields = cast(dict[str, object], meta) if type(meta) is dict else {}
         if role == "user":
             # A new house message starts a new turn: forget the one before.
-            final, notices, stop_state, activity = None, [], None, False
+            final, notices, stop_state, activity, error = None, [], None, False, None
             continue
+        if role == "error":
+            kind = fields.get("kind")
+            error = cast(str, kind) if _label(kind) else "error"
         if role in ("assistant", "permission", "tool"):
             activity = True
         if role == "assistant" and type(content) is str and content.strip():
@@ -349,7 +357,7 @@ def _latest_turn(messages: object) -> SessionTurn:
             notices.append(cast(str, notice))
         if fields.get("kind") == "stop_event" and _label(fields.get("state")):
             stop_state = cast(str, fields["state"])
-    return SessionTurn(final, tuple(notices), stop_state, activity)
+    return SessionTurn(final, tuple(notices), stop_state, activity, error)
 
 
 def _label(value: object) -> bool:

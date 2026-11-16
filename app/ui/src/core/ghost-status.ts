@@ -31,6 +31,7 @@ export const REASON_COPY: Readonly<Record<string, string>> = {
   claim_conflict: 'Another ghost holds this task.',
   contract_unavailable: 'Its room contract is unavailable.',
   confinement_unavailable: 'Its room limits could not be applied.',
+  crew_usage_limit: 'Kiro’s usage limit is reached. Retry once it resets.',
 }
 
 const MAX_REASON_CHARACTERS = 120
