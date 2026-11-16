@@ -272,8 +272,14 @@ def _auto_approve(node: Any, where: str) -> Iterable[Finding]:
             yield from _auto_approve(item, where)
 
 
+# Manifest field names a finding may show. Any other key is manifest text and is left out.
+_KNOWN_KEYS = frozenset(
+    {"permissions", "backend", "ui", "pages", "mcpServers", "env", "agents", "skills", "api", "events", "contributes", "setup"}
+)
+
+
 def _safe_key(key: Any) -> bool:
-    return isinstance(key, str) and re.fullmatch(r"[A-Za-z][A-Za-z0-9]{0,31}", key) is not None
+    return isinstance(key, str) and key in _KNOWN_KEYS
 
 
 def _is_broad(entry: str) -> bool:

@@ -97,12 +97,12 @@ async function main(args) {
   }
   const bundle = args[0] ? path.resolve(args[0]) : DEFAULT_BUNDLE
   if (!isFile(bundle)) {
-    console.error(`${PREFIX}: bundle not found: ${display(bundle)} (run npm run build in app/ui)`)
+    console.error(`${PREFIX}: bundle not found: ${display(bundle)} (run bun run --cwd app/ui build)`)
     return 2
   }
   const lexer = loadLexer()
   if (!lexer) {
-    console.error(`${PREFIX}: es-module-lexer is not installed (run npm ci in app/ui)`)
+    console.error(`${PREFIX}: es-module-lexer is not installed (run bun install --cwd app/ui --frozen-lockfile)`)
     return 2
   }
   await lexer.init()

@@ -60,7 +60,7 @@ GITIGNORE = r"(^|/)\.gitignore$"
 EXPECTED = {
     "kiro-tracked.json": [("PostFileSave", GITIGNORE, "scripts/check-kiro-tracked.sh")],
     "test-core-on-save.json": [
-        ("PostFileSave", UI_CORE, "npm --prefix app/ui run test:core"),
+        ("PostFileSave", UI_CORE, "bun run --cwd app/ui test:core"),
         ("PostFileSave", PY_CORE, "scripts/test-py.sh -q -m core app/backend/tests"),
     ],
     "tests-after-task.json": [("PostTaskExec", None, "scripts/test-all.sh")],
@@ -147,9 +147,9 @@ def test_every_hook_has_a_known_trigger_and_a_runnable_command():
         assert argv, where
         if argv[0] == "python3":
             assert (REPO / argv[1]).is_file(), where
-        elif argv[0] == "npm":
-            assert argv[1:3] == ["--prefix", "app/ui"] and argv[3] == "run", where
-            scripts = json.loads((REPO / argv[2] / "package.json").read_text())["scripts"]
+        elif argv[0] == "bun":
+            assert argv[1:4] == ["run", "--cwd", "app/ui"], where
+            scripts = json.loads((REPO / argv[3] / "package.json").read_text())["scripts"]
             assert argv[4] in scripts, where
         else:
             script = REPO / argv[0]
