@@ -6,13 +6,14 @@
 #
 # What it does:
 #   1. Checks the prerequisites: app/app.json exists; kirocrew is on PATH
-#      and is 0.12.1 or later; node, npm, git and curl are on PATH; the
+#      and is 0.12.1 or later; node, bun, git and curl are on PATH; the
 #      gateway answers GET http://127.0.0.1:${KIROCREW_PORT:-5476}/api/health
 #      with 200 within 5 seconds. Every failed check is printed with a fix,
 #      and the script exits 1 before it changes anything.
 #   2. Asks `kirocrew app info haunted-house` whether the app is installed
 #      (exit 0: installed, exit 1: not installed).
-#   3. Builds the UI in app/ui with `npm ci` and `npm run build`.
+#   3. Builds the UI in app/ui with `bun install --frozen-lockfile` (from
+#      app/ui/bun.lock) and `bun run build` (vite runs on node).
 #   4. Installs the app from app/, or updates the installed app from app/.
 #   5. Prints the steps the owner does by hand in the Crew dashboard.
 #
@@ -26,7 +27,7 @@
 #   0      done (with --dry-run: every check passed)
 #   1      a prerequisite check failed; nothing was changed
 #   2      unknown command-line argument
-#   other  the exit status of the npm or kirocrew command that failed
+#   other  the exit status of the bun or kirocrew command that failed
 set -euo pipefail
 
 prog="install-local"
@@ -50,7 +51,7 @@ Options:
   --help     Show this help and exit.
 
 Needs Kiro Crew $MIN_CREW_VERSION or later with its gateway running, plus
-node, npm, git and curl. Set KIROCREW_PORT if the gateway does not listen
+node, bun, git and curl. Set KIROCREW_PORT if the gateway does not listen
 on port 5476.
 
 The script changes no Crew settings. Afterwards you turn the app on and
@@ -187,10 +188,10 @@ else
   fail "node not found on PATH. Install Node.js (a version allowed by \"engines\" in app/ui/package.json) from https://nodejs.org/."
 fi
 
-if have npm; then
-  ok "npm $(first_line npm --version)"
+if have bun; then
+  ok "bun $(first_line bun --version)"
 else
-  fail "npm not found on PATH. npm comes with Node.js; reinstall Node.js from https://nodejs.org/."
+  fail "bun not found on PATH. Install bun with: curl -fsSL https://bun.sh/install | bash (see https://bun.sh/)."
 fi
 
 if have git; then
@@ -247,8 +248,8 @@ esac
 
 # ---- 3. Build the UI -------------------------------------------------------
 
-step "installing UI dependencies" npm --prefix "$APP_DIR/ui" ci
-step "building the UI" npm --prefix "$APP_DIR/ui" run build
+step "installing UI dependencies" bun install --cwd "$APP_DIR/ui" --frozen-lockfile
+step "building the UI" bun run --cwd "$APP_DIR/ui" build
 
 # ---- 4. Install or update ---------------------------------------------------
 

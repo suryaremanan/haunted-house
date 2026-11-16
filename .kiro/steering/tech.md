@@ -7,11 +7,12 @@ A Kiro Crew App, gateway-managed (`resources: "gateway"`, `lifecycle: "gateway"`
 | Layer | Choice | Status |
 |---|---|---|
 | UI | React + TypeScript, Vite library build to ESM `app/ui/dist/index.mjs` | Decided |
-| Host-provided libs | `react`, `react-dom`, `react/jsx-runtime`, `lucide-react`, `@kirocrew/app-sdk`. Mark them external in Vite. Never npm-install the SDK | Decided |
+| Host-provided libs | `react`, `react-dom`, `react/jsx-runtime`, `lucide-react`, `@kirocrew/app-sdk`. Mark them external in Vite. `react`, `react-dom` and `lucide-react` are dev-only; never install the SDK | Decided |
+| Package manager | bun 1.3.14 everywhere, CI included (`oven-sh/setup-bun`, pinned); lockfile `app/ui/bun.lock` (never `bun.lockb` or `package-lock.json`); `bun install --frozen-lockfile`, `bun run <script>`, `bun scripts/*.mjs`. Vitest, Vite and tsc still start on Node 22 (jsdom does not start under bun's runtime) | Decided |
 | Styling | Plain CSS on top of Crew theme variables (`useTheme`) | Decided. Tailwind on app pages is unconfirmed, so don't depend on it |
 | Backend | Python 3.12 + aiohttp, both from Crew's own interpreter (aiohttp 3.14.5). No `kirocrew-client` (not published) | Decided (spec 1 design) |
 | Replay mode | Same UI built against our own SDK stand-in, static site on GitHub Pages | Resolved; replay build and replay DOM test pass |
-| Tests | Vitest + fast-check (TypeScript); pytest + Hypothesis (Python) | Decided |
+| Tests | Vitest + fast-check + axe-core (TypeScript); pytest + Hypothesis (Python) | Decided |
 
 ## Decisions waiting on spikes
 | Question | Spike | Default if the spike fails |

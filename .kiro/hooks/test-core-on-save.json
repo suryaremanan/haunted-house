@@ -8,7 +8,7 @@
       "matcher": "(^|/)app/ui/src/core/.+\\.tsx?$",
       "action": {
         "type": "command",
-        "command": "npm --prefix app/ui run test:core"
+        "command": "bun run --cwd app/ui test:core"
       }
     },
     {

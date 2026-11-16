@@ -5,25 +5,26 @@ app/ (app.json and an empty ui/ folder) and runs the copy from another
 folder. The real repo is only read (for the text and shellcheck tests).
 
 PATH holds two folders and nothing else:
-  bin/  fake kirocrew, node, npm, git and curl, written as small sh scripts
+  bin/  fake kirocrew, node, bun, git and curl, written as small sh scripts
   sys/  links to the few system tools the script itself runs (bash,
         dirname, head, cat and similar)
 Linking single tools instead of putting /usr/bin on PATH keeps the real
 git, curl and kirocrew out of reach, so a test can make a tool "missing" by
 deleting its fake, and nothing real is ever built or installed. The env is
-built from scratch, so no KIROCREW_PORT, BASH_ENV or npm settings leak in.
+built from scratch, so no KIROCREW_PORT, BASH_ENV or bun settings leak in.
 
 Every fake appends its argv to one shared log (tool name, then each
 argument, tab-separated), so tests can check which commands ran and in what
 order. The fakes read their behaviour from FAKE_* environment variables.
 
 Exit codes under test: 0 done, 1 a prerequisite check failed, 2 unknown
-argument, otherwise the status of the failing npm or kirocrew step.
+argument, otherwise the status of the failing bun or kirocrew step.
 """
 
 from __future__ import annotations
 
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -40,7 +41,7 @@ WOULD_RUN = f"{PREFIX} would run: "
 SYSTEM_DIRS = "/usr/bin:/bin"
 REQUIRED_SYSTEM_TOOLS = ("bash", "dirname", "head", "cat")
 OPTIONAL_SYSTEM_TOOLS = ("env", "sort", "sed", "tr", "grep", "basename", "uname")
-FAKE_TOOLS = ("kirocrew", "node", "npm", "git", "curl")
+FAKE_TOOLS = ("kirocrew", "node", "bun", "git", "curl")
 
 # Strings that would mean the script touches Crew settings, enabling or trust
 # (Requirement 8.4). Matched case-insensitively against the script text.
@@ -86,12 +87,12 @@ exit 0
 if [ "$1" = --version ]; then echo v22.11.0; fi
 exit 0
 """,
-    "npm": r"""
-if [ "$1" = --version ]; then echo 10.9.0; exit 0; fi
+    "bun": r"""
+if [ "$1" = --version ]; then echo 1.3.14; exit 0; fi
 for arg in "$@"; do
   case $arg in
-    ci) exit "${FAKE_NPM_CI_STATUS:-0}" ;;
-    build) exit "${FAKE_NPM_BUILD_STATUS:-0}" ;;
+    install) exit "${FAKE_BUN_INSTALL_STATUS:-0}" ;;
+    build) exit "${FAKE_BUN_BUILD_STATUS:-0}" ;;
   esac
 done
 exit 0
@@ -151,12 +152,12 @@ class Sandbox:
         return [row[1:] for row in self.calls() if row[0] == tool]
 
     def changes(self) -> list[list[str]]:
-        """Calls that build, install or update: npm other than --version,
+        """Calls that build, install or update: bun other than --version,
         and kirocrew app install / app update."""
         return [
             row
             for row in self.calls()
-            if (row[0] == "npm" and row[1:] != ["--version"])
+            if (row[0] == "bun" and row[1:] != ["--version"])
             or (row[0] == "kirocrew" and row[1:3] in (["app", "install"], ["app", "update"]))
         ]
 
@@ -223,8 +224,8 @@ def test_fresh_install_builds_then_installs_from_absolute_app_path(sandbox: Sand
     app = sandbox.app_dir
     assert Path(app).is_absolute()
     assert sandbox.changes() == [
-        ["npm", "--prefix", f"{app}/ui", "ci"],
-        ["npm", "--prefix", f"{app}/ui", "run", "build"],
+        ["bun", "install", "--cwd", f"{app}/ui", "--frozen-lockfile"],
+        ["bun", "run", "--cwd", f"{app}/ui", "build"],
         ["kirocrew", "app", "install", app],
     ]
     # Only read-only kirocrew calls besides the install itself.
@@ -234,6 +235,7 @@ def test_fresh_install_builds_then_installs_from_absolute_app_path(sandbox: Sand
     assert sandbox.argv("git") == [["--version"]]
     assert f"{PREFIX} ok    node v22.11.0" in result.stdout
     assert f"{PREFIX} ok    git version 2.47.0" in result.stdout
+    assert f"{PREFIX} ok    bun 1.3.14" in result.stdout
     assert f"{PREFIX} done: {APP_NAME} installed from {app}." in result.stdout
     assert "Enable" in result.stdout
     assert "trust" in result.stdout
@@ -244,8 +246,8 @@ def test_installed_app_is_updated_instead(sandbox: Sandbox) -> None:
     assert result.returncode == 0, result
     app = sandbox.app_dir
     assert sandbox.changes() == [
-        ["npm", "--prefix", f"{app}/ui", "ci"],
-        ["npm", "--prefix", f"{app}/ui", "run", "build"],
+        ["bun", "install", "--cwd", f"{app}/ui", "--frozen-lockfile"],
+        ["bun", "run", "--cwd", f"{app}/ui", "build"],
         ["kirocrew", "app", "update", "--source", app, APP_NAME],
     ]
     assert sandbox.argv("kirocrew") == [
@@ -387,11 +389,24 @@ def test_missing_manifest_stops(sandbox: Sandbox) -> None:
 # --- failing steps ----------------------------------------------------------------
 
 
-def test_failing_npm_ci_returns_its_status_and_skips_the_rest(sandbox: Sandbox) -> None:
-    result = sandbox.run(FAKE_NPM_CI_STATUS="5")
+def test_failing_bun_install_returns_its_status_and_skips_the_rest(sandbox: Sandbox) -> None:
+    result = sandbox.run(FAKE_BUN_INSTALL_STATUS="5")
     assert result.returncode == 5, result
     assert "installing UI dependencies failed with exit status 5" in result.stderr
-    assert sandbox.changes() == [["npm", "--prefix", f"{sandbox.app_dir}/ui", "ci"]]
+    assert sandbox.changes() == [["bun", "install", "--cwd", f"{sandbox.app_dir}/ui", "--frozen-lockfile"]]
+
+
+def test_failing_ui_build_returns_its_status_and_skips_the_install(sandbox: Sandbox) -> None:
+    result = sandbox.run(FAKE_BUN_BUILD_STATUS="6")
+    assert result.returncode == 6, result
+    assert "building the UI failed with exit status 6" in result.stderr
+    assert [row[0] for row in sandbox.changes()] == ["bun", "bun"]
+
+
+def test_the_script_never_uses_npm(sandbox: Sandbox) -> None:
+    code = "\n".join(line for line in SCRIPT.read_text(encoding="utf-8").split("\n") if not line.lstrip().startswith("#"))
+    assert not re.search(r"\b(?:npm|npx)\b", code)
+    assert "bun install --cwd" in code and "--frozen-lockfile" in code
 
 
 @pytest.mark.parametrize(
@@ -424,8 +439,8 @@ def test_dry_run_runs_checks_but_changes_nothing(
     assert ["app", "info", APP_NAME] in sandbox.argv("kirocrew")
     would = [line.removeprefix(WOULD_RUN) for line in result.stdout.splitlines() if line.startswith(WOULD_RUN)]
     assert len(would) == 3, result.stdout
-    assert would[0].startswith("npm --prefix ") and would[0].endswith("/app/ui ci")
-    assert would[1].startswith("npm --prefix ") and would[1].endswith("/app/ui run build")
+    assert would[0].startswith("bun install --cwd ") and would[0].endswith("/app/ui --frozen-lockfile")
+    assert would[1].startswith("bun run --cwd ") and would[1].endswith("/app/ui build")
     assert would[2].startswith(install_prefix) and would[2].endswith(install_suffix)
     assert f"{PREFIX} dry run: checks passed; nothing was built, installed or updated." in result.stdout
 
@@ -462,3 +477,41 @@ def test_shellcheck_passes() -> None:
         [shellcheck, str(SCRIPT)], capture_output=True, encoding="utf-8", timeout=60
     )
     assert result.returncode == 0, result.stdout + result.stderr
+
+
+# --- the README Install Command (replay-and-submission task 9.3, Requirement 11.6) ---
+
+
+def _readme_install_command() -> str:
+    """The one command of the README's Install section, extracted without a shell."""
+    sys.path.insert(0, str(SCRIPT.parent / "lib"))
+    from submission_contract import install_command
+
+    command, _line = install_command((SCRIPT.parents[1] / "README.md").read_text(encoding="utf-8"))
+    assert command is not None, "README.md has no single Install Command"
+    return command
+
+
+@pytest.mark.parametrize("info_status", ["1", "0"], ids=["install", "update"])
+def test_the_readme_install_command_form_passes_the_dry_run_harness(sandbox: Sandbox, info_status: str) -> None:
+    """The documented form, run from the clone root as written, is accepted by the same fake-CLI harness."""
+    command = _readme_install_command()
+    assert command.split() == [command], "the Install Command must be one word with no argument"
+    assert (sandbox.repo / command).is_file()
+    result = subprocess.run(
+        [command, "--dry-run"],
+        cwd=sandbox.repo,
+        env={**sandbox.env, "FAKE_APP_INFO_STATUS": info_status},
+        capture_output=True,
+        encoding="utf-8",
+        timeout=30,
+    )
+    assert result.returncode == 0, result
+    assert sandbox.changes() == []
+    assert f"{PREFIX} dry run: checks passed; nothing was built, installed or updated." in result.stdout
+
+
+def test_the_readme_install_command_is_the_tested_script() -> None:
+    command = _readme_install_command()
+    assert (SCRIPT.parents[1] / command).resolve() == SCRIPT.resolve()
+    assert os.access(SCRIPT, os.X_OK)

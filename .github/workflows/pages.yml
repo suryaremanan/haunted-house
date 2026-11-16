@@ -1,0 +1,111 @@
+# GitHub Pages for the static replay (replay-and-submission Requirement 6).
+# Three jobs: build and audit the replay, deploy the audited folder, then
+# request the deployed page. Separate from CI (ci.yml), which stays the push
+# and pull-request gate. No secrets are used. Only the deploy job may write,
+# and only to Pages.
+#
+# Repository setting this needs (set once by the owner, not by this file):
+# Settings > Pages > Build and deployment > Source: GitHub Actions.
+name: Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# One deployment at a time, in order. A running deployment is never cancelled.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    name: Build and audit the replay
+    # Publish only from the repository's default branch, also on manual runs.
+    if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      # oven-sh/setup-bun v2.2.0, pinned to its commit (a third-party action).
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
+        with:
+          # Same bun version and lockfile (app/ui/bun.lock) as the CI ui job.
+          bun-version: '1.3.14'
+      - uses: actions/setup-node@v4
+        with:
+          # Same Node runtime line as the CI ui job: vitest, vite and tsc run
+          # on Node; jsdom does not start under bun's own runtime.
+          node-version: '22.23'
+      - uses: actions/setup-python@v5
+        with:
+          # The Publication Gate uses the standard library only.
+          python-version: '3.12'
+      - run: bun install --cwd app/ui --frozen-lockfile
+      - run: bun run --cwd app/ui typecheck
+      - name: UI tests (replay engine, transport traps, build checks)
+        run: bun run --cwd app/ui test
+      - name: Smoke script tests
+        run: bun test ./scripts-tests/smoke-replay-site.test.mjs
+      - name: Replay fixture is the canonical generated fixture
+        run: python3 scripts/build_replay_fixture.py --check
+      - run: bun run --cwd app/ui build:replay
+      - name: Publication Gate (structure, references, credentials, transports)
+        run: bun scripts/check-replay-artifact.mjs app/ui/dist-replay
+      - name: Local static smoke
+        run: bun scripts/smoke-replay-site.mjs --local app/ui/dist-replay
+      - uses: actions/configure-pages@v5
+      - name: Upload the audited replay folder
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: app/ui/dist-replay
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  smoke:
+    name: Smoke the deployed replay
+    needs: deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      # oven-sh/setup-bun v2.2.0, pinned to its commit (a third-party action).
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
+        with:
+          bun-version: '1.3.14'
+      - name: Request the deployed page and its fixture
+        env:
+          # The URL comes only from the deployment output.
+          PAGE_URL: ${{ needs.deploy.outputs.page_url }}
+        run: bun scripts/smoke-replay-site.mjs --url "$PAGE_URL" --timeout-ms 180000

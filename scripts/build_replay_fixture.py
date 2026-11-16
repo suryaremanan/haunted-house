@@ -606,6 +606,9 @@ def build_vector_story() -> Story:
                                             code="session_ended"))
     fact(guardrails.path_denied(tinker, denial_id="denial-2", session_slot=tinker.session_slot, room="workshop",
                                 access=Access.WRITE, code="protected_path", raw_path=".kiro/specs/vector/tasks.md"))
+    # Decision 2026-11-16: the house approved a non-risky room-tool prompt itself.
+    fact(guardrails.room_tool_answered(tinker, answer_id="house-answer-1", session_slot=tinker.session_slot,
+                                       mid="mid-read-1", tool="read_room_file"))
 
     commit = descriptor({
         "schema_version": 1,

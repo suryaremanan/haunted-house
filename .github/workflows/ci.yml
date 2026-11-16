@@ -41,6 +41,14 @@ jobs:
       - name: pytest
         # GitHub sets CI=true, so conftest.py loads the Hypothesis "ci" profile.
         run: pytest
+      - name: Replay fixture is the canonical generated fixture
+        run: python scripts/build_replay_fixture.py --check
+      - name: Replay fixture Publication Gate
+        run: python scripts/check-replay-publication.py
+      - name: Permission freeze
+        # Compares the code's route and event constants, app/app.json,
+        # docs/permission-freeze.json and the README trust copy.
+        run: python scripts/check-permission-freeze.py --check --readme
 
   ui:
     name: UI tests and bundle
@@ -50,19 +58,29 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+      # oven-sh/setup-bun v2.2.0, pinned to its commit (a third-party action).
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
+        with:
+          # bun installs from app/ui/bun.lock and runs every package script
+          # and repo .mjs script. Pinned so the lockfile format is stable.
+          bun-version: '1.3.14'
       - uses: actions/setup-node@v4
         with:
-          # engines needs ^22.22.2 (jsdom 31). 22.23 is the line the bundle
-          # build was checked on; patch releases only.
+          # Runtime only, no package manager: `bun run` starts vitest, vite and
+          # tsc through their `#!/usr/bin/env node` launchers, and jsdom does
+          # not start under bun's own runtime. engines needs ^22.22.2 (jsdom
+          # 31). 22.23 is the line the bundle build was checked on.
           node-version: '22.23'
-          cache: npm
-          cache-dependency-path: app/ui/package-lock.json
-      - run: npm --prefix app/ui ci
-      - run: npm --prefix app/ui run typecheck
-      - run: npm --prefix app/ui test
-      - run: npm --prefix app/ui run build
+      - uses: actions/setup-python@v5
+        with:
+          # The replay Publication Gate and asset scan use the standard library only.
+          python-version: '3.12'
+      - run: bun install --cwd app/ui --frozen-lockfile
+      - run: bun run --cwd app/ui typecheck
+      - run: bun run --cwd app/ui test
+      - run: bun run --cwd app/ui build
       - name: Check bundle imports
-        run: node scripts/check-bundle-imports.mjs
+        run: bun scripts/check-bundle-imports.mjs
       - name: Check the committed bundle is up to date
         # Catches changed or deleted tracked files and new untracked chunks.
         run: |
@@ -73,10 +91,17 @@ jobs:
           if (( stale )); then
             printf '%s\n' "$changes"
             files="$(printf '%s\n' "$changes" | cut -c4- | paste -sd ' ' -)"
-            echo "::error title=Stale UI bundle::app/ui/dist differs from a fresh build: ${files}. Run 'npm --prefix app/ui run build' and commit app/ui/dist."
+            echo "::error title=Stale UI bundle::app/ui/dist differs from a fresh build: ${files}. Run 'bun run --cwd app/ui build' and commit app/ui/dist."
             exit 1
           fi
-      - run: npm --prefix app/ui run build:replay
+      - run: bun run --cwd app/ui build:replay
+      - name: Replay Publication Gate (structure, references, credentials, transports)
+        run: bun scripts/check-replay-artifact.mjs app/ui/dist-replay
+      - name: Smoke script tests
+        run: bun test ./scripts-tests/smoke-replay-site.test.mjs
+      - name: Local static replay smoke
+        # One-shot loopback server; no GitHub Pages or Crew is contacted.
+        run: bun scripts/smoke-replay-site.mjs --local app/ui/dist-replay
 
   repo:
     name: Repo checks
@@ -90,6 +115,11 @@ jobs:
         run: scripts/check-kiro-tracked.sh
       - name: Secret scan
         run: python3 scripts/secret_scan.py
+      - name: Asset provenance and media sources
+        run: python3 scripts/check-assets.py
+      - name: Submission documents
+        # Offline: checks files, headings, links, commands and dates; follows no URL.
+        run: python3 scripts/check-submission.py
       - name: shellcheck
         run: |
           command -v shellcheck || { echo "::error::shellcheck is not installed on this runner"; exit 1; }

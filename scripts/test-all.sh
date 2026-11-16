@@ -13,9 +13,10 @@ scripts/test-py.sh || status=1
 
 if [[ -f app/ui/package.json ]]; then
   if [[ ! -d app/ui/node_modules ]]; then
-    npm --prefix app/ui ci
+    bun install --cwd app/ui --frozen-lockfile
   fi
-  npm --prefix app/ui test || status=1
+  # bun runs the package script; vitest itself starts on node.
+  bun run --cwd app/ui test || status=1
 else
   echo "test-all: app/ui/package.json not found, skipping the TypeScript tests" >&2
 fi

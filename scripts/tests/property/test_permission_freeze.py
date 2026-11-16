@@ -55,8 +55,9 @@ def manifest_bytes(manifest: dict[str, Any]) -> bytes:
 
 
 def readme_for(manifest: dict[str, Any]) -> str:
-    api = manifest.get("permissions", {}).get("api", [])
-    paths = " ".join(f"`{entry}`" for entry in api if isinstance(entry, str))
+    permissions = manifest.get("permissions")
+    api = permissions.get("api") if isinstance(permissions, dict) else None
+    paths = " ".join(f"`{entry}`" for entry in (api if isinstance(api, list) else ()) if isinstance(entry, str))
     return f"Trust prompt: {paths}. Record: [freeze](docs/permission-freeze.json)\n"
 
 
