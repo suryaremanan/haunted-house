@@ -24,6 +24,9 @@ from tests.room_ghost_stage import Play, result_text
 from tests.workflow_support import CLOCK_MS, MANSION, SPEC, house
 
 FAST = {"confirm_seconds": 0.3, "poll_seconds": 0.01}
+# The confirmed path holds Crew's stop reply across several HTTP round trips;
+# a slow CI runner must not push it past the window into "unconfirmed".
+CONFIRMABLE = {"confirm_seconds": 30.0, "poll_seconds": 0.01}
 
 
 def _run(scenario, tmp_path, **options):
@@ -104,7 +107,7 @@ def test_a_confirmed_cancellation_blocks_the_run_and_releases_its_claim_once(tmp
                 await play.terminals(), [room.run_id for room in play.tinkers()])
 
     (offered, first, pending, second, same, history, events, records, body, tool, stops, calls,
-     terminals, runs) = _run(scenario, tmp_path, cancellation_enabled=True, **FAST)
+     terminals, runs) = _run(scenario, tmp_path, cancellation_enabled=True, **CONFIRMABLE)
     assert offered["can_cancel"] is True and offered["can_retry"] is False
     assert first == "accepted"
     assert pending["cancel_requested"] is True and pending["can_cancel"] is False
