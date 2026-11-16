@@ -71,7 +71,7 @@ describe('contrast matrix', () => {
 
   it('holds every text token to 4.5:1 on every background', () => {
     for (const background of ['canvas', 'surface', 'surfaceRaised'] as const) {
-      for (const text of ['text', 'textMuted', 'accent', 'danger', 'ok'] as const) expect(has(text, background, 4.5)).toBe(true)
+      for (const text of ['text', 'textMuted', 'accent', 'danger', 'ok', 'working'] as const) expect(has(text, background, 4.5)).toBe(true)
     }
     expect(has('accentText', 'accent', 4.5)).toBe(true)
   })
@@ -115,5 +115,17 @@ describe('fallback CSS variables', () => {
       }
       expect(css.match(/--hh-fb-/g)).toHaveLength(PALETTE_TOKENS.length)
     }
+  })
+})
+
+describe('the static replay page', () => {
+  it('paints the page behind the app in the palette canvas and text of each mode', async () => {
+    const { default: html } = await import('../../replay/index.html?raw')
+    const style = /<style>([\s\S]*?)<\/style>/.exec(html)?.[1] ?? ''
+    const [light, dark] = style.split('@media (prefers-color-scheme: dark)')
+    expect(light).toContain(`background: ${HOUSE_PALETTES.light.canvas};`)
+    expect(light).toContain(`color: ${HOUSE_PALETTES.light.text};`)
+    expect(dark).toContain(`background: ${HOUSE_PALETTES.dark.canvas};`)
+    expect(dark).toContain(`color: ${HOUSE_PALETTES.dark.text};`)
   })
 })

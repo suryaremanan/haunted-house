@@ -4,8 +4,13 @@ import {
   MANSIONS_PATH,
   OPEN_MANSION_PATH,
   MansionApiRequestError,
+  FALLBACK_HOST_THEME,
+  HOST_HOOKS_PRESENT,
+  normalizeHostTheme,
+  useHostNavBadge,
+  useHostNotify,
+  useHostTheme,
   useMansionApi,
-  useTheme,
 } from './sdk'
 import {
   MANSION_REQUEST_FAILED,
@@ -16,7 +21,9 @@ import {
 const host = vi.hoisted(() => ({
   get: vi.fn(),
   post: vi.fn(),
-  theme: { mode: 'dark' as const, accent: '#c58b45', colorTheme: 'midnight' },
+  theme: { mode: 'dark', accent: '#c58b45', colorTheme: 'midnight' } as unknown,
+  notify: vi.fn(),
+  badge: vi.fn(),
 }))
 
 vi.mock('@kirocrew/app-sdk', () => ({
@@ -29,6 +36,8 @@ vi.mock('@kirocrew/app-sdk', () => ({
   }),
   useAppEvents: () => () => {},
   useTheme: () => host.theme,
+  useNotify: () => host.notify,
+  useNavBadge: () => host.badge,
 }))
 
 const readyMansion: MansionDescriptor = {
@@ -77,6 +86,21 @@ describe('useMansionApi', () => {
     expect(host.post.mock.calls).toEqual([
       [MANSIONS_PATH, { name: 'weather-station' }],
       [OPEN_MANSION_PATH, { name: 'weather-station' }],
+    ])
+  })
+
+  it('adds the normalised brief only when it is non-blank and never sends a refused one', async () => {
+    host.post.mockResolvedValue({ outcome: 'created', mansion: readyMansion })
+    const { result } = renderHook(() => useMansionApi())
+
+    await result.current.create('weather-station', '  Forecasts.\r\nAlerts.  ')
+    await result.current.create('weather-station', ' \n ')
+    await expect(result.current.create('weather-station', 'bad\u0000')).rejects.toBeInstanceOf(
+      MansionApiRequestError,
+    )
+    expect(host.post.mock.calls).toEqual([
+      [MANSIONS_PATH, { name: 'weather-station', brief: 'Forecasts.\nAlerts.' }],
+      [MANSIONS_PATH, { name: 'weather-station' }],
     ])
   })
 
@@ -138,9 +162,91 @@ describe('useMansionApi', () => {
   })
 })
 
-describe('theme boundary', () => {
-  it('re-exports the host theme state', () => {
-    const { result } = renderHook(() => useTheme())
-    expect(result.current).toEqual(host.theme)
+describe('host theme, toast and badge wrappers (Spec 6 task 3.1)', () => {
+  beforeEach(() => {
+    host.theme = { mode: 'dark', accent: '#c58b45', colorTheme: 'midnight' }
+    host.notify.mockReset()
+    host.badge.mockReset()
+  })
+
+  it('finds the three host hooks on a host that exports them', () => {
+    expect(HOST_HOOKS_PRESENT).toEqual({ theme: true, notify: true, navBadge: true })
+  })
+
+  it('normalizes the host theme to the three documented fields', () => {
+    const { result } = renderHook(() => useHostTheme())
+    expect(result.current).toEqual({ mode: 'dark', accent: '#c58b45', colorTheme: 'midnight' })
+  })
+
+  it('follows a host theme change and keeps the same object while nothing changes', () => {
+    const { result, rerender } = renderHook(() => useHostTheme())
+    const first = result.current
+    host.theme = { mode: 'dark', accent: '#c58b45', colorTheme: 'midnight' }
+    rerender()
+    expect(result.current).toBe(first)
+    host.theme = { mode: 'light', accent: '#c58b45', colorTheme: 'midnight' }
+    rerender()
+    expect(result.current.mode).toBe('light')
+  })
+
+  it.each([
+    ['nothing', undefined],
+    ['a string', 'dark'],
+    ['an unknown mode', { mode: 'sepia' }],
+    ['wrong field types', { mode: 7, accent: {}, colorTheme: ['x'] }],
+  ])('falls back for %s', (_name, raw) => {
+    expect(normalizeHostTheme(raw)).toEqual(FALLBACK_HOST_THEME)
+  })
+
+  it('drops an accent that is not a short plain value, and never passes extra host fields on', () => {
+    expect(normalizeHostTheme({ mode: 'dark', accent: 'red; } body { display: none', colorTheme: 'x'.repeat(65), token: 'secret' })).toEqual({
+      mode: 'dark',
+      accent: null,
+      colorTheme: null,
+    })
+    expect(normalizeHostTheme({ mode: 'light', accent: ' rgb(10, 20, 30) ', colorTheme: 'default' })).toEqual({
+      mode: 'light',
+      accent: 'rgb(10, 20, 30)',
+      colorTheme: 'default',
+    })
+  })
+
+  it('sends a toast as the text alone, with no option', () => {
+    const { result } = renderHook(() => useHostNotify())
+    expect(result.current('Tinker 2 is blocked.')).toBe(true)
+    expect(host.notify.mock.calls).toEqual([['Tinker 2 is blocked.']])
+    expect(result.current('')).toBe(false)
+    expect(host.notify).toHaveBeenCalledTimes(1)
+  })
+
+  it('contains a toast that throws or rejects, and does not retry', async () => {
+    const { result } = renderHook(() => useHostNotify())
+    host.notify.mockImplementationOnce(() => {
+      throw new Error('host toast failed')
+    })
+    expect(result.current('first')).toBe(false)
+    host.notify.mockImplementationOnce(() => Promise.reject(new Error('later')))
+    expect(result.current('second')).toBe(true)
+    await Promise.resolve()
+    expect(host.notify).toHaveBeenCalledTimes(2)
+  })
+
+  it('sets the badge to a whole non-negative count and contains a failure', () => {
+    const { result } = renderHook(() => useHostNavBadge())
+    for (const count of [3, 0, -2, 2.9, Number.NaN]) result.current(count)
+    expect(host.badge.mock.calls).toEqual([[3], [0], [0], [2], [0]])
+    host.badge.mockImplementationOnce(() => {
+      throw new Error('no sidebar')
+    })
+    expect(result.current(1)).toBe(false)
+  })
+
+  it('keeps one stable function across renders', () => {
+    const notify = renderHook(() => useHostNotify())
+    const badge = renderHook(() => useHostNavBadge())
+    const before = [notify.result.current, badge.result.current]
+    notify.rerender()
+    badge.rerender()
+    expect([notify.result.current, badge.result.current]).toEqual(before)
   })
 })

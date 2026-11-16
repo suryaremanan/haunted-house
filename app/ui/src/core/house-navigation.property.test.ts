@@ -23,11 +23,11 @@ import {
  */
 const REFERENCE: Readonly<Record<RoomId, readonly [RoomId | null, RoomId | null, RoomId | null, RoomId | null]>> = {
   foyer: ['drafting-room', null, 'study', 'workshop'],
-  study: ['attic', null, null, 'foyer'],
-  'drafting-room': ['attic', 'foyer', 'study', 'workshop'],
-  workshop: ['attic', null, 'foyer', 'seance-room'],
-  attic: [null, 'drafting-room', 'study', 'workshop'],
-  'seance-room': ['attic', null, 'workshop', null],
+  study: ['drafting-room', null, null, 'foyer'],
+  'drafting-room': ['attic', 'foyer', null, 'seance-room'],
+  workshop: ['seance-room', null, 'foyer', null],
+  attic: [null, 'drafting-room', null, null],
+  'seance-room': ['attic', 'workshop', 'drafting-room', null],
 }
 const COLUMN: Readonly<Record<ArrowDirection, number>> = { ArrowUp: 0, ArrowDown: 1, ArrowLeft: 2, ArrowRight: 3 }
 
@@ -95,9 +95,10 @@ describe('house registry', () => {
     expect(nextRoom('attic', 'ArrowUp', all)).toBe('attic')
     expect(nextRoom('study', 'ArrowLeft', all)).toBe('study')
     expect(nextRoom('seance-room', 'ArrowRight', all)).toBe('seance-room')
-    // A hidden Séance Room leaves the Workshop at the right edge.
-    expect(nextRoom('workshop', 'ArrowRight', visibleRoomIds('hidden'))).toBe('workshop')
-    expect(nextRoom('workshop', 'ArrowRight', visibleRoomIds('locked'))).toBe('seance-room')
+    expect(nextRoom('workshop', 'ArrowRight', all)).toBe('workshop')
+    // A hidden Séance Room leaves the Drafting Room at the right edge.
+    expect(nextRoom('drafting-room', 'ArrowRight', visibleRoomIds('hidden'))).toBe('drafting-room')
+    expect(nextRoom('drafting-room', 'ArrowRight', visibleRoomIds('locked'))).toBe('seance-room')
   })
 
   it('steps over a hidden room in the same direction', () => {

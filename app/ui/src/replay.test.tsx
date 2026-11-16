@@ -179,27 +179,39 @@ describe('replay page', () => {
       act(async () => {
         await vi.advanceTimersByTimeAsync(ms)
       })
-    return { view, announcements, advance }
+    /**
+     * Moves the Attic's Cursor: the stand-in then serves that many records.
+     * Nothing polls a recording, so the page is told to look again the way a
+     * live page is: it became visible.
+     */
+    const present = async (cursor: number) => {
+      shim.replayRecording.present('demo-mansion', cursor)
+      for (const state of ['hidden', 'visible']) {
+        Object.defineProperty(document, 'visibilityState', { value: state, configurable: true })
+        act(() => {
+          document.dispatchEvent(new Event('visibilitychange'))
+        })
+      }
+      await advance(0)
+    }
+    return { view, announcements, advance, present }
   }
 
   it('fetches ./fixture.jsonl once and folds its canonical records into ghost states in Sequence order', async () => {
-    const { view, announcements, advance } = await mountReplayStatus()
+    const { view, announcements, advance, present } = await mountReplayStatus()
     expect(view.getByText('Loading the séance log…')).toBeInTheDocument()
 
-    // Playback: what is shown is always the fold of a prefix of the canonical
-    // log, the prefix only grows, and it ends as the whole log.
-    const prefixes = Array.from({ length: LOG.length + 1 }, (_, count) => JSON.stringify(foldedRows(count)))
-    let shownPrefix = 0
+    // A recording does not play by itself: until the Attic's Cursor moves, nothing is shown.
+    await advance(10 * 60_000)
+    expect(shownRows(view.container)).toEqual([])
+
+    // Playback: at every Cursor the page shows exactly the fold of that prefix
+    // of the canonical log, the prefix grows by one record, and it ends as the whole log.
     const stateSeries = new Map<string, string[]>()
-    for (let step = 0; step < 400; step += 1) {
-      await advance(250)
+    for (let cursor = 1; cursor <= LOG.length; cursor += 1) {
+      await present(cursor)
       const shown = shownRows(view.container)
-      const text = JSON.stringify(shown)
-      // The page shows the fold of a prefix at or after the one shown before:
-      // records never appear out of order and never disappear.
-      const prefix = prefixes.indexOf(text, shownPrefix)
-      expect(prefix).toBeGreaterThanOrEqual(shownPrefix)
-      shownPrefix = prefix
+      expect(shown).toEqual(foldedRows(cursor))
       for (const row of shown) {
         const series = stateSeries.get(row.name!) ?? []
         if (series.at(-1) !== row.stateText) series.push(row.stateText!)
@@ -213,7 +225,9 @@ describe('replay page', () => {
     // The story played out over time, not in one jump, and in canonical order.
     expect(stateSeries.get('Archivist')).toEqual(['Working', 'Waiting', 'Working', 'Done'])
     expect(stateSeries.get('Foreman')).toEqual(['Working', 'Failed', 'Working'])
-    expect(stateSeries.get('Tinker 1')).toEqual(['Working', 'Blocked'])
+    // One record per step shows the instant before Tinker 1's run starts, which the
+    // wall-clock player presented together with the start.
+    expect(stateSeries.get('Tinker 1')).toEqual(['Idle', 'Working', 'Blocked'])
     expect(stateSeries.get('Tinker 3')).toEqual(['Working', 'Failed'])
     expect(new Set(shownRows(view.container).map((row) => row.stateText))).toEqual(
       new Set(['Idle', 'Working', 'Waiting', 'Blocked', 'Failed', 'Done']),
@@ -240,8 +254,8 @@ describe('replay page', () => {
     const lines = demo.split('\n').filter((line) => line !== '')
     lines[11] = lines[11].replace(/"persisted_at_ms":\d+/, '"persisted_at_ms":1')
     fixtureResponse = () => new Response(`${lines.join('\n')}\n`, { status: 200 })
-    const { view, advance } = await mountReplayStatus()
-    await advance(120_000)
+    const { view, present } = await mountReplayStatus()
+    await present(LOG.length)
 
     expect(
       view.getByText('The séance log failed its integrity check at line 12. Showing only the records before it.'),

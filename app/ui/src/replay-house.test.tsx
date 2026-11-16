@@ -8,7 +8,6 @@ import { act, fireEvent, render, within } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import demo from '../../../fixtures/replay/demo.jsonl?raw'
 import demoWorkflow from '../../../fixtures/replay/demo.workflow.json'
-import { houseRooms } from './core/house-view'
 import { parseEventLog, projectEvents } from './core/seance-log'
 import { foldWorkflow } from './core/workflow-fold'
 import { parseWorkflowProjection, type WorkflowProjection } from './core/workflow-projection'
@@ -57,24 +56,51 @@ afterEach(() => {
   vi.resetModules()
 })
 
+const DESCRIPTOR = { name: MANSION, projectSpec: MANSION, displayPath: `~/mansions/${MANSION}`, status: 'ready' } as const
+
 async function mountReplayHouse() {
   vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'Date'] })
   const shim = await import('./adapters/sdk-shim')
   const adapter = await import('./adapters/sdk')
   expect(adapter.useAppApi).toBe(shim.useAppApi)
-  expect(adapter.useNotify).toBe(shim.useNotify)
+  expect(adapter.REPLAY_RECORDING).toBe(shim.replayRecording)
   const { House } = await import('./rooms/house/House')
-  const announcements: string[] = []
-  const view = render(<House mansionId={MANSION} onAnnounce={(message) => announcements.push(message)} />)
+  const view = render(<House mansion={DESCRIPTOR} onReturn={() => {}} />)
   const advance = (ms: number) =>
     act(async () => {
       await vi.advanceTimersByTimeAsync(ms)
     })
-  /** Plays the whole recording. Several steps, so the page renders and re-reads between them. */
-  const playAll = async () => {
-    for (let step = 0; step < 12; step += 1) await advance(20_000)
+  // The recording is read in promise callbacks: let them settle.
+  await advance(0)
+  const page = within(view.container)
+  /** Everything the page's one live region said, in order, without repeats of the same text. */
+  const announcements: string[] = []
+  const said = () => view.container.querySelector('[data-announcer]')?.textContent ?? ''
+  const note = () => {
+    const text = said()
+    if (text !== '' && announcements.at(-1) !== text) announcements.push(text)
   }
-  return { view, announcements, advance, playAll }
+  const openAttic = () => {
+    fireEvent.click(page.getByRole('button', { name: /^Attic\./ }))
+    return page.getByRole('region', { name: 'Attic' })
+  }
+  const closeRoom = () => fireEvent.keyDown(document.activeElement ?? view.container, { key: 'Escape' })
+  /** Moves the Attic's Cursor with its seek slider: the house shows that prefix of the recording. */
+  const seek = (cursor: number) => {
+    const attic = view.container.querySelector('[data-attic-panel]') === null ? openAttic() : page.getByRole('region', { name: 'Attic' })
+    fireEvent.change(within(attic).getByRole('slider'), { target: { value: String(cursor) } })
+    note()
+  }
+  /** Plays the whole recording: the Cursor goes to its last record, then the Attic closes. */
+  const playAll = async () => {
+    const attic = openAttic()
+    const slider = within(attic).getByRole('slider') as HTMLInputElement
+    fireEvent.change(slider, { target: { value: slider.max } })
+    note()
+    closeRoom()
+    await advance(0)
+  }
+  return { view, page, announcements, said, note, advance, playAll, openAttic, closeRoom, seek }
 }
 
 /** Phase status, Door status and waiting count of a projection, as one comparable line. */
@@ -84,13 +110,13 @@ function signature(projection: WorkflowProjection): string {
 
 /** The same line read from the house map on the page. */
 function shownSignature(container: HTMLElement): string {
-  return Array.from(container.querySelectorAll<HTMLElement>('.hh-map [data-phase]'), (line) =>
+  return Array.from(container.querySelectorAll<HTMLElement>('[data-door-control]'), (line) =>
     `${line.dataset.phase}:${line.dataset.status}/${line.dataset.door}`,
   ).join('|')
 }
 
 const roomLabels = (container: HTMLElement) =>
-  Array.from(container.querySelectorAll('.hh-map .hh-room'), (room) => room.getAttribute('aria-label'))
+  Array.from(container.querySelectorAll('[data-room-control]'), (room) => room.getAttribute('aria-label'))
 
 /** The backend's final projection of the recording, from the committed fixture. */
 function backendFinal(): WorkflowProjection {
@@ -101,7 +127,7 @@ function backendFinal(): WorkflowProjection {
 
 describe('replay house', () => {
   it('plays the workflow in canonical order and ends on the backend projection, with one request in all', async () => {
-    const { view, announcements, advance } = await mountReplayHouse()
+    const { view, announcements, note, advance, openAttic } = await mountReplayHouse()
 
     // The distinct workflow states of every prefix of the canonical log, in order.
     const expected: string[] = []
@@ -111,36 +137,49 @@ describe('replay house', () => {
     }
     expect(expected.length).toBeGreaterThan(8)
 
-    const shown: string[] = []
+    // A recording starts paused at its start and does not play by itself.
+    expect(view.container.querySelector('[data-replay-start]')).toHaveTextContent(/paused at its start/)
+    await advance(10 * 60_000)
+    expect(shownSignature(view.container)).toBe(expected[0])
+
+    // The judge opens the Attic and presses Play; the house follows the Cursor.
+    const attic = openAttic()
+    fireEvent.click(within(attic).getByRole('button', { name: 'Play' }))
+    expect(view.container.querySelector('[data-replay-start]')).not.toBeNull()
+    const shown: string[] = [shownSignature(view.container)]
     for (let step = 0; step < 500; step += 1) {
       await advance(250)
+      note()
       const line = shownSignature(view.container)
       if (line !== '' && shown.at(-1) !== line) shown.push(line)
     }
-    // What the page showed is a walk through those states in order: none out of order, none invented.
-    let cursor = 0
-    for (const line of shown) {
-      const index = expected.indexOf(line, cursor)
-      expect(index, `state shown out of canonical order: ${line}`).toBeGreaterThanOrEqual(cursor)
-      cursor = index
-    }
-    expect(shown.length).toBeGreaterThan(5)
-    expect(shown.at(-1)).toBe(expected.at(-1))
+    // What the page showed is exactly the walk through those states: none out of order, none skipped, none invented.
+    expect(shown).toEqual(expected)
+    expect(view.container.querySelector('[data-replay-start]')).toBeNull()
+    expect(within(attic).getByText(/^Replay complete\./)).toBeInTheDocument()
 
     // The end state is the backend's projection of the same records, joined with the Spec 2 ghost fold.
     const final = backendFinal()
     expect(shown.at(-1)).toBe(signature(final))
-    expect(roomLabels(view.container)).toEqual(houseRooms(final, projectEvents(LOG).snapshots).map((room) => room.label))
     expect(roomLabels(view.container)).toEqual([
-      'Study. Requirements: Approved, Open door. Archivist: Done.',
-      'Drafting Room. Design: Approved, Open door. Draughtsman: Done.',
-      'Workshop. Tasks: Working, Sealed door. Implementation: Not started, Sealed door. Foreman: Working, Tinker 1: Blocked, Tinker 2: Waiting, Tinker 3: Failed. 1 thing needs you.',
+      'Foyer. Phase: navigation. Door: not applicable. Ghost: not applicable.',
+      'Study. Phase: requirements. Door: open. Ghost: done.',
+      'Drafting Room. Phase: design. Door: open. Ghost: done.',
+      'Workshop. Phase: tasks and implementation. Door: sealed. Ghost: failed.',
+      'Attic. Phase: replay. Door: not applicable. Ghost: not applicable.',
+      'Séance Room. Phase: review. Door: not applicable. Ghost: idle.',
     ])
+    // Every ghost of the Spec 2 fold is on the map in its final state.
+    const ghosts = Object.fromEntries(
+      Array.from(view.container.querySelectorAll<HTMLElement>('[data-ghost-control]'), (ghost) => [ghost.dataset.ghostControl, ghost.dataset.ghost]),
+    )
+    expect(ghosts).toEqual(Object.fromEntries(projectEvents(LOG).snapshots.map((snapshot) => [snapshot.ghost_id, snapshot.state])))
+    expect(ghosts).toMatchObject({ archivist: 'done', draughtsman: 'done', foreman: 'working', 'tinker-1': 'blocked', 'tinker-2': 'waiting', 'tinker-3': 'failed' })
 
-    // Both Doors needed a decision on the way, and each was announced once.
-    for (const sentence of ['The requirements door needs your decision.', 'The design door needs your decision.', 'Tinker 2 asks to run a command.']) {
-      expect(announcements.filter((message) => message.includes(sentence))).toHaveLength(1)
-    }
+    // Playback interrupts nobody (replay-and-submission Requirement 3.6): the Doors and ghosts that
+    // waited on the way were shown in place and not announced. The one thing said is that the replay ended.
+    expect(announcements).toEqual([`Replay complete. Event ${LOG.length} of ${LOG.length}.`])
+    expect(view.container.querySelectorAll('[aria-live], [role="status"], [role="alert"], [role="log"]')).toHaveLength(1)
 
     // One request in all: the recording. No backend, gateway or socket.
     expect(fetchSpy).toHaveBeenCalledTimes(1)
@@ -150,12 +189,27 @@ describe('replay house', () => {
     expect(vi.getTimerCount()).toBe(0)
   })
 
-  it('shows the exact pending proposal read-only: nothing can be decided or started in a recording', async () => {
-    const { view, advance, playAll } = await mountReplayHouse()
-    await playAll()
-    const page = within(view.container)
+  it('shows the fold of the prefix at every Cursor, backwards as well as forwards', async () => {
+    const { view, seek } = await mountReplayHouse()
+    for (const cursor of [LOG.length, 19, 20, 5, 0, 41, 40]) {
+      seek(cursor)
+      expect(shownSignature(view.container)).toBe(signature(foldWorkflow(LOG.slice(0, cursor), { mansionId: MANSION }).projection))
+      const ghosts = Object.fromEntries(
+        Array.from(view.container.querySelectorAll<HTMLElement>('[data-ghost-control]'), (ghost) => [ghost.dataset.ghostControl, ghost.dataset.ghost]),
+      )
+      expect(ghosts).toEqual(
+        Object.fromEntries(projectEvents(LOG.slice(0, cursor)).snapshots.map((snapshot) => [snapshot.ghost_id, snapshot.state])),
+      )
+    }
+    expect(fetchSpy).toHaveBeenCalledTimes(1)
+    expect(unexpected).toEqual([])
+  })
 
-    expect(view.container.querySelector('.hh-house-blocked[data-block="read_only"]')).toHaveTextContent(
+  it('shows the exact pending proposal read-only: nothing can be decided or started in a recording', async () => {
+    const { view, page, advance, playAll } = await mountReplayHouse()
+    await playAll()
+
+    expect(view.container.querySelector('.hh-ui-note[data-block="read_only"]')).toHaveTextContent(
       'This is a recording. Nothing can be started, approved or rejected here.',
     )
     fireEvent.click(page.getByRole('button', { name: /^Workshop\./ }))
@@ -189,7 +243,12 @@ describe('replay house', () => {
     // Damage the record that approves the requirements Door (line 20).
     lines[19] = lines[19].replace(/"persisted_at_ms":\d+/, '"persisted_at_ms":1')
     fixtureResponse = () => new Response(`${lines.join('\n')}\n`, { status: 200 })
-    const { view, playAll } = await mountReplayHouse()
+    const { view, openAttic, playAll } = await mountReplayHouse()
+
+    // The Attic holds only the nineteen records before the failure.
+    const slider = within(openAttic()).getByRole('slider') as HTMLInputElement
+    expect(slider.max).toBe('19')
+    fireEvent.keyDown(document.activeElement ?? view.container, { key: 'Escape' })
     await playAll()
 
     expect(
@@ -199,20 +258,25 @@ describe('replay house', () => {
     const prefix = foldWorkflow(LOG.slice(0, 19), { mansionId: MANSION }).projection
     expect(shownSignature(view.container)).toBe(signature(prefix))
     expect(shownSignature(view.container)).toMatch(/^requirements:waiting\/waiting\|design:not_started\/sealed/)
-    expect(roomLabels(view.container)).toEqual(
-      houseRooms(prefix, projectEvents(LOG.slice(0, 19)).snapshots).map((room) => room.label),
+    const ghosts = Object.fromEntries(
+      Array.from(view.container.querySelectorAll<HTMLElement>('[data-ghost-control]'), (ghost) => [ghost.dataset.ghostControl, ghost.dataset.ghost]),
     )
+    expect(ghosts).toEqual(Object.fromEntries(projectEvents(LOG.slice(0, 19)).snapshots.map((snapshot) => [snapshot.ghost_id, snapshot.state])))
     expect(fetchSpy).toHaveBeenCalledTimes(1)
     expect(unexpected).toEqual([])
   })
 
   it('shows that the house is unavailable when the recording cannot be loaded, and asks nothing else', async () => {
     fixtureResponse = () => new Response('missing', { status: 404 })
-    const { view, playAll } = await mountReplayHouse()
-    await playAll()
+    const { view, openAttic, advance } = await mountReplayHouse()
+    await advance(120_000)
 
     expect(within(view.container).getByText('Could not read the séance log. Showing the last confirmed state.')).toBeInTheDocument()
     expect(within(view.container).queryByRole('button', { name: /^(Approve|Reject|Start)/ })).toBeNull()
+    // The Attic says the same in fixed copy and has nothing to play.
+    const attic = openAttic()
+    expect(within(attic).getByText('The replay recording could not be loaded.')).toBeInTheDocument()
+    expect(within(attic).getByRole('button', { name: 'Play' })).toHaveAttribute('aria-disabled', 'true')
     // The failure is kept by the stand-in: no second fetch, no fallback.
     expect(fetchSpy).toHaveBeenCalledTimes(1)
     expect(unexpected).toEqual([])
@@ -221,7 +285,7 @@ describe('replay house', () => {
 
 describe('Spec 4 owns no event log in the UI', () => {
   const sources = import.meta.glob<string>(
-    ['/src/core/workflow-*.ts', '/src/core/house-*.ts', '/src/core/notify-coalescer.ts', '/src/adapters/workflow-live.ts', '/src/adapters/house-interruptions.ts', '/src/adapters/sdk-shim/workflow-replay.ts', '/src/rooms/house/*.{ts,tsx}', '!**/*.test.{ts,tsx}'],
+    ['/src/core/workflow-*.ts', '/src/core/house-*.ts', '/src/core/interruption-policy.ts', '/src/adapters/workflow-live.ts', '/src/adapters/host-effects.ts', '/src/adapters/house-projection.ts', '/src/adapters/sdk-shim/workflow-replay.ts', '/src/rooms/house/*.{ts,tsx}', '!**/*.test.{ts,tsx}'],
     { query: '?raw', import: 'default', eager: true },
   )
   const code = (source: string) => source.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[^:'"`])\/\/.*$/gm, '$1')
@@ -262,5 +326,49 @@ describe('Spec 4 owns no event log in the UI', () => {
       if (file.includes('/sdk-shim/') || file.endsWith('/workflow-fold.ts')) continue
       expect(code(source), file).not.toMatch(/foldWorkflow|from '.*workflow-fold'/)
     }
+  })
+})
+
+// The replay bar (visual design pass, 2026-11-16): one read-only sentence for
+// the whole house, and a second view of the Attic's one replay.
+describe('replay bar', () => {
+  it('drives the same replay as the Attic, says the end once, and plays again from the start at the end', async () => {
+    const { view, page, announcements, note, advance, openAttic, closeRoom } = await mountReplayHouse()
+    const bar = page.getByRole('group', { name: 'Recording playback' })
+    // One read-only sentence for the house; the rooms keep theirs for assistive technology only.
+    expect(view.container.querySelectorAll('[data-block="read_only"]')).toHaveLength(1)
+    expect(within(bar).getByText(/This is a recording\./)).toBeInTheDocument()
+    for (const reason of view.container.querySelectorAll('[data-room-reason="read-only"]')) {
+      expect(reason).toHaveClass('hh-ui-visually-hidden')
+    }
+    expect(within(bar).getByRole('button', { name: 'Restart' })).toHaveAttribute('aria-disabled', 'true')
+
+    // Play from the bar with the Attic closed: the house fills and the end is said once.
+    fireEvent.click(within(bar).getByRole('button', { name: 'Play' }))
+    expect(within(bar).getByRole('button', { name: 'Pause' })).toBeInTheDocument()
+    for (let step = 0; step < 500; step += 1) {
+      await advance(250)
+      note()
+    }
+    const total = LOG.length
+    expect(within(bar).getByText(`Event ${total} of ${total}`)).toBeInTheDocument()
+    expect(announcements.filter((text) => text.startsWith('Replay complete.'))).toHaveLength(1)
+
+    // The Attic shows the same Cursor: one replay, two views.
+    const attic = openAttic()
+    expect(within(attic).getByRole('slider')).toHaveValue(String(total))
+    closeRoom()
+
+    // Play at the end starts again from the beginning and plays.
+    fireEvent.click(within(bar).getByRole('button', { name: 'Play' }))
+    expect(within(bar).getByRole('button', { name: 'Pause' })).toBeInTheDocument()
+    await advance(250)
+    const slider = within(bar).getByRole('slider') as HTMLInputElement
+    expect(Number(slider.value)).toBeLessThan(total)
+    fireEvent.click(within(bar).getByRole('button', { name: 'Pause' }))
+    fireEvent.click(within(bar).getByRole('button', { name: 'Restart' }))
+    expect(slider).toHaveValue('0')
+    expect(view.container.querySelector('[data-replay-start]')).not.toBeNull()
+    expect(unexpected).toEqual([])
   })
 })

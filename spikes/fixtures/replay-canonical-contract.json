@@ -47,7 +47,8 @@
     "spec_write_prepared",
     "spec_document_written",
     "spec_write_recovered",
-    "spec_write_uncertain"
+    "spec_write_uncertain",
+    "room_tool_answered"
   ],
   "ghostStates": [
     "idle",

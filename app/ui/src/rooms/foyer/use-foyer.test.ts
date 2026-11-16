@@ -128,6 +128,15 @@ describe('useFoyer create', () => {
     expect(onAnnounce.mock.calls).toEqual([['Mansion alpha created.']])
   })
 
+  it('passes the feature brief through to the create body', async () => {
+    const { result } = await readyFoyer(vi.fn())
+    host.post.mockResolvedValueOnce({ outcome: 'created', mansion: mansion('alpha') })
+    await act(async () => {
+      await result.current.create('alpha', ' A tide clock. ')
+    })
+    expect(host.post.mock.calls).toEqual([[MANSIONS, { name: 'alpha', brief: 'A tide clock.' }]])
+  })
+
   it('announces an existing compatible mansion differently', async () => {
     const { result, onAnnounce } = await readyFoyer(vi.fn(), mansion('alpha'))
     host.post.mockResolvedValueOnce({ outcome: 'existing_compatible', mansion: mansion('alpha') })

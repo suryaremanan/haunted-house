@@ -2,11 +2,11 @@
 // verdict, the review cycle, findings traced to requirements and files, and
 // the repair task proposed for each. It is rendered only when the backend
 // says the Séance Room is on and has a review; by default it is off and this
-// panel never appears. It shows proposals and decides nothing: an approved
+// panel never appears. The Mansion Shell's panel host supplies the labelled
+// panel and its heading. It shows proposals and decides nothing: an approved
 // repair runs through the Workshop like any other task, and nothing reviews a
 // fourth time on its own.
 import { Ban, CircleCheck, Hourglass, LoaderCircle, Lock } from 'lucide-react'
-import { useId } from 'react'
 import { SessionLink } from '../../components/SessionLink'
 import type { ReviewView } from '../../core/room-view'
 import { GHOST_TONE, GhostIcon } from '../house/house-icons'
@@ -31,10 +31,8 @@ function VerdictIcon({ status }: { status: ReviewView['status'] }) {
 }
 
 export function SeanceRoomPanel({ view, onOpenSession }: SeanceRoomPanelProps) {
-  const titleId = useId()
   return (
-    <section className="hh-room-panel" aria-labelledby={titleId} data-room-panel="seance-room" data-review={view.status}>
-      <h4 id={titleId}>Séance Room</h4>
+    <div className="hh-room-panel" data-review={view.status}>
       <div className="hh-output">
         <p className="hh-room-line" data-tone={view.status === 'pass' ? 'ok' : view.status === 'reviewing' ? 'plain' : 'attention'} data-verdict>
           <VerdictIcon status={view.status} />
@@ -96,6 +94,6 @@ export function SeanceRoomPanel({ view, onOpenSession }: SeanceRoomPanelProps) {
         </p>
         <SessionLink view={view.sessionLink} onOpen={onOpenSession} />
       </div>
-    </section>
+    </div>
   )
 }

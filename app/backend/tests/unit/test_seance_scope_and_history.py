@@ -421,3 +421,72 @@ def test_the_plan_does_not_mutate_its_inputs():
     plan_history_recovery(history, _registered(), [_pending("2")])
 
     assert repr(history) == snapshot
+
+
+# --- turn end proved by a not-running response (decision 2026-11-16) ------------
+
+
+def _ended(**overrides: Any) -> dict[str, Any]:
+    history: dict[str, Any] = {
+        "slot": SLOT, "running": False, "turn": 4, "turn_gen": "0c698996", "has_more": False,
+        "messages": [_message("m-1"), _message("m-2", role="assistant")],
+    }
+    history.update(overrides)
+    return history
+
+
+def test_a_not_running_response_proves_the_same_turn_end_live_delivery_sends():
+    plan = plan_history_recovery(_ended(), _registered(), [])
+
+    assert plan.partial is False
+    *messages, ended = plan.envelopes
+    assert [item.envelope.type for item in messages] == ["chat_message", "chat_message"]
+    assert ended.envelope.type == "chat_done"
+    assert ended.envelope.data == {
+        "slot": SLOT, "turn": 4, "turn_gen": "0c698996", "continuing": False, "needs_input": False,
+    }
+    context = NormalizationContext({SLOT: _scope()}, {})
+    live = normalize_crew_envelope(
+        type(ended.envelope)(
+            "chat_done",
+            {"slot": SLOT, "turn": 4, "turn_gen": "0c698996", "continuing": False, "needs_input": False},
+        ),
+        context,
+    )
+    (recovered,) = normalize_crew_envelope(ended.envelope, context).candidates
+    assert recovered.event_type == "crew_turn_ended"
+    # The same candidate, so the same Record_ID: a forwarded chat_done collapses.
+    assert (recovered,) == live.candidates
+
+
+@pytest.mark.parametrize(
+    "overrides",
+    [
+        {"running": True},
+        {"running": None},
+        {"running": "false"},
+        {"turn": None},
+        {"turn": -1},
+        {"turn": "4"},
+        {"turn": True},
+        {"turn_gen": ""},
+        {"turn_gen": 7},
+        {"turn_gen": "g" * 200},
+        # Admission-only running omits the identity.
+        {"turn": None, "turn_gen": None},
+        # Only turns of an earlier Run, or no message at all: nothing proves this Run's turn.
+        {"messages": [_message("m-old", ts=BEFORE_RUN)]},
+        {"messages": []},
+    ],
+    ids=[
+        "running", "running-missing", "running-text", "no-turn", "negative-turn", "text-turn",
+        "bool-turn", "empty-gen", "numeric-gen", "oversized-gen", "admission", "earlier-run",
+        "no-messages",
+    ],
+)
+def test_no_turn_end_without_a_proved_not_running_turn_of_this_run(overrides):
+    history = _ended(**overrides)
+    for key in [key for key, value in overrides.items() if value is None]:
+        history.pop(key)
+    plan = plan_history_recovery(history, _registered(), [])
+    assert "chat_done" not in [item.envelope.type for item in plan.envelopes]

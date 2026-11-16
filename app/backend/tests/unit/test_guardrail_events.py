@@ -254,3 +254,55 @@ def test_the_module_is_pure_and_defines_no_envelope_or_serializer():
         "hashlib", "json", "calculate_event_id", "calculate_record_id",
         "build_app_event", "serialize_app_event", "calculate_event_hash", "open",
     }
+
+
+
+# --- credential-shaped text in payload strings (2026-11-16) -----------------------
+
+
+def _unsafe_paths() -> list[str]:
+    from urllib.parse import quote
+
+    token = "aB3dE5" * 5
+    return [
+        "Bear" + "er " + token,
+        "docs/Bear" + "er " + token + ".md",
+        quote("Bear" + "er " + token, safe=""),
+        "hhcap_" + "0" * 123,
+        "cache/" + "a" * 64,
+        "Traceback (most recent call last): oops",
+    ]
+
+
+@pytest.mark.parametrize("path", _unsafe_paths())
+def test_a_credential_shaped_path_is_refused_when_built_and_dropped_from_a_denial(path):
+    from haunted_house.core.guardrail_events import is_unsafe_text
+
+    assert is_unsafe_text(path, path=True)
+    with pytest.raises(GuardrailPayloadError) as refused:
+        _door(document_path=path)
+    assert refused.value.diagnostic == PayloadDiagnostic("data", "sensitive_value")
+    assert path not in str(refused.value)
+    denial = path_denied(
+        _OPERATOR, denial_id="deny-1", session_slot="slot-1", room="study",
+        access=Access.WRITE, code="room_policy", raw_path=path,
+    )
+    assert denial.payload["data"]["path"] is None
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        ".kiro/specs/demo-feature/design.md",
+        "docs/My Notes (draft).md",
+        "docs/bearer-tokens.md",
+        "src/a%20b.py",
+        "build/" + "f" * 63 + ".bin",
+        "notes/Bearer of news.md",
+    ],
+)
+def test_real_room_paths_stay_usable(path):
+    from haunted_house.core.guardrail_events import is_unsafe_text
+
+    assert not is_unsafe_text(path, path=True)
+    assert _door(document_path=path).payload["data"]["document_path"] == path

@@ -259,6 +259,55 @@ class MansionFilesystem:
             # so nothing is removed.
             _fail("mansion_conflict")
 
+    def write_brief(self, mansion: ResolvedMansion, text: str) -> bool:
+        """Write ``text`` once to ``.kiro/specs/<projectSpec>/brief.md``.
+
+        The project tree must be ready. Every directory on the way is opened
+        relative to its parent without following links, and the file is made
+        with an exclusive no-follow create, so an existing entry (a brief from
+        an earlier create, a link, anything) is never replaced or written
+        through. Returns True when this call wrote the brief and False when an
+        entry already existed. A partial write leaves the file in place: it is
+        never removed, and a later create keeps it.
+        """
+
+        if not text:
+            raise ValueError("empty_brief")
+        if classify_project(self.snapshot(mansion)) is not ProjectStatus.READY:
+            _fail("mansion_conflict")
+        if not _DIR_FD_SUPPORTED:
+            _fail("filesystem_error")
+
+        data = (text + "\n").encode("utf-8")
+        components = (mansion.name, ".kiro", "specs", mansion.project_spec)
+        open_descriptors: list[int] = []
+        try:
+            parent = _open_directory(mansion.root, None)
+            open_descriptors.append(parent)
+            for component in components:
+                parent = _open_directory(component, parent)
+                open_descriptors.append(parent)
+            try:
+                descriptor = os.open(BRIEF_FILE_NAME, _BRIEF_FLAGS, 0o644, dir_fd=parent)
+            except FileExistsError:
+                return False
+            try:
+                view = memoryview(data)
+                while view:
+                    view = view[os.write(descriptor, view) :]
+            finally:
+                os.close(descriptor)
+            return True
+        except OSError:
+            _fail("filesystem_error")
+        finally:
+            for descriptor in reversed(open_descriptors):
+                try:
+                    os.close(descriptor)
+                except OSError:
+                    pass
+        return False  # unreachable: _fail raises
+
     def _display_path(self, target: Path) -> str:
         """Return a home-relative label without exposing an absolute path."""
 
@@ -457,6 +506,16 @@ _DIR_FD_SUPPORTED = (
     and hasattr(os, "O_DIRECTORY")
     and {os.mkdir, os.open, os.rmdir, os.stat} <= os.supports_dir_fd
     and os.stat in os.supports_follow_symlinks
+)
+
+
+BRIEF_FILE_NAME = "brief.md"
+_BRIEF_FLAGS = (
+    os.O_WRONLY
+    | os.O_CREAT
+    | os.O_EXCL
+    | getattr(os, "O_NOFOLLOW", 0)
+    | getattr(os, "O_CLOEXEC", 0)
 )
 
 

@@ -198,3 +198,69 @@ def test_one_extra_or_missing_key_always_rejects(name, extra_key, extra_value):
     for body in ({"name": name, extra_key: extra_value}, {extra_key: name}, {}):
         with pytest.raises(InvalidRequest):
             parse_mansion_request(body)
+
+
+# Design decision 2026-11-16 (feature brief): creation also accepts exactly
+# {"name": <string>, "brief": <string>}. Open keeps the single-key shape above.
+
+brief_texts = st.one_of(
+    st.text(max_size=40),
+    st.text(alphabet=st.characters(codec="utf-8"), max_size=40),
+    st.builds(lambda n: "b" * n, st.integers(min_value=1995, max_value=2005)),
+)
+create_bodies = st.one_of(
+    bodies,
+    st.builds(lambda name, brief: {"name": name, "brief": brief}, st.text(max_size=20), brief_texts),
+    st.builds(lambda name, brief: {"name": name, "brief": brief}, st.text(max_size=20), json_values),
+    st.builds(
+        lambda name, brief, extra: {"name": name, "brief": brief, **extra},
+        st.text(max_size=20),
+        brief_texts,
+        st.dictionaries(st.sampled_from(["path", "Brief", "cwd"]), json_values, min_size=1, max_size=1),
+    ),
+)
+
+
+def reference_brief(value: str) -> str | None | InvalidRequest:
+    import unicodedata
+
+    text = value.replace("\r\n", "\n").replace("\r", "\n")
+    if any(
+        (unicodedata.category(c) == "Cc" and c not in "\n\t") or unicodedata.category(c) == "Cs"
+        for c in text
+    ):
+        return InvalidRequest()
+    text = text.strip()
+    if len(text) > 2000:
+        return InvalidRequest()
+    return text or None
+
+
+@given(body=create_bodies)
+@example(body={"name": "lab", "brief": "x"})
+@example(body={"name": "lab", "brief": "\x00"})
+@example(body={"name": "lab", "brief": None})
+@example(body={"brief": "x"})
+def test_create_accepts_only_name_or_name_and_valid_brief(body):
+    from haunted_house.core.mansion_requests import parse_create_mansion_request
+
+    decoded = json.loads(json.dumps(body))
+    before = copy.deepcopy(decoded)
+    expected: MansionRequest | None = None
+    if type(decoded) is dict and type(decoded.get("name")) is str:
+        if list(decoded) == ["name"]:
+            expected = MansionRequest(name=decoded["name"])
+        elif sorted(decoded) == ["brief", "name"] and type(decoded["brief"]) is str:
+            brief = reference_brief(decoded["brief"])
+            if not isinstance(brief, InvalidRequest):
+                expected = MansionRequest(name=decoded["name"], brief=brief)
+
+    if expected is None:
+        with pytest.raises(InvalidRequest) as caught:
+            parse_create_mansion_request(decoded)
+        assert str(caught.value) == "invalid_request"
+    else:
+        command = parse_create_mansion_request(decoded)
+        assert command == expected
+        assert command.brief is None or (command.brief == command.brief.strip() != "")
+    assert decoded == before

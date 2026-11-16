@@ -540,20 +540,6 @@ export function needsYouText(count: number): string {
   return count === 1 ? '1 thing needs you' : `${count} things need you`
 }
 
-/**
- * The announcement for Needs You items not announced before. Each item is
- * announced once, when it first appears; several merge into one message.
- */
-export function waitingAnnouncement(items: readonly NeedsYouItem[], announced: ReadonlySet<string>): { readonly seen: readonly string[]; readonly message: string | null } {
-  const fresh = items.filter((item) => !announced.has(item.id))
-  if (fresh.length === 0) return { seen: [], message: null }
-  const sentences = fresh.map((item) => item.text)
-  return {
-    seen: fresh.map((item) => item.id),
-    message: sentences.length === 1 ? sentences[0] : `${sentences.length} things need you. ${sentences.join(' ')}`,
-  }
-}
-
 // ---------------------------------------------------------------------------
 // Rooms.
 
@@ -625,21 +611,6 @@ export function houseRooms(
       label: `${room.name}. ${phaseText}. ${ghostSummary(ghosts)}.${count > 0 ? ` ${needsYouText(count)}.` : ''}`,
     }
   })
-}
-
-/** The room after `current` in the given direction. Movement stops at the ends of the house. */
-export function moveRoom(current: RoomId, direction: 'next' | 'previous' | 'first' | 'last'): RoomId {
-  const index = ROOM_IDS.indexOf(current)
-  switch (direction) {
-    case 'next':
-      return ROOM_IDS[Math.min(index + 1, ROOM_IDS.length - 1)]
-    case 'previous':
-      return ROOM_IDS[Math.max(index - 1, 0)]
-    case 'first':
-      return ROOM_IDS[0]
-    case 'last':
-      return ROOM_IDS[ROOM_IDS.length - 1]
-  }
 }
 
 // ---------------------------------------------------------------------------

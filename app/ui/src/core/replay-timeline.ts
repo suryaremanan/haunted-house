@@ -74,7 +74,8 @@ export function replayDiagnostic(
   }
 }
 
-function parserDiagnostic(diagnostic: EventDiagnostic): ReplayDiagnostic {
+/** A Spec 2 parser or read-route diagnostic as fixed replay copy. Keeps its line, drops its text. */
+export function parserDiagnostic(diagnostic: EventDiagnostic): ReplayDiagnostic {
   const at = { line: diagnostic.line }
   switch (diagnostic.code) {
     case 'unsupported_schema':
@@ -351,6 +352,7 @@ const GUARDRAIL_COPY: Readonly<Record<GuardrailKind, string>> = {
   spec_document_written: 'Spec document written',
   spec_write_recovered: 'Spec document write recovered',
   spec_write_uncertain: 'Spec document write uncertain',
+  room_tool_answered: 'Room tool approved by the house',
 }
 
 function guardrailSummary(event: AppEvent): string {

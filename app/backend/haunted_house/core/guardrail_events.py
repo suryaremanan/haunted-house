@@ -56,6 +56,7 @@ __all__ = [
     "MAX_LABEL_LENGTH",
     "MAX_SIZE_BYTES",
     "OPERATOR_GHOST_ID",
+    "HOUSE_ANSWERED_TOOLS",
     "PHASES",
     "SOURCE_TYPE",
     "DomainRecord",
@@ -73,6 +74,7 @@ __all__ = [
     "door_superseded",
     "is_identifier",
     "is_safe_code",
+    "is_unsafe_text",
     "operator_scope",
     "path_denied",
     "phase_output_ready",
@@ -90,6 +92,7 @@ __all__ = [
     "risky_action_rejected",
     "risky_action_succeeded",
     "risky_action_superseded",
+    "room_tool_answered",
     "select_domain_records",
     "spec_document_written",
     "spec_write_prepared",
@@ -150,6 +153,9 @@ class GuardrailEventKind(StrEnum):
     SPEC_DOCUMENT_WRITTEN = "spec_document_written"
     SPEC_WRITE_RECOVERED = "spec_write_recovered"
     SPEC_WRITE_UNCERTAIN = "spec_write_uncertain"
+    # Design decision 2026-11-16: the house approved a non-risky room-tool
+    # permission prompt on its own bound session.
+    ROOM_TOOL_ANSWERED = "room_tool_answered"
 
 
 @dataclass(frozen=True, slots=True)
@@ -263,6 +269,15 @@ _base_revision = _int_between(0, _MAX_REVISION)
 _size = _int_between(0, MAX_SIZE_BYTES)
 _exit_code = _optional(_int_between(-255, 255))
 _actor = _one_of(*ACTORS)
+# The only room tools the house ever answers for a Ghost (decision 2026-11-16).
+# The proposal and execution tools are not here, and never will be.
+HOUSE_ANSWERED_TOOLS = (
+    "list_room_files",
+    "read_room_file",
+    "write_spec_document",
+    "write_room_file",
+    "submit_phase_output",
+)
 _access = _one_of(*(access.value for access in Access))
 
 _ARTIFACT = {
@@ -442,6 +457,19 @@ _SCHEMAS: dict[
         "write_id",
         ("write_id",),
     ),
+    K.ROOM_TOOL_ANSWERED: (
+        {
+            "answer_id": _identifier,
+            "session_slot": _label,
+            "mid": _label,
+            "tool": _one_of(*HOUSE_ANSWERED_TOOLS),
+            "outcome": _one_of("approved"),
+            "actor": _one_of("house"),
+            "reason": _one_of("non_risky_room_tool"),
+        },
+        "answer_id",
+        ("answer_id",),
+    ),
 }
 
 _PAYLOAD_FIELDS = frozenset({"domain", "kind", "entity_id", "data"})
@@ -480,10 +508,85 @@ def _check_built(kind: GuardrailEventKind, checked: dict[str, JSONValue]) -> Non
         unchanged = deep_redact(checked) == checked
     except DeepRedactionError:
         unchanged = False
+    if unchanged:
+        unchanged = not any(
+            is_unsafe_text(text, path=name in _PATH_FIELDS)
+            for name, value in checked.items()
+            for text in _texts(value)
+        )
     if not unchanged:
         # The Spec 2 redactor would alter this payload: it carries something
         # credential shaped, so it is not a content-free summary.
         raise GuardrailPayloadError(PayloadDiagnostic("data", "sensitive_value"))
+
+
+# Fields that hold a Mansion-relative path.  A real room path never holds a
+# Session_Capability-shaped hex run, so one there is refused as well.
+_PATH_FIELDS = frozenset({"document_path", "path"})
+_DECODE_ROUNDS = 3
+_CAPABILITY_SHAPE = re.compile(r"[0-9A-Fa-f]{64,}")
+_ERROR_TEXT = re.compile(r"Traceback \(most recent call last\)")
+
+
+def is_unsafe_text(text: str, *, path: bool = False) -> bool:
+    """Whether one payload string is not a content-free summary.
+
+    Root cause fixed 2026-11-16: a path field accepted any clean relative
+    path, and only the raw text was checked against the Spec 2 redactor, so a
+    single-line credential (an authorization token, a percent-encoded secret,
+    an opaque capability) or error text could be stored as a "path".  Now the
+    text and each of its percent-decoded forms must be unchanged by
+    ``deep_redact`` and hold no error text, and a path holds no
+    capability-shaped hex run.
+    """
+
+    forms = [text]
+    for _ in range(_DECODE_ROUNDS):
+        decoded = _unquote_plus(forms[-1])
+        if decoded == forms[-1]:
+            break
+        forms.append(decoded)
+    for form in forms:
+        try:
+            if deep_redact(form) != form:
+                return True
+        except DeepRedactionError:
+            return True
+        if _ERROR_TEXT.search(form) is not None:
+            return True
+        if path and _CAPABILITY_SHAPE.search(form) is not None:
+            return True
+    return False
+
+
+_PERCENT = re.compile(r"%[0-9A-Fa-f]{2}")
+
+
+def _unquote_plus(text: str) -> str:
+    """``urllib.parse.unquote_plus`` with ``re`` only (this module stays pure)."""
+
+    spaced = text.replace("+", " ")
+    out: list[str] = []
+    position = 0
+    for match in re.finditer(r"(?:%[0-9A-Fa-f]{2})+", spaced):
+        out.append(spaced[position : match.start()])
+        raw = bytes(int(item[1:], 16) for item in _PERCENT.findall(match.group(0)))
+        out.append(raw.decode("utf-8", "replace"))
+        position = match.end()
+    out.append(spaced[position:])
+    return "".join(out)
+
+
+def _texts(value: object) -> Iterable[str]:
+    if isinstance(value, str):
+        yield value
+    elif isinstance(value, dict):
+        for key, item in value.items():
+            yield str(key)
+            yield from _texts(item)
+    elif isinstance(value, list):
+        for item in value:
+            yield from _texts(item)
 
 
 def build_payload(kind: GuardrailEventKind, data: Mapping[str, object]) -> dict[str, JSONValue]:
@@ -963,6 +1066,31 @@ def approval_resolution_ignored(
     )
 
 
+def room_tool_answered(
+    scope: EventScope,
+    *,
+    answer_id: str,
+    session_slot: str,
+    mid: str,
+    tool: str,
+) -> AppEventCandidate:
+    """The house approved one non-risky room-tool prompt of ``session_slot``."""
+
+    return build_candidate(
+        scope,
+        K.ROOM_TOOL_ANSWERED,
+        {
+            "answer_id": answer_id,
+            "session_slot": session_slot,
+            "mid": mid,
+            "tool": tool,
+            "outcome": "approved",
+            "actor": "house",
+            "reason": "non_risky_room_tool",
+        },
+    )
+
+
 def path_denied(
     scope: EventScope,
     *,
@@ -983,10 +1111,7 @@ def path_denied(
     shown: str | None = None
     if not isinstance(parsed, PathError):
         shown = join_parts(parsed)
-        try:
-            if deep_redact(shown) != shown:
-                shown = None
-        except DeepRedactionError:
+        if is_unsafe_text(shown, path=True):
             shown = None
     return build_candidate(
         scope,

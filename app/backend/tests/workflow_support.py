@@ -73,11 +73,19 @@ class FakeCrew:
         self.slots: dict[str, dict[str, Any]] = {}
         self.messages: dict[str, list[dict[str, Any]]] = {}
         self.fail: dict[str, tuple[int, dict[str, Any]]] = {}
+        # step -> answers used once each, before ``fail``: (status, body, headers)
+        self.fail_once: dict[str, list[tuple[int, dict[str, Any], dict[str, str]]]] = {}
+        # What the stop route answers (RG-S3) and what it does to the slot.
+        self.stop_reply: dict[str, Any] = {"ok": True}
+        self.stop_state: str | None = "stopped"
         self.refuse_tokens = 0
         self.echo_names = False
         # step -> async callable run just before the fake handles that call
         self.hooks: dict[str, Any] = {}
         self.websocket_attempts = 0
+        # slot -> the head fields Crew adds to that slot's history response
+        # (``running``, ``turn``, ``turn_gen``); none by default.
+        self.status: dict[str, dict[str, Any]] = {}
         self._n = 0
 
     def app(self) -> web.Application:
@@ -89,6 +97,7 @@ class FakeCrew:
         app.router.add_post("/api/chat", self._guard("send_turn", self._send))
         app.router.add_get("/api/chat/slots/{slot}", self._guard("get_session", self._history))
         app.router.add_post("/api/chat/slots/{slot}/approve", self._guard("approve", self._approve))
+        app.router.add_post("/api/chat/slots/{slot}/stop", self._guard("stop", self._stop))
         app.router.add_route("*", "/{tail:.*}", self._other)
         return app
 
@@ -112,6 +121,9 @@ class FakeCrew:
             self.calls.append((step, request.raw_path.partition("?")[0], body))
             if step in self.hooks:
                 await self.hooks[step]()
+            if self.fail_once.get(step):
+                status, payload, headers = self.fail_once[step].pop(0)
+                return web.json_response(payload, status=status, headers=headers)
             if step in self.fail:
                 status, payload = self.fail[step]
                 return web.json_response(payload, status=status)
@@ -155,13 +167,19 @@ class FakeCrew:
         if slot is None or request.query.get("ws") != "1":
             return web.json_response({"error": "bad send"}, status=400)
         slot["turns"].append(body.get("message"))
+        # Crew keeps the house's message in the session's history.
+        self.messages[body.get("slot")].append(
+            {"role": "user", "content": body.get("message"), "meta": {}}
+        )
         return web.json_response({"ok": True, "slot": body.get("slot")})
 
     async def _history(self, request: web.Request, _body: Any) -> web.Response:
         key = request.match_info["slot"]
         if key not in self.slots:
             return web.json_response({"error": "slot not found"}, status=404)
-        return web.json_response({"slot": key, "messages": self.messages[key], "has_more": False})
+        return web.json_response(
+            {"slot": key, **self.status.get(key, {}), "messages": self.messages[key], "has_more": False}
+        )
 
     async def _approve(self, request: web.Request, body: Any) -> web.Response:
         key = request.match_info["slot"]
@@ -179,7 +197,43 @@ class FakeCrew:
             {"error": "no pending approval", "code": "approval_not_pending"}, status=404
         )
 
+    async def _stop(self, request: web.Request, _body: Any) -> web.Response:
+        """RG-S3: one bodyless stop; the reply comes after the cancel settled."""
+
+        key = request.match_info["slot"]
+        if key not in self.slots:
+            return web.json_response({"error": "slot not found", "code": "slot_not_found"}, status=404)
+        self.slots[key].setdefault("stops", []).append(dict(request.query))
+        if self.stop_reply.get("ok") is True and "info" not in self.stop_reply and self.stop_state:
+            self.messages[key].append(
+                {"role": "system", "content": "", "meta": {
+                    "kind": "stop_event", "id": "stop-0a1b", "state": self.stop_state,
+                }}
+            )
+        return web.json_response(self.stop_reply)
+
     # --- test controls ---------------------------------------------------------------
+
+    def answer(self, slot: str, text: str) -> None:
+        """The Ghost's final message of its current turn."""
+
+        self.messages[slot].append({"role": "assistant", "content": text, "ts": IN_RUN_TS})
+
+    def turn_status(self, slot: str, *, running: bool, turn: int | None = None, generation: str | None = None) -> None:
+        """What the slot's history head says about its turn (Crew 0.12 slot detail)."""
+
+        head: dict[str, Any] = {"running": running}
+        if turn is not None and generation is not None:
+            head.update(turn=turn, turn_gen=generation)
+        self.status[slot] = head
+
+    def pressure(self, step: str, code: str = "crew_queue_full", times: int = 1, retry_after: int | None = None) -> None:
+        """RG-S5: Crew refuses the next ``times`` calls of ``step`` for capacity."""
+
+        headers = {} if retry_after is None else {"Retry-After": str(retry_after)}
+        self.fail_once.setdefault(step, []).extend(
+            [(429, {"error": "busy", "code": code, "capacity": {}}, headers)] * times
+        )
 
     def steps(self) -> list[str]:
         return [step for step, _path, _body in self.calls]
@@ -287,6 +341,8 @@ class House:
     reconciler: SessionReconciler
     writer: Any = None
     ids: list[str] = field(default_factory=list)
+    # The Room Ghosts services, when ``house(room_ghosts=...)`` wired them.
+    rooms: Any = None
 
     @property
     def mansion(self) -> Path:
@@ -408,6 +464,7 @@ async def house(
     with_bindings: bool = True,
     data_dir: Path | None = None,
     validator: Any = None,
+    room_ghosts: Any = None,
 ):
     """One wired backend around a fake Crew gateway, all in ``tmp_path``.
 
@@ -461,6 +518,20 @@ async def house(
                 return None
             return WorkflowMansion(MANSION, SPEC, root)
 
+        # Room Ghosts (Spec 5), wired the way the backend wires it:
+        # ``room_ghosts`` is ``True`` or a dict of ``build_room_ghosts`` options.
+        seams = None
+        ghost_options: dict[str, Any] = {}
+        if room_ghosts:
+            from haunted_house.room_ghost_wiring import RoomGhostSeams
+
+            seams = RoomGhostSeams(root)
+            ghost_options = {
+                "validator": seams.validator,
+                "turns": seams.turns,
+                "implementation": seams.implementation,
+                "on_launch_failure": seams.on_launch_failure,
+            }
         service = WorkflowService(
             writer,
             mansions=resolve,
@@ -471,10 +542,36 @@ async def house(
             id_factory=new_id,
             # The Spec 5 artifact validation boundary, when a test supplies it.
             **({"validator": validator(root)} if validator is not None else {}),
+            **ghost_options,
         )
-        yield House(
-            crew, client, root, data, store, seance, bindings, chosen, service, reconciler, writer
-        )
+        rooms = None
+        if seams is not None:
+            from haunted_house.room_ghost_wiring import RoomGhostOptions, build_room_ghosts
+
+            # Records are stamped with the fixed test clock; so is the house's "now".
+            given = {"now_ms": lambda: CLOCK_MS}
+            given.update(room_ghosts if isinstance(room_ghosts, dict) else {})
+            fields = RoomGhostOptions.__dataclass_fields__
+            rooms = build_room_ghosts(
+                seams,
+                writer=writer,
+                workflow=service,
+                crew=chat,
+                bindings=bindings,
+                mansions=resolve,
+                app_root=Path(__file__).resolve().parents[2],
+                history=seance.reconcile,
+                options=RoomGhostOptions(**{k: v for k, v in given.items() if k in fields}),
+                **{k: v for k, v in given.items() if k not in fields},
+            )
+        try:
+            yield House(
+                crew, client, root, data, store, seance, bindings, chosen, service, reconciler,
+                writer, rooms=rooms,
+            )
+        finally:
+            if rooms is not None:
+                await rooms.stop()
 
 
 class MemoryCrew:

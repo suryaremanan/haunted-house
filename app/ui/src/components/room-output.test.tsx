@@ -110,7 +110,9 @@ describe('MarkdownView', () => {
   it('places document headings below the panel headings and reads checkboxes in words', () => {
     render(<MarkdownView text={'# Plan\n\n## Tasks\n\n- [x] 1.1 Model\n- [ ]* 1.3 Property test\n- plain\n1. first'} />)
     expect(screen.getByRole('heading', { name: 'Plan' })).toHaveAttribute('aria-level', '6')
-    expect(screen.getByRole('heading', { name: 'Tasks' })).toHaveAttribute('aria-level', '7')
+    // Deeper document headings stay at 6, the deepest level screen readers support; data-level keeps the depth.
+    expect(screen.getByRole('heading', { name: 'Tasks' })).toHaveAttribute('aria-level', '6')
+    expect(screen.getByRole('heading', { name: 'Tasks' })).toHaveAttribute('data-level', '2')
     const items = screen.getAllByRole('listitem')
     expect(items.map((item) => item.textContent)).toEqual(['Done: 1.1 Model', 'Open, optional: 1.3 Property test (optional)', '•plain', '1.1. first'])
     expect(items[0]).toHaveAttribute('data-checked', 'true')

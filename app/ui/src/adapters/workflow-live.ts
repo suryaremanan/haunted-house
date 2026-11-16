@@ -41,7 +41,7 @@ export interface WorkflowControllerOptions {
 /** UI actions a view may dispatch. Projection and command actions belong to the controller. */
 export type HouseViewAction = Extract<
   HouseAction,
-  { type: 'room_focused' | 'room_moved' | 'room_opened' | 'room_closed' | 'proposal_viewed' | 'notice_dismissed' }
+  { type: 'proposal_viewed' | 'notice_dismissed' }
 >
 
 export interface WorkflowController {

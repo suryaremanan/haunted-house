@@ -31,8 +31,10 @@ export interface HousePalette {
   readonly ok: string
   /** Candle flame in the art. */
   readonly candle: string
-  /** Ghost outline in the art. */
+  /** Ghost outline in the art, and the idle ghost. */
   readonly ghost: string
+  /** A ghost at work: its drawing and its state word. */
+  readonly working: string
 }
 
 export const PALETTE_TOKENS = [
@@ -49,6 +51,7 @@ export const PALETTE_TOKENS = [
   'ok',
   'candle',
   'ghost',
+  'working',
 ] as const satisfies readonly (keyof HousePalette)[]
 
 export const HOUSE_PALETTES: Readonly<Record<ThemeMode, HousePalette>> = {
@@ -66,6 +69,7 @@ export const HOUSE_PALETTES: Readonly<Record<ThemeMode, HousePalette>> = {
     ok: '#2d6a3e',
     candle: '#9a5a00',
     ghost: '#5d4f86',
+    working: '#1d5b86',
   },
   dark: {
     canvas: '#17121c',
@@ -81,6 +85,7 @@ export const HOUSE_PALETTES: Readonly<Record<ThemeMode, HousePalette>> = {
     ok: '#8fd6a0',
     candle: '#ffc56b',
     ghost: '#d9d0ee',
+    working: '#8cc8f0',
   },
 }
 
@@ -109,6 +114,7 @@ export const CONTRAST_PAIRS: readonly ContrastPair[] = [
   ...onEveryBackground('accent', 4.5),
   ...onEveryBackground('danger', 4.5),
   ...onEveryBackground('ok', 4.5),
+  ...onEveryBackground('working', 4.5),
   { foreground: 'accentText', background: 'accent', minimum: 4.5 },
   ...onEveryBackground('border', 3),
   ...onEveryBackground('focus', 3),

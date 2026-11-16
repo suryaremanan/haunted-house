@@ -173,6 +173,58 @@ export function boundedMansionMessage(
     : oneLine
 }
 
+/** The feature brief limit, in Unicode code points after normalising and trimming. */
+export const MAX_MANSION_BRIEF_LENGTH = 2000
+
+export type MansionBriefResult =
+  | { readonly ok: true; readonly brief: string | null; readonly length: number }
+  | { readonly ok: false; readonly reason: 'too_long' | 'invalid_characters'; readonly length: number }
+
+// Python's str.strip() set, minus the controls the brief already refuses
+// (and CR, which becomes LF first). JS trim() differs (it also strips U+FEFF),
+// so the backend rule is spelled out instead.
+const BRIEF_SPACE = '[\\t\\n \\u00a0\\u1680\\u2000-\\u200a\\u2028\\u2029\\u202f\\u205f\\u3000]'
+const BRIEF_EDGE_SPACE = new RegExp(`^${BRIEF_SPACE}+|${BRIEF_SPACE}+$`, 'g')
+
+function isRefusedBriefChar(char: string): boolean {
+  const code = char.codePointAt(0) ?? 0
+  if (code === 0x09 || code === 0x0a) return false
+  // Unicode category Cc (C0, DEL, C1) and unpaired surrogates.
+  return code <= 0x1f || (code >= 0x7f && code <= 0x9f) || (code >= 0xd800 && code <= 0xdfff)
+}
+
+/**
+ * Mirrors the backend's `normalize_mansion_brief`: CRLF and lone CR become LF,
+ * any control character other than LF and tab (or a lone surrogate) is
+ * refused, surrounding whitespace is trimmed, and more than 2,000 code points
+ * is refused. A blank brief is no brief (`brief: null`). `length` is the code
+ * point count of the normalised, trimmed text, for the form's counter.
+ */
+export function normalizeMansionBrief(value: string): MansionBriefResult {
+  const text = value.replace(/\r\n?/g, '\n')
+  const trimmed = text.replace(BRIEF_EDGE_SPACE, '')
+  const chars = [...trimmed]
+  const length = chars.length
+  if ([...text].some(isRefusedBriefChar)) return { ok: false, reason: 'invalid_characters', length }
+  if (length > MAX_MANSION_BRIEF_LENGTH) return { ok: false, reason: 'too_long', length }
+  return { ok: true, brief: trimmed === '' ? null : trimmed, length }
+}
+
+/**
+ * The exact create body: `{name}`, or `{name, brief}` when the brief is
+ * non-blank. Throws for a brief the backend would refuse, so a caller can
+ * never send one.
+ */
+export function createMansionRequestBody(
+  name: string,
+  brief?: string,
+): { name: string } | { name: string; brief: string } {
+  if (brief === undefined) return { name }
+  const result = normalizeMansionBrief(brief)
+  if (!result.ok) throw new RangeError(`mansion brief refused: ${result.reason}`)
+  return result.brief === null ? { name } : { name, brief: result.brief }
+}
+
 /** Parses the exact stable error envelope and replaces its body text with fixed safe copy. */
 export function parseMansionApiError(value: unknown): MansionApiError {
   if (!isRecord(value) || !hasOnlyKeys(value, ['error']) || !isRecord(value.error)) {

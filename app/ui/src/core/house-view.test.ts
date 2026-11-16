@@ -9,13 +9,11 @@ import {
   doorDecisionView,
   doorHint,
   houseRooms,
-  moveRoom,
   needsYou,
   needsYouText,
   riskyDecisionView,
   roomOfGhost,
   startView,
-  waitingAnnouncement,
   type Authority,
   type CanonicalHealth,
 } from './house-view'
@@ -118,14 +116,6 @@ describe('rooms', () => {
     expect(roomOfGhost('tinker-3', bound)).toBe('workshop')
     expect(roomOfGhost('tinkerbell', bound)).toBeNull()
     expect(roomOfGhost('medium', null)).toBeNull()
-  })
-
-  it('moves between rooms and stops at the ends', () => {
-    expect(moveRoom('study', 'next')).toBe('drafting-room')
-    expect(moveRoom('workshop', 'next')).toBe('workshop')
-    expect(moveRoom('study', 'previous')).toBe('study')
-    expect(moveRoom('drafting-room', 'last')).toBe('workshop')
-    expect(moveRoom('workshop', 'first')).toBe('study')
   })
 })
 
@@ -322,16 +312,6 @@ describe('needsYou', () => {
   it('words the count', () => {
     expect([0, 1, 4].map(needsYouText)).toEqual(['Nothing needs you', '1 thing needs you', '4 things need you'])
   })
-
-  it('announces each new item once and merges several into one message', () => {
-    const items = needsYou(busy)
-    const first = waitingAnnouncement(items.slice(0, 1), new Set())
-    expect(first).toEqual({ seen: ['door:door-requirements-1'], message: 'The requirements door needs your decision.' })
-    const rest = waitingAnnouncement(items, new Set(first.seen))
-    expect(rest.seen).toHaveLength(3)
-    expect(rest.message).toMatch(/^3 things need you\. Tinker 2 asks to run a command\./)
-    expect(waitingAnnouncement(items, new Set(items.map((item) => item.id)))).toEqual({ seen: [], message: null })
-  })
 })
 
 describe('reduceHouse', () => {
@@ -353,14 +333,10 @@ describe('reduceHouse', () => {
     expect(reduceHouse(refused, { type: 'projection_received', projection: waitingDoor }).projectionStatus).toBe('ready')
   })
 
-  it('tracks focus, the open room, and one command in flight', () => {
-    let state = reduceHouse(INITIAL_HOUSE_STATE, { type: 'room_moved', direction: 'next' })
-    expect(state.focusedRoom).toBe('drafting-room')
-    state = reduceHouse(state, { type: 'room_opened', room: 'workshop' })
-    expect(state).toMatchObject({ focusedRoom: 'workshop', openRoom: 'workshop' })
-    state = reduceHouse(state, { type: 'room_closed' })
-    expect(state).toMatchObject({ focusedRoom: 'workshop', openRoom: null })
-    state = reduceHouse(state, { type: 'command_sent', target: 'phase:design' })
+  it('tracks one command in flight and holds no navigation state', () => {
+    // Which room is focused or open is UI state of the Mansion Shell; the arrow map is house-registry.ts.
+    expect(Object.keys(INITIAL_HOUSE_STATE).sort()).toEqual(['inFlight', 'notice', 'projection', 'projectionStatus'])
+    let state = reduceHouse(INITIAL_HOUSE_STATE, { type: 'command_sent', target: 'phase:design' })
     expect(state.inFlight).toBe('phase:design')
     state = reduceHouse(state, { type: 'command_settled', notice: 'Design started.' })
     expect(state).toMatchObject({ inFlight: null, notice: 'Design started.' })

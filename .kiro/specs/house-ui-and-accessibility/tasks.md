@@ -89,21 +89,21 @@ Implement the final Haunted House presentation in React and TypeScript after ver
     - **Validates: Requirements 8.1, 8.2, 8.3, 8.4, 8.5, 8.6**
     - _Writes: `app/ui/src/core/interruption-policy.property.test.ts`_
 
-- [ ] 3. Extend the verified SDK seam and host effects (MVP)
-  - [ ] 3.1 Add HUI-S1-proven theme, notification, and badge wrappers
+- [x] 3. Extend the verified SDK seam and host effects (MVP)
+  - [x] 3.1 Add HUI-S1-proven theme, notification, and badge wrappers
     - Extend only `app/ui/src/adapters/sdk.ts` and `app-sdk.d.ts` with the exact scrubbed HUI-S1 hook contracts; normalize theme values behind a local HostThemeSnapshot instead of exporting undocumented raw objects.
     - Extend `sdk-shim/index.ts` with matching no-network hook interfaces. Production replay effects are inert; test instances may record synthetic notification and badge calls.
     - Keep `sdk.ts` as the sole production importer of `@kirocrew/app-sdk` and add no manifest API permission.
     - _Writes: `app/ui/src/adapters/sdk.ts`, `app/ui/src/adapters/app-sdk.d.ts`, `app/ui/src/adapters/sdk-shim/index.ts`_
     - _Requirements: 5.4, 5.5, 8.6, 8.7, 9.5, 10.10_
 
-  - [ ] 3.2 Implement the Host Effects adapter
+  - [x] 3.2 Implement the Host Effects adapter
     - Add `app/ui/src/adapters/host-effects.ts` to map one pure summary to the HUI-S1-proven `useNotify` operation, set the host badge from `projection.needsYou.length`, clear the badge on unmount, and expose the normalized reactive theme.
     - Use one timer owned by the adapter for trailing burst flush, cancel it on unmount, keep the in-page live announcement functional when a host effect fails, and avoid unbounded retry.
     - _Writes: `app/ui/src/adapters/host-effects.ts`_
     - _Requirements: 4.4, 4.5, 8.5, 8.6, 8.7, 8.9, 9.5_
 
-  - [ ]* 3.3 Add SDK seam, shim, host-effect, and cleanup tests
+  - [x]* 3.3 Add SDK seam, shim, host-effect, and cleanup tests
     - Extend the AST import-boundary test, verify declarations/wrappers against the HUI-S1 fixture, exercise light/dark updates without shell remount, and assert exact toast/badge calls, failure containment, timer cleanup, badge clearing, and zero replay transport.
     - _Writes: `app/ui/src/adapters/sdk-boundary.test.ts`, `app/ui/src/adapters/sdk-shim/index.test.ts`, `app/ui/src/adapters/host-effects.test.tsx`_
     - _Requirements: 4.4, 4.5, 5.4, 8.6, 8.7, 8.9, 9.5, 10.10_
@@ -128,116 +128,117 @@ Implement the final Haunted House presentation in React and TypeScript after ver
     - _Writes: `app/ui/src/components/house-palette.test.ts`, `app/ui/src/components/house-styles.test.ts`, `app/ui/src/components/house-art.test.tsx`_
     - _Requirements: 5.1, 5.2, 5.5, 5.6, 5.7, 5.8, 5.9, 6.1, 6.2, 6.6, 7.5, 7.6, 7.7, 8.11, 10.7, 10.8, 11.1_
 
-- [ ] 5. Implement the accessible Mansion Shell and House Map (MVP)
-  - [ ] 5.1 Implement the House Map and separate room, Ghost, and Door controls
+- [x] 5. Implement the accessible Mansion Shell and House Map (MVP)
+  - [x] 5.1 Implement the House Map and separate room, Ghost, and Door controls
     - Add `HouseMap.tsx` and `RoomHotspots.tsx` as one `nav` landmark with one ordered list in Room order. Render native non-nested controls for each Room and applicable Ghost/Door, fixed visible/accessibility state copy, and original decorative art.
     - Implement arrow behavior only on Room controls through `nextRoom`; preserve ordinary Tab order for Room, Ghost, Door, and decision controls; use `aria-disabled` for focusable explanatory locked/unavailable surfaces.
     - _Writes: `app/ui/src/components/HouseMap.tsx`, `app/ui/src/components/RoomHotspots.tsx`_
     - _Requirements: 1.2, 1.3, 1.4, 1.5, 1.6, 2.5, 2.6, 2.7, 2.8, 3.1, 3.2, 3.3, 3.4, 3.9, 3.10, 4.1, 4.2, 4.3, 5.3, 5.8, 6.4_
 
-  - [ ] 5.2 Implement the toolbar, Still House, and Needs You shortcut
+  - [x] 5.2 Implement the toolbar, Still House, and Needs You shortcut
     - Add `HouseToolbar.tsx` with active Mansion identity, visible Needs You count, first-target open/focus behavior, zero-count no-op state, labelled Still House toggle, reactive reduced-motion observation, and compact system-status disclosure.
     - Derive motion only through Motion Policy and Needs You only through House projection; do not persist the toggle or create state authority.
     - _Writes: `app/ui/src/components/HouseToolbar.tsx`, `app/ui/src/components/use-reduced-motion.ts`_
     - _Requirements: 3.7, 3.8, 3.9, 5.4, 7.1, 7.2, 7.3, 7.4, 7.8, 8.7, 8.9_
 
-  - [ ] 5.3 Implement panel hosting, nested focus restoration, and the one live announcer
+  - [x] 5.3 Implement panel hosting, nested focus restoration, and the one live announcer
     - Add `RoomPanelHost.tsx` with labelled dialog/region modes, one surface stack, opener refs plus stable opener keys, Enter/open behavior, Escape close behavior, nested restoration, stale-opener fallback, and closed-content removal.
     - Add `LiveAnnouncer.tsx` as the only shell live region. Move active-Mansion foundation status announcements through the shared announcer and prohibit live-region roles inside room modules.
     - _Writes: `app/ui/src/components/RoomPanelHost.tsx`, `app/ui/src/components/LiveAnnouncer.tsx`_
     - _Requirements: 1.6, 3.4, 3.5, 3.6, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9_
 
-  - [ ] 5.4 Compose the Mansion Shell as the primary open-Mansion surface
+  - [x] 5.4 Compose the Mansion Shell as the primary open-Mansion surface
     - Add `MansionShell.tsx` with House styles, toolbar, House Map, panel host, one announcer, host effects, motion state, and semantic main structure. Place the spatial map before room detail, status feeds, and Session Links.
     - Accept only HouseProjection and typed upstream callbacks; expose no generic approval, raw path, chat composer, parallel state reducer, or second live region.
     - _Writes: `app/ui/src/components/MansionShell.tsx`_
     - _Requirements: 1.2, 1.9, 1.10, 2.9, 2.10, 4.4, 6.4, 7.8, 8.6, 8.7_
 
-  - [ ]* 5.5 Add House Map semantics, state-cue, and keyboard tests
+  - [x]* 5.5 Add House Map semantics, state-cue, and keyboard tests
     - Cover exact Room order; hidden/locked/enabled Séance variants; every Door/Ghost state; text plus icon/pose/shape; one navigation list; complete accessible labels; hidden art; Tab; all Arrow directions; Enter; disabled reasons; and zero mutation calls from viewing.
     - _Writes: `app/ui/src/components/HouseMap.test.tsx`, `app/ui/src/components/RoomHotspots.test.tsx`_
     - _Requirements: 1.3, 1.4, 1.5, 1.6, 2.5, 2.6, 2.7, 2.8, 2.10, 3.1, 3.2, 3.3, 3.4, 3.9, 3.10, 4.1, 4.2, 4.3_
 
-  - [ ]* 5.6 Add panel, toolbar, focus, motion, and announcer tests
+  - [x]* 5.6 Add panel, toolbar, focus, motion, and announcer tests
     - Cover panel/dialog semantics, open focus, room and nested Escape restoration, opener replacement, closed accessibility tree, Needs You first/zero behavior, Still House, runtime matchMedia changes without remount, one live region, ambient preservation, identical toast/live summary, and timer cleanup.
     - _Writes: `app/ui/src/components/MansionShell.test.tsx`, `app/ui/src/components/RoomPanelHost.test.tsx`, `app/ui/src/components/HouseToolbar.test.tsx`, `app/ui/src/components/LiveAnnouncer.test.tsx`_
     - _Requirements: 3.5, 3.6, 3.7, 3.8, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9, 7.1, 7.2, 7.3, 7.4, 7.8, 8.6, 8.7, 8.9_
 
-- [ ] 6. Compose approved Room panels into the house (MVP)
-  - [ ] 6.1 Integrate the active-Mansion Foyer panel
+- [x] 6. Compose approved Room panels into the house (MVP)
+  - [x] 6.1 Integrate the active-Mansion Foyer panel
     - Add the in-house Foyer panel adapter around the approved mansion-lifecycle Foyer/Mansion Shell seam. Show active Mansion and Project Spec identity and route Return through the existing Foyer action with focus restoration.
     - Keep the pre-Mansion Foyer implementation authoritative; add no create/list/open reducer here.
     - _Writes: `app/ui/src/rooms/foyer/ActiveMansionFoyerPanel.tsx`_
     - _Requirements: 1.1, 1.7, 2.1, 2.9, 9.8_
 
-  - [ ] 6.2 Integrate Study and Drafting Room artifact-first panels
+  - [x] 6.2 Integrate Study and Drafting Room artifact-first panels
     - Add thin composition modules that place approved requirements/design artifacts, state, authority, findings, and actions before secondary Session Links and reuse exact existing Door/approval callbacks.
     - Add no inline composer, duplicate revision state, generic approval callback, or new live region.
     - _Writes: `app/ui/src/rooms/study/StudyHousePanel.tsx`, `app/ui/src/rooms/drafting-room/DraftingHousePanel.tsx`_
     - _Requirements: 1.9, 1.10, 2.1, 2.2, 2.3, 2.9, 2.10, 4.7_
 
-  - [ ] 6.3 Integrate the Workshop task and implementation panel
+  - [x] 6.3 Integrate the Workshop task and implementation panel
     - Compose the approved task board, Foreman/Tinker projections, queue/claim state, exact Door and recovery controls, allowed scope, and secondary Session Links behind one Workshop room surface.
     - Preserve the upstream three-Tinker limit and task authority; add no scheduler or task-state store.
     - _Writes: `app/ui/src/rooms/workshop/WorkshopHousePanel.tsx`_
     - _Requirements: 1.9, 1.10, 2.1, 2.2, 2.3, 2.9, 2.10_
 
-  - [ ] 6.4 Implement the Attic canonical replay panel
+  - [x] 6.4 Implement the Attic canonical replay panel
     - Add `AtticPanel.tsx` using only the approved canonical replay projection: valid record count, current replay-derived history, and safe integrity diagnostic with valid-prefix behavior.
     - Keep search, filtering, export, and rich timeline controls absent from MVP; never request live data as replay fallback.
     - _Writes: `app/ui/src/rooms/attic/AtticPanel.tsx`_
     - _Requirements: 1.8, 2.1, 9.2, 9.7_
 
-  - [ ] 6.5 Implement locked and enabled Séance Room composition
+  - [x] 6.5 Implement locked and enabled Séance Room composition
     - Add `LockedSeancePanel.tsx` with plain stretch copy and no mutation. Add `SeanceHousePanel.tsx` as a typed composition over the approved bounded review projection, activated only by the build-time stretch setting.
     - Keep the locked Room focusable for explanation, preserve Room order, and add no independent review state or automatic return action.
     - _Writes: `app/ui/src/rooms/seance-room/LockedSeancePanel.tsx`, `app/ui/src/rooms/seance-room/SeanceHousePanel.tsx`_
     - _Requirements: 1.4, 1.5, 2.1, 2.9, 11.5, 11.6, 11.7_
 
-  - [ ]* 6.6 Add room-composition DOM and authority tests
+  - [x]* 6.6 Add room-composition DOM and authority tests
     - Render every room with representative ready, working, waiting, blocked, failed, done, uncertain, corrupt, and replay states. Assert artifact-first order, exact active Mansion identity, valid-prefix Attic diagnostic, secondary Session Links, no composer/live region duplication, and zero decisions from view/open/close.
     - Exercise existing exact phase, Door, tool, recovery, and return callbacks only through their visible controls.
     - _Writes: `app/ui/src/rooms/house-panels.test.tsx`_
     - _Requirements: 1.7, 1.8, 1.9, 1.10, 2.4, 2.9, 2.10, 4.4, 9.6, 9.7, 11.5, 11.6_
 
-- [ ] 7. Wire live and replay application flows (MVP)
-  - [ ] 7.1 Replace the open-Mansion placeholder with House UI
+- [x] 7. Wire live and replay application flows (MVP)
+  - [x] 7.1 Replace the open-Mansion placeholder with House UI
     - Update `App.tsx` to retain the foundation backend/gateway loading, error, Retry, and single-live-region behavior; mount the approved Foyer before Mansion entry and MansionShell after a validated open result.
     - Add the HUI-S0-backed House Projection adapter in `app/ui/src/adapters/house-projection.ts`; subscribe only to acknowledged upstream projections and preserve the same default root component.
     - _Writes: `app/ui/src/App.tsx`, `app/ui/src/adapters/house-projection.ts`_
     - _Requirements: 1.1, 1.2, 2.1, 2.4, 9.1, 9.8_
 
-  - [ ] 7.2 Extend canonical replay composition for the complete house
+  - [x] 7.2 Extend canonical replay composition for the complete house
     - Extend `sdk-shim` and add `app/ui/src/adapters/house-replay.ts` so the canonical scrubbed fixture supplies Mansion, workflow, Ghost, room, and Attic projections through the same House Projection function and components.
     - Disable mutation and Session Links with visible read-only copy; keep fixture fetch as the sole request and create no Gateway/backend fallback.
     - _Writes: `app/ui/src/adapters/sdk-shim/index.ts`, `app/ui/src/adapters/house-replay.ts`_
     - _Requirements: 8.11, 9.2, 9.3, 9.4, 9.5, 9.6, 9.7_
 
-  - [ ] 7.3 Wire interruption and badge effects at the shell level
+  - [x] 7.3 Wire interruption and badge effects at the shell level
     - Connect acknowledged canonical Ghost transitions to Interruption Policy, manage the one resettable flush timer through Host Effects, update the one Live Announcer with the exact summary, and update the host badge immediately from current Needs You items.
     - Start no timer or effect for idle, working, done, routine progress, streaming chunks, or tool activity; clear timer and badge on unmount.
     - _Writes: `app/ui/src/components/MansionShell.tsx`, `app/ui/src/adapters/host-effects.ts`_
     - _Requirements: 4.4, 4.5, 4.6, 4.7, 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 8.8, 8.9, 8.10, 8.11_
 
-  - [ ]* 7.4 Add live/replay projection and transport-parity tests
+  - [x]* 7.4 Add live/replay projection and transport-parity tests
     - Extend the foundation replay DOM harness to render the same root, Foyer, Mansion Shell, House Map, controls, panels, and Attic from equivalent acknowledged live records and the canonical fixture; compare Room order, state text, labels, Needs You count, and diagnostic output.
     - Throw on WebSocket, XMLHttpRequest, EventSource, and every replay fetch except `./fixture.jsonl`; hold live acknowledgments and prove unacknowledged data cannot update House UI.
     - _Writes: `app/ui/src/replay.test.tsx`, `app/ui/src/house-live-replay.test.tsx`_
     - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5, 9.7, 9.8, 10.9_
 
-  - [ ]* 7.5 Add interruption, badge, and ambient-state DOM tests
+  - [x]* 7.5 Add interruption, badge, and ambient-state DOM tests
     - Drive canonical transitions through the integrated shell with fake timers. Assert one merged Host toast and one identical live announcement per burst, duplicate suppression, no ambient effects, actionable-only badge counts, immediate resolution removal, non-actionable blocked exclusion, and unmount cleanup.
     - _Writes: `app/ui/src/house-interruptions.test.tsx`_
     - _Requirements: 4.4, 4.5, 4.6, 4.7, 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 8.8, 8.9, 8.10, 10.4_
 
 - [ ] 8. Complete automated accessibility and reflow verification (MVP)
-  - [ ]* 8.1 Add automated accessibility-rule coverage
+  - [x]* 8.1 Add automated accessibility-rule coverage
     - Add `axe-core` as a development-only dependency and an `house-accessibility.test.tsx` fixture matrix for every major Room, Door, Ghost, panel, light/dark, locked, unavailable, read-only, and reduced-motion state.
     - Assert zero applicable violations, exactly one live region, labelled native controls, valid landmark/list/dialog structure, no nested controls, no duplicate IDs, and no hidden focusable art.
-    - _Writes: `app/ui/package.json`, `app/ui/package-lock.json`, `app/ui/src/house-accessibility.test.tsx`_
+    - _Writes: `app/ui/package.json`, `app/ui/bun.lock`, `app/ui/src/house-accessibility.test.tsx`, `app/ui/src/house-accessibility.axe.test.tsx`, `app/ui/src/test/axe-audit.ts`_
     - _Requirements: 3.1, 3.9, 3.10, 4.1, 4.2, 4.3, 4.4, 4.8, 4.9, 10.4, 10.6_
+    - _Done: axe-core 4.14 (dev only) runs over the Foyer, the shell fixture matrix (every room, Door and ghost state, light and dark, locked, hidden, unavailable, read-only, reduced motion, Still House, dialog), the House with each room, Door, ghost and risky-action panel and the Attic open, and the static replay entry; zero violations. Layout and colour rules are off in jsdom (`test/axe-audit.ts`). Fixed: document headings deeper than level 6 (`aria-level` 7+) are capped at 6._
 
-  - [ ]* 8.2 Add the complete keyboard and focus matrix
+  - [x]* 8.2 Add the complete keyboard and focus matrix
     - Add one DOM suite that tabs through all interactive room, Ghost, Door, panel, and decision controls in reading order; exercises every Arrow edge/no-edge, Enter, room Escape, nested Escape, stale opener fallback, Needs You first target, and zero-target no-op.
     - Run the matrix with motion enabled, Still House, and reduced motion to prove keyboard behavior has no animation dependency.
     - _Writes: `app/ui/src/house-keyboard.test.tsx`_
@@ -249,14 +250,14 @@ Implement the final Haunted House presentation in React and TypeScript after ver
     - _Writes: `app/ui/browser-tests/house-reflow.test.ts`, `app/ui/browser-tests/browser-test.config.ts`_
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 10.8_
 
-  - [ ]* 8.4 Add source, CSS, bundle, and MVP-scope regression tests
+  - [x]* 8.4 Add source, CSS, bundle, and MVP-scope regression tests
     - Add static checks for original inline art constraints, plain CSS, fallback contrast, no standalone required stylesheet, no remote art, no prohibited motion, no sound API/assets/controls, no primary composer, and no review mutation when stretch is disabled.
     - Assert the app manifest gains no API path from this feature and the built module keeps only approved host bare imports.
     - _Writes: `app/ui/scripts-tests/check-house-ui-contract.test.ts`_
     - _Requirements: 1.10, 5.1, 5.2, 5.6, 5.7, 5.9, 7.5, 7.6, 7.7, 8.11, 10.7, 10.8, 11.1, 11.5, 11.7_
 
 - [ ] 9. Add isolated stretch interfaces (stretch)
-  - [ ]* 9.1 Wire the enabled Séance Room to the bounded review projection
+  - [x]* 9.1 Wire the enabled Séance Room to the bounded review projection
     - Behind the existing disabled-by-default build setting, connect `SeanceHousePanel` to the approved `room-ghosts` review projection and exact decision callbacks. Keep all MVP room projections, order, keyboard behavior, motion, and interruption policy unchanged.
     - _Writes: `app/ui/src/rooms/seance-room/SeanceHousePanel.tsx`, `app/ui/src/components/MansionShell.tsx`_
     - _Requirements: 1.5, 11.5, 11.6, 11.7_
@@ -272,13 +273,13 @@ Implement the final Haunted House presentation in React and TypeScript after ver
     - _Writes: `app/ui/src/stretch/sound-feature.test.ts`_
     - _Requirements: 8.11, 11.1, 11.2, 11.3, 11.4, 11.7_
 
-  - [ ]* 9.4 Add enabled/disabled Séance Room isolation tests
+  - [x]* 9.4 Add enabled/disabled Séance Room isolation tests
     - Compare the same MVP fixture with stretch disabled, locked, and enabled. Assert only the Séance surface changes; disabled mode has no review mutation, enabled mode delegates to upstream bounded review, and no setting changes other room states or controls.
     - _Writes: `app/ui/src/rooms/seance-room/SeanceHousePanel.test.tsx`_
     - _Requirements: 1.4, 1.5, 11.5, 11.6, 11.7_
 
-- [ ] 10. Produce the installable live and replay artifacts (MVP)
-  - [ ] 10.1 Run all checks and rebuild the committed ESM bundle
+- [x] 10. Produce the installable live and replay artifacts (MVP)
+  - [x] 10.1 Run all checks and rebuild the committed ESM bundle
     - Run UI unit, property, DOM, accessibility, keyboard, reflow, live/replay, source-contract, and SDK-boundary tests in non-watch mode; run TypeScript checking, the Python regression suite, manifest checks, secret/home-path scans, and `.kiro` tracking checks. Return any failure to the task that owns the affected source before continuing.
     - Build `app/ui/dist/index.mjs`, run the host-module import check, build replay output, verify a second build leaves the committed live bundle unchanged, and verify the MVP bundle contains no sound path, remote art, Tailwind, extra SDK importer, or unapproved API path.
     - Preserve foundation plus specs 2–5 behavior and make no source change from this bundle-only task.

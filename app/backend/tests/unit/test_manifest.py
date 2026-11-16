@@ -759,3 +759,59 @@ def test_every_client_route_template_is_covered_and_every_grant_is_used():
     gateway_entries = [entry for entry in api if entry != OWN_BACKEND_PREFIX]
     for entry in gateway_entries:
         assert any(api_entry_covers(entry, template) for template in templates), entry
+
+
+# --- Replay and Submission task 8.4: the manifest and its permission freeze ---
+
+REPO_ROOT = APP_ROOT.parent
+FREEZE_RECORD = REPO_ROOT / "docs" / "permission-freeze.json"
+
+
+def _freeze_module():
+    """scripts/lib/permission_freeze.py, the pure freeze rules (stdlib only)."""
+    import importlib.util
+    import sys
+
+    name = "permission_freeze"
+    if name in sys.modules:
+        return sys.modules[name]
+    spec = importlib.util.spec_from_file_location(name, REPO_ROOT / "scripts" / "lib" / "permission_freeze.py")
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_the_freeze_baseline_is_exactly_what_this_test_expects_of_the_manifest():
+    """Replay Requirements 8.1-8.5: one baseline, stated twice, compared here."""
+    freeze = _freeze_module()
+    assert set(freeze.REVIEWED_API) == expected_api_prefixes()
+    assert sorted(freeze.REVIEWED_EVENTS) == expected_events()
+    assert set(freeze.PERMISSION_KEYS) == set(ALLOWED_PERMISSION_KEYS)
+
+
+def test_the_freeze_record_is_the_canonical_record_of_the_committed_manifest():
+    """Replay Requirements 8.6-8.8: a manifest edit without a newly reviewed
+    record (scripts/check-permission-freeze.py --write-reviewed) fails here."""
+    freeze = _freeze_module()
+    manifest_bytes = MANIFEST.read_bytes()
+    manifest = load_manifest(MANIFEST)
+    assert FREEZE_RECORD.is_file(), "docs/permission-freeze.json is missing"
+    findings = freeze.check_record(FREEZE_RECORD.read_text(encoding="utf-8"), manifest, manifest_bytes)
+    assert [str(finding) for finding in findings] == []
+    record = json.loads(FREEZE_RECORD.read_text(encoding="utf-8"))
+    assert record["appVersion"] == manifest["version"]
+    assert set(record["permissions"]) == set(ALLOWED_PERMISSION_KEYS)
+    assert not list(_auto_approve_errors(record, "freeze record"))
+
+
+def test_a_permission_change_with_the_old_record_is_refused():
+    freeze = _freeze_module()
+    manifest = load_manifest(MANIFEST)
+    manifest["permissions"]["api"].append("/api/spawn")
+    changed = (json.dumps(manifest, indent=2) + "\n").encode("utf-8")
+    findings = freeze.check_record(FREEZE_RECORD.read_text(encoding="utf-8"), manifest, changed)
+    categories = {finding.category for finding in findings}
+    assert freeze.CHANGE_WITHOUT_VERSION in categories
+    assert freeze.RECORD_MANIFEST_HASH in categories

@@ -50,21 +50,31 @@ afterEach(() => {
   vi.resetModules()
 })
 
+// The page passes the Mansion as the Foyer opened it; its Project_Spec is the Mansion's own name.
+const DESCRIPTOR = { name: MANSION, projectSpec: MANSION, displayPath: `~/mansions/${MANSION}`, status: 'ready' } as const
+
 async function mountReplayHouse() {
   vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'Date'] })
   const shim = await import('./adapters/sdk-shim')
   const adapter = await import('./adapters/sdk')
   expect(adapter.useAppApi).toBe(shim.useAppApi)
   const { House } = await import('./rooms/house/House')
-  const announcements: string[] = []
-  // The page passes the Mansion's Project_Spec, which is the Mansion's own name.
-  const view = render(<House mansionId={MANSION} specName={MANSION} onAnnounce={(message) => announcements.push(message)} />)
+  const view = render(<House mansion={DESCRIPTOR} onReturn={() => {}} />)
   const advance = (ms: number) =>
     act(async () => {
       await vi.advanceTimersByTimeAsync(ms)
     })
+  await advance(0)
+  /** What the page's one live region says now. */
+  const said = () => view.container.querySelector('[data-announcer]')?.textContent ?? ''
+  /** Plays the whole recording: the Attic's Cursor goes to its last record, then the Attic closes. */
   const playAll = async () => {
-    for (let step = 0; step < 12; step += 1) await advance(20_000)
+    fireEvent.click(within(view.container).getByRole('button', { name: /^Attic\./ }))
+    const slider = within(within(view.container).getByRole('region', { name: 'Attic' })).getByRole('slider') as HTMLInputElement
+    fireEvent.change(slider, { target: { value: slider.max } })
+    fireEvent.keyDown(document.activeElement ?? view.container, { key: 'Escape' })
+    await advance(0)
+    expect(view.container.querySelector('[data-attic-panel]')).toBeNull()
   }
   const open = async (name: string) => {
     const button = within(view.container).getByRole('button', { name: new RegExp(`^${name}\\.`) })
@@ -72,7 +82,7 @@ async function mountReplayHouse() {
     await advance(500)
     return within(view.container).getByRole('region', { name })
   }
-  return { view, shim, announcements, advance, playAll, open }
+  return { view, shim, said, advance, playAll, open }
 }
 
 function backendFinal(): WorkflowProjection {
@@ -94,8 +104,13 @@ describe('replay rooms', () => {
       const panel = await open(room)
       const proposal = final.phases[index].door.proposal!
       const artifact = within(panel).getByRole('article', { name: title })
-      // The first thing in the room after its heading row is the document.
-      expect(panel.querySelector('.hh-room-panel-head + *')?.contains(artifact)).toBe(true)
+      // The first thing in the room body is the document; only the shell's read-only note stands before it.
+      const body = panel.querySelector('.hh-ui-panel-body')!
+      expect(body.querySelector('article')).toBe(artifact)
+      const earlier = Array.from(body.querySelectorAll<HTMLElement>('p, h4, h5, ul, ol, dl, button')).filter(
+        (node) => node.compareDocumentPosition(artifact) & Node.DOCUMENT_POSITION_FOLLOWING && !node.contains(artifact),
+      )
+      expect(earlier.every((node) => node.matches('.hh-ui-note[data-kind="read-only"]'))).toBe(true)
       expect(artifact).toHaveTextContent(proposal.documentPath)
       expect(artifact).toHaveTextContent(`Revision ${proposal.artifactRevision.revision} (${proposal.artifactRevision.sizeBytes.toLocaleString('en-US')} bytes)`)
       expect(artifact.querySelector('[data-digest]')).toHaveTextContent(proposal.artifactRevision.sha256)
@@ -148,13 +163,15 @@ describe('replay rooms', () => {
   })
 
   it('announces nothing about room output: a recording interrupts nobody beyond what the house already says', async () => {
-    const { view, announcements, playAll, open } = await mountReplayHouse()
+    const { view, said, playAll, open } = await mountReplayHouse()
     await playAll()
-    const before = announcements.length
+    const before = said()
     await open('Study')
+    expect(said()).toBe(before)
     await open('Workshop')
-    expect(announcements).toHaveLength(before)
-    expect(announcements.join(' ')).not.toMatch(/room's output|recording has no text/i)
+    expect(said()).toBe(before)
+    expect(said()).not.toMatch(/room's output|recording has no text/i)
+    expect(view.container.querySelectorAll('[aria-live]')).toHaveLength(1)
     view.unmount()
   })
 })

@@ -2,7 +2,7 @@
 // radio group for selection, and the one Open control. View only: every
 // decision arrives through props from the Foyer reducer.
 import { CircleCheck, CircleDashed, DoorOpen, LoaderCircle, RotateCw, TriangleAlert } from 'lucide-react'
-import { useId, useRef, type KeyboardEvent } from 'react'
+import { Fragment, useId, useRef, type KeyboardEvent } from 'react'
 import type { LoadState, MutationState } from '../../core/foyer-reducer'
 import type { MansionDescriptor, MansionStatus } from '../../core/mansion-api'
 
@@ -35,6 +35,25 @@ function StatusIcon({ status }: { status: MansionStatus }) {
   }
 }
 
+/**
+ * A folder path that breaks only after a slash: each segment keeps together
+ * (a hyphen inside a name is not a break), and a segment wider than the card
+ * still wraps rather than overflow. The text is the path, unchanged.
+ */
+function PathText({ path }: { path: string }) {
+  const parts = path.split('/')
+  return (
+    <>
+      {parts.map((part, index) => (
+        <Fragment key={index}>
+          <span className="hh-path-part">{index < parts.length - 1 ? `${part}/` : part}</span>
+          {index < parts.length - 1 ? <wbr /> : null}
+        </Fragment>
+      ))}
+    </>
+  )
+}
+
 interface MansionCardProps {
   mansion: MansionDescriptor
   group: string
@@ -54,7 +73,9 @@ function MansionCard({ mansion, group, selected, onSelect }: MansionCardProps) {
         onChange={() => onSelect(mansion.name)}
       />
       <span className="hh-mansion-name">{mansion.name}</span>
-      <span className="hh-mansion-path">{mansion.displayPath}</span>
+      <span className="hh-mansion-path">
+        <PathText path={mansion.displayPath} />
+      </span>
       <span className={`hh-mansion-status hh-status-${mansion.status}`}>
         <StatusIcon status={mansion.status} />
         {STATUS_COPY[mansion.status]}

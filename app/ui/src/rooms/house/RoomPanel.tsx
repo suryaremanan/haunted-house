@@ -1,12 +1,13 @@
-// The open room: each phase with its state, its explicit start control and its
-// Door proposal, the ghosts of the room, and the risky actions they asked for.
-// Nothing here starts or advances on its own.
+// The body of an open workflow room: each phase with its state, its explicit
+// start control and its Door proposal, the ghosts of the room, and the risky
+// actions they asked for. Nothing here starts or advances on its own. The
+// labelled panel, its heading and its Close control belong to the Mansion
+// Shell's panel host (Spec 6).
 //
 // With a joined Room_Projection (Spec 5) the room's work products come first:
 // documents and the task board above the phase state, and the runs with their
 // secondary session links last.
-import { Play, X } from 'lucide-react'
-import { forwardRef } from 'react'
+import { Play } from 'lucide-react'
 import type { RoomDetail, WorkflowCommand } from '../../core/house-view'
 import type { RoomCommand, RoomProjection } from '../../core/room-view'
 import { DoorPanel } from './DoorPanel'
@@ -17,10 +18,7 @@ import { RoomOutput } from './RoomOutput'
 import { RoomRuns } from './RoomRuns'
 
 export interface RoomPanelProps {
-  id: string
-  titleId: string
   detail: RoomDetail
-  onClose: () => void
   onSend: (command: WorkflowCommand) => void
   /** The joined Room_Projection of this room. Without it the panel shows state and decisions only. */
   output?: RoomProjection | null
@@ -32,23 +30,10 @@ export interface RoomPanelProps {
 
 const ignore = () => {}
 
-/** The ref goes to the heading, which receives focus when the room opens. */
-export const RoomPanel = forwardRef<HTMLHeadingElement, RoomPanelProps>(function RoomPanel(
-  { id, titleId, detail, onClose, onSend, output = null, onRoomSend = ignore, onOpenSession = null },
-  ref,
-) {
+export function RoomPanelBody({ detail, onSend, output = null, onRoomSend = ignore, onOpenSession = null }: RoomPanelProps) {
   const { room } = detail
   return (
-    <section className="hh-room-panel" id={id} aria-labelledby={titleId} data-room-panel={room.id}>
-      <div className="hh-room-panel-head">
-        <h4 id={titleId} ref={ref} tabIndex={-1}>
-          {room.name}
-        </h4>
-        <button type="button" className="hh-button" onClick={onClose}>
-          <X size={16} aria-hidden />
-          Close room
-        </button>
-      </div>
+    <div className="hh-room-panel" data-room-body={room.id}>
       {output === null ? null : <RoomOutput output={output} onSend={onRoomSend} onOpenSession={onOpenSession} />}
       {detail.phases.map(({ line, start, door }) => (
         <div className="hh-phase" key={line.phase} data-phase={line.phase} data-status={line.status}>
@@ -117,6 +102,6 @@ export const RoomPanel = forwardRef<HTMLHeadingElement, RoomPanelProps>(function
         </div>
       )}
       {output === null ? null : <RoomRuns output={output} onSend={onRoomSend} onOpenSession={onOpenSession} />}
-    </section>
+    </div>
   )
-})
+}

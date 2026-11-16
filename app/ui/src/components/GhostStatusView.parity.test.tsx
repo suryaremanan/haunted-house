@@ -90,14 +90,25 @@ async function renderReplay(): Promise<Rendered> {
   const fetchSpy = vi.fn(async () => new Response(demo, { status: 200 }))
   vi.stubGlobal('fetch', fetchSpy)
   vi.doMock('@kirocrew/app-sdk', () => import('../adapters/sdk-shim'))
+  const shim = await import('../adapters/sdk-shim')
   const { MansionGhostStatus } = await import('./GhostStatusView')
   const announcements: string[] = []
   const view = render(<MansionGhostStatus mansionId={MANSION} onAnnounce={(message) => announcements.push(message)} />)
 
   const history: string[] = []
-  for (let step = 0; step < 1_000; step += 1) {
+  // The Attic's Cursor presents the recording one record at a time. Nothing
+  // polls a recording, so after each step the page is told to look again the
+  // way a live page is: it became visible.
+  for (let cursor = 1; cursor <= LOG.length; cursor += 1) {
+    shim.replayRecording.present(MANSION, cursor)
+    for (const state of ['hidden', 'visible']) {
+      Object.defineProperty(document, 'visibilityState', { value: state, configurable: true })
+      act(() => {
+        document.dispatchEvent(new Event('visibilitychange'))
+      })
+    }
     await act(async () => {
-      await vi.advanceTimersByTimeAsync(100)
+      await vi.advanceTimersByTimeAsync(0)
     })
     const text = JSON.stringify(readRows(view.container))
     if (history.at(-1) !== text) history.push(text)
@@ -129,8 +140,7 @@ describe('Ghost_Status_View: live acknowledgments and replay render the same thi
     expect(live.announcements).toEqual(replay.announcements)
     expect(live.announcements).toHaveLength(5)
 
-    // Replay presents records that share an instant together, so it may skip
-    // views the live run showed, but it never shows one the live run did not.
+    // Replay never shows a view the live run did not, and never one out of order.
     let cursor = 0
     for (const view of replay.history) {
       const at = live.history.indexOf(view, cursor)

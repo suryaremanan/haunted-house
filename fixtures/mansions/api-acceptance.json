@@ -266,6 +266,44 @@
           "message": "Existing content conflicts with this mansion. Nothing was changed."
         }
       }
+    },
+    {
+      "step": "create-with-brief",
+      "method": "POST",
+      "path": "/api/mansions",
+      "request": {
+        "name": "guest-book",
+        "brief": "  A guest book.\r\nKeep the last 50 entries.  "
+      },
+      "status": 201,
+      "body": {
+        "outcome": "created",
+        "mansion": {
+          "name": "guest-book",
+          "projectSpec": "guest-book",
+          "displayPath": "~/workspace/haunted-house/mansions/guest-book",
+          "status": "ready"
+        }
+      }
+    },
+    {
+      "step": "create-with-brief-repeat",
+      "method": "POST",
+      "path": "/api/mansions",
+      "request": {
+        "name": "guest-book",
+        "brief": "Another."
+      },
+      "status": 200,
+      "body": {
+        "outcome": "existing_compatible",
+        "mansion": {
+          "name": "guest-book",
+          "projectSpec": "guest-book",
+          "displayPath": "~/workspace/haunted-house/mansions/guest-book",
+          "status": "ready"
+        }
+      }
     }
   ]
 }

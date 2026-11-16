@@ -97,6 +97,10 @@ def _candidates() -> list[tuple[str, object]]:
         ("", ge.path_denied(
             SESSION_SCOPE, denial_id="deny-1", session_slot=SESSION_SCOPE.session_slot, room="workshop",
             access=ge.Access.WRITE, code="protected_path", raw_path=".env")),
+        # Decision 2026-11-16: the house approved a non-risky room-tool prompt.
+        ("", ge.room_tool_answered(
+            SESSION_SCOPE, answer_id="house-1", session_slot=SESSION_SCOPE.session_slot,
+            mid="m-read-1", tool="read_room_file")),
         ("risky_consumed", ge.risky_action_failed(
             SESSION_SCOPE, proposal_id="act-delete", action_digest=digest, claim_id="claim-1",
             code="not_found", exit_code=None, output_bytes=0)),

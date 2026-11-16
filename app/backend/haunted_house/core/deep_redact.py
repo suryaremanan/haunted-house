@@ -201,6 +201,13 @@ _VALUE_SENSITIVE_PATTERNS = (
         r"(?P<head>mc_(?:token|refresh)_\d+[\"']?\s*[=:\t]\s*[\"']?)"
         r"(?P<value>" + _VALUE_CHAR + r"{16,})"
     ),
+    # An HTTP authorization credential: the scheme stays, the token goes
+    # (2026-11-16; the payload-safety property found one surviving as a path).
+    re.compile(
+        r"(?P<head>\b(?:Bearer|Basic)[ \t]+)"
+        r"(?P<value>[A-Za-z0-9._~+/-]{16,}=*)",
+        re.IGNORECASE,
+    ),
     re.compile(
         r"(?P<head>(?:api[_-]?key|secret|token|password)"
         r"(?:[_-][A-Za-z0-9]+)*[\"']?\s*(?::=|=>|[:=])\s*[\"'])"

@@ -1,15 +1,18 @@
-// House, Door and waiting panels in the DOM (Spec 4 task 14.4).
+// House, Door and waiting panels in the DOM (Spec 4 task 14.4), rendered in
+// the Spec 6 Mansion Shell: the six-room House Map, the panel host, the
+// toolbar's Needs You shortcut and the one live region.
 // **Validates: Requirements 4.8, 9.1 to 9.9**
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { useEffect } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { DOOR_STATUS_TEXT, PHASE_STATUS_TEXT, RISKY_STATUS_TEXT } from '../../core/house-view'
+import { MANSION_DESCRIPTOR } from '../../test/house-projection-kit'
 import { DOOR_STATUSES, PHASE_STATUSES, RISKY_STATUSES, type WorkflowProjection } from '../../core/workflow-projection'
 import { BASE, FakeHouseBackend, ghostEvent, httpError, wire } from '../../test/house-kit'
-import { MANSION, SHA_A, SHA_B, decision, doorProposal, eventId, projection, riskyProposal } from '../../test/workflow-arbitraries'
+import { SHA_A, SHA_B, decision, doorProposal, eventId, projection, riskyProposal } from '../../test/workflow-arbitraries'
 import { liveRegions } from '../foyer/foyer-test-kit'
 import { House } from './House'
-import { HOUSE_STYLES } from './house-styles'
+import { HOUSE_PANEL_STYLES } from './panel-styles'
 
 const host = vi.hoisted(() => ({
   backend: null as unknown as { get: (path: string) => Promise<unknown>; post: (path: string, body?: unknown) => Promise<unknown> },
@@ -91,21 +94,26 @@ const LOG = [
 ]
 
 let backend: FakeHouseBackend
-const announce = vi.fn<(message: string) => void>()
+const onReturn = vi.fn()
 
-async function mount(workflow: WorkflowProjection = waiting, props: { stillHouse?: boolean } = {}) {
+async function mount(workflow: WorkflowProjection = waiting) {
   backend = new FakeHouseBackend(workflow)
   backend.log = [...LOG]
   host.backend = backend
-  const view = render(<House mansionId={MANSION} onAnnounce={announce} {...props} />)
+  const view = render(<House mansion={MANSION_DESCRIPTOR} onReturn={onReturn} />)
   await screen.findByRole('button', { name: /^Study\./ })
-  await waitFor(() => expect(view.container.querySelector('.hh-house-map')).toHaveAttribute('aria-busy', 'false'))
+  await waitFor(() => expect(view.container.querySelector('.hh-ui')).toHaveAttribute('aria-busy', 'false'))
   return view
 }
 
-const room = (name: 'Study' | 'Drafting Room' | 'Workshop') => screen.getByRole('button', { name: new RegExp(`^${name}\\.`) })
+type RoomName = 'Foyer' | 'Study' | 'Drafting Room' | 'Workshop' | 'Attic' | 'Séance Room'
+const room = (name: RoomName) => screen.getByRole('button', { name: new RegExp(`^${name}\\.`) })
+/** The list item of a room: its Room, ghost and Door controls with their state words. */
+const cell = (name: RoomName) => room(name).closest('li') as HTMLElement
+/** What the page's one live region says now. */
+const said = () => document.querySelector('[data-announcer]')?.textContent ?? ''
 
-async function openRoom(name: 'Study' | 'Drafting Room' | 'Workshop') {
+async function openRoom(name: RoomName) {
   fireEvent.click(room(name))
   return screen.findByRole('region', { name })
 }
@@ -114,7 +122,7 @@ beforeEach(() => {
   host.handlers.clear()
   host.notify.mockReset()
   host.badge.mockReset()
-  announce.mockReset()
+  onReturn.mockReset()
 })
 
 afterEach(() => {
@@ -122,31 +130,40 @@ afterEach(() => {
 })
 
 describe('house map', () => {
-  it('is a navigation list of three rooms, each with phase, Door and ghost state as icon and text', async () => {
+  it('is a navigation list of the six rooms in Room order, each with phase, Door and ghost state as cue and text', async () => {
     const { container } = await mount()
-    const map = screen.getByRole('navigation', { name: 'House map' })
-    const rooms = within(map).getAllByRole('button')
-    expect(rooms.map((button) => button.getAttribute('aria-label'))).toEqual([
-      'Study. Requirements: Waiting for your decision, Door waiting for your decision. Archivist: Done. 1 thing needs you.',
-      'Drafting Room. Design: Not started, Sealed door. No ghost here yet.',
-      'Workshop. Tasks: Not started, Sealed door. Implementation: Not started, Sealed door. Tinker 2: Waiting. 1 thing needs you.',
+    const map = screen.getByRole('navigation', { name: 'Mansion rooms' })
+    expect(within(map).getAllByRole('list')).toHaveLength(1)
+    expect(Array.from(map.querySelectorAll('[data-room-control]'), (button) => button.getAttribute('aria-label'))).toEqual([
+      'Foyer. Phase: navigation. Door: not applicable. Ghost: not applicable.',
+      'Study. Phase: requirements. Door: waiting. Ghost: done.',
+      'Drafting Room. Phase: design. Door: sealed. Ghost: not applicable.',
+      'Workshop. Phase: tasks and implementation. Door: sealed. Ghost: waiting.',
+      'Attic. Phase: replay. Door: not applicable. Ghost: not applicable.',
+      'Séance Room. Phase: review. Door: not applicable. Ghost: not applicable.',
     ])
-    expect(within(map).getAllByRole('listitem')).toHaveLength(3)
-    // Every visible state line pairs an icon with words.
-    for (const line of container.querySelectorAll('.hh-room .hh-room-line')) {
-      expect(line.querySelector('svg[aria-hidden="true"]')).not.toBeNull()
+    expect(within(map).getAllByRole('listitem')).toHaveLength(6)
+    // Every visible state line pairs a hidden drawing or icon with words.
+    const lines = container.querySelectorAll('.hh-ui-map .hh-ui-state')
+    expect(lines.length).toBeGreaterThan(18)
+    for (const line of lines) {
+      expect(line.closest('button, p')?.querySelector('svg[aria-hidden="true"]')).not.toBeNull()
       expect(line.textContent?.trim()).not.toBe('')
     }
-    expect(within(rooms[0]).getByText('Requirements: Waiting for your decision')).toBeInTheDocument()
-    expect(within(rooms[0]).getByText('Door waiting for your decision')).toBeInTheDocument()
-    expect(within(rooms[0]).getByText('Archivist: Done')).toBeInTheDocument()
-    expect(within(rooms[2]).getByText('Tinker 2: Waiting')).toBeInTheDocument()
+    // The Spec 4 words for the phase and its Door stay on the map, beside the exact state word.
+    expect(within(cell('Study')).getByText('Requirements: Waiting for your decision')).toBeInTheDocument()
+    expect(within(cell('Study')).getByText('Door waiting for your decision')).toBeInTheDocument()
+    expect(within(cell('Study')).getByRole('button', { name: 'Archivist, ghost in the Study. State: done.' })).toHaveTextContent('Archivist: done')
+    expect(within(cell('Workshop')).getByRole('button', { name: 'Tinker 2, ghost in the Workshop. State: waiting.' })).toHaveTextContent('Tinker 2: waiting')
+    expect(within(cell('Study')).getByRole('button', { name: 'Requirements door of the Study. State: waiting.' })).toBeInTheDocument()
+    expect(within(cell('Study')).getByText('1 thing needs you')).toBeInTheDocument()
+    expect(room('Study')).toHaveAccessibleDescription(/^1 thing needs you/)
   })
 
   it('has words for every phase, Door and risky-action state', async () => {
     for (const status of PHASE_STATUSES) {
       const view = await mount(projection({ version: 20, phaseOverrides: { design: { status } } }))
-      expect(within(room('Drafting Room')).getByText(`Design: ${PHASE_STATUS_TEXT[status]}`)).toBeInTheDocument()
+      expect(within(cell('Drafting Room')).getByText(`Design: ${PHASE_STATUS_TEXT[status]}`)).toBeInTheDocument()
       view.unmount()
     }
     for (const status of DOOR_STATUSES) {
@@ -157,7 +174,8 @@ describe('house map', () => {
           decision: status === 'waiting' ? null : decision(status === 'open' ? 'approved' : 'rejected', 6),
         })
       const view = await mount(projection({ version: 20, phaseOverrides: { design: { door: { status, proposal } } } }))
-      expect(within(room('Drafting Room')).getByText(DOOR_STATUS_TEXT[status])).toBeInTheDocument()
+      expect(within(cell('Drafting Room')).getByText(DOOR_STATUS_TEXT[status])).toBeInTheDocument()
+      expect(room('Drafting Room')).toHaveAccessibleName(`Drafting Room. Phase: design. Door: ${status}. Ghost: not applicable.`)
       view.unmount()
     }
     for (const status of RISKY_STATUSES) {
@@ -170,21 +188,25 @@ describe('house map', () => {
     }
   })
 
-  it('moves between rooms with the arrow keys, Home and End, and stops at the ends', async () => {
+  it('moves between rooms with the arrow keys along the fixed map, with Home and End, and stays put at an edge', async () => {
     await mount()
     room('Study').focus()
     fireEvent.keyDown(room('Study'), { key: 'ArrowRight' })
+    expect(room('Foyer')).toHaveFocus()
+    fireEvent.keyDown(room('Foyer'), { key: 'ArrowUp' })
     expect(room('Drafting Room')).toHaveFocus()
-    fireEvent.keyDown(room('Drafting Room'), { key: 'ArrowDown' })
+    fireEvent.keyDown(room('Drafting Room'), { key: 'ArrowRight' })
+    expect(room('Séance Room')).toHaveFocus()
+    fireEvent.keyDown(room('Séance Room'), { key: 'ArrowDown' })
     expect(room('Workshop')).toHaveFocus()
-    fireEvent.keyDown(room('Workshop'), { key: 'ArrowRight' })
+    fireEvent.keyDown(room('Workshop'), { key: 'ArrowDown' })
     expect(room('Workshop')).toHaveFocus()
     fireEvent.keyDown(room('Workshop'), { key: 'ArrowLeft' })
-    expect(room('Drafting Room')).toHaveFocus()
-    fireEvent.keyDown(room('Drafting Room'), { key: 'Home' })
-    expect(room('Study')).toHaveFocus()
-    fireEvent.keyDown(room('Study'), { key: 'End' })
-    expect(room('Workshop')).toHaveFocus()
+    expect(room('Foyer')).toHaveFocus()
+    fireEvent.keyDown(room('Foyer'), { key: 'End' })
+    expect(room('Séance Room')).toHaveFocus()
+    fireEvent.keyDown(room('Séance Room'), { key: 'Home' })
+    expect(room('Foyer')).toHaveFocus()
     // Every room and control is a real button, so Tab reaches each of them.
     for (const button of screen.getAllByRole('button')) expect(button.tabIndex).toBe(0)
     // Moving opened nothing and decided nothing.
@@ -203,24 +225,21 @@ describe('house map', () => {
     expect(study).toHaveAttribute('aria-expanded', 'true')
     expect(study).toHaveAttribute('aria-controls', panel.id)
 
-    // Escape is handled by the house, so the Mansion Shell behind it does not also close.
+    // Escape closes the room only: it is taken before the page could also leave the Mansion.
     const seen: boolean[] = []
     const shell = (event: KeyboardEvent) => seen.push(event.defaultPrevented)
     document.addEventListener('keydown', shell)
     fireEvent.keyDown(within(panel).getByRole('button', { name: /^Approve/ }), { key: 'Escape' })
     document.removeEventListener('keydown', shell)
     expect(seen).toEqual([true])
+    expect(onReturn).not.toHaveBeenCalled()
     expect(screen.queryByRole('region', { name: 'Study' })).toBeNull()
     expect(room('Study')).toHaveFocus()
     expect(room('Study')).toHaveAttribute('aria-expanded', 'false')
 
-    // With no room open, Escape is left for the shell.
-    const after: boolean[] = []
-    const shellAgain = (event: KeyboardEvent) => after.push(event.defaultPrevented)
-    document.addEventListener('keydown', shellAgain)
+    // With no room open, Escape leaves the Mansion through the Foyer's return action.
     fireEvent.keyDown(room('Study'), { key: 'Escape' })
-    document.removeEventListener('keydown', shellAgain)
-    expect(after).toEqual([false])
+    expect(onReturn).toHaveBeenCalledTimes(1)
   })
 
   it('closes a room with its Close button and restores focus to the room', async () => {
@@ -273,9 +292,9 @@ describe('Door panel', () => {
     // Requirement 4.8: the decision controls of that proposal are gone.
     expect(within(panel).queryByRole('button', { name: /Requirements door/ })).toBeNull()
     // The successor is ready and waits for its own explicit start.
-    expect(within(room('Drafting Room')).getByText('Design: Ready to start')).toBeInTheDocument()
+    expect(within(cell('Drafting Room')).getByText('Design: Ready to start')).toBeInTheDocument()
     expect(backend.posts).toHaveLength(1)
-    expect(announce).toHaveBeenCalledWith('Requirements door approved. The next phase starts only when you start it.')
+    await waitFor(() => expect(said()).toBe('Requirements door approved. The next phase starts only when you start it.'))
     // Focus did not fall off the page when the buttons went away.
     expect(document.activeElement).not.toBe(document.body)
   })
@@ -292,7 +311,7 @@ describe('Door panel', () => {
       path: `${BASE}/phases/design/start`,
       body: { command_id: expect.any(String), expected_version: 21 },
     })
-    await waitFor(() => expect(announce).toHaveBeenCalledWith('Design started.'))
+    await waitFor(() => expect(said()).toBe('Design started.'))
   })
 
   it('removes the controls and names the actor when the proposal was resolved elsewhere', async () => {
@@ -331,9 +350,10 @@ describe('Door panel', () => {
     }
     fireEvent.click(within(panel).getByRole('button', { name: /^Approve Requirements door, revision 3/ }))
     expect(await within(panel).findByText('Revision 4, 2,100 bytes')).toBeInTheDocument()
-    expect(
-      screen.getByText('The house changed before your decision arrived, so nothing was recorded. Check what is shown now and decide again.'),
-    ).toBeInTheDocument()
+    const stale = 'The house changed before your decision arrived, so nothing was recorded. Check what is shown now and decide again.'
+    // Shown in place and said once through the one live region.
+    expect(document.querySelector('[data-house-notice]')).toHaveTextContent(stale)
+    await waitFor(() => expect(said()).toBe(stale))
     // The new revision needs its own press.
     expect(within(panel).getByRole('button', { name: 'Approve Requirements door, revision 4' })).toHaveAttribute('aria-disabled', 'false')
     expect(backend.posts).toHaveLength(1)
@@ -410,7 +430,7 @@ describe('risky-action panel', () => {
 })
 
 describe('waiting, blocked and uncertain state', () => {
-  it('updates Needs You, the sidebar badge and one polite announcement, with one toast per ghost', async () => {
+  it('updates Needs You and the sidebar badge at once, and keeps exactly one polite live region', async () => {
     const { container } = await mount()
     expect(screen.getByRole('button', { name: 'Needs you: 2 things need you. Go to the first.' })).toBeInTheDocument()
     expect(within(screen.getByRole('list', { name: 'Waiting on you' })).getAllByRole('listitem').map((item) => item.textContent)).toEqual([
@@ -418,33 +438,31 @@ describe('waiting, blocked and uncertain state', () => {
       'Tinker 2 asks to run a command.',
     ])
     await waitFor(() => expect(host.badge).toHaveBeenLastCalledWith(2))
-    // The house has no live region of its own: it hands messages to the page's one.
-    expect(liveRegions(container)).toEqual([])
-    const said = announce.mock.calls.map(([message]) => message).join(' ')
-    expect(said).toContain('The requirements door needs your decision.')
-    expect(said).toContain('Tinker 2 asks to run a command.')
-    expect(said.match(/The requirements door needs your decision\./g)).toHaveLength(1)
-
-    // Tinker 2 both went waiting and has a proposal: still one toast for that ghost.
-    const toasts = host.notify.mock.calls.map(([text]) => text as string)
-    expect(toasts.filter((text) => text.includes('Tinker 2'))).toHaveLength(1)
-    expect(toasts.filter((text) => text.includes('requirements door'))).toHaveLength(1)
-    // Done and working ghosts raise nothing.
-    expect(toasts.some((text) => /Archivist (is|failed)/.test(text))).toBe(false)
+    // One live region for the whole house, and no panel adds another.
+    expect(liveRegions(container)).toHaveLength(1)
+    await openRoom('Workshop')
+    expect(liveRegions(container)).toHaveLength(1)
+    // The badge does not wait for an interruption burst, and nothing toasts before the burst closes.
+    expect(host.notify).not.toHaveBeenCalled()
+    expect(said()).toBe('')
   })
 
-  it('jumps from Needs You to the first waiting room', async () => {
+  it('jumps from Needs You to the first room that needs you and lands on the decision, not on a button', async () => {
     await mount()
     fireEvent.click(screen.getByRole('button', { name: /^Needs you:/ }))
     const panel = await screen.findByRole('region', { name: 'Study' })
-    expect(within(panel).getByRole('heading', { name: 'Study' })).toHaveFocus()
+    const decision = within(panel).getByRole('article', { name: 'Requirements door' })
+    expect(decision).toHaveFocus()
+    // A second Enter lands on the decision's container, so it cannot approve anything.
+    expect(decision.tagName).toBe('ARTICLE')
+    expect(backend.posts).toEqual([])
   })
 
   it('shows an empty Needs You and clears the badge when nothing waits, and on leaving', async () => {
     const view = await mount(projection({ version: 20 }))
     expect(screen.getByRole('button', { name: 'Needs you: Nothing needs you.' })).toHaveAttribute('aria-disabled', 'true')
     await waitFor(() => expect(host.badge).toHaveBeenLastCalledWith(0))
-    expect(host.notify.mock.calls.filter(([text]) => /door|asks/.test(text as string))).toEqual([])
+    expect(host.notify).not.toHaveBeenCalled()
     host.badge.mockClear()
     view.unmount()
     expect(host.badge).toHaveBeenLastCalledWith(0)
@@ -463,7 +481,7 @@ describe('waiting, blocked and uncertain state', () => {
     ]
     await act(async () => emit('chat_done', { slot: 'hh-tinker-2' }))
     await waitFor(() => expect(backend.ingests).toHaveLength(1))
-    await waitFor(() => expect(within(room('Workshop')).getByText('Tinker 2: Done')).toBeInTheDocument())
+    await waitFor(() => expect(within(cell('Workshop')).getByRole('button', { name: /^Tinker 2, ghost/ })).toHaveTextContent('Tinker 2: done'))
     // The projection was read again for the new records, and it still holds no approval.
     await waitFor(() => expect(backend.workflowReads).toBeGreaterThan(1))
     await act(async () => new Promise((resolve) => setTimeout(resolve, 50)))
@@ -472,8 +490,14 @@ describe('waiting, blocked and uncertain state', () => {
     // Both proposals are still pending with their controls.
     expect(within(workshop).getByRole('button', { name: /^Approve run a command/ })).toHaveAttribute('aria-disabled', 'false')
     expect(within(workshop).getByText('Waiting for your decision')).toBeInTheDocument()
-    expect(within(room('Study')).getByText('Door waiting for your decision')).toBeInTheDocument()
+    expect(within(cell('Study')).getByText('Door waiting for your decision')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /^Needs you: 2 things need you/ })).toBeInTheDocument()
+    // Looking at a ghost and at a Door is not deciding either.
+    fireEvent.click(within(cell('Workshop')).getByRole('button', { name: /^Tinker 2, ghost/ }))
+    fireEvent.click(await screen.findByRole('button', { name: 'Close ghost details' }))
+    fireEvent.click(within(cell('Study')).getByRole('button', { name: /^Requirements door of the Study/ }))
+    fireEvent.click(await screen.findByRole('button', { name: 'Close door details' }))
+    expect(backend.posts).toEqual([])
   })
 
   it.each([
@@ -482,7 +506,9 @@ describe('waiting, blocked and uncertain state', () => {
     ['a recording', { readOnly: true }, 'read_only', /This is a recording/],
   ])('blocks every decision and start for %s and says why', async (_name, change, block, text) => {
     const { container } = await mount({ ...waiting, ...change })
-    expect(container.querySelector(`.hh-house-blocked[data-block="${block}"]`)).toHaveTextContent(text)
+    expect(container.querySelector(`.hh-ui-note[data-block="${block}"]`)).toHaveTextContent(text)
+    // The room says so too, and its controls are marked off.
+    expect(cell('Study').querySelector('[data-room-reason]')).toHaveTextContent(/recording|not confirmed|integrity/)
     const panel = await openRoom('Study')
     const approve = within(panel).getByRole('button', { name: /^Approve Requirements door/ })
     const reject = within(panel).getByRole('button', { name: /^Reject Requirements door/ })
@@ -501,9 +527,10 @@ describe('waiting, blocked and uncertain state', () => {
     backend.log = [...LOG]
     backend.workflow = { ...(wire(waiting) as object), phases: [] }
     host.backend = backend
-    const { container } = render(<House mansionId={MANSION} onAnnounce={announce} />)
-    await waitFor(() => expect(container.querySelector('.hh-house-blocked[data-block="malformed"]')).not.toBeNull())
-    expect(screen.getByRole('button', { name: /^Study\. State not loaded/ })).toBeInTheDocument()
+    const { container } = render(<House mansion={MANSION_DESCRIPTOR} onReturn={onReturn} />)
+    await waitFor(() => expect(container.querySelector('.hh-ui-note[data-block="malformed"]')).not.toBeNull())
+    // Nothing is guessed: the Door and ghost of an unread room are shown as unavailable.
+    expect(screen.getByRole('button', { name: 'Study. Phase: requirements. Door: unavailable. Ghost: done.' })).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: /^Approve/ })).toBeNull()
   })
 
@@ -519,26 +546,22 @@ describe('waiting, blocked and uncertain state', () => {
     const panel = await openRoom('Workshop')
     expect(await within(panel).findByText('Tinker 1: Blocked. A door upstream is still sealed.')).toBeInTheDocument()
     expect(within(panel).getByText('Tinker 3: Failed. Crew error')).toBeInTheDocument()
-    await waitFor(() => {
-      const said = announce.mock.calls.map(([message]) => message).join(' ')
-      expect(said).toContain('Tinker 1 is blocked')
-      expect(said).toContain('Tinker 3 failed')
-    })
-    const toasts = host.notify.mock.calls.map(([text]) => text as string)
-    expect(toasts.filter((text) => text.includes('Tinker 1'))).toHaveLength(1)
-    expect(toasts.filter((text) => text.includes('Tinker 3'))).toHaveLength(1)
+    expect(within(cell('Workshop')).getByRole('button', { name: 'Tinker 1, ghost in the Workshop. State: blocked.' })).toBeInTheDocument()
+    expect(within(cell('Workshop')).getByRole('button', { name: 'Tinker 3, ghost in the Workshop. State: failed.' })).toBeInTheDocument()
+    expect(room('Workshop')).toHaveAccessibleName('Workshop. Phase: tasks and implementation. Door: sealed. Ghost: failed.')
   })
 })
 
 describe('motion', () => {
   it('animates only when the browser allows motion and Still House is off', async () => {
-    const { container } = await mount(waiting, { stillHouse: true })
-    expect(container.querySelector('.hh-house-map')).toHaveAttribute('data-still', 'true')
-    const animated = HOUSE_STYLES.split('@media (prefers-reduced-motion: no-preference)')
+    const { container } = await mount()
+    // jsdom cannot say what the browser prefers, so the house stays still.
+    expect(container.querySelector('.hh-ui')).toHaveAttribute('data-motion', 'none')
+    const animated = HOUSE_PANEL_STYLES.split('@media (prefers-reduced-motion: no-preference)')
     expect(animated).toHaveLength(2)
     // Outside the motion query nothing animates or transitions.
     expect(animated[0]).not.toMatch(/animation\s*:|transition\s*:/)
-    expect(animated[1]).toContain(".hh-house-map:not([data-still='true']) .hh-spin")
+    expect(animated[1]).toContain("[data-motion='low-frequency'] .hh-spin")
     // One slow turn: nothing loops faster than once every 2 seconds.
     expect(animated[1]).toMatch(/animation: hh-house-spin 2s linear infinite/)
   })

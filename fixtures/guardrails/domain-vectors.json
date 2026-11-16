@@ -865,10 +865,10 @@
             "status": "failed"
           }
         ],
-        "version": 21,
+        "version": 22,
         "waiting_count": 2
       },
-      "through_sequence": 21
+      "through_sequence": 22
     }
   ],
   "description": "Doors-and-guardrails vectors: Spec 2 canonical records, the Spec 4 workflow projection after each checkpoint, and Action_Descriptor digests.",
@@ -1735,6 +1735,49 @@
     },
     {
       "caused_by": [],
+      "event_id": "e1:c1187abb09421158ead2e9f8adb2ec15b26254428f6ff879e19f07720b4fb39d",
+      "event_type": "domain_event_recorded",
+      "occurred_at_ms": null,
+      "payload": {
+        "data": {
+          "actor": "house",
+          "answer_id": "house-1",
+          "mid": "m-read-1",
+          "outcome": "approved",
+          "reason": "non_risky_room_tool",
+          "session_slot": "workshop-slot-1",
+          "tool": "read_room_file"
+        },
+        "domain": "doors_and_guardrails",
+        "entity_id": "house-1",
+        "kind": "room_tool_answered"
+      },
+      "persisted_at_ms": 1731400000000,
+      "record_id": "r1:ea6646c4081f615c51cf792ed3577816fb99185bd6f4b0690a531e973a5aa636",
+      "schema_version": 1,
+      "scope": {
+        "ghost_id": "tinker-1",
+        "mansion_id": "demo-mansion",
+        "run_id": "implementation-1",
+        "run_sequence": 1,
+        "session_slot": "workshop-slot-1"
+      },
+      "sequence": 21,
+      "source": {
+        "generation": "",
+        "identity_parts": [
+          "room_tool_answered",
+          "house-1",
+          "house-1"
+        ],
+        "origin": "house",
+        "revision": 0,
+        "source_sequence": 0,
+        "source_type": "guardrail"
+      }
+    },
+    {
+      "caused_by": [],
       "event_id": "e1:eb77b466a6fc7e2002ea24696fc80e2123a2f4a58b07f2b1c07e8fa48c297c5b",
       "event_type": "domain_event_recorded",
       "occurred_at_ms": null,
@@ -1761,7 +1804,7 @@
         "run_sequence": 1,
         "session_slot": "workshop-slot-1"
       },
-      "sequence": 21,
+      "sequence": 22,
       "source": {
         "generation": "",
         "identity_parts": [
@@ -1799,7 +1842,8 @@
     "spec_write_prepared",
     "spec_document_written",
     "spec_write_recovered",
-    "spec_write_uncertain"
+    "spec_write_uncertain",
+    "room_tool_answered"
   ],
   "mansion_id": "demo-mansion"
 }

@@ -97,6 +97,9 @@ describe('mansion lifecycle acceptance transcript', () => {
       'invalid-request',
       'list-final',
       'open-broken',
+      // Design decision 2026-11-16: create may carry an optional feature brief.
+      'create-with-brief',
+      'create-with-brief-repeat',
     ])
   })
 
@@ -193,5 +196,18 @@ describe('mansion lifecycle acceptance transcript', () => {
     const last = states.get('open-broken')
     expect(last?.selectedName).toBeNull()
     expect(last?.view).toEqual({ kind: 'foyer' })
+  })
+
+  it('creates a mansion with a feature brief through the same response contract', () => {
+    const { states } = walkTranscript()
+    const withBrief = [
+      descriptor('adopted-project', 'conflict'),
+      descriptor('guest-book'),
+      descriptor('weather-station'),
+    ]
+
+    expect(states.get('create-with-brief')?.load).toEqual({ kind: 'ready', mansions: withBrief })
+    expect(states.get('create-with-brief')?.mutation).toEqual({ kind: 'idle' })
+    expect(states.get('create-with-brief-repeat')?.load).toEqual({ kind: 'ready', mansions: withBrief })
   })
 })

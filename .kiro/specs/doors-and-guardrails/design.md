@@ -615,3 +615,11 @@ For any workflow history and feature flag, review state is absent when disabled;
 8. **S10, process confinement:** Must prove host confinement. Failure disables command and git actions.
 9. **No native Kiro phase engine is assumed.** Haunted House writes compatible files and owns its phase projection.
 10. **No `/api/spawn` fallback exists.** Runtime ghosts use app-owned chat sessions only.
+
+### Design decision (2026-11-16): `room_tool_answered`
+
+One new closed domain kind records the house approving a non-risky room-tool prompt on its own bound session (see the room-ghosts design note of the same date): `{answer_id, session_slot, mid, tool ∈ HOUSE_ANSWERED_TOOLS, outcome: "approved", actor: "house", reason: "non_risky_room_tool"}`, entity and identity `answer_id`. `actor` is its own closed value, not an addition to `ACTORS`, so no Door or risky-action decision can ever carry `house`. It grants no risky action and opens no Door. The TypeScript fold table, replay copy and cross-language vectors carry it.
+
+### Design decision (2026-11-16): credential-shaped text in payload strings
+
+Root cause: a path field (`document_path`, `path`) accepted any clean relative path, and `_check_built` compared only the raw payload with `deep_redact`, which had no rule for HTTP authorization tokens and never looks at percent-decoded forms. So a single-line credential (`Bearer <token>`, a percent-encoded `Bearer%20…` or `api_key="…"`), an opaque capability, or error text could be stored as a "path" (Property 16 counterexamples: `Bearer 000…`, `hhcap_000…`). Fix: (1) `deep_redact` redacts `Bearer`/`Basic` followed by a token of 16 or more characters anywhere, keeping the scheme, and its residual check reports it; (2) `guardrail_events.is_unsafe_text` refuses a payload string when it or any of up to three percent-decodings is changed by `deep_redact` or holds Python error text, and refuses a path that holds a 64-or-longer hex run (the Session_Capability shape); `_check_built` applies it to every string and `path_denied` drops such a path instead of storing it. Real Mansion paths (spaces, parentheses, `%20`, the word "bearer", hex runs shorter than 64) stay usable. Proof: the counterexamples are explicit `@example` cases; Property 16 passes at 2,000 examples on 10 seeds with no example database, and the same run with the check disabled fails on all 10.

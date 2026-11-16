@@ -8,6 +8,7 @@
 import {
   MANSION_SCHEMA_VERSION,
   isMansionName,
+  normalizeMansionBrief,
   parseMansionListResponse,
   type MansionApiErrorCode,
   type MansionDescriptor,
@@ -61,7 +62,7 @@ const ERROR_STATUS: Record<MansionApiErrorCode, number> = {
 }
 
 const ERROR_MESSAGE: Record<MansionApiErrorCode, string> = {
-  invalid_request: 'Request body must be a JSON object with one string field named name.',
+  invalid_request: 'Request body must be a JSON object with a string name and, on create only, a string brief.',
   invalid_mansion_name: 'Mansion name must be kebab-case and at most 40 characters.',
   unsafe_mansion_root: 'Mansion storage is not configured safely.',
   symlink_escape: 'The mansion path is not safe to use.',
@@ -86,13 +87,21 @@ function errorReply(code: MansionApiErrorCode): ReplayMansionReply {
   return { status: ERROR_STATUS[code], body: { error: { code, message: ERROR_MESSAGE[code] } } }
 }
 
-/** The exact request shape of the live API: an object with one string field, `name`. */
-function requestedName(body: unknown): string | null {
+/**
+ * The exact request shapes of the live API: open takes `{name}`; create takes
+ * `{name}` or `{name, brief}` with a brief the backend's normaliser accepts
+ * (design decision 2026-11-16). Anything else is null (`invalid_request`).
+ * The replay keeps no brief: it has no mansion folder to write one into.
+ */
+function requestedName(body: unknown, allowBrief: boolean): string | null {
   if (typeof body !== 'object' || body === null || Array.isArray(body)) return null
-  const keys = Object.keys(body)
-  if (keys.length !== 1 || keys[0] !== 'name') return null
-  const name = (body as { name: unknown }).name
-  return typeof name === 'string' ? name : null
+  const record = body as Record<string, unknown>
+  const keys = Object.keys(record)
+  if (!keys.includes('name') || typeof record.name !== 'string') return null
+  if (keys.length === 1) return record.name
+  if (!allowBrief || keys.length !== 2 || !keys.includes('brief')) return null
+  const brief = record.brief
+  return typeof brief === 'string' && normalizeMansionBrief(brief).ok ? record.name : null
 }
 
 /**
@@ -121,7 +130,7 @@ export function replayMansionStep(
     }
   }
 
-  const name = requestedName(operation.body)
+  const name = requestedName(operation.body, operation.kind === 'create')
   if (name === null) return { state, reply: errorReply('invalid_request') }
   if (!isMansionName(name)) return { state, reply: errorReply('invalid_mansion_name') }
   const existing = state.mansions.find((mansion) => mansion.name === name)

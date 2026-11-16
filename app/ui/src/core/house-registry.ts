@@ -3,7 +3,10 @@
 // fixed map the arrow keys follow. This is the one place room names and Room
 // order are written down; every other module reads them from here.
 //
-// The arrow map is geometric and fixed. A layout change (wide cutaway, compact
+// The arrow map is geometric and fixed. It follows the wide cutaway: the
+// Attic across the top; the Drafting Room (left) and Séance Room (right)
+// upstairs; the Study, Foyer and Workshop on the ground floor, left to right.
+// The arrow map is fixed. A layout change (wide cutaway, compact
 // grid, one column) never reaches this file, so it cannot change what a key does.
 // No React, DOM, Crew SDK, network, filesystem, or clock.
 
@@ -63,7 +66,7 @@ export const HOUSE_ROOMS: readonly RoomDefinition[] = [
     phase: 'requirements',
     order: 1,
     scope: 'mvp',
-    neighbors: { ArrowUp: 'attic', ArrowRight: 'foyer' },
+    neighbors: { ArrowUp: 'drafting-room', ArrowRight: 'foyer' },
     workflowPhases: ['requirements'],
     ghostRoles: ['archivist'],
   },
@@ -73,7 +76,7 @@ export const HOUSE_ROOMS: readonly RoomDefinition[] = [
     phase: 'design',
     order: 2,
     scope: 'mvp',
-    neighbors: { ArrowUp: 'attic', ArrowDown: 'foyer', ArrowLeft: 'study', ArrowRight: 'workshop' },
+    neighbors: { ArrowUp: 'attic', ArrowDown: 'foyer', ArrowRight: 'seance-room' },
     workflowPhases: ['design'],
     ghostRoles: ['draughtsman'],
   },
@@ -83,7 +86,7 @@ export const HOUSE_ROOMS: readonly RoomDefinition[] = [
     phase: 'tasks-and-implementation',
     order: 3,
     scope: 'mvp',
-    neighbors: { ArrowUp: 'attic', ArrowLeft: 'foyer', ArrowRight: 'seance-room' },
+    neighbors: { ArrowUp: 'seance-room', ArrowLeft: 'foyer' },
     workflowPhases: ['tasks', 'implementation'],
     ghostRoles: ['foreman', 'tinker'],
   },
@@ -93,7 +96,7 @@ export const HOUSE_ROOMS: readonly RoomDefinition[] = [
     phase: 'replay',
     order: 4,
     scope: 'mvp',
-    neighbors: { ArrowDown: 'drafting-room', ArrowLeft: 'study', ArrowRight: 'workshop' },
+    neighbors: { ArrowDown: 'drafting-room' },
     workflowPhases: [],
     ghostRoles: [],
   },
@@ -103,7 +106,7 @@ export const HOUSE_ROOMS: readonly RoomDefinition[] = [
     phase: 'review',
     order: 5,
     scope: 'stretch',
-    neighbors: { ArrowUp: 'attic', ArrowLeft: 'workshop' },
+    neighbors: { ArrowUp: 'attic', ArrowDown: 'workshop', ArrowLeft: 'drafting-room' },
     workflowPhases: [],
     ghostRoles: ['medium'],
   },

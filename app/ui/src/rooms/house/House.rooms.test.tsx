@@ -26,7 +26,11 @@ import {
 } from '../../test/room-kit'
 import { MANSION, SHA_A, decision, doorProposal, projection, riskyProposal } from '../../test/workflow-arbitraries'
 import { liveRegions } from '../foyer/foyer-test-kit'
+import type { SeanceRoomSetting } from '../../core/house-registry'
+import { MANSION_DESCRIPTOR } from '../../test/house-projection-kit'
+import { ROOM_OUTPUT_STYLES } from '../../components/room-output-styles'
 import { House } from './House'
+import { HOUSE_PANEL_STYLES } from './panel-styles'
 
 const host = vi.hoisted(() => ({
   backend: null as unknown as { get: (path: string) => Promise<unknown>; post: (path: string, body?: unknown) => Promise<unknown> },
@@ -61,10 +65,11 @@ vi.mock('@kirocrew/app-sdk', () => ({
   useChatLauncher: () => ({ openChat: host.openChat }),
 }))
 
-type RoomName = 'Study' | 'Drafting Room' | 'Workshop'
+type RoomName = 'Study' | 'Drafting Room' | 'Workshop' | 'Séance Room'
 
 let backend: FakeRoomBackend
 const announce = vi.fn<(message: string) => void>()
+const onReturn = vi.fn()
 
 /** The Archivist finished; its requirements wait at the Door. Everything is at version 10. */
 const STUDY_LOG = [
@@ -92,13 +97,21 @@ const workshopAnswer = (overrides: Partial<RoomGhosts> = {}): RoomGhosts => {
   }
 }
 
-async function mount(workflow: WorkflowProjection, rooms: RoomGhosts | Error | { raw: unknown }, log = STUDY_LOG, props: { stillHouse?: boolean } = {}) {
+let watcher: MutationObserver | null = null
+
+async function mount(workflow: WorkflowProjection, rooms: RoomGhosts | Error | { raw: unknown }, log = STUDY_LOG, props: { seanceRoom?: SeanceRoomSetting } = {}) {
   backend = new FakeRoomBackend(workflow, rooms)
   backend.log = [...log]
   host.backend = backend
-  const view = render(<House mansionId={MANSION} specName={SPEC} onAnnounce={announce} {...props} />)
+  const view = render(<House mansion={MANSION_DESCRIPTOR} onReturn={onReturn} {...props} />)
+  // Everything the page's one live region says is recorded as one `announce` call.
+  const region = view.container.querySelector('[data-announcer]')!
+  watcher = new MutationObserver(() => {
+    if (region.textContent !== '') announce(region.textContent ?? '')
+  })
+  watcher.observe(region, { childList: true, subtree: true, characterData: true })
   await screen.findByRole('button', { name: /^Study\./ })
-  await waitFor(() => expect(view.container.querySelector('.hh-house-map')).toHaveAttribute('aria-busy', 'false'))
+  await waitFor(() => expect(view.container.querySelector('.hh-ui')).toHaveAttribute('aria-busy', 'false'))
   await waitFor(() => expect(backend.roomReads).toBeGreaterThan(0))
   return view
 }
@@ -123,6 +136,8 @@ beforeEach(() => {
 })
 
 afterEach(() => {
+  watcher?.disconnect()
+  watcher = null
   vi.useRealTimers()
 })
 
@@ -190,7 +205,11 @@ describe('Study and Drafting Room: artifact first', () => {
     const doorLine = panel.querySelector(`.hh-phase [data-tone] svg.lucide-${status === 'sealed' ? 'lock' : status === 'waiting' ? 'door-closed' : status === 'open' ? 'door-open' : 'ban'}`)?.closest('.hh-room-line')
     expect(doorLine).not.toBeNull()
     expect(follows(artifactView, doorLine!)).toBe(true)
-    expect(roomButton('Drafting Room')).toHaveAccessibleName(new RegExp(DOOR_STATUS_TEXT[status]))
+    // The map says the exact state word in the room's name and the Spec 4 words on the Door control.
+    expect(roomButton('Drafting Room')).toHaveAccessibleName(`Drafting Room. Phase: design. Door: ${status}. Ghost: not applicable.`)
+    const doorControl = screen.getByRole('button', { name: `Design door of the Drafting Room. State: ${status}.` })
+    expect(doorControl).toHaveTextContent(DOOR_STATUS_TEXT[status])
+    expect(doorControl.querySelector('svg[aria-hidden="true"]')).not.toBeNull()
   })
 
   it('shows deterministic findings and offers Retry for a failed run, never an approval', async () => {
@@ -485,7 +504,7 @@ describe('cancel', () => {
     await waitFor(() => expect(announce).toHaveBeenCalledWith('The house cannot do this right now: a contract it depends on is unavailable. Nothing was done.'))
     expect(backend.roomPosts).toHaveLength(1)
     expect(document.body.textContent).not.toContain('raw /private detail')
-    expect(screen.getByText(/a contract it depends on is unavailable/)).toBeInTheDocument()
+    expect(document.querySelector('[data-room-notice]')).toHaveTextContent(/a contract it depends on is unavailable/)
   })
 
   it('moves focus to the room heading when the pressed control goes away', async () => {
@@ -581,7 +600,9 @@ describe('interruption budget, focus and motion with room output', () => {
     await openRoom('Workshop')
     expect(host.notify).not.toHaveBeenCalled()
     expect(announce).not.toHaveBeenCalled()
-    expect(liveRegions(container)).toEqual([])
+    // The shell's one region, empty; the room panel adds none.
+    expect(liveRegions(container)).toHaveLength(1)
+    expect(liveRegions(container)[0]).toHaveTextContent('')
     expect(host.badge).toHaveBeenLastCalledWith(0)
   })
 
@@ -616,13 +637,16 @@ describe('interruption budget, focus and motion with room output', () => {
     expect(roomButton('Study')).toHaveFocus()
   })
 
-  it('adds no motion: the only animation stays the spinner, off under Still House', async () => {
-    const { container } = await mount(TASKS_APPROVED, workshopAnswer(), WORKSHOP_LOG, { stillHouse: true })
+  it('adds no motion: the room panels animate only the spinner, and nothing while the house is still', async () => {
+    const { container } = await mount(TASKS_APPROVED, workshopAnswer(), WORKSHOP_LOG)
     await openRoom('Workshop')
-    expect(container.querySelector('.hh-house-map')).toHaveAttribute('data-still', 'true')
-    const css = container.querySelector('style')!.textContent ?? ''
+    // jsdom cannot say what the browser prefers, so motion is off.
+    expect(container.querySelector('.hh-ui')).toHaveAttribute('data-motion', 'none')
+    expect(container.querySelector('.hh-ui')).toHaveAttribute('data-still', 'true')
+    const css = HOUSE_PANEL_STYLES + ROOM_OUTPUT_STYLES
+    expect(container.querySelector('style')!.textContent).toContain(css)
     expect(css.match(/animation:/g)).toHaveLength(1)
-    expect(css).toContain(".hh-house-map:not([data-still='true']) .hh-spin { animation: hh-house-spin 2s linear infinite; }")
+    expect(css).toContain("[data-motion='low-frequency'] .hh-spin { animation: hh-house-spin 2s linear infinite; }")
     expect(css).toContain('@media (prefers-reduced-motion: no-preference)')
     expect(css).not.toMatch(/transition/)
   })
@@ -645,24 +669,48 @@ describe('Séance Room (stretch, off by default)', () => {
     repairs: [{ taskId: '4.1', findingId: 'f-1', title: 'Keep insertion order in the store', writes: ['src/guestbook/store.py'], status: 'proposed' as const }],
   }
 
-  it('does not exist while the backend leaves the Séance Room off', async () => {
-    await mount(TASKS_APPROVED, workshopAnswer(), WORKSHOP_LOG)
+  it('is a locked room with nothing to operate in the default build, even when the backend has a review', async () => {
+    await mount(TASKS_APPROVED, workshopAnswer({ seanceEnabled: true, review }), WORKSHOP_LOG)
+    expect(roomButton('Séance Room')).toHaveAttribute('aria-disabled', 'true')
+    fireEvent.click(roomButton('Séance Room'))
+    const panel = await screen.findByRole('region', { name: 'Séance Room' })
+    expect(panel).toHaveTextContent('The Séance Room is locked. Review is a later chapter of this house')
+    // Only the panel's own Close: no review control, no session link, no verdict.
+    expect(within(panel).getAllByRole('button').map((button) => button.textContent?.trim())).toEqual(['Close room'])
+    expect(panel.querySelector('[data-verdict]')).toBeNull()
+    expect(document.body.textContent).not.toMatch(/Medium/)
+    expect(backend.posts).toEqual([])
+    expect(backend.roomPosts).toEqual([])
+  })
+
+  it('does not exist when the build hides it', async () => {
+    await mount(TASKS_APPROVED, workshopAnswer({ seanceEnabled: true, review }), WORKSHOP_LOG, { seanceRoom: 'hidden' })
     await openRoom('Workshop')
-    expect(screen.queryByRole('region', { name: 'Séance Room' })).toBeNull()
-    expect(document.body.textContent).not.toMatch(/Séance Room|Medium/)
+    expect(screen.queryByRole('button', { name: /^Séance Room\./ })).toBeNull()
+    expect(document.querySelector('.hh-ui-map')!.textContent).not.toMatch(/Séance Room|Medium/)
+  })
+
+  it('shows no review while the backend leaves the Séance Room off, even in the stretch build', async () => {
+    await mount(TASKS_APPROVED, workshopAnswer(), WORKSHOP_LOG, { seanceRoom: 'enabled' })
+    fireEvent.click(roomButton('Séance Room'))
+    const panel = await screen.findByRole('region', { name: 'Séance Room' })
+    expect(panel).toHaveTextContent('No review yet.')
+    expect(panel.querySelector('[data-verdict]')).toBeNull()
   })
 
   it('shows the verdict, the traced findings, the repair proposal and the three-cycle stop when it is on', async () => {
-    await mount(TASKS_APPROVED, workshopAnswer({ seanceEnabled: true, review }), WORKSHOP_LOG)
+    await mount(TASKS_APPROVED, workshopAnswer({ seanceEnabled: true, review }), WORKSHOP_LOG, { seanceRoom: 'enabled' })
+    fireEvent.click(roomButton('Séance Room'))
     const panel = await screen.findByRole('region', { name: 'Séance Room' })
+    await waitFor(() => expect(panel.querySelector('[data-verdict]')).not.toBeNull())
     expect(panel.querySelector('[data-verdict]')).toHaveTextContent('Blocked: the review needs your decision. Review cycle 3 of 3.')
     expect(panel.querySelector('[data-review-limit]')).toHaveTextContent('No fourth review starts on its own')
     const finding = within(within(panel).getByRole('list', { name: 'Review findings' })).getByRole('listitem')
     expect(finding).toHaveTextContent('Entries are sorted by name, not kept in insertion order.')
     expect(finding).toHaveTextContent('Requirements1.3')
     expect(finding).toHaveTextContent('Repair task 4.1: Keep insertion order in the store. Proposed: not started. May write: src/guestbook/store.py')
-    // It shows proposals and decides nothing: its only control is the (disabled) session link.
-    const buttons = within(panel).getAllByRole('button')
+    // It shows proposals and decides nothing: besides the panel's Close, its only control is the (disabled) session link.
+    const buttons = within(panel).getAllByRole('button').filter((button) => button.textContent?.trim() !== 'Close room')
     expect(buttons).toHaveLength(1)
     expect(buttons[0]).toHaveAccessibleName("Open Medium's Crew session (No run yet)")
     expect(buttons[0]).toHaveAttribute('aria-disabled', 'true')

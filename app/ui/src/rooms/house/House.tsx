@@ -1,109 +1,204 @@
-// The house of one Mansion: the map of rooms, the open room with its Door and
-// risky-action panels, and what needs the Operator (Spec 4 section 14).
-// Rendered inside the Mansion Shell. View only: state and handlers come from
-// useHouse, and every decision is an explicit button press.
+// The house of one open Mansion: the House Projection adapter joined to the
+// Mansion Shell (Spec 6 tasks 6 and 7.1). This file only connects: it reads
+// the upstream projections through `useHouseProjection`, hands the projection
+// to the shell, and fills each open surface with the approved room module and
+// that module's exact upstream callbacks. It keeps no room, Door, ghost or
+// approval state, and every decision is an explicit press inside a panel.
 import { Lock, RefreshCw, TriangleAlert } from 'lucide-react'
-import { useId, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
+import { useAtticReplay } from '../../adapters/attic-replay'
+import { useHouseProjection } from '../../adapters/house-projection'
+import type { ReplayScheduler } from '../../adapters/replay-controller'
+import { MansionShell, type SurfaceApi } from '../../components/MansionShell'
+import type { PanelMode } from '../../components/RoomPanelHost'
 import { ROOM_OUTPUT_STYLES } from '../../components/room-output-styles'
-import { SeanceRoomPanel } from '../seance-room/SeanceRoomPanel'
-import { HOUSE_STYLES } from './house-styles'
-import { HouseMap } from './HouseMap'
-import { NeedsYouBar } from './NeedsYouBar'
-import { RoomPanel } from './RoomPanel'
-import { useHouse } from './use-house'
-import { usePanelFocus } from './use-panel-focus'
+import type { OpenSurface } from '../../core/house-projection'
+import type { SeanceRoomSetting } from '../../core/house-registry'
+import type { MansionDescriptor } from '../../core/mansion-api'
+import { AtticPanel } from '../attic/AtticPanel'
+import { ReplayBar } from '../attic/ReplayBar'
+import { useAtticPanel } from '../attic/use-attic-panel'
+import { DraftingHousePanel } from '../drafting-room/DraftingHousePanel'
+import { ActiveMansionFoyerPanel } from '../foyer/ActiveMansionFoyerPanel'
+import { LockedSeancePanel } from '../seance-room/LockedSeancePanel'
+import { SeanceHousePanel } from '../seance-room/SeanceHousePanel'
+import { StudyHousePanel } from '../study/StudyHousePanel'
+import { WorkshopHousePanel } from '../workshop/WorkshopHousePanel'
+import { DoorSurface } from './DoorSurface'
+import { GhostSurface } from './GhostSurface'
+import { HOUSE_PANEL_STYLES } from './panel-styles'
+
+/**
+ * The build-time setting of the stretch Séance Room: shown locked, with plain
+ * words, and nothing to operate. `enabled` is the stretch build.
+ */
+export const HOUSE_SEANCE_ROOM: SeanceRoomSetting = 'locked'
+
+export const REPLAY_START_TEXT = 'The recording is paused at its start. Press Play to watch the house fill, or open the Attic to step through it.'
+
+/** The bar's sentence while the house has not yet said why decisions are off. */
+export const READ_ONLY_BAR_TEXT = 'This is a recording. Nothing can be started, approved or rejected here.'
+
+const PANEL_STYLES = HOUSE_PANEL_STYLES + ROOM_OUTPUT_STYLES
 
 export interface HouseProps {
-  /** The open Mansion. */
-  mansionId: string
-  /** The Mansion's Project_Spec. Defaults to the Mansion's own name. */
-  specName?: string
+  /** The open Mansion, as the Foyer's open call returned it. */
+  mansion: MansionDescriptor
+  /** The Foyer's return action. */
+  onReturn: () => void
+  /** The latest result the page announced before or outside the house (a Mansion opened). */
+  announcement?: string
+  /** The foundation status details, for the toolbar's disclosure. */
+  status?: ReactNode
   /** Display names by `ghost_id`. A ghost without one is named after its id. */
   ghostNames?: Readonly<Record<string, string>>
-  /** Receives each announcement for the page's one polite live region. */
-  onAnnounce: (message: string) => void
-  /** Still House: turns off the working spinner. Reduced motion in the browser does the same. */
-  stillHouse?: boolean
+  seanceRoom?: SeanceRoomSetting
+  panelMode?: PanelMode
+  /** Steps the Attic's playback. For tests; the page uses timeouts. */
+  replayScheduler?: ReplayScheduler
+  /** Milliseconds clock for the interruption window. Defaults to Date.now. */
+  now?: () => number
 }
 
-export function House({ mansionId, specName, ghostNames, onAnnounce, stillHouse = false }: HouseProps) {
-  const house = useHouse({ mansionId, specName, ghostNames, onAnnounce })
-  const titleId = useId()
-  const panelId = useId()
-  const panelTitleId = useId()
-  const root = useRef<HTMLElement>(null)
-  const heading = useRef<HTMLHeadingElement>(null)
-  usePanelFocus(root, heading, house.ui.openRoom, house.inFlight)
+export function House({
+  mansion,
+  onReturn,
+  announcement = '',
+  status,
+  ghostNames,
+  seanceRoom = HOUSE_SEANCE_ROOM,
+  panelMode,
+  replayScheduler,
+  now,
+}: HouseProps) {
+  // The latest thing the Operator asked for and got an answer to. The shell says it once.
+  const [message, setMessage] = useState(announcement)
+  useEffect(() => setMessage(announcement), [announcement])
+  const announce = useCallback((text: string) => setMessage(text), [])
 
-  return (
-    <section
-      className="hh-house-map"
-      aria-labelledby={titleId}
-      aria-busy={house.loading}
-      data-still={stillHouse}
-      ref={root}
-      onKeyDown={(event) => {
-        // Escape closes the open room first. With no room open it is left to
-        // the Mansion Shell, which returns to the Foyer.
-        if (event.key !== 'Escape' || house.ui.openRoom === null) return
-        event.preventDefault()
-        house.closeRoom()
-      }}
-    >
-      <style>{HOUSE_STYLES + ROOM_OUTPUT_STYLES}</style>
-      <h3 id={titleId}>The house</h3>
-      <p className="hh-house-lede">
-        Arrow keys move between rooms. Enter opens a room. Escape closes it. Doors open only when you approve them.
-      </p>
+  // The Attic's replay is held here, once, so playback goes on while the Attic room is closed.
+  // In the static replay build it also supplies the house at its Cursor; inside Crew the house stays live.
+  const attic = useAtticReplay(mansion.name, replayScheduler)
+  const mode = attic.mode
+  const house = useHouseProjection({ mansion, ghostNames, seanceRoom, mode, replay: attic.upstream, replayed: attic.house, onAnnounce: announce })
+  const { projection } = house
+  // The replay bar is a second view of the same replay. In the static replay it,
+  // not the Attic room, says when playback ends or a command is refused.
+  const bar = useAtticPanel(attic, announce, { watch: mode === 'replay', refresh: false })
+
+  const host = useMemo(
+    () => ({
+      mansionId: mansion.name,
+      // A recording being played back interrupts nobody.
+      active: mode === 'live',
+      transitions: house.canonical.transitions,
+      snapshots: house.canonical.snapshots,
+      roomOf: house.canonical.roomOf,
+      nameOf: house.canonical.nameOf,
+      now,
+    }),
+    [mansion.name, mode, house.canonical, now],
+  )
+
+  const renderSurface = (surface: OpenSurface, api: SurfaceApi): ReactNode => {
+    const target = surface.target
+    const room = projection.rooms.find((candidate) => candidate.roomId === target.roomId)
+    if (room === undefined) return null
+    const detail = house.details.get(room.roomId) ?? null
+    const output = house.outputs.get(room.roomId) ?? null
+    if (target.kind === 'ghost') {
+      const ghost = room.ghosts.find((candidate) => candidate.ghostId === target.ghostId)
+      return ghost === undefined ? null : <GhostSurface room={room} ghost={ghost} onOpenRoom={api.openNested} />
+    }
+    if (target.kind === 'door') {
+      const door = room.doors.find((candidate) => candidate.phase === target.phase)
+      if (door === undefined) return null
+      const decision = detail?.phases.find((phase) => phase.line.phase === target.phase)?.door ?? null
+      return <DoorSurface room={room} door={door} decision={decision} onSend={house.send} onOpenRoom={api.openNested} />
+    }
+    const panel = { room, detail, output, onSend: house.send, onRoomSend: house.sendRoom, onOpenSession: house.openSession }
+    switch (room.roomId) {
+      case 'foyer':
+        return <ActiveMansionFoyerPanel room={room} mansion={mansion} onReturn={onReturn} />
+      case 'study':
+        return <StudyHousePanel {...panel} />
+      case 'drafting-room':
+        return <DraftingHousePanel {...panel} />
+      case 'workshop':
+        return <WorkshopHousePanel {...panel} />
+      case 'attic':
+        return (
+          <>
+            {/* A plain recording is already said in the Attic's own note and the replay bar. */}
+            {room.diagnostic === null || (room.readOnly && room.integrity === 'valid') ? null : (
+              <p className="hh-ui-note" data-kind="diagnostic" data-attic-diagnostic>
+                <TriangleAlert size={16} aria-hidden />
+                <span>{room.diagnostic}</span>
+              </p>
+            )}
+            <AtticPanel replay={attic} onAnnounce={announce} motion={api.stillHouse ? 'none' : 'low-frequency'} watch={mode !== 'replay'} />
+          </>
+        )
+      case 'seance-room':
+        return room.locked ? <LockedSeancePanel /> : <SeanceHousePanel room={room} review={house.review} onOpenSession={house.openSession} />
+    }
+  }
+
+  const notes = (
+    <div className="hh-ui-notes">
       {house.loading ? (
-        <p className="hh-house-note hh-house-muted">
+        <p className="hh-ui-note" data-kind="loading" data-house-loading>
           <RefreshCw size={16} aria-hidden />
           <span>Loading the house…</span>
         </p>
       ) : null}
       {house.logProblem === null ? null : (
-        <p className="hh-house-note hh-house-problem">
+        <p className="hh-ui-note" data-kind="diagnostic" data-log-problem>
           <TriangleAlert size={16} aria-hidden />
           <span>{house.logProblem}</span>
         </p>
       )}
-      {house.authority.text === null || house.authority.block === 'loading' ? null : (
-        <p className="hh-house-note hh-house-blocked" data-block={house.authority.block}>
+      {house.authority.text === null || house.authority.block === 'loading' || (mode === 'replay' && house.authority.block === 'read_only') ? null : (
+        <p className="hh-ui-note" data-kind={house.authority.block === 'read_only' ? 'read-only' : 'diagnostic'} data-block={house.authority.block}>
           <Lock size={16} aria-hidden />
           <span>{house.authority.text}</span>
         </p>
       )}
-      <NeedsYouBar items={house.needsYou} text={house.needsYouText} onJump={house.jumpToNeedsYou} />
-      <HouseMap
-        rooms={house.rooms}
-        focusedRoom={house.ui.focusedRoom}
-        openRoom={house.ui.openRoom}
-        panelId={panelId}
-        onFocus={house.focusRoom}
-        onMove={house.moveRoom}
-        onOpen={house.openRoom}
-      />
-      {house.ui.notice === null ? null : <p className="hh-house-note">{house.ui.notice}</p>}
-      {house.roomNotice === null ? null : (
-        <p className="hh-house-note" data-room-notice>
-          {house.roomNotice}
+      {house.notice === null ? null : (
+        <p className="hh-ui-note" data-kind="notice" data-house-notice>
+          <span>{house.notice}</span>
         </p>
       )}
-      {house.open === null ? null : (
-        <RoomPanel
-          id={panelId}
-          titleId={panelTitleId}
-          detail={house.open}
-          ref={heading}
-          onClose={house.closeRoom}
-          onSend={house.send}
-          output={house.output}
-          onRoomSend={house.sendRoom}
-          onOpenSession={house.openSession}
-        />
+      {house.roomNotice === null ? null : (
+        <p className="hh-ui-note" data-kind="notice" data-room-notice>
+          <span>{house.roomNotice}</span>
+        </p>
       )}
-      {/* Stretch: present only when the backend turned the Séance Room on and it has a review. */}
-      {house.review === null ? null : <SeanceRoomPanel view={house.review} onOpenSession={house.openSession} />}
-    </section>
+    </div>
+  )
+
+  return (
+    <MansionShell
+      projection={projection}
+      renderSurface={renderSurface}
+      host={host}
+      message={message}
+      status={status}
+      notes={notes}
+      banner={
+        mode === 'replay' ? (
+          <ReplayBar
+            panel={bar}
+            readOnlyText={house.authority.block === 'read_only' && house.authority.text !== null ? house.authority.text : READ_ONLY_BAR_TEXT}
+            startText={attic.state.cursor === 0 ? REPLAY_START_TEXT : null}
+          />
+        ) : undefined
+      }
+      busy={house.loading}
+      onReturn={onReturn}
+      panelMode={panelMode}
+      inFlight={house.inFlight}
+      panelStyles={PANEL_STYLES}
+    />
   )
 }

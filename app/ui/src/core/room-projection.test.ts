@@ -118,8 +118,25 @@ describe('parseRoomGhosts', () => {
     )
   })
 
-  it('refuses a valid answer after any one field is removed or replaced by a wrong type', () => {
-    const bases = vectors.valid.map((vector) => vector.value)
+  // Regression: this check used to draw mutations at random and failed about once in
+  // 7 whole-suite runs. The cause was the test, not the parser: one of its "wrong"
+  // replacements, `[[]]`, is a valid value for `task_plan.waves` when no task names a
+  // wave (one empty wave), which the plan of the review vector allows. The check now
+  // walks every mutation, so it cannot depend on a seed, and uses `[[[]]]`, which no
+  // field accepts.
+  it('accepts a wave that lists no task, where no task claims a wave', () => {
+    const review = vectors.valid.find((vector) => vector.name === 'seance_review_changes_requested')!.value as { task_plan: { waves: unknown } }
+    const body = JSON.parse(JSON.stringify(review)) as { task_plan: { waves: unknown } }
+    expect(body.task_plan.waves).toEqual([])
+    body.task_plan.waves = [[]]
+    const result = parseRoomGhosts(body)
+    expect(result.ok && result.roomGhosts.taskPlan?.waves).toEqual([[]])
+    // A wave may still not name a task that says another wave, or none.
+    body.task_plan.waves = [['1.1']]
+    expect(parseRoomGhosts(body)).toEqual({ ok: false, path: '$.task_plan.waves[0][0]' })
+  })
+
+  it('refuses a valid answer after any one field is removed or replaced by a wrong type (every case)', () => {
     /** Every path to a value inside `value`. */
     const paths = (value: unknown, prefix: (string | number)[] = []): (string | number)[][] => {
       if (Array.isArray(value)) return value.flatMap((item, index) => [[...prefix, index], ...paths(item, [...prefix, index])])
@@ -128,34 +145,32 @@ describe('parseRoomGhosts', () => {
       }
       return []
     }
-    const mutate = (base: unknown, path: (string | number)[], replacement: unknown, remove: boolean): unknown => {
-      const copy = JSON.parse(JSON.stringify(base)) as Record<string | number, unknown>
-      let at = copy as Record<string | number, unknown>
-      for (const key of path.slice(0, -1)) at = at[key] as Record<string | number, unknown>
-      const last = path[path.length - 1]
-      if (remove && !Array.isArray(at)) delete at[last]
-      else at[last] = replacement
-      return copy
-    }
-    fc.assert(
-      fc.property(
-        fc.integer({ min: 0, max: bases.length - 1 }).chain((index) => fc.tuple(fc.constant(index), fc.nat({ max: paths(bases[index]).length - 1 }))),
-        // A value no field of this schema accepts.
-        fc.constantFrom<unknown>(-1.5, { nested: true }, `not${String.fromCharCode(0)}valid`, [[]]),
-        fc.boolean(),
-        (pick, replacement, remove) => {
-          const [index, pathIndex] = pick
-          const path = paths(bases[index])[pathIndex]
-          const leafIsObjectKey = typeof path[path.length - 1] === 'string'
+    // Values no field of this schema accepts. The text carries a control character.
+    const replacements: unknown[] = [-1.5, { nested: true }, `not${String.fromCharCode(0)}valid`, [[[]]]]
+    const accepted: string[] = []
+    let cases = 0
+    for (const vector of vectors.valid) {
+      for (const path of paths(vector.value)) {
+        const last = path[path.length - 1]
+        for (const [index, replacement] of [...replacements, undefined].entries()) {
+          const remove = index === replacements.length
+          // An array element cannot be "absent"; shortening a list is covered by the named vectors.
+          if (remove && typeof last !== 'string') continue
           // `read_only` is the one optional key: removing it leaves a valid answer.
-          fc.pre(!(remove && path.length === 1 && path[0] === 'read_only'))
-          const mutated = mutate(bases[index], path, replacement, remove && leafIsObjectKey)
+          if (remove && path.length === 1 && last === 'read_only') continue
           // The document text is the one field that accepts any string.
-          fc.pre(!(typeof replacement === 'string' && path[path.length - 1] === 'content'))
-          expect(parseRoomGhosts(mutated).ok).toBe(false)
-        },
-      ),
-      { numRuns: 400 },
-    )
+          if (typeof replacement === 'string' && last === 'content') continue
+          const copy = JSON.parse(JSON.stringify(vector.value)) as Record<string | number, unknown>
+          let at = copy
+          for (const key of path.slice(0, -1)) at = at[key] as Record<string | number, unknown>
+          if (remove) delete at[last]
+          else at[last] = replacement
+          cases += 1
+          if (parseRoomGhosts(copy).ok) accepted.push(`${vector.name} ${JSON.stringify(path)} ${remove ? 'removed' : JSON.stringify(replacement)}`)
+        }
+      }
+    }
+    expect(accepted).toEqual([])
+    expect(cases).toBeGreaterThan(1500)
   })
 })

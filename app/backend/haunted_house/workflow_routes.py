@@ -68,6 +68,7 @@ __all__ = [
     "WORKFLOW_PATH",
     "WorkflowReply",
     "WorkflowServiceProvider",
+    "read_json_body",
     "register_workflow_routes",
     "run_workflow_command",
     "workflow_error_status",
@@ -343,6 +344,10 @@ async def _read_json(request: web.Request) -> object:
     except (ValueError, RecursionError):
         # UnicodeDecodeError and JSONDecodeError are ValueErrors.
         return _error_reply("invalid_request")
+
+
+# The strict body reader, for the routes of a later spec (Room Ghosts).
+read_json_body = _read_json
 
 
 def _object_without_duplicates(pairs: list[tuple[str, object]]) -> dict[str, object]:

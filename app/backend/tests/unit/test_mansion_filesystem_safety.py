@@ -422,6 +422,9 @@ def test_adapter_exposes_no_deletion_operation():
         "ensure_safe_root",
         "resolve",
         "snapshot",
+        # Decision 2026-11-16 (feature brief): one exclusive, never-overwriting
+        # file create. Still no delete, rename, or replace.
+        "write_brief",
     ]
     assert sorted(mansion_filesystem.__all__) == [
         "FilesystemErrorCode",

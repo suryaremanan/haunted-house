@@ -67,8 +67,10 @@ describe('Property 2: Every cursor is exactly a canonical prefix fold', () => {
 
         let state = apply(model, initialReplayState(model, foldReplay), { kind: 'set_speed', speed }, { kind: 'seek', cursor: origin })
         if (playing) state = apply(model, state, { kind: 'play' })
-        expect(state.cursor).toBe(origin)
-        expect(state.projection).toEqual(fresh(origin))
+        // Play at the end starts again from Cursor zero.
+        const start = playing && origin === total && total > 0 ? 0 : origin
+        expect(state.cursor).toBe(start)
+        expect(state.projection).toEqual(fresh(start))
 
         // Seek: the projection is the fresh prefix fold, and only the final Cursor is complete.
         const sought = apply(model, state, { kind: 'seek', cursor: target })

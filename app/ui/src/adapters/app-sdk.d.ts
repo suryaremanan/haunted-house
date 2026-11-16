@@ -9,7 +9,11 @@ declare module '@kirocrew/app-sdk' {
     readonly body: string
   }
 
-  /** Reactive theme state supplied by the Crew dashboard. */
+  /**
+   * Reactive theme state supplied by the Crew dashboard. The docs name these
+   * three fields and give no types; HUI-S1 (the live probe) has not confirmed
+   * them. src/adapters/sdk.ts reads the value as unknown and normalizes it.
+   */
   export interface AppTheme {
     readonly mode: 'dark' | 'light'
     readonly accent: string
@@ -40,10 +44,16 @@ declare module '@kirocrew/app-sdk' {
   /**
    * Returns a function that shows a dashboard toast. The docs give the shape
    * `(text, opts?) => void` and define no option; this app passes none.
+   * Whether a toast can be replaced by id is unverified (HUI-S1), so the app
+   * sends one toast per closed interruption burst and never relies on it.
    */
   export function useNotify(): (text: string, opts?: Record<string, unknown>) => void
 
-  /** Returns a function that sets this app's sidebar badge count. Zero clears it. */
+  /**
+   * Returns a function that sets this app's sidebar badge count. Zero is the
+   * app's clear operation; that the host hides the badge at zero and on
+   * unmount is unverified (HUI-S1).
+   */
   export function useNavBadge(): (count: number) => void
 
   /**
@@ -53,4 +63,14 @@ declare module '@kirocrew/app-sdk' {
    * does that. A host older than the hook exports nothing under this name.
    */
   export function useChatLauncher(): { openChat(options?: { slotKey?: string }): void }
+
+  /**
+   * Not part of Crew's SDK. Only the static replay stand-in
+   * (src/adapters/sdk-shim) exports it: the one recorded Event_Log of that
+   * page. The adapter reads it through the module namespace, so the live host,
+   * which has no such export, simply yields none.
+   */
+  export const replayRecording:
+    | { load(): Promise<string>; present(mansionId: string, cursor: number): void }
+    | undefined
 }

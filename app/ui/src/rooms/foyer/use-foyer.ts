@@ -17,8 +17,11 @@ export interface FoyerController {
   /** Asks for the mansion list again after a failed load. */
   retryLoad: () => void
   select: (name: string) => void
-  /** Resolves true when the mansion was created or adopted, false when refused or failed. */
-  create: (name: string) => Promise<boolean>
+  /**
+   * Resolves true when the mansion was created or adopted, false when refused
+   * or failed. `brief` is the optional feature brief; a blank one is not sent.
+   */
+  create: (name: string, brief?: string) => Promise<boolean>
   /** Selects `name`, then asks the backend to revalidate and open it. */
   open: (name: string) => void
   returnToFoyer: () => void
@@ -99,12 +102,12 @@ export function useFoyer({ onAnnounce }: UseFoyerOptions = {}): FoyerController 
   )
 
   const create = useCallback(
-    async (name: string): Promise<boolean> => {
+    async (name: string, brief?: string): Promise<boolean> => {
       const before = stateRef.current
       // The reducer refuses a start while any mutation is pending or the list is not ready.
       if (dispatch({ type: 'create_started', name }) === before) return false
       try {
-        const { outcome, mansion } = await apiRef.current.create(name)
+        const { outcome, mansion } = await apiRef.current.create(name, brief)
         if (mansion.name !== name) throw new MansionApiParseError()
         dispatch({ type: 'create_succeeded', mansion })
         announceRef.current?.(CREATE_ANNOUNCEMENT[outcome](name))
