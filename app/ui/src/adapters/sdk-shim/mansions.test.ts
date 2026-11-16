@@ -94,6 +94,11 @@ describe('live adapter over the replay stand-in', () => {
       },
     })
     await expect(api.create('new-wing')).resolves.toMatchObject({ outcome: 'existing_compatible' })
+    // The optional feature brief (design decision 2026-11-16) goes through the same route.
+    await expect(api.create('briefed-wing', '  A tide clock.\r\n')).resolves.toMatchObject({
+      outcome: 'created',
+      mansion: { name: 'briefed-wing', status: 'ready' },
+    })
     await expect(api.open('new-wing')).resolves.toMatchObject({ mansion: { name: 'new-wing', status: 'ready' } })
 
     const names = (await api.list()).mansions.map(({ name }) => name)

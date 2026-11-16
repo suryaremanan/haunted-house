@@ -169,7 +169,7 @@ This feature also defines the final judge-facing permission baseline, publicatio
 #### Acceptance Criteria
 
 1. THE Public_Repository SHALL be publicly readable and SHALL contain the MIT `LICENSE`, source, committed `app/ui/dist/index.mjs`, `.kiro/` evidence, and Submission_Document_Set.
-2. THE README SHALL state that Live_App requires Kiro Crew 0.12.1 or later, Node.js, npm, git, curl, and a running Crew_Gateway.
+2. THE README SHALL state that Live_App requires Kiro Crew 0.12.1 or later, Node.js, bun, git, curl, and a running Crew_Gateway.
 3. THE README SHALL present one Install_Command that invokes `scripts/install-local.sh` from a clone of Public_Repository.
 4. WHEN Install_Command runs on a supported prepared host, THE Install_Command SHALL build and install or update Haunted_House through the existing install script.
 5. THE Install_Command SHALL preserve Crew trust, approval, permission, and security settings.

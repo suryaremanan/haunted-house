@@ -155,6 +155,19 @@ const SCHEMAS = {
   spec_document_written: [{ write_id: identifier, phase, ...ARTIFACT }, 'write_id'],
   spec_write_recovered: [{ write_id: identifier, phase, document_path: cleanPath, outcome: oneOf('completed', 'not_applied') }, 'write_id'],
   spec_write_uncertain: [{ write_id: identifier, phase, document_path: cleanPath, code }, 'write_id'],
+  // Design decision 2026-11-16: the house approved a non-risky room-tool prompt.
+  room_tool_answered: [
+    {
+      answer_id: identifier,
+      session_slot: label,
+      mid: label,
+      tool: oneOf('list_room_files', 'read_room_file', 'write_spec_document', 'write_room_file', 'submit_phase_output'),
+      outcome: oneOf('approved'),
+      actor: oneOf('house'),
+      reason: oneOf('non_risky_room_tool'),
+    },
+    'answer_id',
+  ],
 } as const satisfies Record<string, readonly [Record<string, Check>, string]>
 
 export type GuardrailKind = keyof typeof SCHEMAS

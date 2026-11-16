@@ -141,4 +141,58 @@ describe('SDK import boundary', () => {
     )
     expect(computed).toEqual([])
   })
+
+  // Spec 6 task 3.3: the host toast, badge and theme reach the page through one adapter each.
+  it('lets only the Host Effects adapter use the toast and badge wrappers, and no component the raw hooks', () => {
+    const code = (source: string) => source.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[^:'"`])\/\/.*$/gm, '$1')
+    // Test kits are not shipped; they may name a hook to build a double for it.
+    const users = (pattern: RegExp) => files.filter((file) => !/-test-kit\.tsx?$/.test(file) && pattern.test(code(sources[file]))).sort()
+    expect(users(/\buseHostNotify\b|\buseHostNavBadge\b/)).toEqual(['/src/adapters/host-effects.ts', ADAPTER])
+    // The raw host hooks are named in the adapter and in the two stand-ins that implement them (replay, tests).
+    const standIns = [ADAPTER, '/src/adapters/sdk-shim/index.ts', '/src/test/app-sdk.ts'].sort()
+    expect(users(/\buseNotify\b|\buseNavBadge\b/)).toEqual(standIns)
+    expect(users(/\buseTheme\b/)).toEqual(standIns)
+  })
+
+  it('declares the three host hooks the adapter looks up', () => {
+    const declarations = import.meta.glob<string>('/src/adapters/app-sdk.d.ts', { query: '?raw', import: 'default', eager: true })['/src/adapters/app-sdk.d.ts']
+    for (const hook of ['useTheme', 'useNotify', 'useNavBadge']) {
+      expect(declarations).toMatch(new RegExp(`export function ${hook}\\(`))
+      expect(sources[ADAPTER]).toContain(`hostHook('${hook}')`)
+    }
+    // Looked up by name on the namespace, never as a named import that a host without it would fail on.
+    expect(sources[ADAPTER]).not.toMatch(/import \{[^}]*\buse(Theme|Notify|NavBadge)\b[^}]*\} from '@kirocrew\/app-sdk'/)
+  })
+
+  // A name imported from the adapter that the adapter does not export compiles in a
+  // mocked test run and only fails in the bundler. This catches it in the suite.
+  it('exports every name any source imports from the adapter', () => {
+    const adapter = sources[ADAPTER]
+    const exported = new Set<string>()
+    for (const match of adapter.matchAll(/export\s+(?:async\s+)?(?:function|const|let|class|interface|type|enum)\s+([A-Za-z_$][\w$]*)/g)) exported.add(match[1])
+    for (const match of adapter.matchAll(/export\s+(?:type\s+)?\{([^}]*)\}/g)) {
+      for (const part of match[1].split(',')) {
+        const name = part.trim().replace(/^type\s+/, '').split(/\s+as\s+/).pop()?.trim()
+        if (name !== undefined && name !== '') exported.add(name)
+      }
+    }
+    expect(exported.size).toBeGreaterThan(10)
+    const missing: string[] = []
+    let imports = 0
+    for (const file of files) {
+      if (file === ADAPTER) continue
+      for (const match of sources[file].matchAll(/import\s+(?:type\s+)?\{([^}]*)\}\s+from\s+['"]((?:\.\.?\/)+(?:adapters\/)?sdk)['"]/g)) {
+        // Only the adapter itself: `./sdk` beside it, or `…/adapters/sdk` from elsewhere.
+        if (!match[2].endsWith('adapters/sdk') && !file.startsWith('/src/adapters/')) continue
+        for (const part of match[1].split(',')) {
+          const name = part.trim().replace(/^type\s+/, '').split(/\s+as\s+/)[0].trim()
+          if (name === '') continue
+          imports += 1
+          if (!exported.has(name)) missing.push(`${file}: ${name}`)
+        }
+      }
+    }
+    expect(imports).toBeGreaterThan(10)
+    expect(missing).toEqual([])
+  })
 })

@@ -95,6 +95,8 @@ class MansionFilesystemPort(Protocol):
 
     def create_minimal_tree(self, mansion: ResolvedMansion) -> None: ...
 
+    def write_brief(self, mansion: ResolvedMansion, text: str) -> bool: ...
+
 
 class MansionService:
     """Orchestrates mansion operations over injected adapters."""
@@ -124,8 +126,16 @@ class MansionService:
         }
         return project_mansion_descriptors(registry.mansions, statuses)
 
-    async def create_mansion(self, name: object) -> CreateResult:
-        """Create a new mansion, or register or return a compatible one."""
+    async def create_mansion(
+        self, name: object, brief: str | None = None
+    ) -> CreateResult:
+        """Create a new mansion, or register or return a compatible one.
+
+        ``brief`` is an already-normalised feature brief. When given it is
+        written once to the project spec's ``brief.md`` with an exclusive
+        create, before the mansion is registered; an existing ``brief.md`` is
+        kept unchanged, so a repeated create never overwrites the original.
+        """
 
         valid_name = _require_valid_name(name)
         async with self._lock:
@@ -146,6 +156,9 @@ class MansionService:
                 await self._fs(self._filesystem.create_minimal_tree, mansion)
                 outcome = CreateOutcome.CREATED
                 origin = "created"
+
+            if brief:
+                await self._fs(self._filesystem.write_brief, mansion, brief)
 
             final = await self._fs(self._filesystem.snapshot, mansion)
             if classify_project(final) is not ProjectStatus.READY:

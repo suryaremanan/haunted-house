@@ -1,23 +1,28 @@
-// Replay séance read route: the recording as the only event source (task 8.3).
-// **Validates: Requirements 7.4, 7.5, 7.6, 8.3, 8.4, 8.5, 8.6**
+// Replay séance read route: the recording as the only event source (Spec 2
+// task 8.3), presented by the Attic's Cursor instead of a clock
+// (replay-and-submission tasks 3.2 and 3.4).
+// **Validates: Requirements 7.4, 7.5, 7.6, 8.3, 8.4, 8.5, 8.6; replay-and-submission 1.2, 4.3, 4.5**
 import { describe, expect, it, vi } from 'vitest'
 import demo from '../../../../../fixtures/replay/demo.jsonl?raw'
 import { parseCanonicalPage, seanceEventsPath } from '../../core/seance-api'
 import { parseEventLog } from '../../core/seance-log'
+import { createReplaySource } from './replay-source'
 import { FIXTURE_URL, createSeanceReplayRoutes } from './seance-replay'
 
 const LOG = parseEventLog(demo).events
 const MANSION = 'demo-mansion'
 
 function setup(text: string = demo, response: () => Response = () => new Response(text, { status: 200 })) {
-  let now = 50_000
   const fetchSpy = vi.fn(async (_url: string) => response())
-  const routes = createSeanceReplayRoutes({ fetch: fetchSpy, now: () => now })
+  const source = createReplaySource({ fetch: fetchSpy })
+  const routes = createSeanceReplayRoutes(source)
   return {
     routes,
+    source,
     fetchSpy,
-    advance(ms: number) {
-      now += ms
+    /** Moves the Attic's Cursor: the route serves that many records of the Mansion. */
+    present(cursor: number, mansion = MANSION) {
+      source.present(mansion, cursor)
     },
     async read(afterSequence = 0, limit = 500, mansion = MANSION) {
       const body = await routes.get(seanceEventsPath(mansion, afterSequence, limit))
@@ -51,44 +56,66 @@ describe('replay séance read route', () => {
     expect(fetchSpy).toHaveBeenCalledWith(FIXTURE_URL)
   })
 
-  it('reveals records in Sequence order as playback time passes, then all of them', async () => {
-    const { read, advance } = setup()
-
-    const start = await read()
-    // Playback starts when the recording has loaded: only what is due at time zero.
-    expect(start.page.events.length).toBeGreaterThan(0)
-    expect(start.page.events.length).toBeLessThan(LOG.length)
-    expect(start.page.events).toEqual(LOG.slice(0, start.page.events.length))
-    expect(start.page.highestSequence).toBe(start.page.events.length)
-    expect(start.page.nextEventInMs).toBeGreaterThan(0)
-
-    let seen = start.page.events.length
-    let hint = start.page.nextEventInMs
-    for (let step = 0; step < LOG.length && hint !== null; step += 1) {
-      // Just before the hint nothing new is readable; at the hint something is.
-      advance(hint - 1)
-      expect((await read(seen)).page.events).toEqual([])
-      advance(1)
-      const next = await read(seen)
-      expect(next.page.events.length).toBeGreaterThan(0)
-      expect(next.page.events).toEqual(LOG.slice(seen, seen + next.page.events.length))
-      seen += next.page.events.length
-      expect(next.page.highestSequence).toBe(seen)
-      hint = next.page.nextEventInMs
+  it('serves nothing until the Attic presents a prefix: a recording never plays by itself', async () => {
+    vi.useFakeTimers()
+    try {
+      const { read } = setup()
+      const start = await read()
+      expect(start.page).toMatchObject({ events: [], highestSequence: 0, nextEventInMs: null })
+      expect(start.body).not.toHaveProperty('next_event_in_ms')
+      // Time alone presents nothing.
+      await vi.advanceTimersByTimeAsync(10 * 60_000)
+      expect((await read()).page.events).toEqual([])
+    } finally {
+      vi.useRealTimers()
     }
-    expect(seen).toBe(LOG.length)
-    expect(hint).toBeNull()
+  })
+
+  it('reveals exactly the presented prefix of Canonical_Order, forwards and backwards, then all of it', async () => {
+    const { read, present } = setup()
+    let seen = 0
+    for (let cursor = 1; cursor <= LOG.length; cursor += 1) {
+      present(cursor)
+      // Each step reveals one more record, in Sequence order, and nothing after it.
+      const next = await read(seen)
+      expect(next.page.events).toEqual(LOG.slice(seen, cursor))
+      expect(next.page.highestSequence).toBe(cursor)
+      expect(next.body).not.toHaveProperty('next_event_in_ms')
+      seen = cursor
+    }
 
     const end = await read()
     expect(end.page.events).toEqual(LOG)
-    expect(end.body).not.toHaveProperty('next_event_in_ms')
     expect(end.page.diagnostics).toEqual([])
+
+    // A seek back serves the shorter prefix again; a restart serves nothing.
+    present(7)
+    expect((await read()).page).toMatchObject({ events: LOG.slice(0, 7), highestSequence: 7 })
+    present(0)
+    expect((await read()).page).toMatchObject({ events: [], highestSequence: 0 })
+  })
+
+  it('ignores a presented prefix that is not a whole number of zero or more', async () => {
+    const { read, present, source } = setup()
+    present(5)
+    for (const bad of [-1, 2.5, Number.NaN, Number.POSITIVE_INFINITY]) present(bad)
+    expect(source.presentedCount(MANSION)).toBe(5)
+    expect((await read()).page.events).toEqual(LOG.slice(0, 5))
+    // A prefix longer than the recording is the whole recording.
+    present(LOG.length + 50)
+    expect((await read()).page.events).toEqual(LOG)
+  })
+
+  it('presents each Mansion by its own Cursor', async () => {
+    const { present, source } = setup()
+    present(3)
+    expect((await source.presented(MANSION)).events).toEqual(LOG.slice(0, 3))
+    expect((await source.presented('other-mansion')).events).toEqual([])
   })
 
   it('pages by after_sequence and limit like the live route', async () => {
-    const { read, advance } = setup()
-    await read()
-    advance(10 * 60_000)
+    const { read, present } = setup()
+    present(LOG.length)
 
     expect((await read(0, 4)).page.events).toEqual(LOG.slice(0, 4))
     expect((await read(4, 4)).page.events).toEqual(LOG.slice(4, 8))
@@ -123,9 +150,8 @@ describe('replay séance read route', () => {
   it('serves only the valid prefix of a damaged recording, with the safe diagnostic', async () => {
     const lines = demo.split('\n').filter((line) => line !== '')
     lines.splice(9, 1) // Sequence 10 is missing.
-    const { read, advance } = setup(`${lines.join('\n')}\n`)
-    await read()
-    advance(10 * 60_000)
+    const { read, present } = setup(`${lines.join('\n')}\n`)
+    present(LOG.length)
 
     const { page, body } = await read()
     expect(page.events).toEqual(LOG.slice(0, 9))
@@ -141,11 +167,17 @@ describe('replay séance read route', () => {
     await expect(missing.routes.get(seanceEventsPath(MANSION, 0))).rejects.toMatchObject({ status: 502 })
     expect(missing.fetchSpy).toHaveBeenCalledTimes(1)
 
-    const offline = createSeanceReplayRoutes({
-      fetch: async () => {
-        throw new TypeError('offline')
-      },
+    // A network failure is reported with the same fixed copy: no exception text, no second request.
+    const offlineFetch = vi.fn(async (_url: string): Promise<Response> => {
+      throw new TypeError('offline: secret-host.example')
     })
-    await expect(offline.get(seanceEventsPath(MANSION, 0))).rejects.toBeInstanceOf(TypeError)
+    const offline = createSeanceReplayRoutes(createReplaySource({ fetch: offlineFetch }))
+    await expect(offline.get(seanceEventsPath(MANSION, 0))).rejects.toMatchObject({
+      status: 502,
+      body: 'Could not load the replay recording.',
+    })
+    await expect(offline.get(seanceEventsPath(MANSION, 0))).rejects.toMatchObject({ status: 502 })
+    expect(offlineFetch).toHaveBeenCalledTimes(1)
+    expect(offlineFetch).toHaveBeenCalledWith(FIXTURE_URL)
   })
 })

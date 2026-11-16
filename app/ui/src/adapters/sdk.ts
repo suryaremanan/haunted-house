@@ -1,15 +1,17 @@
 // SDK adapter: the only file in the UI that imports @kirocrew/app-sdk.
 // The live build leaves the import to the dashboard's import map; the replay
 // build aliases it to a stand-in. Everything else imports from here.
-import { useAppApi, useAppEvents, useNavBadge, useNotify, useTheme } from '@kirocrew/app-sdk'
-// The namespace is read only for exports an older host may lack: a named import of
-// a missing export would stop the whole page from loading.
+import { useAppApi, useAppEvents } from '@kirocrew/app-sdk'
+// The namespace is read for every export a host may lack or shape differently
+// (theme, toast, badge, chat launcher): a named import of a missing export
+// would stop the whole page from loading.
 import * as hostSdk from '@kirocrew/app-sdk'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { parseWhoami, statusFromError, WHOAMI_PATH, type BackendStatus } from '../core/backend-status'
 import {
   MANSION_REQUEST_FAILED,
   UNEXPECTED_MANSION_RESPONSE,
+  createMansionRequestBody,
   parseCreateMansionResponse,
   parseMansionApiError,
   parseMansionListResponse,
@@ -20,7 +22,7 @@ import {
   type OpenMansionResponse,
 } from '../core/mansion-api'
 
-export { useAppApi, useAppEvents, useNavBadge, useNotify, useTheme, WHOAMI_PATH }
+export { useAppApi, useAppEvents, WHOAMI_PATH }
 export type { AppApiClient, AppApiError, AppTheme } from '@kirocrew/app-sdk'
 export type { BackendStatus, GatewayErrorKind, GatewayStatus } from '../core/backend-status'
 
@@ -29,7 +31,8 @@ export const OPEN_MANSION_PATH = '/apps/haunted-house/api/mansions/open'
 
 export interface MansionApi {
   list: () => Promise<MansionListResponse>
-  create: (name: string) => Promise<CreateMansionResponse>
+  /** Sends `{name}`, or `{name, brief}` when `brief` is non-blank after normalising. */
+  create: (name: string, brief?: string) => Promise<CreateMansionResponse>
   open: (name: string) => Promise<OpenMansionResponse>
 }
 
@@ -109,9 +112,9 @@ export function useMansionApi(): MansionApi {
           () => apiRef.current.get<unknown>(MANSIONS_PATH),
           parseMansionListResponse,
         ),
-      create: (name: string) =>
+      create: (name: string, brief?: string) =>
         parsedSdkRequest(
-          () => apiRef.current.post<unknown>(MANSIONS_PATH, { name }),
+          () => apiRef.current.post<unknown>(MANSIONS_PATH, createMansionRequestBody(name, brief)),
           parseCreateMansionResponse,
         ),
       open: (name: string) =>
@@ -185,3 +188,160 @@ export function useSessionOpener(): ((slotKey: string) => void) | null {
   }, [])
   return typeof launcher?.openChat === 'function' ? open : null
 }
+
+// ---------------------------------------------------------------------------
+// Host theme, toast and sidebar badge (Spec 6 task 3.1).
+//
+// Crew's docs name `useTheme`, `useNotify` and `useNavBadge` but do not define
+// their value shapes, toast replacement, or cleanup. HUI-S1, the probe that
+// would read them inside a running dashboard, has not been run. So nothing
+// undocumented leaves this file: each hook is looked up once, called
+// defensively, and its value is normalized. A host without a hook, or one that
+// throws, leaves the page working with its own fallback palette, its in-page
+// Needs You count and its live region.
+
+export type HostThemeMode = 'light' | 'dark'
+
+/** The host theme as this app uses it. Never the host's own object. */
+export interface HostThemeSnapshot {
+  readonly mode: HostThemeMode
+  /** The host accent as given, or null when absent or not a short plain string. */
+  readonly accent: string | null
+  readonly colorTheme: string | null
+}
+
+/** Used when the host supplies no theme: the light fallback palette, which the house sheet also defaults to. */
+export const FALLBACK_HOST_THEME: HostThemeSnapshot = { mode: 'light', accent: null, colorTheme: null }
+
+const MAX_THEME_TEXT = 64
+
+function themeText(value: unknown): string | null {
+  if (typeof value !== 'string') return null
+  const text = value.trim()
+  // A color or theme name: short, one line, nothing that could close a CSS declaration.
+  return text !== '' && text.length <= MAX_THEME_TEXT && /^[\w#(),.%\s-]+$/.test(text) ? text : null
+}
+
+/** Reads only the three documented fields, each by type; anything else is ignored. */
+export function normalizeHostTheme(raw: unknown): HostThemeSnapshot {
+  if (typeof raw !== 'object' || raw === null) return FALLBACK_HOST_THEME
+  const value = raw as { mode?: unknown; accent?: unknown; colorTheme?: unknown }
+  const mode: HostThemeMode = value.mode === 'dark' ? 'dark' : value.mode === 'light' ? 'light' : FALLBACK_HOST_THEME.mode
+  return { mode, accent: themeText(value.accent), colorTheme: themeText(value.colorTheme) }
+}
+
+/** A host hook by name, or undefined when this host does not export a function under it. */
+function hostHook(name: string): ((...args: unknown[]) => unknown) | undefined {
+  try {
+    const hook = (hostSdk as Record<string, unknown>)[name]
+    return typeof hook === 'function' ? (hook as (...args: unknown[]) => unknown) : undefined
+  } catch {
+    return undefined
+  }
+}
+
+// Resolved once, so each wrapper calls the same host hooks in the same order on every render.
+const HOST_USE_THEME = hostHook('useTheme')
+const HOST_USE_NOTIFY = hostHook('useNotify')
+const HOST_USE_NAV_BADGE = hostHook('useNavBadge')
+
+/** Which host effects this host exports at all. False means the wrapper below is inert. */
+export const HOST_HOOKS_PRESENT = {
+  theme: HOST_USE_THEME !== undefined,
+  notify: HOST_USE_NOTIFY !== undefined,
+  navBadge: HOST_USE_NAV_BADGE !== undefined,
+} as const
+
+function callHook(hook: ((...args: unknown[]) => unknown) | undefined): unknown {
+  if (hook === undefined) return undefined
+  try {
+    return hook()
+  } catch {
+    return undefined
+  }
+}
+
+/** The reactive host theme, normalized. The same object is returned until a field changes. */
+export function useHostTheme(): HostThemeSnapshot {
+  const theme = normalizeHostTheme(callHook(HOST_USE_THEME))
+  return useMemo(() => theme, [theme.mode, theme.accent, theme.colorTheme])
+}
+
+/** A promise a host function may return is watched, so a rejection never becomes an unhandled one. */
+function settleQuietly(result: unknown): void {
+  if (typeof result === 'object' && result !== null && typeof (result as { then?: unknown }).then === 'function') {
+    ;(result as Promise<unknown>).then(undefined, () => {})
+  }
+}
+
+/**
+ * Shows one dashboard toast with exactly the given text and no option (no
+ * option is documented). Returns false when the host has no toast or refused;
+ * the caller's own live region and Needs You count carry the same information.
+ * Never retries.
+ */
+export function useHostNotify(): (text: string) => boolean {
+  const notify = callHook(HOST_USE_NOTIFY)
+  const notifyRef = useRef(notify)
+  notifyRef.current = notify
+  return useCallback((text: string) => {
+    const send = notifyRef.current
+    if (typeof send !== 'function' || text === '') return false
+    try {
+      settleQuietly((send as (text: string) => unknown)(text))
+      return true
+    } catch {
+      return false
+    }
+  }, [])
+}
+
+/**
+ * Sets this app's sidebar badge to a whole, non-negative count. Zero is the
+ * only clear operation the docs give. Returns false when the host has no
+ * badge or refused. Never retries.
+ */
+export function useHostNavBadge(): (count: number) => boolean {
+  const setBadge = callHook(HOST_USE_NAV_BADGE)
+  const badgeRef = useRef(setBadge)
+  badgeRef.current = setBadge
+  return useCallback((count: number) => {
+    const set = badgeRef.current
+    if (typeof set !== 'function') return false
+    const whole = Number.isFinite(count) ? Math.max(0, Math.trunc(count)) : 0
+    try {
+      settleQuietly((set as (count: number) => unknown)(whole))
+      return true
+    } catch {
+      return false
+    }
+  }, [])
+}
+
+// ---------------------------------------------------------------------------
+// Static replay seam (replay-and-submission task 3.1).
+
+/**
+ * The recording of the static replay build. Only the replay stand-in exports
+ * it; Crew's SDK has no such export, so in the live app this is null.
+ */
+export interface ReplayRecordingSeam {
+  /** The text of `./fixture.jsonl`, the canonical Event_Log. One request per page, never another URL. */
+  load(): Promise<string>
+  /** Tells the stand-in's read routes how long a prefix of a Mansion's Canonical_Order the Attic has reached. */
+  present(mansionId: string, cursor: number): void
+}
+
+function hostReplayRecording(): ReplayRecordingSeam | null {
+  try {
+    const seam = (hostSdk as { replayRecording?: unknown }).replayRecording
+    if (typeof seam !== 'object' || seam === null) return null
+    const { load, present } = seam as { load?: unknown; present?: unknown }
+    return typeof load === 'function' && typeof present === 'function' ? (seam as ReplayRecordingSeam) : null
+  } catch {
+    return null
+  }
+}
+
+/** The static replay's recording, or null in the live app. Resolved once: a page never changes mode. */
+export const REPLAY_RECORDING: ReplayRecordingSeam | null = hostReplayRecording()

@@ -233,3 +233,51 @@ export function canonicalTransitionOf(transition: GhostTransition, options: Cano
     observedAtMs: options.observedAtMs,
   }
 }
+
+export interface CollectTransitionsInput {
+  /** Every derived transition of the open Mansion in Canonical_Order. */
+  readonly transitions: readonly GhostTransition[]
+  /** The current state of each ghost, by ghost id. */
+  readonly currentState: (ghostId: string) => GhostState | null
+  /** Transition ids looked at in an earlier pass. */
+  readonly offered: ReadonlySet<string>
+  readonly roomOf: (ghostId: string) => RoomId | null
+  readonly nameOf: (ghostId: string) => string
+  readonly observedAtMs: number
+}
+
+export interface CollectedTransitions {
+  /** Every id looked at in this pass. Add them to the offered set. */
+  readonly offered: readonly string[]
+  /** What to hand to `reduceInterruption`, in Canonical_Order. */
+  readonly events: readonly CanonicalGhostTransition[]
+}
+
+/**
+ * The transitions of one pass that are worth offering: those not looked at
+ * before that are a ghost's latest change of state and still describe the
+ * state the ghost is in. History a ghost has already moved past (a page opened
+ * on a long log, a catch-up after a reconnect) is never read out. This only
+ * narrows what is offered; eligibility and wording stay with the policy.
+ */
+export function collectCanonicalTransitions(input: CollectTransitionsInput): CollectedTransitions {
+  const latestChange = new Map<string, GhostTransition>()
+  for (const transition of input.transitions) {
+    if (transition.from_state !== transition.to_state) latestChange.set(transition.ghost_id, transition)
+  }
+  const offered: string[] = []
+  const events: CanonicalGhostTransition[] = []
+  for (const transition of input.transitions) {
+    if (input.offered.has(transition.transition_id)) continue
+    offered.push(transition.transition_id)
+    if (latestChange.get(transition.ghost_id) !== transition) continue
+    if (input.currentState(transition.ghost_id) !== transition.to_state) continue
+    const event = canonicalTransitionOf(transition, {
+      roomId: input.roomOf(transition.ghost_id),
+      ghostName: input.nameOf(transition.ghost_id),
+      observedAtMs: input.observedAtMs,
+    })
+    if (event !== null) events.push(event)
+  }
+  return { offered, events }
+}

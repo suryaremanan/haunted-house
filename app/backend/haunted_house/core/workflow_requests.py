@@ -27,6 +27,7 @@ from haunted_house.core.path_policy import PathError, join_parts, parse_relative
 from haunted_house.core.workflow import ArtifactRevision
 
 __all__ = [
+    "COMMON_FIELDS",
     "DECISIONS",
     "MAX_ASSIGNMENTS",
     "MAX_PROJECTION_VERSION",
@@ -37,7 +38,9 @@ __all__ = [
     "StartBody",
     "parse_decision",
     "parse_door_decision",
+    "parse_command_header",
     "parse_mansion_id",
+    "parse_object",
     "parse_phase",
     "parse_proposal_id",
     "parse_risky_decision",
@@ -153,6 +156,12 @@ def _common(record: dict[str, object]) -> tuple[str, int]:
 
 
 _COMMON = frozenset({"command_id", "expected_version"})
+
+# The same strict object and command-header checks, for the routes of a later
+# spec (Room Ghosts) that carry the same ``command_id`` and ``expected_version``.
+COMMON_FIELDS = _COMMON
+parse_object = _object
+parse_command_header = _common
 
 
 def parse_start(value: object) -> StartBody:

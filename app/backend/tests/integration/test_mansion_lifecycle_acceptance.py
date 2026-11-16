@@ -34,6 +34,7 @@ NOW = 1_731_400_000
 NAME = "weather-station"
 ADOPTED = "adopted-project"
 LEGACY = "legacy-code"
+BRIEFED = "guest-book"
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
 FIXTURE = REPO_ROOT / "fixtures" / "mansions" / "api-acceptance.json"
@@ -273,6 +274,38 @@ def test_mansion_lifecycle_through_the_signed_api_with_restart(tmp_path):
         ),
     ]
     assert tree(backend.root) == broken
+
+    # 5. Design decision 2026-11-16 (feature brief): create with `{name, brief}`
+    #    writes the normalised brief once to the project spec's brief.md; a
+    #    repeat create with another brief keeps the original bytes.
+    fifth = backend.run(
+        [
+            (
+                "create-with-brief",
+                "POST",
+                "/api/mansions",
+                {"name": BRIEFED, "brief": "  A guest book.\r\nKeep the last 50 entries.  "},
+            ),
+            ("create-with-brief-repeat", "POST", "/api/mansions", {"name": BRIEFED, "brief": "Another."}),
+        ]
+    )
+    assert [(item["status"], item["body"]) for item in fifth] == [
+        (201, {"outcome": "created", "mansion": descriptor(BRIEFED)}),
+        (200, {"outcome": "existing_compatible", "mansion": descriptor(BRIEFED)}),
+    ]
+    briefed = {
+        key: value for key, value in tree(backend.root).items() if key.startswith(BRIEFED)
+    }
+    assert briefed == {
+        BRIEFED: ("directory", b""),
+        f"{BRIEFED}/.kiro": ("directory", b""),
+        f"{BRIEFED}/.kiro/specs": ("directory", b""),
+        f"{BRIEFED}/.kiro/specs/{BRIEFED}": ("directory", b""),
+        f"{BRIEFED}/.kiro/specs/{BRIEFED}/brief.md": (
+            "file",
+            b"A guest book.\nKeep the last 50 entries.\n",
+        ),
+    }
 
     # No response carries a host path.
     rendered = json.dumps(backend.transcript)

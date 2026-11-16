@@ -3,7 +3,7 @@
 // string. They do not replace rendered reflow evidence (HUI-S2).
 import { describe, expect, it } from 'vitest'
 import packageJson from '../../package.json'
-import { HOUSE_STYLES } from '../rooms/house/house-styles'
+import { HOUSE_PANEL_STYLES } from '../rooms/house/panel-styles'
 import { FOYER_STYLES } from '../rooms/foyer/foyer-styles'
 import { HOUSE_PALETTES, PALETTE_TOKENS, fallbackVariableName } from './house-palette'
 import { HOUSE_UI_STYLES, LINEAR_BREAKPOINT_PX, MIN_ANIMATION_SECONDS, WIDE_BREAKPOINT_PX } from './house-styles'
@@ -103,7 +103,7 @@ describe('plain CSS on Crew theme variables', () => {
   })
 
   it('every var() it reads is a known Crew variable or one of its own', () => {
-    const crew = new Set(['--card', '--card-fg', '--text', '--muted', '--border', '--border-strong', '--ring', '--accent', '--accent-fg', '--warn', '--ok', '--input'])
+    const crew = new Set(['--card', '--card-fg', '--text', '--muted', '--border', '--border-strong', '--ring', '--accent', '--accent-fg', '--warn', '--ok', '--input', '--font-sans'])
     for (const match of css.matchAll(/var\((--[a-z-]+)/g)) {
       expect(crew.has(match[1]) || match[1].startsWith('--hh-')).toBe(true)
     }
@@ -112,7 +112,7 @@ describe('plain CSS on Crew theme variables', () => {
   it('redefines no class of the Foyer or Spec 4 house sheets', () => {
     const mine = classNames(css)
     for (const name of mine) expect(name.startsWith('hh-ui')).toBe(true)
-    const theirs = new Set([...classNames(HOUSE_STYLES), ...classNames(FOYER_STYLES)])
+    const theirs = new Set([...classNames(HOUSE_PANEL_STYLES), ...classNames(FOYER_STYLES)])
     expect([...mine].filter((name) => theirs.has(name))).toEqual([])
   })
 })
@@ -130,8 +130,9 @@ describe('responsive layout', () => {
     expect(base.body).toContain('grid-template-columns: repeat(2, minmax(0, 1fr))')
     expect(block(css, '@media (max-width: 640px)')).toContain('.hh-ui-rooms { grid-template-columns: minmax(0, 1fr); }')
     const wide = block(css, '@media (min-width: 900px)')
-    expect(wide).toContain("grid-template-areas: 'attic attic attic' '. drafting .' 'study foyer workshop'")
-    expect(wide).toContain("grid-template-areas: 'attic attic attic attic' '. drafting . .' 'study foyer workshop seance'")
+    // Attic across the top; Drafting Room and Séance Room upstairs; Study, Foyer and the widest Workshop on the ground floor.
+    expect(wide).toContain("grid-template-areas: 'attic attic attic attic' 'drafting drafting drafting drafting' 'study foyer workshop workshop'")
+    expect(wide).toContain("grid-template-areas: 'attic attic attic attic' 'drafting drafting seance seance' 'study foyer workshop workshop'")
     for (const room of ['foyer', 'study', 'drafting-room', 'workshop', 'attic', 'seance-room']) {
       expect(wide).toContain(`.hh-ui-room-cell[data-room='${room}'] { grid-area:`)
     }
@@ -171,10 +172,11 @@ describe('responsive layout', () => {
     expect(heights.filter((value) => !['1px', '100%', 'auto'].includes(value))).toEqual([])
   })
 
-  it('never truncates text: no ellipsis, and nowrap or hidden overflow only in the announcer', () => {
+  it('never truncates text: no ellipsis, and nowrap or hidden overflow only in visually hidden text', () => {
     expect(css).not.toMatch(/text-overflow|line-clamp/)
     const clipping = rules(css).filter((rule) => /white-space:\s*nowrap|overflow:\s*hidden/.test(rule.body))
-    expect(clipping.map((rule) => rule.selector)).toEqual(['.hh-ui-announcer'])
+    // The announcer and words kept for assistive technology only (the same visually hidden pattern) are the exceptions.
+    expect(clipping.map((rule) => rule.selector).sort()).toEqual(['.hh-ui-announcer', '.hh-ui-visually-hidden'])
     expect(css).not.toMatch(/overflow-x:\s*(?:scroll|auto)/)
   })
 })
@@ -249,7 +251,7 @@ describe('focus and state cues', () => {
   })
 
   it('keeps decorative layers out of the way of pointer and keyboard', () => {
-    for (const selector of ['.hh-ui-house-art', '.hh-ui-room-art']) {
+    for (const selector of ['.hh-ui-house-art', '.hh-ui-room-art', '.hh-ui-room-wall', '.hh-ui-room-scene']) {
       expect(rules(css).find((rule) => rule.selector === selector)!.body).toContain('pointer-events: none')
     }
   })
@@ -311,7 +313,12 @@ describe('motion', () => {
     expect(css).not.toMatch(/perspective|parallax|shake|wobble|jitter|blink|strobe|flash/i)
     expect(css).not.toMatch(/translate3d|rotate3d|rotate[XY]|preserve-3d|backface/)
     expect(css).not.toMatch(/mousemove|pointermove|--mouse|--pointer|--cursor-[xy]|:hover[^{]*\{[^}]*transform/)
-    expect(css).not.toMatch(/background-attachment|scroll-timeline|animation-timeline|view-timeline|scroll-behavior|position:\s*sticky/)
+    expect(css).not.toMatch(/background-attachment|scroll-timeline|animation-timeline|view-timeline|scroll-behavior/)
+    // The one sticky element is the replay bar, and only in the wide layout: it holds still while the page scrolls under it,
+    // and never sticks at narrow widths or high zoom, where it would cover the house.
+    const sticky = rules(css).filter((rule) => /position:\s*sticky/.test(rule.body))
+    expect(sticky.map((rule) => rule.selector)).toEqual(['.hh-ui-replay-bar'])
+    expect(block(css, `@media (min-width: ${WIDE_BREAKPOINT_PX}px)`)).toMatch(/\.hh-ui-replay-bar \{ position: sticky;/)
     expect(css).not.toMatch(/steps\(/)
   })
 })

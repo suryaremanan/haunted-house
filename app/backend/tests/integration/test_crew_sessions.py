@@ -109,7 +109,7 @@ def test_dynamic_values_are_validated_and_errors_are_bounded(tmp_path):
             lambda: client.set_chat_slot_project("slot-1", "/a/../b"),
             lambda: client.set_chat_slot_interactive("slot 1"),
             lambda: client.send_chat_turn("slot-1", ""),
-            lambda: client.send_chat_turn("slot-1", "x" * 20000),
+            lambda: client.send_chat_turn("slot-1", "x" * (gateway_client.MAX_CHAT_MESSAGE_BYTES + 1)),
             lambda: client.send_chat_turn("..", "hello"),
             lambda: client.resolve_chat_approval("slot-1", "2", "m-1", "trust"),
             lambda: client.resolve_chat_approval("slot-1", "2", "m-1", "yolo"),
@@ -163,6 +163,8 @@ def test_only_chat_routes_exist_and_no_websocket_or_spawn_is_reachable():
     assert client_methods == {
         "call", "session_history", "create_chat_slot", "set_chat_slot_project",
         "set_chat_slot_interactive", "send_chat_turn", "resolve_chat_approval",
+        # Room Ghosts RG-S3: the one bodyless stop of an owned session's turn.
+        "stop_chat_slot",
     }
     assert gateway_client.ROUTES == {"version": ("GET", "/api/version")}
     forbidden_text = ("/api/spawn", "/api/approvals", "/api/ws", "ws_connect", "autoApprove", "yolo")

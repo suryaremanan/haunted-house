@@ -57,6 +57,7 @@ __all__ = [
     "CHAT_SLOTS_PATH",
     "CHAT_MODE_PATH",
     "MAX_CHAT_MESSAGE_BYTES",
+    "STOP_TIMEOUT",
     "DEFAULT_HISTORY_MESSAGES",
     "DEFAULT_TIMEOUT",
     "ERROR_KINDS",
@@ -104,7 +105,13 @@ CHAT_MODE_PATH = "/api/chat/mode"
 CHAT_MODE = "normal"  # interactive: Crew asks before each tool call
 CHAT_MEMORY_MODE = "temporary"
 CHAT_APPROVAL_ACTIONS = frozenset({"approved", "rejected"})
-MAX_CHAT_MESSAGE_BYTES = 16 * 1024
+# One role prompt: the Room_Skill block (at most 12 KiB) in front of a bounded
+# assignment (at most 32 KiB), Room Ghosts RG-S2.
+MAX_CHAT_MESSAGE_BYTES = 48 * 1024
+# RG-S3: Crew answers a stop only after the cancel settled; its own soft-stop
+# budget is 10 s (owner-configurable to 60), so the client waits at least 30 s.
+STOP_TIMEOUT = 35.0
+_MAX_RETRY_AFTER = 3600
 _MAX_PROJECT_BYTES = 1024
 
 DEFAULT_TIMEOUT = 30.0
@@ -147,7 +154,8 @@ class GatewayError(Exception):
 
     ``status`` is the HTTP status when there was one. ``code`` is the
     gateway's error code from the JSON body (``code``, or else ``error``),
-    when it is a string.
+    when it is a string. ``retry_after`` is the whole number of seconds of a
+    429 answer's ``Retry-After`` header, when it had one.
 
     The message and ``code`` are cleaned at construction: URL queries are
     removed and every value in ``secrets`` is redacted. ``secrets`` is not
@@ -162,12 +170,14 @@ class GatewayError(Exception):
         status: int | None = None,
         code: str | None = None,
         secrets: Iterable[str | None] = (),
+        retry_after: int | None = None,
     ) -> None:
         if kind not in ERROR_KINDS:
             raise ValueError(f"unknown GatewayError kind {kind!r}")
         hidden = list(secrets)
         self.kind = kind
         self.status = status
+        self.retry_after = retry_after if type(retry_after) is int else None
         self.code = None if code is None else _clean(code, hidden)[:_MAX_CODE_CHARS]
         super().__init__(_clean(message or kind, hidden))
 
@@ -180,7 +190,7 @@ def token_exchange_path(app_name: str) -> str:
 class _CallState:
     """What one ``call()`` needs to keep its output clean."""
 
-    __slots__ = ("base", "secret", "secrets", "last")
+    __slots__ = ("base", "secret", "secrets", "last", "retry_after")
 
     def __init__(self, secret: str | None, cached_token: str | None) -> None:
         self.base = ""
@@ -189,6 +199,8 @@ class _CallState:
         self.secrets: list[str | None] = [secret, cached_token]
         # "METHOD /path" of the last request started, for error messages.
         self.last = ""
+        # Seconds of the last 429 answer's Retry-After header, if it had one.
+        self.retry_after: int | None = None
 
 
 class GatewayClient:
@@ -383,6 +395,20 @@ class GatewayClient:
         }
         return await self._run(state, "POST", path, path, body, timeout)
 
+    async def stop_chat_slot(self, slot: str, *, timeout: float = STOP_TIMEOUT) -> dict[str, Any]:
+        """Ask Crew to stop the owned session's turn: one bodyless
+        ``POST /api/chat/slots/<slot>/stop`` (RG-S3).
+
+        Sent at most once: a second stop while the first is pending is a
+        forced stop that resets the session, so a refused token is not
+        refreshed and retried here, and ``force`` is never sent. ``timeout``
+        is at least 30 seconds. The answer is ``{"ok": true}`` only after the
+        cancel settled; one carrying ``info`` stopped nothing.
+        """
+        state = _CallState(self._settings.secret, self._token)
+        path = self._slot_path(state, slot, "/stop")
+        return await self._run(state, "POST", path, path, None, max(float(timeout), 30.0), once=True)
+
     def _slot_path(self, state: _CallState, slot: object, suffix: str) -> str:
         if type(slot) is not str or _SLOT.fullmatch(slot) is None or slot in (".", ".."):
             raise self._fail(state, "config", "a chat call needs one valid slot name")
@@ -398,6 +424,7 @@ class GatewayClient:
         timeout: float,
         *,
         max_bytes: int | None = None,
+        once: bool = False,
     ) -> dict[str, Any]:
         """Check that the call is safe, then make it under one deadline.
 
@@ -426,7 +453,7 @@ class GatewayClient:
         try:
             async with asyncio.timeout(timeout):
                 return await self._call(
-                    state, method, path, target, body, max_bytes
+                    state, method, path, target, body, max_bytes, once
                 )
         except TimeoutError:  # also aiohttp's own timeouts, which subclass it
             kind, message = "timeout", f"{state.last} got no answer within {timeout:g} s"
@@ -446,8 +473,18 @@ class GatewayClient:
         target: str,
         body: dict[str, Any] | None,
         max_bytes: int | None,
+        once: bool = False,
     ) -> dict[str, Any]:
         status, data = await self._target(state, method, target, body, max_bytes)
+        if status in _REFUSED and once:
+            # The target request is never sent a second time.
+            raise self._fail(
+                state,
+                "denied",
+                f"{method} {path} was refused ({status})",
+                status=status,
+                code=_error_code(data),
+            )
         if status in _REFUSED:
             self._log(
                 logging.INFO,
@@ -568,6 +605,7 @@ class GatewayClient:
         async with self._session.request(method, url, **kwargs) as response:
             status = response.status
             raw = await response.read()
+            state.retry_after = _retry_after(response) if status == 429 else None
         self._log(logging.DEBUG, state, f"{state.last} -> {status}")
         if max_bytes is not None and len(raw) > max_bytes:
             return status, _TOO_LARGE
@@ -582,7 +620,14 @@ class GatewayClient:
         status: int | None = None,
         code: str | None = None,
     ) -> GatewayError:
-        error = GatewayError(kind, message, status=status, code=code, secrets=state.secrets)
+        error = GatewayError(
+            kind,
+            message,
+            status=status,
+            code=code,
+            secrets=state.secrets,
+            retry_after=state.retry_after if status == 429 else None,
+        )
         self._log(logging.WARNING, state, f"gateway call failed ({kind}): {error}")
         return error
 
@@ -611,6 +656,18 @@ def load_allowed_prefixes(app_json_path: Path) -> list[str]:
         log.warning("%s has no permissions.api list; gateway calls will be refused", app_json_path)
         return []
     return [entry for entry in api if isinstance(entry, str) and entry]
+
+
+def _retry_after(response: object) -> int | None:
+    """Whole seconds of a ``Retry-After`` header; a date form is ignored."""
+    headers = getattr(response, "headers", None)
+    try:
+        value = headers.get("Retry-After") if headers is not None else None
+    except Exception:  # noqa: BLE001 - a response without usable headers
+        return None
+    if type(value) is not str or not value.strip().isdigit() or len(value.strip()) > 6:
+        return None
+    return min(int(value.strip()), _MAX_RETRY_AFTER)
 
 
 def _is_name(value: object) -> bool:

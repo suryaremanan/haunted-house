@@ -53,6 +53,8 @@ from haunted_house.seance_routes import (
     mansion_service_gate,
     register_seance_routes,
 )
+from haunted_house.room_ghost_routes import RoomGhostsProvider, register_room_ghost_routes
+from haunted_house.services.room_ghosts import RoomGhosts
 from haunted_house.workflow_routes import WorkflowServiceProvider, register_workflow_routes
 from haunted_house.workflow_wiring import live_workflow
 
@@ -163,6 +165,7 @@ def build_app(
     seance_service: SeanceService | SeanceServiceProvider | None = None,
     seance_mansion_gate: MansionGate | None = None,
     workflow_service: WorkflowService | WorkflowServiceProvider | None = None,
+    room_ghosts: RoomGhosts | RoomGhostsProvider | None = None,
 ) -> web.Application:
     """Build the backend application.
 
@@ -226,6 +229,10 @@ def build_app(
     if workflow_service is not None:
         # Workflow, Door and risky-decision API, behind the same signature check.
         register_workflow_routes(app, workflow_service)
+    if room_ghosts is not None:
+        # Room Ghosts read model, feedback, Workshop start, cancel and retry:
+        # the same signature check, and no second approval or state route.
+        register_room_ghost_routes(app, room_ghosts)
     return app
 
 
@@ -280,6 +287,7 @@ def build_live_app(
         seance_service=seance,
         seance_mansion_gate=mansion_service_gate(mansions),
         workflow_service=workflow.provider,
+        room_ghosts=workflow.room_ghosts,
     )
     app.cleanup_ctx.append(gateway_session)
     app.cleanup_ctx.append(workflow.lifecycle)

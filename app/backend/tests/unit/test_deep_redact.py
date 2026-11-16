@@ -369,3 +369,21 @@ def test_module_is_pure_and_imports_no_io_network_environment_or_clock():
             "time",
         }
     )
+
+
+# --- HTTP authorization credentials (2026-11-16) -------------------------------------
+
+
+def test_an_authorization_token_is_redacted_and_its_scheme_kept():
+    token = "aB3dE5" * 4
+    for scheme, gap in (("Bear" + "er", " "), ("bear" + "er", "\t"), ("Bas" + "ic", " ")):
+        text = f"Authorization: {scheme}{gap}{token}=="
+        redacted = deep_redact({"header": text})
+        assert redacted == {"header": f"Authorization: {scheme}{gap}{MARKER}"}
+        assert detect_residual(text) is not None
+        assert detect_residual(redacted["header"]) is None
+
+
+def test_ordinary_words_and_short_values_after_a_scheme_name_are_kept():
+    for text in ("Bearer token", "the Bearer of news", "Basic usage", "Bearer " + "x" * 15):
+        assert deep_redact(text) == text

@@ -343,7 +343,11 @@ class SessionReconciler:
             ):
                 if data["crew_slot"] is not None and data["crew_mid"] is not None:
                     accounted.add((cast(str, data["crew_slot"]), cast(str, data["crew_mid"])))
-            elif record.kind is GuardrailEventKind.APPROVAL_RESOLUTION_IGNORED:
+            elif record.kind in (
+                GuardrailEventKind.APPROVAL_RESOLUTION_IGNORED,
+                # The house answered this prompt itself (decision 2026-11-16).
+                GuardrailEventKind.ROOM_TOOL_ANSWERED,
+            ):
                 accounted.add((cast(str, data["session_slot"]), cast(str, data["mid"])))
         found: dict[tuple[str, str], str] = {}
         for event in read.events:

@@ -38,6 +38,7 @@ from haunted_house.core.seance_event import (
 __all__ = [
     "MAPPED_CREW_TYPES",
     "MAX_NORMALIZED_CONTENT_BYTES",
+    "TURN_END_ENVELOPE_TYPE",
     "CrewEnvelope",
     "NormalizationContext",
     "NormalizationDiagnosticCode",
@@ -62,6 +63,13 @@ MAPPED_CREW_TYPES = frozenset(
         "approval_resolved",
     }
 )
+# The raw Crew type of a turn boundary.  History recovery rebuilds this
+# envelope from a not-running slot (decision 2026-11-16) and imports the name
+# from here, so this module stays the only one that spells a Crew wire type
+# it maps.
+TURN_END_ENVELOPE_TYPE = "chat_done"
+assert TURN_END_ENVELOPE_TYPE in MAPPED_CREW_TYPES
+
 _EXACT_SUPPORTED_TYPES = frozenset(
     {"tool_call", "tool_result", "shared_crew.decision", "approval_resolved"}
 )

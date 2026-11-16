@@ -77,6 +77,9 @@ __all__ = [
     "ValidatedTerminalGate",
     "run_terminal",
     "terminal_candidate",
+    "terminal_code",
+    "terminal_outcome",
+    "terminal_status",
 ]
 
 TERMINAL_EVENT_TYPES = ("run_completed", "run_failed", "run_blocked")
@@ -290,6 +293,30 @@ def _status(event: AppEvent) -> TerminalStatus:
 def _payload_code(event: AppEvent) -> str:
     code = event.payload.get("code") if type(event.payload) is dict else None
     return code if type(code) is str else event.event_type
+
+
+def terminal_status(event: AppEvent) -> TerminalStatus | None:
+    """``completed``, ``failed`` or ``blocked`` when ``event`` is a house-origin
+    run terminal, else ``None``.  Other Room Ghosts modules ask this instead of
+    spelling the domain terminal types themselves."""
+
+    if event.event_type not in TERMINAL_EVENT_TYPES or event.source.origin != "house":
+        return None
+    return _status(event)
+
+
+def terminal_code(event: AppEvent) -> str:
+    """The stable code a terminal record carries (``ready`` when completed)."""
+
+    return _payload_code(event)
+
+
+def terminal_outcome(event: AppEvent) -> tuple[str, str] | None:
+    """``(status, code)`` of a house-origin run terminal, else ``None``: the
+    classifier the pure Room Ghosts folds take."""
+
+    status = terminal_status(event)
+    return None if status is None else (status, _payload_code(event))
 
 
 def _spec_document(binding: GhostRunBinding, phase: Phase) -> str:

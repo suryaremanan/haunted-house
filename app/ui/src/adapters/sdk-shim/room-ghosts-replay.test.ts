@@ -5,25 +5,26 @@ import demo from '../../../../../fixtures/replay/demo.jsonl?raw'
 import { parseRoomGhosts } from '../../core/room-projection'
 import { parseWorkflowProjection } from '../../core/workflow-projection'
 import { createRoomGhostsReplayRoutes } from './room-ghosts-replay'
+import { createReplaySource } from './replay-source'
 import { createSeanceReplayRoutes } from './seance-replay'
 import { createWorkflowReplayRoutes } from './workflow-replay'
 
 const MANSION = 'demo-mansion'
 const ROUTE = `/apps/haunted-house/api/mansions/${MANSION}/specs/${MANSION}/room-ghosts`
 
-function routes(text = demo, elapsedMs = 10 * 60_000) {
-  let now = 0
+function routes(text = demo, cursor = Number.MAX_SAFE_INTEGER) {
   const fetch = vi.fn(async () => new Response(text, { status: 200 }))
-  const seance = createSeanceReplayRoutes({ fetch, now: () => now })
+  const source = createReplaySource({ fetch })
+  const seance = createSeanceReplayRoutes(source)
   return {
     fetch,
     seance,
     rooms: createRoomGhostsReplayRoutes(seance),
     workflow: createWorkflowReplayRoutes(seance),
-    /** Loads the recording at time zero, then lets `elapsedMs` of playback pass. */
+    /** Loads the recording, then moves the Attic's Cursor to `cursor`. */
     async play() {
       await seance.presented(MANSION)
-      now = elapsedMs
+      source.present(MANSION, cursor)
     },
   }
 }

@@ -5,7 +5,7 @@ import { render } from '@testing-library/react'
 import type { ReactElement } from 'react'
 import { describe, expect, it } from 'vitest'
 import { HOUSE_ROOM_IDS, PRESENTATION_DOOR_STATES, PRESENTATION_GHOST_STATES } from '../core/house-registry'
-import { CandleArt, DoorArt, DustArt, GHOST_VARIANTS, GhostArt, HouseCutawayArt, RoomArt, ghostVariantOf } from './house-art'
+import { CandleArt, DoorArt, DustArt, GHOST_VARIANTS, GhostArt, HouseCutawayArt, RoomArt, RoomWallArt, ghostVariantOf } from './house-art'
 import artSource from './house-art.tsx?raw'
 import paletteSource from './house-palette.ts?raw'
 import stylesSource from './house-styles.ts?raw'
@@ -20,6 +20,7 @@ const DRAWINGS: readonly Drawing[] = [
   { name: 'cutaway', element: <HouseCutawayArt /> },
   { name: 'cutaway with séance bay', element: <HouseCutawayArt seanceRoom /> },
   ...HOUSE_ROOM_IDS.map((room) => ({ name: `room ${room}`, element: <RoomArt room={room} /> })),
+  ...HOUSE_ROOM_IDS.map((room) => ({ name: `wall ${room}`, element: <RoomWallArt room={room} /> })),
   ...GHOST_VARIANTS.flatMap((variant) =>
     PRESENTATION_GHOST_STATES.map((state) => ({ name: `ghost ${variant} ${state}`, element: <GhostArt state={state} variant={variant} /> })),
   ),
@@ -41,7 +42,7 @@ function markup(element: ReactElement): string {
 
 describe('every drawing', () => {
   it('covers each room, each ghost role in each state, and each Door state', () => {
-    expect(DRAWINGS).toHaveLength(2 + 6 + 6 * 8 + 6 + 3)
+    expect(DRAWINGS).toHaveLength(2 + 6 + 6 + 6 * 8 + 6 + 3)
   })
 
   for (const drawing of DRAWINGS) {

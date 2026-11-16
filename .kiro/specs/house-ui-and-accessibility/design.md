@@ -159,11 +159,13 @@ The fixed MVP navigation map is spatial rather than list-based:
 | Room | Up | Down | Left | Right |
 |---|---|---|---|---|
 | Foyer | Drafting Room | — | Study | Workshop |
-| Study | Attic | — | — | Foyer |
-| Drafting Room | Attic | Foyer | Study | Workshop |
-| Workshop | Attic | — | Foyer | Séance Room when visible |
-| Attic | — | Drafting Room | Study | Workshop |
-| Séance Room | Attic | — | Workshop | — |
+| Study | Drafting Room | — | — | Foyer |
+| Drafting Room | Attic | Foyer | — | Séance Room when visible |
+| Workshop | Séance Room when visible (else Attic) | — | Foyer | — |
+| Attic | — | Drafting Room | — | — |
+| Séance Room | Attic | Workshop | Drafting Room | — |
+
+Decision (2026-11-16, visual design pass): the wide cutaway puts the Attic across the top, the Drafting Room and Séance Room on the upper floor, and the Study, Foyer (centre, front door) and Workshop (widest: up to four ghosts and two Doors) on the ground floor. The map above follows that layout. DOM and reading order stay Room order.
 
 When the preferred neighbor is hidden, `nextRoom` follows the same direction through the static map once more; if no visible target exists, it returns the origin. Responsive reflow does not change this map, so a layout media query cannot silently change keyboard behavior.
 
@@ -395,6 +397,8 @@ Room panels receive authoritative action callbacks from upstream adapters. They 
 ```
 
 Exact variable names replace the placeholders only after HUI-S1. Light and dark fallback palettes are data in `house-palette.ts`, allowing automated contrast calculation. State colors are accents only; shape, icon/pose, border style, and text carry meaning.
+
+Decision (2026-11-16, visual design pass): art never sits under text. Each room cell has a content region (room, ghost and Door controls) and a reserved scene region below it (candle, furniture), sized by width and aspect ratio. The cutaway drawing is the roof only, laid above the room grid; the walls and ground are the grid's borders. Ghost controls draw the ghost at about 3.5em (56px at default text size) in a per-state color (idle ghost, working blue ink, waiting amber with a raised lantern, blocked muted with a cobweb, failed red cross, done green glow and tick), always beside the ghost's name and state word. The `working` token was added to the palette and is held to 4.5:1. In a recording, the room cells keep their read-only reason for assistive technology only; the replay bar says it once for the house. The replay bar may be `position: sticky` in the wide layout only.
 
 At 900 CSS pixels and above, CSS Grid positions rooms over the cutaway. Below 900 pixels, the same list uses a compact grid. At 640 pixels and below, it becomes one column. At a 320-pixel container width, controls use `min-width: 0`, long values use `overflow-wrap: anywhere`, and the page has no horizontal overflow. The panel width is bounded by `min(42rem, 100%)`.
 

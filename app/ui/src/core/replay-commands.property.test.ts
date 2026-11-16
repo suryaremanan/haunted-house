@@ -87,6 +87,13 @@ describe('Property 3: Playback command sequences converge without spontaneous pr
             case 'play':
             case 'resume': {
               const before = send({ kind: action.kind })
+              if (reference.status !== 'playing' && reference.cursor >= total && total > 0) {
+                // Play at the end starts again from the beginning: Cursor zero, playing, its fresh fold.
+                reference.status = 'playing'
+                reference.cursor = 0
+                expect(state.projection).toEqual(prefix(0))
+                break
+              }
               if (reference.status !== 'playing') reference.status = reference.cursor < total ? 'playing' : 'complete'
               // Playing starts nothing by itself: same position, same projection object.
               expect(state.cursor).toBe(before.cursor)
@@ -152,7 +159,12 @@ describe('Property 3: Playback command sequences converge without spontaneous pr
 
           expect({ status: state.status, cursor: state.cursor, speed: state.speed }).toEqual(reference)
           expect(state.projection).toEqual(prefix(state.cursor))
-          expect(Math.abs(state.cursor - stepsBefore) <= 1 || action.kind === 'seek' || action.kind === 'restart').toBe(true)
+          expect(
+            Math.abs(state.cursor - stepsBefore) <= 1 ||
+              action.kind === 'seek' ||
+              action.kind === 'restart' ||
+              ((action.kind === 'play' || action.kind === 'resume') && state.cursor === 0),
+          ).toBe(true)
           const delay = nextDelayMs(model, state)
           expect(delay === null).toBe(state.status !== 'playing')
         }

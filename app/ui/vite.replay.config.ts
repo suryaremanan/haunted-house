@@ -11,13 +11,18 @@ const here = (path: string) => fileURLToPath(new URL(path, import.meta.url))
 const SDK_SHIM = here('./src/adapters/sdk-shim/index.ts')
 const RECORDING = here('../../fixtures/replay/demo.jsonl')
 
-/** Copies the recording into the build as fixture.jsonl, where the stand-in fetches it. */
+/**
+ * Copies the recording into the build as fixture.jsonl, where the stand-in
+ * fetches it, and adds an empty .nojekyll so GitHub Pages serves the folder
+ * as built. These are the only two files that do not come from the module graph.
+ */
 function replayRecording(): Plugin {
   return {
     name: 'haunted-house:replay-recording',
     apply: 'build',
     async generateBundle() {
       this.emitFile({ type: 'asset', fileName: 'fixture.jsonl', source: await readFile(RECORDING) })
+      this.emitFile({ type: 'asset', fileName: '.nojekyll', source: '' })
     },
   }
 }
@@ -27,6 +32,8 @@ export default defineConfig({
   base: './',
   // The recording is the only static file; it comes from fixtures/, not a public folder.
   publicDir: false,
+  // No .env file and no environment variable reaches the page (Requirement 4.8).
+  envDir: false,
   plugins: [react(), replayRecording()],
   resolve: {
     // Exact match only: a subpath such as the SDK's /ui components has no stand-in and should fail to resolve.

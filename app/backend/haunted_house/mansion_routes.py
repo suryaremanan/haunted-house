@@ -11,7 +11,9 @@ proxy-signature middleware already guards every `/api/` path:
     descriptor = {"name", "projectSpec", "displayPath", "status"}
     error      = {"error": {"code": <stable code>, "message": <fixed copy>}}
 
-POST bodies must be `application/json` holding exactly `{"name": <string>}`.
+POST bodies must be `application/json`. Open holds exactly `{"name": <string>}`;
+create holds that or exactly `{"name": <string>, "brief": <string>}`, where the
+optional feature brief is written once to `.kiro/specs/<projectSpec>/brief.md`.
 The client never sends a path. Error messages are fixed text chosen by code,
 so no request text, host path, or exception text can reach a response. Logs
 carry the stable code and, for unexpected failures, the exception class name.
@@ -44,6 +46,7 @@ from haunted_house.core.mansion_planner import CreateOutcome
 from haunted_house.core.mansion_requests import (
     InvalidRequest,
     MansionRequest,
+    parse_create_mansion_request,
     parse_mansion_request,
 )
 
@@ -151,12 +154,16 @@ def register_mansion_routes(
         return await _guarded(provider, run)
 
     async def create_mansion(request: web.Request) -> web.Response:
-        parsed = await _read_request(request)
+        parsed = await _read_request(request, parse_create_mansion_request)
         if parsed is None:
             return _error("invalid_request")
 
         async def run(current: MansionService) -> web.Response:
-            result = await current.create_mansion(parsed.name)
+            result = await (
+                current.create_mansion(parsed.name)
+                if parsed.brief is None
+                else current.create_mansion(parsed.name, brief=parsed.brief)
+            )
             created = result.outcome is CreateOutcome.CREATED
             return web.json_response(
                 {
@@ -217,7 +224,10 @@ async def _guarded(
         return _error("filesystem_error")
 
 
-async def _read_request(request: web.Request) -> MansionRequest | None:
+async def _read_request(
+    request: web.Request,
+    parse: Callable[[object], MansionRequest] = parse_mansion_request,
+) -> MansionRequest | None:
     """Return the parsed body, or None for anything but the exact shape.
 
     The signature middleware has already read the body, so `read()` returns
@@ -232,7 +242,7 @@ async def _read_request(request: web.Request) -> MansionRequest | None:
             object_pairs_hook=_object_without_duplicates,
             parse_constant=_reject_constant,
         )
-        return parse_mansion_request(value)
+        return parse(value)
     except (InvalidRequest, ValueError, RecursionError):
         # UnicodeDecodeError and JSONDecodeError are ValueErrors.
         return None

@@ -3,23 +3,25 @@ import { describe, expect, it, vi } from 'vitest'
 import demo from '../../../../../fixtures/replay/demo.jsonl?raw'
 import demoWorkflow from '../../../../../fixtures/replay/demo.workflow.json'
 import { parseWorkflowProjection } from '../../core/workflow-projection'
+import { createReplaySource } from './replay-source'
 import { createSeanceReplayRoutes } from './seance-replay'
 import { createWorkflowReplayRoutes } from './workflow-replay'
 
 const PATH = '/apps/haunted-house/api/mansions/demo-mansion/workflow'
 
-function routes(body: string = demo, elapsedMs = 10 * 60_000) {
-  let now = 0
+function routes(body: string = demo) {
   const fetch = vi.fn(async () => new Response(body, { status: 200 }))
-  const seance = createSeanceReplayRoutes({ fetch, now: () => now })
+  const source = createReplaySource({ fetch })
+  const seance = createSeanceReplayRoutes(source)
   return {
     fetch,
     workflow: createWorkflowReplayRoutes(seance),
     seance,
-    /** Starts playback, then moves the clock. */
+    /** Moves the Attic's Cursor to the end of the recording, for every Mansion. */
     async play() {
-      await seance.presented('demo-mansion')
-      now = elapsedMs
+      const { records } = await source.recording()
+      source.present('demo-mansion', records.length)
+      source.present('other-mansion', records.length)
     },
   }
 }
@@ -36,9 +38,9 @@ describe('workflow replay route', () => {
   it('serves the initial read-only projection before playback presents anything', async () => {
     const { workflow } = routes()
     const parsed = parseWorkflowProjection(await workflow.get(PATH), 'demo-mansion')
-    // Playback has only just begun: at most the first record is presented, and it is not a Spec 4 fact.
+    // Nothing is presented until the Attic moves its Cursor.
     expect(parsed.ok && parsed.projection).toMatchObject({ readOnly: true, integrity: 'valid', riskyProposals: [] })
-    expect(parsed.ok && parsed.projection.version).toBeLessThanOrEqual(1)
+    expect(parsed.ok && parsed.projection.version).toBe(0)
     expect(parsed.ok && parsed.projection.phases.map((phase) => phase.status)).toEqual(['ready', 'not_started', 'not_started', 'not_started'])
   })
 
@@ -72,7 +74,7 @@ describe('workflow replay route', () => {
   })
 
   it('rejects when the recording cannot be loaded and a malformed mansion name', async () => {
-    const seance = createSeanceReplayRoutes({ fetch: async () => new Response('missing', { status: 404 }) })
+    const seance = createSeanceReplayRoutes(createReplaySource({ fetch: async () => new Response('missing', { status: 404 }) }))
     const workflow = createWorkflowReplayRoutes(seance)
     await expect(workflow.get(PATH)).rejects.toMatchObject({ status: 502 })
     await expect(workflow.get('/apps/haunted-house/api/mansions/%E0%A4%A/workflow')).rejects.toMatchObject({ status: 400 })

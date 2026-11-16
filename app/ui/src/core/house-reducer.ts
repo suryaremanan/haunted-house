@@ -1,27 +1,19 @@
 // UI state of the house and the one gate every command passes (Spec 4,
 // Requirements 4.8, 9.7, 9.9). The reducer holds the latest backend projection
-// as received: no action can change a proposal's status. Navigation, viewing,
-// timers and ghost activity move focus or nothing at all. A command leaves the
-// page only through `authorizeCommand`, and only for an explicit press.
+// as received: no action can change a proposal's status. Viewing, timers and
+// ghost activity change nothing at all. A command leaves the page only through
+// `authorizeCommand`, and only for an explicit press. Which room is focused or
+// open is not workflow state: it lives in the Mansion Shell (Spec 6), and the
+// arrow map is `house-registry.ts`.
 // No SDK, React, network, or clock.
 
-import {
-  moveRoom,
-  type Authority,
-  type ProjectionStatus,
-  type RoomId,
-  type WorkflowCommand,
-} from './house-view'
+import type { Authority, ProjectionStatus, WorkflowCommand } from './house-view'
 import type { WorkflowProjection } from './workflow-projection'
 
 export interface HouseUiState {
   /** The newest projection the backend sent, exactly as parsed. */
   readonly projection: WorkflowProjection | null
   readonly projectionStatus: ProjectionStatus
-  /** The room that holds the map's roving focus. */
-  readonly focusedRoom: RoomId
-  /** The room whose panel is open, or null when the map alone shows. */
-  readonly openRoom: RoomId | null
   /** `commandTarget` of the command on its way, or null. One command at a time. */
   readonly inFlight: string | null
   /** The result of the last command, in plain words. */
@@ -31,8 +23,6 @@ export interface HouseUiState {
 export const INITIAL_HOUSE_STATE: HouseUiState = {
   projection: null,
   projectionStatus: 'loading',
-  focusedRoom: 'study',
-  openRoom: null,
   inFlight: null,
   notice: null,
 }
@@ -41,10 +31,6 @@ export type HouseAction =
   | { readonly type: 'projection_received'; readonly projection: WorkflowProjection }
   | { readonly type: 'projection_refused' }
   | { readonly type: 'projection_unavailable' }
-  | { readonly type: 'room_focused'; readonly room: RoomId }
-  | { readonly type: 'room_moved'; readonly direction: 'next' | 'previous' | 'first' | 'last' }
-  | { readonly type: 'room_opened'; readonly room: RoomId }
-  | { readonly type: 'room_closed' }
   | { readonly type: 'command_sent'; readonly target: string }
   | { readonly type: 'command_settled'; readonly notice: string | null }
   | { readonly type: 'notice_dismissed' }
@@ -70,16 +56,6 @@ export function reduceHouse(state: HouseUiState, action: HouseAction): HouseUiSt
       return state.projectionStatus === 'malformed' ? state : { ...state, projectionStatus: 'malformed' }
     case 'projection_unavailable':
       return state.projectionStatus === 'unavailable' ? state : { ...state, projectionStatus: 'unavailable' }
-    case 'room_focused':
-      return state.focusedRoom === action.room ? state : { ...state, focusedRoom: action.room }
-    case 'room_moved': {
-      const room = moveRoom(state.focusedRoom, action.direction)
-      return room === state.focusedRoom ? state : { ...state, focusedRoom: room }
-    }
-    case 'room_opened':
-      return { ...state, focusedRoom: action.room, openRoom: action.room }
-    case 'room_closed':
-      return state.openRoom === null ? state : { ...state, openRoom: null }
     case 'command_sent':
       return { ...state, inFlight: action.target, notice: null }
     case 'command_settled':

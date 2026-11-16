@@ -44,6 +44,7 @@ __all__ = [
     "MAX_ATTEMPT",
     "MAX_CLAIM_PATHS",
     "MAX_EVIDENCE",
+    "MAX_SELECTED_TASKS",
     "RELEASE_OUTCOMES",
     "SOURCE_TYPE",
     "RoomGhostEventKind",
@@ -62,6 +63,8 @@ SOURCE_TYPE = "room_ghost"
 MAX_CLAIM_PATHS = 32
 MAX_EVIDENCE = 64
 MAX_ATTEMPT = 3
+MAX_SELECTED_TASKS = 200
+_REVISABLE_PHASES = ("requirements", "design", "tasks")
 # ``not_started``: a provisional claim whose session Crew never accepted.
 RELEASE_OUTCOMES = ("complete", "failed", "cancelled", "blocked", "not_started")
 _MAX_SIZE = 2**53 - 1
@@ -76,6 +79,11 @@ class RoomGhostEventKind(StrEnum):
     TASK_COMPLETION_INTENDED = "task_completion_intended"
     TASK_COMPLETED = "task_completed"
     TASK_COMPLETION_ABANDONED = "task_completion_abandoned"
+    # Operator commands Room Ghosts owns.  Each is keyed by its command id, so
+    # a repeated command is the same record.
+    WORKSHOP_SELECTED = "workshop_selected"
+    REVISION_REQUESTED = "revision_requested"
+    RETRY_REQUESTED = "retry_requested"
 
 
 class RoomGhostPayloadError(ValueError):
@@ -144,6 +152,23 @@ def _claim_paths(value: object) -> list[JSONValue]:
     if len({cast(str, item) for item in items}) != len(items):
         raise _Bad("duplicate_path")
     return [cast(str, item) for item in items]
+
+
+def _task_ids(value: object) -> list[JSONValue]:
+    if type(value) not in (list, tuple):
+        raise _Bad("invalid_task_ids")
+    items = list(cast("list[object] | tuple[object, ...]", value))
+    if not 1 <= len(items) <= MAX_SELECTED_TASKS:
+        raise _Bad("out_of_range")
+    if not all(is_task_id(item) for item in items):
+        raise _Bad("invalid_task_id")
+    if len({cast(str, item) for item in items}) != len(items):
+        raise _Bad("duplicate_task_id")
+    return [cast(str, item) for item in items]
+
+
+def _optional_task_id(value: object) -> str | None:
+    return None if value is None else _task_id(value)
 
 
 def _evidence(value: object) -> list[JSONValue]:
@@ -236,6 +261,34 @@ _SCHEMAS: dict[
         {**_COMPLETION, "code": _code},
         "completion_id",
         ("completion_id",),
+    ),
+    K.WORKSHOP_SELECTED: (
+        {"command_id": _identifier, "task_ids": _task_ids},
+        "command_id",
+        ("command_id",),
+    ),
+    K.REVISION_REQUESTED: (
+        {
+            "command_id": _identifier,
+            "phase": _one_of(*_REVISABLE_PHASES),
+            # The run the feedback was given about; the text itself is never recorded.
+            "run_id": _identifier,
+            "feedback_sha256": _sha256,
+            "size_bytes": _int_between(1, _MAX_SIZE),
+        },
+        "command_id",
+        ("command_id",),
+    ),
+    K.RETRY_REQUESTED: (
+        {
+            "command_id": _identifier,
+            # The failed or cancelled run a fresh attempt replaces.
+            "run_id": _identifier,
+            "task_id": _optional_task_id,
+            "attempt": _int_between(2, MAX_ATTEMPT),
+        },
+        "command_id",
+        ("command_id",),
     ),
 }
 _PAYLOAD_FIELDS = frozenset({"domain", "kind", "entity_id", "data"})

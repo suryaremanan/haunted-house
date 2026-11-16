@@ -102,9 +102,28 @@ function markup(container: Element): string {
   return container.innerHTML.replace(/:r[0-9a-z]+:/g, ':id:')
 }
 
+/**
+ * The markup both builds must share for an opened mansion: everything but the
+ * mode attribute and what only a recording shows. The replay bar (with the
+ * start note and the one read-only sentence) replaces the live build's
+ * read-only note. Attributes are compared as a set, so the order React
+ * happened to write them in does not count.
+ */
+function sharedMarkup(container: Element): string {
+  const copy = container.cloneNode(true) as Element
+  copy.querySelectorAll('[data-replay-start], [data-replay-bar], .hh-ui-notes > [data-block="read_only"]').forEach((note) => note.remove())
+  copy.querySelectorAll('[data-mode]').forEach((node) => node.removeAttribute('data-mode'))
+  for (const node of [copy, ...Array.from(copy.querySelectorAll('*'))]) {
+    const attributes = Array.from(node.attributes, ({ name, value }) => [name, value] as const).sort(([a], [b]) => (a < b ? -1 : 1))
+    for (const [name] of attributes) node.removeAttribute(name)
+    for (const [name, value] of attributes) node.setAttribute(name, value)
+  }
+  return markup(copy)
+}
+
 /** Waits until the opened mansion's house has read its state, so both builds are compared at rest. */
 async function houseSettled(container: Element): Promise<void> {
-  await waitFor(() => expect(container.querySelector('.hh-house-map')).toHaveAttribute('aria-busy', 'false'))
+  await waitFor(() => expect(container.querySelector('.hh-ui')).toHaveAttribute('aria-busy', 'false'))
 }
 
 function expectNoWayOut(): void {
@@ -158,11 +177,15 @@ describe('replay Foyer', () => {
     expect(radioValues()).toEqual(recordedMansions.mansions.map(({ name }) => name).sort())
     for (const { name, displayPath, status } of recordedMansions.mansions) {
       const card = radio(name).closest('label')!
-      expect(within(card).getByText(displayPath)).toBeInTheDocument()
+      expect(card.querySelector('.hh-mansion-path')?.textContent).toBe(displayPath)
       expect(radio(name).disabled).toBe(status !== 'ready')
     }
     expect(within(group).getByText(/^Missing:/)).toBeInTheDocument()
-    expect(page.getByRole('button', { name: 'Open mansion' })).toHaveAttribute('aria-disabled', 'true')
+    // The recording's mansion is selected and invited, but nothing opens by itself.
+    expect(radio('demo-mansion').checked).toBe(true)
+    expect(page.getByText('Watch a mansion get built, then step through what happened.')).toBeInTheDocument()
+    expect(page.getByRole('button', { name: 'Open demo-mansion' })).toHaveAttribute('aria-disabled', 'false')
+    expect(page.queryByRole('region', { name: 'Mansion demo-mansion' })).not.toBeInTheDocument()
     expect(page.getByRole('button', { name: 'Create mansion' })).toHaveAttribute('aria-disabled', 'false')
     expect(page.queryByRole('button', { name: 'Retry' })).not.toBeInTheDocument()
     expect(liveRegions(container)).toHaveLength(1)
@@ -176,7 +199,7 @@ describe('replay Foyer', () => {
     // Create: the visible list gains the mansion through the sorted upsert.
     await createMansion('a-new-wing')
     expect(radioValues()).toEqual(['a-new-wing', ...before])
-    expect(within(radio('a-new-wing').closest('label')!).getByText(`${ROOT}/a-new-wing`)).toBeInTheDocument()
+    expect(radio('a-new-wing').closest('label')!.querySelector('.hh-mansion-path')?.textContent).toBe(`${ROOT}/a-new-wing`)
     const summary = liveRegions(container)[0]
     expect(summary).toHaveTextContent(`${SUMMARY} Mansion a-new-wing created.`)
 
@@ -200,15 +223,20 @@ describe('replay Foyer', () => {
     await act(async () => {
       fireEvent.click(open)
     })
-    const shell = await screen.findByRole('region', { name: 'a-new-wing' })
-    expect(within(shell).getByRole('heading', { level: 2, name: 'a-new-wing' })).toHaveFocus()
-    expect(within(shell).getByText('Project spec').nextElementSibling).toHaveTextContent('a-new-wing')
-    expect(within(shell).getByText('Folder').nextElementSibling).toHaveTextContent(`${ROOT}/a-new-wing`)
+    const shell = await screen.findByRole('region', { name: 'Mansion a-new-wing' })
+    expect(within(shell).getByRole('heading', { level: 2, name: /^Mansion\s*a-new-wing$/ })).toHaveFocus()
     expect(screen.queryByRole('region', { name: 'Foyer' })).not.toBeInTheDocument()
-    expect(summary).toHaveTextContent('Mansion a-new-wing opened.')
+    // In an open mansion the house's announcer is the page's one live region.
+    expect(liveRegions(container)).toHaveLength(1)
+    expect(liveRegions(container)[0]).toHaveTextContent('Mansion a-new-wing opened.')
+    // The Foyer room of the house names the mansion and its folder, and offers the way back.
+    fireEvent.click(within(shell).getByRole('button', { name: /^Foyer\./ }))
+    const foyerRoom = await within(shell).findByRole('region', { name: 'Foyer' })
+    expect(within(foyerRoom).getByText('Project spec').nextElementSibling).toHaveTextContent('a-new-wing')
+    expect(within(foyerRoom).getByText('Folder').nextElementSibling).toHaveTextContent(`${ROOT}/a-new-wing`)
 
     // Return: the Foyer is back, focus is on the control that opened the shell.
-    fireEvent.click(within(shell).getByRole('button', { name: 'Return to Foyer' }))
+    fireEvent.click(within(foyerRoom).getByRole('button', { name: 'Return to Foyer' }))
     expect(screen.getByRole('region', { name: 'Foyer' })).toBeInTheDocument()
     expect(open).toHaveFocus()
     expect(radio('a-new-wing').checked).toBe(true)
@@ -219,7 +247,7 @@ describe('replay Foyer', () => {
     await act(async () => {
       fireEvent.keyDown(recorded, { key: 'Enter' })
     })
-    expect(await screen.findByRole('region', { name: 'weather-station' })).toBeInTheDocument()
+    expect(await screen.findByRole('region', { name: 'Mansion weather-station' })).toBeInTheDocument()
     fireEvent.keyDown(document.body, { key: 'Escape' })
     expect(recorded).toHaveFocus()
 
@@ -271,9 +299,14 @@ describe('replay Foyer', () => {
     await act(async () => {
       fireEvent.click(screen.getByRole('button', { name: 'Open weather-station' }))
     })
-    await screen.findByRole('region', { name: 'weather-station' })
+    await screen.findByRole('region', { name: 'Mansion weather-station' })
     await houseSettled(replay)
-    const replayShell = markup(replay.querySelector('.hh-foyer')!)
+    const opened = replay.querySelector('.hh-foyer')!
+    const replayShell = {
+      mode: opened.querySelector('.hh-ui')?.getAttribute('data-mode'),
+      startNotes: opened.querySelectorAll('[data-replay-start]').length,
+      markup: sharedMarkup(opened),
+    }
     for (const { root } of roots.splice(0)) act(() => root.unmount())
     replay.remove()
 
@@ -307,7 +340,9 @@ describe('replay Foyer', () => {
     }))
     const { initialWorkflowProjection, workflowProjectionToJson } = await import('./core/workflow-projection')
     const { default: LiveApp } = await import('./App')
-    const live = render(<LiveApp />)
+    const { REPLAY_LANDING } = await import('./landing')
+    // The same root with the same landing props: the replay entry passes its invitation, nothing else differs.
+    const live = render(<LiveApp landing={REPLAY_LANDING} />)
     await screen.findByRole('radiogroup', { name: 'Mansions' })
     expect(markup(live.container.querySelector('.hh-foyer')!)).toBe(replayList)
 
@@ -315,11 +350,19 @@ describe('replay Foyer', () => {
     await act(async () => {
       fireEvent.click(screen.getByRole('button', { name: 'Open weather-station' }))
     })
-    await screen.findByRole('region', { name: 'weather-station' })
+    await screen.findByRole('region', { name: 'Mansion weather-station' })
     await houseSettled(live.container)
     // The shell now holds the house too: same map, same rooms, same read-only notice.
-    expect(replayShell).toContain('hh-house-map')
-    expect(markup(live.container.querySelector('.hh-foyer')!)).toBe(replayShell)
+    // The shell now holds the house too: same map, same rooms, same read-only notice. The
+    // replay differs in exactly two labelled things: its mode, and the note that a recording
+    // starts paused (replay-and-submission Requirement 2.1).
+    const liveShell = live.container.querySelector('.hh-foyer')!
+    expect(replayShell.mode).toBe('replay')
+    expect(liveShell.querySelector('.hh-ui')).toHaveAttribute('data-mode', 'live')
+    expect(replayShell.startNotes).toBe(1)
+    expect(liveShell.querySelectorAll('[data-replay-start]')).toHaveLength(0)
+    expect(replayShell.markup).toContain('hh-ui-map')
+    expect(sharedMarkup(liveShell)).toBe(replayShell.markup)
     expect(post).toHaveBeenCalledTimes(1)
     expectNoWayOut()
   })

@@ -133,10 +133,12 @@ export function reduceReplayCommand<P>(
     case 'play':
     case 'resume':
       if (state.status === 'playing') return accepted(state)
-      // Nothing is left to play: an empty or finished replay is complete.
-      if (state.cursor >= total) {
+      // An empty replay has nothing to play: it is complete.
+      if (total === 0) {
         return state.status === 'complete' ? accepted(state) : { ...state, status: 'complete', commandError: null }
       }
+      // Play at the end starts again from the beginning (decision of 2026-11-16, replay design.md).
+      if (state.cursor >= total) return moveTo(model, state, 0, 'playing', fold)
       return { ...state, status: 'playing', generation: state.generation + 1, commandError: null }
 
     case 'pause':

@@ -151,16 +151,37 @@ describe('page with the Foyer', () => {
     await act(async () => {
       fireEvent.click(open)
     })
-    const shell = await screen.findByRole('region', { name: 'attic-radio' })
+    const shell = await screen.findByRole('region', { name: 'Mansion attic-radio' })
     expect(client.post).toHaveBeenLastCalledWith(OPEN, { name: 'attic-radio' })
-    expect(summary(container)).toHaveTextContent(`${SUMMARY} Mansion attic-radio opened.`)
-    expect(within(shell).getByRole('heading', { name: 'attic-radio' })).toHaveFocus()
+    // In an open mansion the house's announcer is the page's one live region.
+    // The status details are plain text in the toolbar's disclosure, after the heading.
+    expect(liveRegions(container)).toHaveLength(1)
+    expect(liveRegions(container)[0]).toHaveAttribute('data-announcer')
+    expect(liveRegions(container)[0]).toHaveTextContent('Mansion attic-radio opened.')
+    expect(within(shell).getByRole('heading', { level: 2, name: /^Mansion\s*attic-radio$/ })).toHaveFocus()
+    expect(within(shell).getByRole('list', { name: 'Status' })).toHaveTextContent('BackendReachable')
+    expect(within(shell).getByText(SUMMARY)).not.toHaveAttribute('aria-live')
+    expect(screen.getByRole('heading', { level: 1, name: 'Haunted House' })).toBeInTheDocument()
     expect(screen.queryByRole('region', { name: 'Foyer' })).not.toBeInTheDocument()
+    // The house map comes before room details and the status disclosure's content is collapsed.
+    expect(within(shell).getByRole('navigation', { name: 'Mansion rooms' })).toBeInTheDocument()
+
+    // The Foyer room of the house names the mansion and offers the way back.
+    fireEvent.click(within(shell).getByRole('button', { name: /^Foyer\./ }))
+    const foyerRoom = await within(shell).findByRole('region', { name: 'Foyer' })
+    expect(foyerRoom).toHaveTextContent('Mansionattic-radioProject specattic-radio')
+    expect(within(foyerRoom).getByRole('button', { name: 'Return to Foyer' })).toBeInTheDocument()
+    // Escape closes the open room first, and only then leaves the mansion.
+    fireEvent.keyDown(document.body, { key: 'Escape' })
+    expect(within(shell).queryByRole('region', { name: 'Foyer' })).toBeNull()
+    expect(screen.getByRole('region', { name: 'Mansion attic-radio' })).toBeInTheDocument()
 
     fireEvent.keyDown(document.body, { key: 'Escape' })
     expect(screen.getByRole('region', { name: 'Foyer' })).toBeInTheDocument()
+    expect(screen.queryByRole('region', { name: 'Mansion attic-radio' })).toBeNull()
     expect(open).toHaveFocus()
     expect(liveRegions(container)).toHaveLength(1)
+    expect(summary(container)).toHaveTextContent(SUMMARY)
     // whoami and the list were each asked once for the whole journey.
     expect(client.whoami).toHaveBeenCalledTimes(1)
     expect(client.mansions).toHaveBeenCalledTimes(1)
@@ -189,7 +210,9 @@ describe('page with the Foyer', () => {
     const { container } = render(<HauntedHouseApp />)
     await screen.findByRole('radio', { name: /^weather-station\b/ })
     expect(screen.getAllByRole('button').map((button) => button.textContent)).toEqual(['Open mansion', 'Create mansion'])
-    expect(container.querySelectorAll('a, select, textarea, input[type="file"]')).toHaveLength(0)
+    expect(container.querySelectorAll('a, select, input[type="file"]')).toHaveLength(0)
+    // The one textarea is the optional feature brief (design decision 2026-11-16).
+    expect([...container.querySelectorAll('textarea')].map((area) => area.name)).toEqual(['mansion-brief'])
     expect(container.textContent).not.toMatch(/delete|remove|rename|archive|import/i)
   })
 })

@@ -13,6 +13,8 @@ const backend = vi.hoisted(() => ({
 
 vi.mock('./adapters/sdk', () => ({
   useBackendStatus: () => ({ state: backend.state, retry: backend.retry }),
+  // The live app: no replay recording.
+  REPLAY_RECORDING: null,
 }))
 
 // These tests cover the status panel alone. The Foyer, which mounts beside it

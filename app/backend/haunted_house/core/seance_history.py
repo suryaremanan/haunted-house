@@ -20,6 +20,16 @@ What one response can prove (spike S2-A4 leaves completeness unproved):
 History never proves an approval outcome here; decided facts come only from
 envelopes that carry the permission ``mid`` themselves.
 
+* a response that says the slot is not ``running`` and names the turn it
+  last ran (``turn`` and ``turn_gen``, the identity Crew stamps on that turn's
+  ``chat_done``) proves that turn ended, provided the history holds at least
+  one proved message of the current Run.  It becomes the same ``chat_done``
+  envelope live delivery carries for an ordinary turn end (``continuing`` and
+  ``needs_input`` false), so the turn-end record a dashboard later forwards
+  collapses on Record_ID.  Crew omits the identity while a turn is admitted
+  but not started, and a turn of an earlier Run proves nothing here.
+  (Design decision 2026-11-16: the backend settles runs without a browser.)
+
 This module performs no I/O and reads no clock.
 """
 
@@ -32,7 +42,7 @@ from datetime import datetime
 from types import MappingProxyType
 from typing import cast
 
-from haunted_house.core.crew_event_normalizer import CrewEnvelope
+from haunted_house.core.crew_event_normalizer import TURN_END_ENVELOPE_TYPE, CrewEnvelope
 from haunted_house.core.seance_event import AppEvent, JSONValue
 from haunted_house.core.seance_scope_registry import RegisteredScope
 
@@ -126,6 +136,7 @@ def plan_history_recovery(
 
     pending_decisions = _pending_approval_decisions(registered, persisted)
     recovered: list[RecoveredEnvelope] = []
+    current_run_seen = False
     for raw in message_list:
         message = _proved_message(raw, slot)
         if message is None:
@@ -134,6 +145,7 @@ def plan_history_recovery(
         if message.at_ms < registered.registered_at_ms:
             # An earlier Run of the same session: not a fact of this scope.
             continue
+        current_run_seen = True
         recovered.append(
             RecoveredEnvelope(
                 envelope=CrewEnvelope(type="chat_message", data=message.data),
@@ -159,9 +171,35 @@ def plan_history_recovery(
             )
         )
 
+    ended = _turn_end_envelope(response, slot) if current_run_seen else None
+    if ended is not None:
+        recovered.append(
+            RecoveredEnvelope(envelope=ended, approval_mid_by_decision=MappingProxyType({}))
+        )
+
     return HistoryRecoveryPlan(
         envelopes=tuple(recovered),
         partial_reasons=tuple(reasons),
+    )
+
+
+def _turn_end_envelope(response: Mapping[str, object], slot: str) -> CrewEnvelope | None:
+    """The ``chat_done`` a not-running slot's response proves, or ``None``."""
+
+    if response.get("running") is not False:
+        return None
+    turn, generation = response.get("turn"), response.get("turn_gen")
+    if type(turn) is not int or turn < 0 or not _bounded_text(generation, 160):
+        return None
+    return CrewEnvelope(
+        type=TURN_END_ENVELOPE_TYPE,
+        data={
+            "slot": slot,
+            "turn": turn,
+            "turn_gen": cast(str, generation),
+            "continuing": False,
+            "needs_input": False,
+        },
     )
 
 

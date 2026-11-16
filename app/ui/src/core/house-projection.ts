@@ -32,6 +32,7 @@ import {
 import {
   DOOR_STATUS_TEXT,
   PHASE_NAMES,
+  PHASE_STATUS_TEXT,
   doorHint,
   needsYou as workflowNeedsYou,
   needsYouText,
@@ -42,7 +43,7 @@ import {
 import type { MansionDescriptor } from './mansion-api'
 import type { ReplayDiagnostic, ReplayIntegrity } from './replay-timeline'
 import type { RoomGate, RoomProjection as JoinedRoomProjection } from './room-view'
-import { DOOR_STATUSES, PHASES, type DoorStatus, type Phase, type WorkflowProjection } from './workflow-projection'
+import { DOOR_STATUSES, PHASES, PHASE_STATUSES, type DoorStatus, type Phase, type PhaseStatus, type WorkflowProjection } from './workflow-projection'
 
 export type { PresentationDoorState, PresentationGhostState } from './house-registry'
 
@@ -108,6 +109,10 @@ export interface DoorPresentation {
   readonly hint: string
   /** The proposal waiting on this Door, or null. Identifies the decision surface; it decides nothing. */
   readonly proposalId: string | null
+  /** The upstream status of the phase behind this Door, or null when it could not be read. */
+  readonly phaseStatus: PhaseStatus | null
+  /** The phase and its status as Spec 4 writes them ("Design: Ready to start"), or null. */
+  readonly phaseText: string | null
 }
 
 /** One ghost of a room, with the upstream state untouched. */
@@ -269,6 +274,10 @@ function isDoorStatus(value: unknown): value is DoorStatus {
   return typeof value === 'string' && (DOOR_STATUSES as readonly string[]).includes(value)
 }
 
+function isPhaseStatus(value: unknown): value is PhaseStatus {
+  return typeof value === 'string' && (PHASE_STATUSES as readonly string[]).includes(value)
+}
+
 function isGhostState(value: unknown): value is GhostState {
   return typeof value === 'string' && (GHOST_STATES as readonly string[]).includes(value)
 }
@@ -316,7 +325,16 @@ function roomFacts(room: RoomDefinition, input: UpstreamHouseInput): RoomFacts {
     const status: unknown = view?.door?.status
     if (view === undefined || !isDoorStatus(status)) {
       if (workflow !== null) malformed = true
-      return { phase, phaseName: PHASE_NAMES[phase], state: 'unavailable', text: DOOR_UNAVAILABLE_TEXT, hint: DOOR_UNAVAILABLE_HINT, proposalId: null }
+      return {
+        phase,
+        phaseName: PHASE_NAMES[phase],
+        state: 'unavailable',
+        text: DOOR_UNAVAILABLE_TEXT,
+        hint: DOOR_UNAVAILABLE_HINT,
+        proposalId: null,
+        phaseStatus: null,
+        phaseText: null,
+      }
     }
     const proposal = view.door.proposal
     return {
@@ -326,6 +344,8 @@ function roomFacts(room: RoomDefinition, input: UpstreamHouseInput): RoomFacts {
       text: DOOR_STATUS_TEXT[status],
       hint: doorHint(phase, status),
       proposalId: status === 'waiting' && proposal !== null && proposal.status === 'pending' ? proposal.proposalId : null,
+      phaseStatus: isPhaseStatus(view.status) ? view.status : null,
+      phaseText: isPhaseStatus(view.status) ? `${PHASE_NAMES[phase]}: ${PHASE_STATUS_TEXT[view.status]}` : null,
     }
   })
 

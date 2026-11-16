@@ -397,10 +397,11 @@ describe('workflow controller', () => {
 
   it('dispatches only view actions and never changes the projection through them', async () => {
     const { held, controller } = await loaded(waiting)
-    controller.dispatch({ type: 'room_opened', room: 'workshop' })
+    const before = controller.getState()
     controller.dispatch({ type: 'proposal_viewed', id: 'risky:risky-1' })
-    controller.dispatch({ type: 'room_closed' })
-    expect(controller.getState()).toMatchObject({ focusedRoom: 'workshop', openRoom: null, projection: waiting })
+    controller.dispatch({ type: 'notice_dismissed' })
+    expect(controller.getState()).toMatchObject({ projection: waiting, inFlight: null })
+    expect(controller.getState().projection).toBe(before.projection)
     expect(held.pending).toBe(0)
   })
 

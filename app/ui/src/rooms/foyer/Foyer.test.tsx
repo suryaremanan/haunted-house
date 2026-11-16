@@ -119,8 +119,10 @@ describe('Foyer list states', () => {
       const input = radio(name)
       const card = input.closest('label')
       expect(card).not.toBeNull()
-      expect(within(card!).getByText(name)).toBeInTheDocument()
-      expect(within(card!).getByText(`${ROOT}/${name}`)).toBeInTheDocument()
+      expect(card!.querySelector('.hh-mansion-name')?.textContent).toBe(name)
+      // Shown whole, split only into slash-ended parts so it breaks after a slash.
+      expect(card!.querySelector('.hh-mansion-path')?.textContent).toBe(`${ROOT}/${name}`)
+      expect(card!.querySelectorAll('.hh-mansion-path wbr').length).toBe(`${ROOT}/${name}`.split('/').length - 1)
       // Status is words plus one decorative icon, never color alone.
       const statusText = within(card!).getByText(status)
       expect(statusText.querySelectorAll('svg[aria-hidden="true"]')).toHaveLength(1)
@@ -542,7 +544,8 @@ describe('Foyer accessibility, theme, and motion', () => {
     const controls = [...screen.getAllByRole('button'), ...screen.getAllByRole('radio'), ...screen.getAllByRole('textbox')]
     for (const control of controls) {
       expect(control).toHaveAccessibleName()
-      expect(['BUTTON', 'INPUT']).toContain(control.tagName)
+      // The optional feature brief (design decision 2026-11-16) is the one textarea.
+      expect(['BUTTON', 'INPUT', 'TEXTAREA']).toContain(control.tagName)
       // aria-disabled keeps a control focusable, so focus is never dropped mid-action.
       expect(control).not.toBeDisabled()
     }
@@ -558,8 +561,10 @@ describe('Foyer accessibility, theme, and motion', () => {
 
     const { container } = await renderFoyer(listBody(mansion('alpha'), mansion('lost', 'missing')))
     expect(screen.getAllByRole('button').map((button) => button.textContent)).toEqual(['Open mansion', 'Create mansion'])
-    expect(screen.getAllByRole('textbox')).toHaveLength(1)
-    expect(container.querySelectorAll('a, select, textarea, input[type="file"], [contenteditable]')).toHaveLength(0)
+    // The name field plus the optional feature brief (design decision 2026-11-16).
+    expect(screen.getAllByRole('textbox').map((box) => box.tagName)).toEqual(['INPUT', 'TEXTAREA'])
+    expect(container.querySelectorAll('textarea')).toHaveLength(1)
+    expect(container.querySelectorAll('a, select, input[type="file"], [contenteditable]')).toHaveLength(0)
     for (const name of names(container)) expect(name).not.toMatch(forbidden)
 
     host.post.mockResolvedValue({ mansion: mansion('alpha') })
@@ -598,7 +603,7 @@ describe('Foyer accessibility, theme, and motion', () => {
     for (const selector of ['.hh-button:focus-visible', '.hh-field input:focus-visible', '.hh-mansion:focus-within', '.hh-foyer h2:focus-visible']) {
       const rule = FOYER_STYLES.slice(FOYER_STYLES.indexOf(selector))
       expect(FOYER_STYLES).toContain(selector)
-      expect(rule.slice(0, rule.indexOf('}'))).toContain('outline: 2px solid var(--ring, currentColor)')
+      expect(rule.slice(0, rule.indexOf('}'))).toContain('outline: 2px solid var(--ring, var(--hh-fb-focus, currentColor))')
     }
     expect(FOYER_STYLES).not.toMatch(/outline:\s*(none|0)\b/)
   })

@@ -72,45 +72,45 @@ Milestone targets are canonical Replay Engine by 2026-11-22, Attic and Pages can
     - _Writes: `app/ui/src/core/replay-timeline.test.ts`, `app/ui/src/core/replay-reducer.test.ts`_
     - _Requirements: 1.4, 1.5, 2.1–2.9, 3.2_
 
-- [ ] 3. Implement mode-specific replay adapters (MVP)
-  - [ ] 3.1 Implement the canonical live and static Attic log sources
+- [x] 3. Implement mode-specific replay adapters (MVP)
+  - [x] 3.1 Implement the canonical live and static Attic log sources
     - Add `app/ui/src/adapters/attic-log-source.ts` with a live implementation that pages only the spec 2 signed Event Log read API and a replay implementation seam that loads only `./fixture.jsonl`.
     - Return bounded loading/ready/error values, preserve parser diagnostics, and make source failure incapable of querying Crew chat history, saved snapshots, or a remote fallback.
     - Keep direct `@kirocrew/app-sdk` imports in the existing SDK boundary.
     - _Writes: `app/ui/src/adapters/attic-log-source.ts`, `app/ui/src/adapters/sdk.ts`, `app/ui/src/adapters/app-sdk.d.ts`_
     - _Requirements: 1.1, 1.2, 1.4, 4.2, 4.3, 4.5, 4.6_
 
-  - [ ] 3.2 Replace the raw-frame replay stand-in with canonical fixture behavior
+  - [x] 3.2 Replace the raw-frame replay stand-in with canonical fixture behavior
     - Extend `app/ui/src/adapters/sdk-shim/index.ts` with the Attic fixture source and HUI-S1 host interfaces. Keep deterministic local status/theme behavior and make notification, badge, session navigation, chat launch, approval, and every mutation inert or explicitly read-only.
     - Remove production authority from the foundation raw `{t, frame}` player; open no WebSocket and fetch only the relative canonical fixture.
     - _Writes: `app/ui/src/adapters/sdk-shim/index.ts`, `app/ui/src/adapters/sdk-shim/replay-source.ts`_
     - _Requirements: 1.2, 1.7, 3.8, 4.2, 4.3, 4.4, 4.5, 4.8_
 
-  - [ ] 3.3 Implement the Replay Controller timer adapter
+  - [x] 3.3 Implement the Replay Controller timer adapter
     - Add `app/ui/src/adapters/replay-controller.ts` with one cancellable timeout, reducer dispatch, speed-aware next delay, generation-safe callbacks, unmount cleanup, and no persistent preference or announcement effect.
     - Cancel and reschedule on pause, seek, speed, restart, model change, and unmount; never advance Cursor from a stale callback.
     - _Writes: `app/ui/src/adapters/replay-controller.ts`_
     - _Requirements: 2.2, 2.3, 2.4, 2.5, 2.8, 2.10, 3.6, 3.7_
 
-  - [ ]* 3.4 Add source, shim, and controller integration tests
+  - [x]* 3.4 Add source, shim, and controller integration tests
     - Use fake timers and throwing transport/navigation spies to cover one fixture load, no fallback, pagination in live mode, local stand-in operations, read-only mutations, cancellation/rescheduling, stale callbacks, cleanup, and no live-region/host effect.
     - _Writes: `app/ui/src/adapters/attic-log-source.test.ts`, `app/ui/src/adapters/sdk-shim/index.test.ts`, `app/ui/src/adapters/replay-controller.test.tsx`_
     - _Requirements: 2.2–2.10, 3.6, 3.8, 4.3–4.6, 4.8, 8.9_
 
-- [ ] 4. Build the accessible Attic replay experience (MVP, due 2026-11-26)
-  - [ ] 4.1 Implement Attic replay controls, summary, Timeline, and diagnostics
+- [x] 4. Build the accessible Attic replay experience (MVP, due 2026-11-26)
+  - [x] 4.1 Implement Attic replay controls, summary, Timeline, and diagnostics
     - Add native Play/Pause/Resume/Restart/Previous/Next buttons, labelled 0.5×/1×/2× selection, range seek with `Event n of N` value text, ordered Timeline, `aria-current="step"`, safe projection summary, and bounded diagnostic list.
     - Keep controls in logical document/Tab order, state visible in text plus non-color cues, progress ambient, and decorative transitions subject to the existing Motion Policy.
     - _Writes: `app/ui/src/rooms/attic/ReplayControls.tsx`, `app/ui/src/rooms/attic/ReplaySummary.tsx`, `app/ui/src/rooms/attic/ReplayTimeline.tsx`, `app/ui/src/rooms/attic/ReplayDiagnostics.tsx`_
     - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.9_
 
-  - [ ] 4.2 Integrate controlled replay into the approved Attic Panel and shared house
+  - [x] 4.2 Integrate controlled replay into the approved Attic Panel and shared house
     - Extend the `house-ui-and-accessibility` Attic Panel instead of creating another Room shell; connect canonical source, Replay Model, controller, shared projection, and read-only mode.
     - Preserve House map Arrow behavior, Escape/focus restoration, one shell live region, secondary Session Links, Foyer/live status gates, and identical live/replay root components.
     - _Writes: `app/ui/src/rooms/attic/AtticPanel.tsx`, `app/ui/src/adapters/house-replay.ts`, `app/ui/src/App.tsx`_
     - _Requirements: 1.4, 3.1, 3.5, 3.6, 3.7, 3.8, 3.9, 4.1_
 
-  - [ ]* 4.3 Add Attic DOM, keyboard, motion, and shared-root parity tests
+  - [x]* 4.3 Add Attic DOM, keyboard, motion, and shared-root parity tests
     - Render start, middle, complete, empty, malformed-line, load-failure, and read-only states. Exercise every control by keyboard, native range Arrows, Attic Escape, focus restoration, and House map Arrows after close.
     - Assert controls precede Timeline, secondary links follow content, current state has text/non-color cue, routine progress creates no toast/sound/live announcement, one live region remains, and live/replay use the same root and Attic components.
     - _Writes: `app/ui/src/rooms/attic/AtticPanel.test.tsx`, `app/ui/src/attic-live-replay.test.tsx`_
@@ -140,87 +140,87 @@ Milestone targets are canonical Replay Engine by 2026-11-22, Attic and Pages can
     - _Writes: `scripts/tests/test_build_replay_fixture.py`, `scripts/tests/test_replay_fixture_contract.py`_
     - _Requirements: 1.4, 5.1–5.6_
 
-- [ ] 6. Harden the static replay build and smoke path (MVP)
-  - [ ] 6.1 Update the relative Vite replay build and static entry
+- [x] 6. Harden the static replay build and smoke path (MVP)
+  - [x] 6.1 Update the relative Vite replay build and static entry
     - Keep `base: './'`, exact SDK alias, bundled React/Lucide, disabled public directory, no module-preload polyfill, and `app/ui/dist-replay/`; copy only the canonical fixture and add `.nojekyll`.
     - Render the same default `HauntedHouseApp` and supply no environment-dependent path, live SDK import, service worker, analytics, remote resource, or hidden snapshot.
     - _Writes: `app/ui/vite.replay.config.ts`, `app/ui/replay/index.html`, `app/ui/replay/main.tsx`_
     - _Requirements: 4.1–4.9_
 
-  - [ ] 6.2 Implement built-artifact reference and transport checks
+  - [x] 6.2 Implement built-artifact reference and transport checks
     - Extend UI script tests to parse `index.html` and emitted modules, resolve every local reference under a synthetic project-site prefix, compare built/source fixture bytes, inspect regular-file/link metadata, and combine static findings with the Python Publication Gate.
     - Permit shared route constants only when the replay adapter consumes them in-memory; reject executable live SDK/Gateway transports and localhost origins.
     - _Writes: `app/ui/scripts-tests/check-replay-build.test.ts`, `scripts/check-replay-artifact.mjs`_
     - _Requirements: 4.3, 4.4, 4.7, 4.8, 4.9, 11.5_
 
-  - [ ] 6.3 Implement bounded local and deployed replay smoke modes
+  - [x] 6.3 Implement bounded local and deployed replay smoke modes
     - Add a one-shot Node script that serves `dist-replay` on an ephemeral loopback port, requests index/local assets/fixture, rejects external or traversing references, and closes in `finally`.
     - Add an HTTPS deployed mode with bounded retry/backoff and a total timeout; accept the URL only from explicit Pages workflow output and log no query string.
     - _Writes: `scripts/smoke-replay-site.mjs`_
     - _Requirements: 6.4, 6.5, 11.7_
 
-  - [ ]* 6.4 Add replay build, transport-isolation, and smoke tests
+  - [x]* 6.4 Add replay build, transport-isolation, and smoke tests
     - Extend the DOM harness to throw on WebSocket, XMLHttpRequest, EventSource, Crew navigation/chat launch, backend requests, and nonlocal fetches; test project-prefix assets, missing/external/traversing files, local server cleanup, bounded deployed retries, and no Crew global/account/env requirement.
     - _Writes: `app/ui/src/replay.test.tsx`, `app/ui/scripts-tests/check-replay-build.test.ts`, `scripts-tests/smoke-replay-site.test.mjs`_
     - _Requirements: 4.1–4.9, 6.4, 6.5, 8.9, 11.4, 11.7_
 
-- [ ] 7. Add GitHub Pages while preserving Normal CI (MVP, candidate due 2026-11-26)
-  - [ ] 7.1 Implement the least-privilege Pages workflow
+- [x] 7. Add GitHub Pages while preserving Normal CI (MVP, candidate due 2026-11-26)
+  - [x] 7.1 Implement the least-privilege Pages workflow
     - Add build, deploy, and smoke jobs with verified default-branch/manual triggers, non-cancelling deployment concurrency, locked Node/npm setup, replay tests/typecheck/build/publication/local smoke, audited `dist-replay` upload, `github-pages` environment, deployment URL output, and bounded post-deploy smoke.
     - Give build/smoke read-only permissions and give only deploy `pages: write` plus `id-token: write`; pin reviewed action versions according to repository policy.
     - _Writes: `.github/workflows/pages.yml`_
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 6.8_
 
-  - [ ] 7.2 Extend Normal CI with offline replay and submission gates
+  - [x] 7.2 Extend Normal CI with offline replay and submission gates
     - Preserve push/pull-request triggers, `python`, `ui`, and `repo` jobs plus every existing test, typecheck, manifest, Kiro tracking, bundle import, stale live bundle, secret scan, and shellcheck step.
     - Add canonical fixture checks, replay Publication Gate, local static smoke, documentation/assets checks, and permission-freeze check at the applicable jobs without making Normal CI depend on GitHub Pages or live Crew.
     - _Writes: `.github/workflows/ci.yml`_
     - _Requirements: 6.6, 6.7, 11.8_
 
-  - [ ]* 7.3 Add workflow policy and Normal CI regression tests
+  - [x]* 7.3 Add workflow policy and Normal CI regression tests
     - Parse both workflow files and assert trigger coverage, job names, exact permission scopes, build/deploy/smoke needs, `github-pages` environment, concurrency, audited artifact path, deployment URL flow, offline Normal CI, and every preserved command marker.
     - _Writes: `scripts/tests/test_pages_workflow.py`, `scripts/tests/test_ci_contract.py`_
     - _Requirements: 6.1–6.8_
 
-- [ ] 8. Inventory and freeze the final manifest permissions (MVP, due 2026-11-29)
-  - [ ] 8.1 Implement normalized permission inventory and freeze checking
+- [x] 8. Inventory and freeze the final manifest permissions (MVP, due 2026-11-29)
+  - [x] 8.1 Implement normalized permission inventory and freeze checking
     - Add pure models and a CLI that read central API route, event subscription, storage, session approval, resource, lifecycle, and version constants; compare the exact proposed baseline with `app/app.json`; calculate canonical permission and exact manifest hashes; and reject prohibited paths/fields.
     - Provide only `--check` and explicit reviewed-generation modes. Never enable the app, edit Crew config, approve a permission, or silently rewrite the manifest.
     - _Writes: `scripts/lib/permission_freeze.py`, `scripts/check-permission-freeze.py`_
     - _Requirements: 8.1–8.8_
 
-  - [ ]* 8.2 Write the property test for exact permission freeze behavior
+  - [x]* 8.2 Write the property test for exact permission freeze behavior
     - Use at least 200 Hypothesis examples that mutate resource/lifecycle/version, API/event set members/order/duplicates, booleans, forbidden paths/fields, app version, README evidence, and hashes; assert only exact normalized coordinated state passes.
     - **Property 6: Permission freeze accepts only the exact reviewed baseline**
     - **Validates: Requirements 8.1, 8.2, 8.3, 8.4, 8.5, 8.7, 8.8**
     - _Writes: `scripts/tests/property/test_permission_freeze.py`_
 
-  - [ ] 8.3 Run RS-S2 and create the reviewed Judge-Facing manifest baseline
+  - [x] 8.3 Run RS-S2 and create the reviewed Judge-Facing manifest baseline
     - Inventory the completed specs 2–6 and replay code, reconcile any mismatch through the owning design, then set `resources`/`lifecycle` gateway and the exact API/events/sessionApproval/storage permission object.
     - Remove prohibited/broad/unused declarations, set the reviewed Judge-Facing semver, and generate canonical `docs/permission-freeze.json` dated 2026-11-29 only after tests agree.
     - _Writes: `app/app.json`, `docs/permission-freeze.json`, `spikes/fixtures/replay-permission-inventory.json`_
     - _Requirements: 8.1–8.9, 12.4, 12.5_
 
-  - [ ]* 8.4 Add manifest inventory, freeze, and post-freeze regression tests
+  - [x]* 8.4 Add manifest inventory, freeze, and post-freeze regression tests
     - Compare implementation constants, manifest, README trust copy, and freeze hashes; assert no spawn/global-approval/broad wildcard/autoApprove/undeclared field; verify a permission change without coordinated version/evidence/freeze updates fails.
     - _Writes: `app/backend/tests/unit/test_manifest.py`, `scripts/tests/test_permission_freeze_cli.py`_
     - _Requirements: 8.1–8.9, 11.8_
 
 - [ ] 9. Build machine-checked submission documents and media evidence (MVP)
-  - [ ] 9.1 Implement pure submission-document parsing and the Publication Gate CLI
+  - [x] 9.1 Implement pure submission-document parsing and the Publication Gate CLI
     - Add parsers for required Markdown headings, relative links, fenced Install Command grammar, Crew version references, Kiro Coverage Table columns, Demo Script elapsed markers, asset/submission checklists, milestone dates, publication metadata, and provenance records.
     - Add `scripts/check-submission.py` to read repository files through an adapter and return file/line/category findings without evaluating shell text or following web links in Normal CI.
     - _Writes: `scripts/lib/submission_contract.py`, `scripts/check-submission.py`_
     - _Requirements: 7.2, 7.3, 7.6, 7.8, 9.1–9.10, 12.1–12.11_
 
-  - [ ] 9.2 Populate the validated judge-facing document set
+  - [x] 9.2 Populate the validated judge-facing document set
     - Update `README.md` with verified Static Replay first, product/authority summary, Crew 0.12.1+ requirements, one `scripts/install-local.sh` command from a clone, explicit Apps → Library → Haunted House → Enable → Trust steps, tests, repository map, license, and document links.
     - Add `docs/writeup.md`, `docs/kiro-coverage.md`, `docs/demo-script.md`, `docs/credits.md`, `docs/assets-checklist.md`, and `docs/submission-checklist.md` with the required architecture, related-work credit, 165-second walkthrough, exact dated gates, MVP/stretch boundary, and evidence placeholders that remain visibly incomplete until verified.
     - Use RS-S1 metadata for public links; include no local absolute path, invented URL, secret, or completion claim without evidence.
     - _Writes: `README.md`, `docs/writeup.md`, `docs/kiro-coverage.md`, `docs/demo-script.md`, `docs/credits.md`, `docs/assets-checklist.md`, `docs/submission-checklist.md`, `docs/publication-metadata.json`_
     - _Requirements: 7.1–7.9, 9.1–9.10, 12.1–12.11_
 
-  - [ ]* 9.3 Add submission parser, link, command, demo-duration, and schedule tests
+  - [x]* 9.3 Add submission parser, link, command, demo-duration, and schedule tests
     - Cover complete samples; every missing heading/column/link/asset/checklist key; command injection-shaped text; missing script; version mismatch; 179/180-second boundaries; malformed or decreasing markers; exact milestone dates; submission-before-deadline ordering; and stretch-before-MVP refusal.
     - Reuse the existing fake-CLI dry-run harness for the extracted install command form.
     - _Writes: `scripts/tests/test_submission_contract.py`, `scripts/tests/test_submission_documents.py`, `scripts/tests/test_install_local.py`_
@@ -238,31 +238,31 @@ Milestone targets are canonical Replay Engine by 2026-11-22, Attic and Pages can
     - _Writes: `docs/screenshots/**`, `app/assets/**`, `docs/assets-manifest.json`, `docs/credits.md`, `docs/assets-checklist.md`_
     - _Requirements: 9.6, 9.7, 10.1–10.6, 12.6, 12.7_
 
-  - [ ]* 9.6 Add asset provenance, source, capture, and prohibited-feature tests
+  - [x]* 9.6 Add asset provenance, source, capture, and prohibited-feature tests
     - Cover valid Original/CC0 records, missing source/license/alt text, duplicate/unmanifested/traversing paths, remote SVG/image/font/media, data URIs, script/animation elements, audio module APIs, prohibited terms, external requests, deterministic capture metadata, and absence of MVP sound.
     - _Writes: `scripts/tests/test_asset_contract.py`, `app/ui/scripts-tests/check-submission-assets.test.ts`_
     - _Requirements: 9.6, 9.7, 10.1–10.6_
 
-- [ ] 10. Integrate and package the complete release gate (MVP)
-  - [ ] 10.1 Implement one offline release-check command
+- [x] 10. Integrate and package the complete release gate (MVP)
+  - [x] 10.1 Implement one offline release-check command
     - Add a bounded script that runs Python tests, UI tests, type checking, live/replay builds, live-bundle freshness/import checks, manifest/profile/skill tests, `.kiro` tracking, secret/Home Path scan, canonical fixture generation check, replay publication/build checks, local smoke, documentation/assets checks, and permission freeze.
     - Preserve each underlying command's output and return nonzero when any gate fails; make no live Crew, GitHub, Pages, trust, approval, push, or submission action.
     - _Writes: `scripts/check-release.sh`_
     - _Requirements: 6.5, 6.7, 7.5, 8.7, 9.9, 9.10, 10.6, 11.8_
 
-  - [ ]* 10.2 Add cross-layer live/replay and release-contract integration tests
+  - [x]* 10.2 Add cross-layer live/replay and release-contract integration tests
     - Drive one canonical Event Log through live acknowledgements and the Static Replay source; compare selected records, final House/Room/Ghost/Door/task/artifact state, accessible Attic output, and diagnostics; hold acknowledgements to prove no transient state enters replay.
     - Test fixture/build redaction, no live transport, read-only actions, exact manifest freeze, README command/version/trust copy, workflow contracts, and document/asset links as one release fixture.
     - _Writes: `app/ui/src/replay-submission.integration.test.tsx`, `scripts/tests/test_release_contract.py`_
     - _Requirements: 1.1–1.7, 3.1–3.9, 4.1–4.9, 5.1–5.6, 7.1–7.9, 8.1–8.9, 9.1–9.10, 11.3–11.8_
 
-  - [ ] 10.3 Build the final live and replay artifacts and run the release gate
+  - [x] 10.3 Build the final live and replay artifacts and run the release gate
     - Run the non-watch release command, fix only failures owned by this feature, rebuild committed `app/ui/dist/index.mjs`, rebuild audited `app/ui/dist-replay/`, and verify a second build leaves the committed live bundle and canonical fixture unchanged.
     - Update evidence/checklist status only from passing commands or verified RS-S1/RS-S3 results. Keep human video, originality sign-off, trust rehearsal, and final submission items incomplete until performed.
     - _Writes: `app/ui/dist/**`, `fixtures/replay/demo.jsonl`, `docs/submission-checklist.md`, `docs/assets-checklist.md`_
     - _Requirements: 4.1, 4.9, 5.1–5.6, 6.5–6.7, 8.6–8.9, 9.8–9.10, 11.1–11.8, 12.4–12.10_
 
-- [ ] 11. Checkpoint: verify the canonical replay and static boundary
+- [x] 11. Checkpoint: verify the canonical replay and static boundary
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 12. Final checkpoint: verify the judge-facing release package

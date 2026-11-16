@@ -116,8 +116,13 @@ describe('play, pause and resume', () => {
     expect(state.projection).toEqual(prefix(TOTAL))
     expect(nextDelayMs(MODEL, state)).toBeNull()
     expect(run([{ kind: 'step', generation: state.generation }], MODEL, FOLD, state)).toBe(state)
-    expect(run([{ kind: 'play' }], MODEL, FOLD, state)).toBe(state)
     expect(run([{ kind: 'pause' }], MODEL, FOLD, state)).toBe(state)
+    // Play at the end starts again from the beginning and plays (decision of 2026-11-16).
+    const again = run([{ kind: 'play' }], MODEL, FOLD, state)
+    expect(again).toMatchObject({ status: 'playing', cursor: 0, commandError: null })
+    expect(again.projection).toEqual(prefix(0))
+    expect(again.generation).toBeGreaterThan(state.generation)
+    expect(nextDelayMs(MODEL, again)).not.toBeNull()
   })
 
   it('completes an empty replay on play instead of playing nothing', () => {

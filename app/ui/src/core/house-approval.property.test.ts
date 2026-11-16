@@ -54,12 +54,9 @@ type Step =
   | { readonly kind: 'unknown'; readonly type: string; readonly extra: unknown }
 
 const stepArb: fc.Arbitrary<Step> = fc.oneof(
-  fc.constantFrom(...ROOM_IDS).map((room): Step => ({ kind: 'action', action: { type: 'room_focused', room } })),
-  fc.constantFrom(...ROOM_IDS).map((room): Step => ({ kind: 'action', action: { type: 'room_opened', room } })),
-  fc
-    .constantFrom('next', 'previous', 'first', 'last')
-    .map((direction): Step => ({ kind: 'action', action: { type: 'room_moved', direction: direction as 'next' } })),
-  fc.constant<Step>({ kind: 'action', action: { type: 'room_closed' } }),
+  // Moving between rooms and opening or closing one is not an action of this reducer at all
+  // (Spec 6: the Mansion Shell holds it); a stray navigation-shaped action is ignored whole.
+  fc.constantFrom('room_focused', 'room_opened', 'room_moved', 'room_closed').map((type): Step => ({ kind: 'unknown', type, extra: 'study' })),
   fc.string({ maxLength: 20 }).map((id): Step => ({ kind: 'action', action: { type: 'proposal_viewed', id } })),
   fc.constant<Step>({ kind: 'action', action: { type: 'timer_elapsed' } }),
   fc.constant<Step>({ kind: 'action', action: { type: 'ghost_activity' } }),

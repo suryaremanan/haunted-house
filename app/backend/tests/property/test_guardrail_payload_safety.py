@@ -19,7 +19,7 @@ import base64
 from urllib.parse import quote
 
 import pytest
-from hypothesis import given, settings
+from hypothesis import example, given, settings
 from hypothesis import strategies as st
 
 from haunted_house.core import guardrail_events
@@ -102,6 +102,10 @@ _VALID = {
     "access": "read",
     "path": "src/app.py",
     "write_id": "write-1",
+    # room_tool_answered (decision 2026-11-16)
+    "answer_id": "house-1",
+    "tool": "write_room_file",
+    "reason": "non_risky_room_tool",
     "descriptor": {
         "schema_version": 1,
         "mansion_id": MANSION,
@@ -138,6 +142,9 @@ def _poisoned_data(draw):
     data = {name: _VALID[name] for name in schema}
     if kind is GuardrailEventKind.APPROVAL_RESOLUTION_IGNORED:
         data["outcome"] = "approved"
+    if kind is GuardrailEventKind.ROOM_TOOL_ANSWERED:
+        data["outcome"] = "approved"
+        data["actor"] = "house"
     poisoned = draw(st.lists(st.sampled_from(sorted(schema)), min_size=1, unique=True))
     sensitive = []
     for name in poisoned:
@@ -151,8 +158,41 @@ def _poisoned_data(draw):
     return kind, data, poisoned, sensitive
 
 
+def _path_case(kind: GuardrailEventKind, field: str, value: str):
+    data = {name: _VALID[name] for name in guardrail_events._SCHEMAS[kind][0]}
+    data[field] = value
+    return kind, data, [field], [value]
+
+
+# Regression cases (2026-11-16): single-line credential-shaped values that are
+# clean relative paths used to be stored in a path field.  The first two are
+# the counterexamples Hypothesis found; the rest are their siblings.  Each is
+# assembled at runtime so no credential-shaped literal is committed.
+_TOKEN_BODY = "0" * 24
+_PATH_REGRESSIONS = [
+    "Bear" + "er " + _TOKEN_BODY,
+    "hhcap_" + "0" * 123,
+    "Bear" + "er " + "aB3dE5" * 5,
+    "bear" + "er\t" + "Zz9_-." * 5,
+    "Bas" + "ic " + base64.b64encode(b"user:" + b"p" * 20).decode(),
+    quote("Bear" + "er " + "aB3dE5" * 5, safe=""),
+    quote("api" + "_key=\"" + base64.b64encode(b"k" * 24).decode() + "\"", safe=""),
+    "Traceback (most recent call last): abc defgh",
+    "build/" + "f" * 64 + ".bin",
+]
+
+
+def _with_regressions(test):
+    for value in _PATH_REGRESSIONS:
+        test = example(case=_path_case(GuardrailEventKind.DOOR_APPROVED, "document_path", value))(test)
+        test = example(case=_path_case(GuardrailEventKind.PATH_DENIED, "path", value))(test)
+        test = example(case=_path_case(GuardrailEventKind.SPEC_WRITE_PREPARED, "document_path", value))(test)
+    return test
+
+
 @settings(max_examples=300)
 @given(case=_poisoned_data())
+@_with_regressions
 def test_domain_payload_builders_exclude_sensitive_or_content_bearing_fields(case):
     kind, data, poisoned, sensitive = case
     try:

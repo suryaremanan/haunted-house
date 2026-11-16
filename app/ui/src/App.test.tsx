@@ -6,6 +6,8 @@ import HauntedHouseApp from './App'
 // replaced here. Per-state DOM tests of the status page live in task 9.3.
 vi.mock('./adapters/sdk', () => ({
   useBackendStatus: () => ({ state: { kind: 'loading' }, retry: () => {} }),
+  // The live app: no replay recording.
+  REPLAY_RECORDING: null,
 }))
 
 describe('HauntedHouseApp', () => {

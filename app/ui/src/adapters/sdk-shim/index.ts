@@ -1,11 +1,14 @@
 // Replay stand-in for the Crew app SDK. The replay build (vite.replay.config.ts)
 // aliases the SDK module to this file, so src/adapters/sdk.ts and everything
 // above it run unchanged. It never talks to a gateway: the only network request
-// is one fetch of the recorded Event_Log, made on the first séance read.
+// is one fetch of the recorded Event_Log, made on the first read of it.
+// Nothing here opens a socket, and no call can change anything.
+import { useSyncExternalStore } from 'react'
 import { WHOAMI_PATH } from '../../core/backend-status'
 // Type-only, so it is erased from the build and creates no import cycle.
 import type { AppApiClient, AppApiError, AppTheme } from '../sdk'
 import { createReplayMansionRoutes } from './mansions'
+import { createReplaySource } from './replay-source'
 import { createRoomGhostsReplayRoutes } from './room-ghosts-replay'
 import { createSeanceReplayRoutes } from './seance-replay'
 import { createWorkflowReplayRoutes } from './workflow-replay'
@@ -13,8 +16,23 @@ import { createWorkflowReplayRoutes } from './workflow-replay'
 /** The recorded Event_Log, next to the replay page. The build copies fixtures/replay/demo.jsonl here. */
 export { FIXTURE_URL } from './seance-replay'
 
+/** This page's one recording: `./fixture.jsonl`, fetched once and never from anywhere else. */
+const replaySource = createReplaySource()
+
+/**
+ * The Attic's seam to the recording (replay-and-submission task 3.2). Only the
+ * stand-in exports it, so its presence is what tells `adapters/sdk.ts` that
+ * the page is the static replay. `load` returns the canonical Event_Log text;
+ * `present` tells the read routes below how long a prefix of a Mansion's
+ * Canonical_Order the Attic's Cursor has reached.
+ */
+export const replayRecording = {
+  load: (): Promise<string> => replaySource.loadText(),
+  present: (mansionId: string, cursor: number): void => replaySource.present(mansionId, cursor),
+}
+
 /** This page's canonical séance read route, answered from the recording (Spec 2, task 8.1). */
-const seanceRoutes = createSeanceReplayRoutes()
+const seanceRoutes = createSeanceReplayRoutes(replaySource)
 
 /** This page's workflow read route, folded from the same recording (Spec 4, task 15.1). */
 const workflowRoutes = createWorkflowReplayRoutes(seanceRoutes)
@@ -81,15 +99,34 @@ export function useAppApi(): AppApiClient {
   return replayApi
 }
 
-const REPLAY_THEME: AppTheme = {
-  mode: 'dark',
-  accent: '',
-  colorTheme: 'default',
+// Host theme stand-in. The static page is its own host, so it follows the
+// browser's color-scheme preference, as Crew's theme follows Crew's setting.
+// Without a readable preference (tests, old browsers) it is deterministic:
+// dark. Reactive like the host hook, so a change reaches the page without a remount.
+const schemeQuery: MediaQueryList | null =
+  typeof window !== 'undefined' && typeof window.matchMedia === 'function' ? window.matchMedia('(prefers-color-scheme: dark)') : null
+let replayTheme: AppTheme = { mode: schemeQuery?.matches === false ? 'light' : 'dark', accent: '', colorTheme: 'default' }
+const themeListeners = new Set<() => void>()
+schemeQuery?.addEventListener?.('change', (event) => setReplayTheme({ mode: event.matches ? 'dark' : 'light' }))
+
+function subscribeTheme(listener: () => void): () => void {
+  themeListeners.add(listener)
+  return () => {
+    themeListeners.delete(listener)
+  }
 }
 
-/** Deterministic host-theme stand-in for the static replay build. */
+const currentTheme = () => replayTheme
+
+/** Changes the stand-in theme. The replay page has no theme switch of its own; tests use this. */
+export function setReplayTheme(change: Partial<AppTheme>): void {
+  replayTheme = { ...replayTheme, ...change }
+  for (const listener of [...themeListeners]) listener()
+}
+
+/** Reactive host-theme stand-in for the static replay build. */
 export function useTheme(): AppTheme {
-  return REPLAY_THEME
+  return useSyncExternalStore(subscribeTheme, currentTheme, currentTheme)
 }
 
 const noSubscription = () => {}
@@ -103,17 +140,34 @@ export function useAppEvents(_event: string, _cb: (data: unknown) => void): () =
   return noSubscription
 }
 
-const noToast = (_text: string, _opts?: Record<string, unknown>) => {}
-const noBadge = (_count: number) => {}
+/** What a test may ask the stand-in to write down. The replay page itself never records. */
+export interface ReplayHostRecorder {
+  readonly notifications: string[]
+  readonly badges: number[]
+}
 
-/** A recording interrupts nobody: the replay page has no dashboard to toast in. */
+let recorder: ReplayHostRecorder | null = null
+
+/** Test seam: synthetic toast and badge calls are appended to `target`. Pass null to stop. */
+export function recordReplayHostEffects(target: ReplayHostRecorder | null): void {
+  recorder = target
+}
+
+const replayToast = (text: string, _opts?: Record<string, unknown>) => {
+  recorder?.notifications.push(text)
+}
+const replayBadge = (count: number) => {
+  recorder?.badges.push(count)
+}
+
+/** A recording interrupts nobody: the replay page has no dashboard to toast in. No request, no storage. */
 export function useNotify(): (text: string, opts?: Record<string, unknown>) => void {
-  return noToast
+  return replayToast
 }
 
 /** The replay page has no sidebar, so there is no badge to set. */
 export function useNavBadge(): (count: number) => void {
-  return noBadge
+  return replayBadge
 }
 
 /** Every `openChat` call made on the replay page. A recording has no Crew session, so this stays empty. */

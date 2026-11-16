@@ -64,11 +64,22 @@ function Item({ item }: { item: ListItem }) {
   )
 }
 
+/**
+ * The ARIA level of a document heading: below the panel's headings, capped at
+ * 6. Screen readers do not support levels above 6 (several read them as level
+ * 2, above the panel), so deeper document headings share level 6; `data-level`
+ * keeps their depth for styling.
+ */
+const MAX_HEADING_LEVEL = 6
+function headingLevel(baseLevel: number, level: number): number {
+  return Math.min(MAX_HEADING_LEVEL, baseLevel + level - 1)
+}
+
 function BlockView({ block, baseLevel }: { block: Block; baseLevel: number }) {
   switch (block.kind) {
     case 'heading':
       return (
-        <p className="hh-md-heading" role="heading" aria-level={baseLevel + block.level - 1} data-level={block.level}>
+        <p className="hh-md-heading" role="heading" aria-level={headingLevel(baseLevel, block.level)} data-level={block.level}>
           <Inlines parts={block.inlines} />
         </p>
       )

@@ -23,12 +23,13 @@ from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from typing import Any, Literal, Protocol, cast
 
-from haunted_house.adapters.gateway_client import GatewayError
+from haunted_house.adapters.gateway_client import MAX_CHAT_MESSAGE_BYTES, GatewayError
 from haunted_house.core.approvals import PendingPermission
 from haunted_house.core.seance_event import JSONValue
 
 __all__ = [
     "MAX_TOOL_INPUT_CHARACTERS",
+    "MAX_TURN_BYTES",
     "ChatGateway",
     "CrewChat",
     "CrewChatError",
@@ -37,11 +38,15 @@ __all__ = [
     "SessionBinding",
     "SessionPermission",
     "SessionRequest",
+    "SessionTurn",
+    "StopResult",
     "TurnResult",
     "qualified_tool_name",
 ]
 
 MAX_TOOL_INPUT_CHARACTERS = 64 * 1024
+# The largest turn text Crew is sent: one skill block and one bounded prompt.
+MAX_TURN_BYTES = MAX_CHAT_MESSAGE_BYTES
 _MAX_LABEL = 200
 
 
@@ -62,13 +67,32 @@ class ChatGateway(Protocol):
         self, slot: str, request_id: str, request_mid: str, action: str
     ) -> dict[str, Any]: ...
 
+    async def stop_chat_slot(self, slot: str) -> dict[str, Any]: ...
+
 
 class CrewChatError(RuntimeError):
-    """A Crew call failed.  ``code`` is ``crew_timeout`` or ``crew_failed``."""
+    """A Crew call failed.  ``code`` is ``crew_timeout`` or ``crew_failed``.
 
-    def __init__(self, code: Literal["crew_timeout", "crew_failed"], step: str) -> None:
+    ``status``, ``gateway_code`` and ``retry_after`` repeat the HTTP status,
+    Crew's own error code, and the ``Retry-After`` seconds of the refusal when
+    it had them (Room Ghosts classifies capacity pressure from these, RG-S5).
+    They are a number and a bounded redacted code; no gateway text travels.
+    """
+
+    def __init__(
+        self,
+        code: Literal["crew_timeout", "crew_failed"],
+        step: str,
+        *,
+        status: int | None = None,
+        gateway_code: str | None = None,
+        retry_after: int | None = None,
+    ) -> None:
         self.code = code
         self.step = step
+        self.status = status if type(status) is int else None
+        self.gateway_code = gateway_code if type(gateway_code) is str else None
+        self.retry_after = retry_after if type(retry_after) is int else None
         super().__init__(f"{code}:{step}")
 
 
@@ -96,6 +120,32 @@ class SessionBinding:
 @dataclass(frozen=True, slots=True)
 class TurnResult:
     queued: bool
+
+
+@dataclass(frozen=True, slots=True)
+class SessionTurn:
+    """What one owned session's history says about its latest turn.
+
+    ``final_text`` is the last assistant message after the last message the
+    house sent, or ``None`` when there is none.  ``notices`` are the
+    ``meta.notice`` values Crew left after that message (RG-S5) and
+    ``stop_state`` the state of the latest ``stop_event`` row (RG-S3).
+    ``activity`` says the session did anything at all after that message.
+    """
+
+    final_text: str | None = None
+    notices: tuple[str, ...] = ()
+    stop_state: str | None = None
+    activity: bool = False
+
+
+@dataclass(frozen=True, slots=True)
+class StopResult:
+    """``stopped``: Crew answered ``ok`` with no ``info``, so the cancel
+    settled.  ``not_stopped``: the answer carried ``info`` or no ``ok``;
+    nothing was stopped."""
+
+    status: Literal["stopped", "not_stopped"]
 
 
 @dataclass(frozen=True, slots=True)
@@ -154,10 +204,8 @@ class CrewChat:
         try:
             return await call(client)
         except GatewayError as error:
-            # Only the kind: gateway text never travels further.
-            failure = CrewChatError(
-                "crew_timeout" if error.kind == "timeout" else "crew_failed", step
-            )
+            # Only the kind, status and code: gateway text never travels further.
+            failure = _crew_failure(error, step)
         raise failure from None
 
     async def create_bound_session(self, request: SessionRequest) -> SessionBinding:
@@ -194,6 +242,19 @@ class CrewChat:
         history = await self._call("get_session", lambda client: client.session_history(slot))
         return CrewSessionSnapshot(slot, _permissions(slot, history.get("messages")))
 
+    async def read_turn(self, slot: str) -> SessionTurn:
+        """Read the latest turn of one owned session from its bounded history."""
+
+        history = await self._call("read_turn", lambda client: client.session_history(slot))
+        return _latest_turn(history.get("messages"))
+
+    async def stop_turn(self, slot: str) -> StopResult:
+        """Ask Crew once to stop the session's turn (RG-S3).  Never retried."""
+
+        reply = await self._call("stop_turn", lambda client: client.stop_chat_slot(slot))
+        stopped = reply.get("ok") is True and "info" not in reply
+        return StopResult("stopped" if stopped else "not_stopped")
+
     async def resolve_permission(
         self, permission: PendingPermission, decision: Literal["approved", "rejected"]
     ) -> ResolveResult:
@@ -215,6 +276,16 @@ class CrewChat:
                 "resolve_permission",
             )
         raise failure from None
+
+
+def _crew_failure(error: GatewayError, step: str) -> CrewChatError:
+    return CrewChatError(
+        "crew_timeout" if error.kind == "timeout" else "crew_failed",
+        step,
+        status=error.status,
+        gateway_code=error.code,
+        retry_after=getattr(error, "retry_after", None),
+    )
 
 
 def _permissions(slot: str, messages: object) -> tuple[SessionPermission, ...]:
@@ -249,6 +320,36 @@ def _permissions(slot: str, messages: object) -> tuple[SessionPermission, ...]:
             resolved if type(resolved) is str and resolved else None,
         )
     return tuple(found.values())
+
+
+def _latest_turn(messages: object) -> SessionTurn:
+    if type(messages) is not list:
+        return SessionTurn()
+    final: str | None = None
+    notices: list[str] = []
+    stop_state: str | None = None
+    activity = False
+    for raw in cast(list[object], messages):
+        if type(raw) is not dict:
+            continue
+        message = cast(dict[str, object], raw)
+        role, content = message.get("role"), message.get("content")
+        meta = message.get("meta")
+        fields = cast(dict[str, object], meta) if type(meta) is dict else {}
+        if role == "user":
+            # A new house message starts a new turn: forget the one before.
+            final, notices, stop_state, activity = None, [], None, False
+            continue
+        if role in ("assistant", "permission", "tool"):
+            activity = True
+        if role == "assistant" and type(content) is str and content.strip():
+            final = cast(str, content)
+        notice = fields.get("notice")
+        if _label(notice) and len(notices) < 16:
+            notices.append(cast(str, notice))
+        if fields.get("kind") == "stop_event" and _label(fields.get("state")):
+            stop_state = cast(str, fields["state"])
+    return SessionTurn(final, tuple(notices), stop_state, activity)
 
 
 def _label(value: object) -> bool:

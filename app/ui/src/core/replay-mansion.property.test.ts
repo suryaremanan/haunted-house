@@ -84,6 +84,17 @@ const bodyArb: fc.Arbitrary<unknown> = fc.oneof(
       validNameArb.map((name) => ({ Name: name })),
     ),
   },
+  {
+    // Design decision 2026-11-16: create also takes an optional feature brief.
+    weight: 2,
+    arbitrary: fc.oneof(
+      fc.tuple(validNameArb, fc.string({ maxLength: 30 })).map(([name, brief]) => ({ name, brief })),
+      fc
+        .tuple(validNameArb, fc.constantFrom<unknown>('a\u0000b', 'x'.repeat(2001), null, 7))
+        .map(([name, brief]) => ({ name, brief })),
+      validNameArb.map((name) => ({ name, brief: 'ok', path: '/tmp/elsewhere' })),
+    ),
+  },
 )
 
 const operationArb: fc.Arbitrary<ReplayMansionOperation> = fc.oneof(
@@ -320,6 +331,13 @@ describe('replay mansion model examples', () => {
     ['create', { name: 'Bad Name' }, 422, 'invalid_mansion_name'],
     ['open', { name: '../etc' }, 422, 'invalid_mansion_name'],
     ['create', { name: 'ok', extra: true }, 400, 'invalid_request'],
+    ['create', { name: 'ok', brief: 'a\u0007b' }, 400, 'invalid_request'],
+    ['create', { name: 'ok', brief: 'x'.repeat(2001) }, 400, 'invalid_request'],
+    ['create', { name: 'ok', brief: null }, 400, 'invalid_request'],
+    ['create', { name: 'ok', brief: 'x', path: '/tmp' }, 400, 'invalid_request'],
+    ['create', { brief: 'x' }, 400, 'invalid_request'],
+    ['create', { name: 'Bad Name', brief: 'x' }, 422, 'invalid_mansion_name'],
+    ['open', { name: 'weather-station', brief: 'x' }, 400, 'invalid_request'],
     ['open', 'weather-station', 400, 'invalid_request'],
     ['open', undefined, 400, 'invalid_request'],
     ['create', { name: 'crowded-crypt' }, 409, 'mansion_conflict'],
@@ -333,6 +351,17 @@ describe('replay mansion model examples', () => {
     expect(reply.status).toBe(status)
     expect(parseMansionApiError(reply.body).error.code).toBe(code)
     expect(model.snapshot()).toEqual(before)
+  })
+
+  it('creates with a valid or blank brief exactly as it creates with a name alone', () => {
+    for (const brief of ['A tide clock.\r\nWith alarms.', '  ', '\u{1F47B}'.repeat(2000)]) {
+      const withBrief = createReplayMansionModel(fixture)
+      const nameOnly = createReplayMansionModel(fixture)
+      expect(withBrief.request({ kind: 'create', body: { name: 'new-wing', brief } })).toEqual(
+        nameOnly.request({ kind: 'create', body: { name: 'new-wing' } }),
+      )
+      expect(withBrief.snapshot()).toEqual(nameOnly.snapshot())
+    }
   })
 
   it('recreates a missing mansion, as the live planner does, and then opens it', () => {

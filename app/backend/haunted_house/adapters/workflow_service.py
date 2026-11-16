@@ -51,6 +51,7 @@ from haunted_house.adapters.session_bindings import (
     RoomBinding,
     SessionBindingStore,
     new_capability,
+    session_label,
 )
 from haunted_house.adapters.session_reconciler import (
     PermissionInfo,
@@ -105,6 +106,7 @@ from haunted_house.core.workflow import (
     FailStart,
     PhaseStatus,
     StartPhase,
+    StartRevision,
     SubmitOutput,
     SupersedeDoor,
     WorkflowCommand,
@@ -127,10 +129,13 @@ __all__ = [
     "DEFAULT_AGENTS",
     "ROLE_BY_PHASE",
     "CommandResult",
+    "ImplementationStarter",
+    "LaunchFailureHook",
     "MansionResolver",
     "OutputValidator",
     "PhaseOutput",
     "RoomResult",
+    "TurnPlanner",
     "WorkflowError",
     "WorkflowMansion",
     "WorkflowService",
@@ -216,6 +221,20 @@ class OutputValidator(Protocol):
     def __call__(self, output: PhaseOutput) -> Awaitable[str | None]: ...
 
 
+# --- Room Ghosts (Spec 5) seams.  Each is optional; without one the service
+# behaves exactly as Spec 4 defines it. -------------------------------------------------
+
+# The bounded role prompt of a spec-phase run.  A refusal is a WorkflowError.
+TurnPlanner = Callable[[RoomBinding, WorkflowMansion], Awaitable[str]]
+# Starts the Workshop for a reserved implementation phase: selects tasks,
+# acquires claims, and returns the first Tinker session it bound.
+ImplementationStarter = Callable[[WorkflowMansion, str, Sequence[str]], Awaitable[RoomBinding]]
+# Told when a registered run's turn could not be sent, with a safe code and the
+# failure itself, so the run gets a terminal record instead of staying open
+# with no Ghost.
+LaunchFailureHook = Callable[[RoomBinding, str, BaseException], Awaitable[None]]
+
+
 async def accept_non_empty_output(output: PhaseOutput) -> str | None:
     """Baseline validation until the room-ghosts spec supplies its own."""
 
@@ -295,6 +314,9 @@ class WorkflowService:
         validator: OutputValidator = accept_non_empty_output,
         agents: Mapping[str, str] = DEFAULT_AGENTS,
         id_factory: Callable[[], str] | None = None,
+        turns: TurnPlanner | None = None,
+        implementation: ImplementationStarter | None = None,
+        on_launch_failure: LaunchFailureHook | None = None,
     ) -> None:
         self._writer = writer
         self._port = GuardrailPort(writer)
@@ -311,6 +333,9 @@ class WorkflowService:
         self._validator = validator
         self._agents = dict(agents)
         self._new_id = id_factory or (lambda: secrets.token_hex(16))
+        self._turns = turns
+        self._implementation = implementation
+        self._on_launch_failure = on_launch_failure
         self._locks: dict[str, asyncio.Lock] = {}
         self._live_reservations: set[str] = set()
         self._recovered: set[str] = set()
@@ -503,6 +528,9 @@ class WorkflowService:
         scope = operator_scope(name)
         role = ROLE_BY_PHASE[phase]
         seats: list[tuple[str, str]] = [(role, reservation_id)]
+        if phase is Phase.IMPLEMENTATION and self._implementation is not None:
+            # Room Ghosts owns Tinker dispatch: tasks, claims, and capacity.
+            return await self._start_workshop(mansion, reservation_id, assignments)
         if phase is Phase.IMPLEMENTATION:
             # A new attempt replaces the sessions of the previous one.
             schedule = self._workshops.get(name, empty_schedule())
@@ -552,6 +580,38 @@ class WorkflowService:
                 self._seat(name, phase, assignment_id, Fail)
         return None
 
+    async def _start_workshop(
+        self, mansion: WorkflowMansion, reservation_id: str, assignments: Sequence[str]
+    ) -> str | None:
+        """Hand a reserved implementation start to the Room Ghosts Workshop."""
+
+        name = mansion.mansion_id
+        scope = operator_scope(name)
+        phase = Phase.IMPLEMENTATION
+        assert self._implementation is not None
+        code: str | None = None
+        binding: RoomBinding | None = None
+        try:
+            binding = await self._implementation(mansion, reservation_id, assignments)
+        except CrewChatError as error:
+            code = error.code
+        except BindingError:
+            code = "binding_failed"
+        except WorkflowError as error:
+            code = error.code
+        if code is not None or binding is None:
+            return await self._fail_start(name, scope, phase, reservation_id, code or "crew_failed")
+        read = await self._port.read(name)
+        confirmed = decide_transition(
+            read.projection, ConfirmStart(scope, phase, reservation_id, binding.slot)
+        )
+        acknowledged = (
+            await self._port.append(name, confirmed.candidates) if confirmed.ok else None
+        )
+        if acknowledged is None or not acknowledged.ok:
+            return await self._fail_start(name, scope, phase, reservation_id, "writer_unavailable")
+        return None
+
     def _seat(self, mansion_id: str, phase: Phase, assignment_id: str, event: type) -> None:
         if phase is Phase.IMPLEMENTATION and mansion_id in self._workshops:
             self._workshops[mansion_id] = apply_event(
@@ -578,6 +638,39 @@ class WorkflowService:
     ) -> RoomBinding:
         """Create one app-owned session, bind it, register its run, send its turn."""
 
+        async def turn(binding: RoomBinding) -> str:
+            if self._turns is not None and role != "tinker":
+                return await self._turns(binding, mansion)
+            if role == "tinker":
+                return _TINKER_TURN.format(spec=mansion.spec_name, assignment=assignment_id[-32:])
+            return _SPEC_TURN.format(role=role, spec=mansion.spec_name, phase=phase.value)
+
+        return await self.launch_session(mansion, phase, role, ghost, turn=turn)
+
+    async def launch_session(
+        self,
+        mansion: WorkflowMansion,
+        phase: Phase,
+        role: str,
+        ghost: str,
+        *,
+        turn: Callable[[RoomBinding], Awaitable[str]],
+        run_id: str | None = None,
+        slot: str | None = None,
+        before_turn: Callable[[RoomBinding], Awaitable[None]] | None = None,
+    ) -> RoomBinding:
+        """Bind one app-owned session to a new run and send its one turn.
+
+        With ``slot`` the turn goes to that existing session (a revision
+        before Door approval): no slot is created, and the new run replaces
+        the slot's registered scope.  ``before_turn`` runs once the session
+        identity is final and before anything is registered or sent, so a
+        Tinker's Task_Claim is durable first.  ``turn`` renders the bounded
+        prompt.  Any failure leaves no binding the house did not finish
+        starting; a run that was registered is reported to the launch-failure
+        hook.
+        """
+
         name = mansion.mansion_id
         policy = room_policy(role, mansion.spec_name)
         agent = self._agents.get(role)
@@ -598,7 +691,10 @@ class WorkflowService:
         # The house names the slot, so the session label is known before Crew
         # creates the session and starts its MCP server: the binding is on
         # disk first.
-        slot_name = f"hh-{ghost}-{self._new_id()}"[:64]
+        slot_name = slot if slot is not None else f"hh-{ghost}-{self._new_id()}"[:64]
+        previous = (
+            await asyncio.to_thread(store.load, session_label(slot)) if slot is not None else None
+        )
         binding = RoomBinding(
             slot=slot_name,
             ghost=ghost,
@@ -608,36 +704,51 @@ class WorkflowService:
             mansion_root=str(mansion.root),
             spec=mansion.spec_name,
             phase=phase,
-            run_id=f"{phase.value}-{run_sequence}",
+            run_id=run_id if run_id is not None else f"{phase.value}-{run_sequence}",
             run_sequence=run_sequence,
-            capability=new_capability(),
+            capability=previous.capability if previous is not None else new_capability(),
         )
         await asyncio.to_thread(store.write, binding)
+        registered = False
         try:
-            session: SessionBinding = await self._crew.create_bound_session(
-                SessionRequest(
-                    name=slot_name, agent=agent, project_directory=str(mansion.directory)
+            if slot is None:
+                session: SessionBinding = await self._crew.create_bound_session(
+                    SessionRequest(
+                        name=slot_name, agent=agent, project_directory=str(mansion.directory)
+                    )
                 )
-            )
-            if session.slot != slot_name:
-                # Crew keyed the slot differently: bind the key it reported.
-                provisional = binding
-                binding = replace(binding, slot=session.slot)
-                await asyncio.to_thread(store.write, binding)
-                await asyncio.to_thread(store.remove, provisional.label)
-            registered = await self._writer.append_candidates(
+                if session.slot != slot_name:
+                    # Crew keyed the slot differently: bind the key it reported.
+                    provisional = binding
+                    binding = replace(binding, slot=session.slot)
+                    await asyncio.to_thread(store.write, binding)
+                    await asyncio.to_thread(store.remove, provisional.label)
+            else:
+                session = SessionBinding(slot)
+            if before_turn is not None:
+                await before_turn(binding)
+            text = await turn(binding)
+            acknowledged = await self._writer.append_candidates(
                 name, [_run_started(binding, policy)]
             )
-            if registered.status != "ok":
+            if acknowledged.status != "ok":
                 raise WorkflowError("writer_unavailable")
-            if role == "tinker":
-                text = _TINKER_TURN.format(spec=mansion.spec_name, assignment=assignment_id[-32:])
-            else:
-                text = _SPEC_TURN.format(role=role, spec=mansion.spec_name, phase=phase.value)
+            registered = True
             await self._crew.send_turn(session, text)
-        except BaseException:
+        except BaseException as error:
+            if registered and self._on_launch_failure is not None:
+                code = getattr(error, "code", None)
+                try:
+                    await self._on_launch_failure(
+                        binding, code if events_module.is_safe_code(code) else "crew_failed", error
+                    )
+                except Exception as failure:  # noqa: BLE001 - the launch error is what is raised
+                    log.warning("launch failure was not recorded (%s)", type(failure).__name__)
             # No session may keep a binding the house did not finish starting.
-            await asyncio.to_thread(store.remove, binding.label)
+            if previous is not None:
+                await asyncio.to_thread(store.write, previous)
+            else:
+                await asyncio.to_thread(store.remove, binding.label)
             raise
         return binding
 
@@ -708,6 +819,49 @@ class WorkflowService:
                 expected_version, approve, "operator", command_id,
             ),
         )
+
+    async def reopen_for_revision(
+        self, mansion_id: object, phase: Phase, *, command_id: str, session_slot: str
+    ) -> WorkflowView:
+        """Return a spec phase to ``working`` for a same-session revision
+        before its Door is approved (Room Ghosts revision feedback).
+
+        A pending proposal is superseded, so the Door is sealed again and the
+        proposal can no longer be decided; a rejected one starts its revision
+        in ``session_slot``.  A phase that is already working needs nothing.
+        An approved Door is never reopened here.
+        """
+
+        mansion = await self._mansion(mansion_id)
+        name = mansion.mansion_id
+        scope = operator_scope(name)
+        for _ in range(_CAS_ATTEMPTS):
+            read = await self._writable(name)
+            view = read.projection.phases[phase]
+            if view.status is PhaseStatus.WORKING:
+                return WorkflowView(name, read)
+            if view.status is PhaseStatus.WAITING:
+                decision = decide_transition(
+                    read.projection, SupersedeDoor(scope, phase, "revision_requested")
+                )
+            elif view.status is PhaseStatus.REVISION_REQUIRED:
+                decision = decide_transition(
+                    read.projection,
+                    StartRevision(scope, phase, command_id, session_slot, read.projection.version),
+                )
+            else:
+                raise WorkflowError("invalid_state", WorkflowView(name, read))
+            if not decision.ok:
+                raise WorkflowError(decision.code, WorkflowView(name, read))
+            acknowledged = await self._port.compare_and_append(
+                name, cast(int, decision.expected_sequence), decision.candidates
+            )
+            if acknowledged.status == "conflict":
+                continue
+            if not acknowledged.ok:
+                raise await self._refuse(name, "writer_unavailable")
+            return await self._view(name)
+        raise await self._refuse(name, "stale_version")
 
     async def _document_changed(self, mansion: WorkflowMansion, proposal: DoorProposal) -> bool:
         parts = parse_relative_path(proposal.document_path)
