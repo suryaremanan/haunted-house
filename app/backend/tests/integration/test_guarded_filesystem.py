@@ -339,6 +339,36 @@ def test_replacing_the_file_with_another_inode_is_detected(world):
     assert _code(lambda: linker.read_file(TINKER, "src/app.py")) == ("hard_link", True)
 
 
+class _ReusedInode:
+    """A real fstat result that reports a recycled inode number."""
+
+    def __init__(self, info: os.stat_result, inode: int) -> None:
+        self._info = info
+        self.st_ino = inode
+
+    def __getattr__(self, name: str):
+        return getattr(self._info, name)
+
+
+def test_a_swapped_file_on_a_recycled_inode_number_is_detected(world, monkeypatch):
+    # ext4 hands the freed inode number straight to the next file, so the
+    # replacement can share (device, inode) and even the size of the original.
+    root, mansion, _outside = world
+    target = mansion / "src" / "app.py"
+    original = target.stat()
+    real_fstat = os.fstat
+
+    def swap_same_size():
+        target.unlink()
+        target.write_bytes(b"x" * original.st_size)
+        monkeypatch.setattr(
+            module.os, "fstat", lambda fd: _ReusedInode(real_fstat(fd), original.st_ino)
+        )
+
+    reader = _Racing(root, MANSION, stage="before_open", attack=swap_same_size)
+    assert _code(lambda: reader.read_file(TINKER, "src/app.py")) == ("changed", False)
+
+
 def test_exchanging_the_parent_directory_cannot_redirect_a_write(world):
     root, mansion, outside = world
 

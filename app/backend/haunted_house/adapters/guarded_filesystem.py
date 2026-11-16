@@ -124,6 +124,21 @@ class _Identity:
     links: int = 0
     mode: int = 0
     size: int = 0
+    # A recycled inode number (ext4 reuses one at once after an unlink)
+    # still gets fresh change/modify times, so a swapped file never
+    # matches on (device, inode) alone.
+    ctime_ns: int = 0
+    mtime_ns: int = 0
+
+
+def _same_file(info: os.stat_result, identity: _Identity) -> bool:
+    return (
+        info.st_dev,
+        info.st_ino,
+        info.st_size,
+        info.st_ctime_ns,
+        info.st_mtime_ns,
+    ) == (identity.device, identity.inode, identity.size, identity.ctime_ns, identity.mtime_ns)
 
 
 def _identity(info: os.stat_result | None) -> _Identity:
@@ -137,7 +152,16 @@ def _identity(info: os.stat_result | None) -> _Identity:
         kind = "directory"
     else:
         kind = "other"
-    return _Identity(kind, info.st_dev, info.st_ino, info.st_nlink, info.st_mode, info.st_size)
+    return _Identity(
+        kind,
+        info.st_dev,
+        info.st_ino,
+        info.st_nlink,
+        info.st_mode,
+        info.st_size,
+        info.st_ctime_ns,
+        info.st_mtime_ns,
+    )
 
 
 def _lstat(name: str, parent: int) -> _Identity:
@@ -536,7 +560,7 @@ class GuardedFilesystem:
                 raise _denied(PathDecisionCode.NOT_REGULAR)
             if info.st_nlink != 1:
                 raise _denied(PathDecisionCode.HARD_LINK)
-            if (info.st_dev, info.st_ino) != (target.identity.device, target.identity.inode):
+            if not _same_file(info, target.identity):
                 raise GuardedFilesystemError("changed")
             if info.st_size > self._max_file_bytes:
                 raise GuardedFilesystemError("too_large")
