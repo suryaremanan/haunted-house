@@ -1958,7 +1958,8 @@ var yr = {
 	capacity_unavailable: "No ghost is free to take this.",
 	claim_conflict: "Another ghost holds this task.",
 	contract_unavailable: "Its room contract is unavailable.",
-	confinement_unavailable: "Its room limits could not be applied."
+	confinement_unavailable: "Its room limits could not be applied.",
+	crew_usage_limit: "Kiro’s usage limit is reached. Retry once it resets."
 }, Sr = 120;
 function Cr(e, t) {
 	let n = e.replace(/[\u0000-\u001f\u007f-\u009f\s]+/g, " ").trim(), r = Array.from(n);

@@ -71,11 +71,16 @@ describe('ghostReasonText', () => {
       'claim_conflict',
       'contract_unavailable',
       'confinement_unavailable',
+      'crew_usage_limit',
     ]) {
       const text = ghostReasonText(code)
       expect(text).toMatch(/\.$/)
       expect(text).not.toContain('_')
     }
+  })
+
+  it('says a usage-limit refusal is Kiro’s, not the ghost’s', () => {
+    expect(ghostReasonText('crew_usage_limit')).toBe('Kiro’s usage limit is reached. Retry once it resets.')
   })
 
   it('bounds free text to one short line', () => {

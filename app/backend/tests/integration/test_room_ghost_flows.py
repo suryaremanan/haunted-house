@@ -301,6 +301,34 @@ def test_a_closed_turn_without_a_result_fails_the_run(tmp_path):
     assert len(turns) == 1 and body["runs"][0]["can_retry"] is True
 
 
+def test_a_turn_crew_refused_for_the_usage_limit_blocks_the_run_without_blame(tmp_path):
+    # Observed live: Crew answers the house's message with one error row whose
+    # meta.kind is usage_limit, then ends the turn.  The Ghost did nothing wrong.
+    async def scenario(play: Play):
+        room = await play.start(Phase.REQUIREMENTS)
+        play.h.crew.messages[room.slot].append(
+            {"role": "error", "content": "monthly usage limit", "meta": {"kind": "usage_limit"}}
+        )
+        await play.turn_ended(room)
+        return await play.terminals(), await play.read(), play.turns(room.slot)
+
+    terminals, body, turns = _run(scenario, tmp_path)
+    assert terminals == [("requirements-1", "blocked", "crew_usage_limit")]
+    assert len(turns) == 1 and body["runs"][0]["can_retry"] is True
+
+
+def test_a_turn_crew_ended_on_another_error_fails_the_run_as_a_crew_error(tmp_path):
+    async def scenario(play: Play):
+        room = await play.start(Phase.REQUIREMENTS)
+        play.h.crew.messages[room.slot].append({"role": "error", "content": "boom", "meta": {}})
+        await play.turn_ended(room)
+        return await play.terminals(), play.turns(room.slot)
+
+    terminals, turns = _run(scenario, tmp_path)
+    assert terminals == [("requirements-1", "failed", "crew_error")]
+    assert len(turns) == 1  # a Crew error is not the Ghost's to correct
+
+
 def test_a_read_never_waits_on_crew_and_the_background_pump_settles_and_dispatches(tmp_path):
     async def scenario(play: Play):
         crew = play.h.crew

@@ -81,6 +81,22 @@ def test_notices_and_stop_state_of_the_latest_turn_are_reported():
     assert classify_crew_refusal(notice=turn.notices[0]) == "crew_capacity"
 
 
+def test_the_latest_turns_crew_error_kind_is_reported():
+    gateway = Gateway(
+        [
+            {"role": "user", "content": "first"},
+            {"role": "error", "content": "old", "meta": {"kind": "usage_limit"}},
+            {"role": "user", "content": "second"},
+        ]
+    )
+    assert run(CrewChat(gateway).read_turn("slot-1")).error is None  # a new turn forgets it
+    gateway.messages.append({"role": "error", "content": "x", "meta": {"kind": "usage_limit"}})
+    turn = run(CrewChat(gateway).read_turn("slot-1"))
+    assert turn.error == "usage_limit" and turn.final_text is None
+    gateway.messages.append({"role": "error", "content": "y", "meta": {"kind": 7}})
+    assert run(CrewChat(gateway).read_turn("slot-1")).error == "error"
+
+
 def test_stop_is_confirmed_only_by_ok_without_info():
     gateway = Gateway()
     chat = CrewChat(gateway)
