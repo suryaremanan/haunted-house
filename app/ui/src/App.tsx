@@ -3,16 +3,29 @@
 // reachable, the Foyer mounts below it and lists, creates, and opens mansions.
 // An opened mansion shows its house; the status details then move into the
 // house toolbar, and the house's own live region is the page's one.
+//
+// Before a mansion is open the page also holds the first visit (Spec 8): the
+// Gate for a visitor who has no mansion yet, and the Warden's balloon in the
+// Foyer hall. Where the visitor stands is `core/first-visit.ts`; this file
+// only shows it and hands each choice to the Foyer's own actions.
 import { CircleCheck, CircleDashed, LoaderCircle, RotateCw, TriangleAlert } from 'lucide-react'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useId, useReducer, useRef, useState } from 'react'
 import { REPLAY_RECORDING, useBackendStatus, type BackendStatus, type GatewayErrorKind } from './adapters/sdk'
-import { FrontDoorPainting, WardenArt } from './components/room-paint'
+import { GUIDE_BALLOON_STYLES } from './components/guide-balloon-styles'
+import { FrontDoorPainting } from './components/room-paint'
 import { ROOM_PAINT_STYLES } from './components/room-paint-styles'
 import { paletteCssVariables, sceneCssVariables } from './components/house-palette'
-import { NO_GUIDE_SETTINGS, type GuideSettings } from './components/MansionShell'
+import { NO_GUIDE_SETTINGS, SETTING_SAID, type GuideSettings } from './components/MansionShell'
+import { GATE_STATUS, hallGuide, initialVisit, visitReducer, type HallOption } from './core/first-visit'
+import type { LoadState } from './core/foyer-reducer'
+import { POSE_LABEL } from './core/house-guide'
 import type { MansionDescriptor } from './core/mansion-api'
 import { REPLAY_LANDING, TAGLINE, type LandingInvitation } from './landing'
-import { Foyer } from './rooms/foyer/Foyer'
+import { FIRST_VISIT_STYLES } from './rooms/foyer/first-visit-styles'
+import { Foyer, type FoyerHall } from './rooms/foyer/Foyer'
+import { Gate } from './rooms/foyer/Gate'
+import { HallGuide } from './rooms/foyer/HallGuide'
+import { IdeaStep } from './rooms/foyer/IdeaStep'
 import { House } from './rooms/house/House'
 
 type Tone = 'ok' | 'problem' | 'pending' | 'unknown'
@@ -105,6 +118,7 @@ function StatusRow({ name, view }: { name: string; view: RowView }) {
 // dark. Icons carry color as a hint only; every state is also spelled out in text.
 const STYLES = `
 .hh-house { ${paletteCssVariables('light')} ${sceneCssVariables('light')}
+  --hh-font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, "Times New Roman", serif;
   font-family: var(--font-sans, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
   color: var(--card-fg, var(--text, var(--hh-fb-text))); line-height: 1.45;
   display: block; max-width: 76rem; margin: 0 auto; padding: 8px 12px 32px; box-sizing: border-box; }
@@ -152,26 +166,29 @@ const STYLES = `
   color: var(--accent-fg, var(--hh-fb-accent-text)); background: var(--accent, var(--hh-fb-accent));
   border: 1px solid var(--border-strong, var(--hh-fb-border)); border-radius: 6px; padding: 6px 12px; }
 .hh-retry:focus-visible { outline: 2px solid var(--ring, var(--hh-fb-focus)); outline-offset: 2px; }
-/* The way in: the front door fills the page, the name is its brass plate, and the Foyer is a sheet of cream paper. */
-.hh-house[data-landing='true'] { position: relative; max-width: none; min-height: 100vh; margin: 0; padding: 0 16px 48px; overflow: hidden;
-  background: var(--hh-sc-front-door); }
-.hh-landing-door { position: absolute; inset: 0; display: block; }
-.hh-landing-keeper { display: none; }
-.hh-house[data-landing='true'] .hh-status[data-quiet='true'] { position: relative; z-index: 1; display: block; max-width: 30rem; margin: 5vh auto 0;
+/* The way in: the front door fills the page, the name is its brass plate, the Warden stands by his balloon, and the
+   Foyer is a sheet of cream paper. */
+.hh-house[data-landing='true'] { position: relative; display: flex; flex-direction: column; max-width: none; min-height: 100vh; margin: 0; padding: 0 16px 48px;
+  overflow: hidden; background: var(--hh-sc-front-door); }
+/* The door is as tall as the window, not as the page, so it is the same door at the Gate and behind a long hall. */
+.hh-landing-door { position: absolute; inset: 0 0 auto; height: 100vh; display: block; container-type: size; }
+/* The painted knocker knocks for a pointer. The Knock button is the real control. */
+.hh-landing-knocker { position: absolute; left: 50%; top: 50%; width: max(15cqw, 24cqh); aspect-ratio: 1; translate: -50% -50%; border-radius: 50%; cursor: pointer; }
+.hh-landing-knocker:hover { outline: 3px solid var(--hh-sc-lamp); outline-offset: 4px; }
+/* The Gate: nothing but the door, the plate, and the Warden's question at the foot of the window. */
+.hh-gate { position: relative; z-index: 1; box-sizing: border-box; width: 100%; max-width: 44rem; margin: auto auto 0; padding-top: 24px; }
+.hh-house[data-landing='true'] .hh-status[data-quiet='true'] { position: relative; z-index: 1; display: block; box-sizing: border-box; width: 100%; max-width: 30rem; margin: 5vh auto 0;
   padding: 14px 24px 12px; text-align: center; color: var(--hh-sc-ink); background: var(--hh-sc-brass); border: 3px solid var(--hh-sc-ink);
   border-radius: 6px; box-shadow: 0 5px 0 var(--hh-sc-ink); }
 .hh-house[data-landing='true'] .hh-status[data-quiet='true'] .hh-tagline { margin: 0 auto 6px; }
 .hh-house[data-landing='true'] .hh-status[data-quiet='true'] .hh-summary { color: var(--hh-sc-ink); }
-.hh-house[data-landing='true'] .hh-foyer { position: relative; z-index: 1; max-width: 44rem; }
+.hh-house[data-landing='true'] .hh-foyer { position: relative; z-index: 1; box-sizing: border-box; width: 100%; max-width: 44rem; }
 .hh-house[data-landing='true'] .hh-foyer-hall { ${paletteCssVariables('light')}
   --card: var(--hh-sc-balloon); --card-fg: var(--hh-fb-text); --text: var(--hh-fb-text); --muted: var(--hh-fb-text-muted);
   --border: var(--hh-fb-border); --border-strong: var(--hh-fb-border); --input: var(--hh-fb-surface-raised); --ok: var(--hh-fb-ok);
   --warn: var(--hh-fb-accent); --accent: var(--hh-fb-accent); --accent-fg: var(--hh-fb-accent-text); --ring: var(--hh-fb-focus);
   color: var(--hh-fb-text); background: var(--hh-sc-balloon); border: 2px solid var(--hh-sc-ink); border-radius: 10px;
   box-shadow: 4px 5px 0 var(--hh-sc-ink); }
-@media (min-width: 900px) {
-  .hh-landing-keeper { display: block; position: fixed; z-index: 1; right: 2.5%; bottom: 2%; width: clamp(96px, 11vw, 170px); aspect-ratio: 200 / 300; }
-}
 @media (max-width: 640px) {
   .hh-status[data-quiet='true'] { grid-template-columns: minmax(0, 1fr); }
   .hh-status[data-quiet='true'] > :not(.hh-hero-art) { grid-column: 1; }
@@ -198,9 +215,12 @@ function StatusRows({ state }: { state: BackendStatus }) {
   )
 }
 
+const NO_OPTIONS: readonly HallOption[] = []
+
 export default function HauntedHouseApp({ landing }: HauntedHouseAppProps = {}) {
   const { state, retry } = useBackendStatus()
-  const invite = landing ?? (REPLAY_RECORDING === null ? undefined : REPLAY_LANDING)
+  const replayPage = REPLAY_RECORDING !== null
+  const invite = landing ?? (replayPage ? REPLAY_LANDING : undefined)
   // The page has one polite live region. Before a mansion is open it is the
   // summary line, and the Foyer hands it each completed create or open result.
   // In an open mansion it is the house's announcer, and the summary line is
@@ -209,8 +229,74 @@ export default function HauntedHouseApp({ landing }: HauntedHouseAppProps = {}) 
   const [openMansion, setOpenMansion] = useState<MansionDescriptor | null>(null)
   // The guide's settings last for the visit: held here so they outlast one Mansion, and written nowhere.
   const [guideSettings, setGuideSettings] = useState<GuideSettings>(NO_GUIDE_SETTINGS)
+  // Where the visitor stands: at the Gate, in the hall, or in a mansion. Page state, gone on reload.
+  const [visit, tell] = useReducer(visitReducer, replayPage, initialVisit)
+  const [listLoading, setListLoading] = useState(true)
   const reachable = state.kind === 'ok'
   const inMansion = reachable && openMansion !== null
+  const atGate = reachable && !inMansion && visit.place === 'gate'
+  const gateFormId = useId()
+
+  const onLoad = useCallback((load: LoadState) => {
+    setListLoading(load.kind === 'loading')
+    if (load.kind === 'ready') tell({ type: 'list_loaded', mansionCount: load.mansions.length })
+  }, [])
+  const onMansionChange = useCallback((mansion: MansionDescriptor | null) => {
+    setOpenMansion(mansion)
+    tell({ type: mansion === null ? 'mansion_left' : 'mansion_opened' })
+  }, [])
+
+  // Where focus goes after a press that changes the screen: the Warden's first line
+  // (so it is read), the idea field, or the control that calls him back.
+  const statusRef = useRef<HTMLParagraphElement>(null)
+  const focusNext = useRef<'status' | 'idea' | 'call' | null>(null)
+  useEffect(() => {
+    const where = focusNext.current
+    focusNext.current = null
+    const call = () => document.querySelector<HTMLElement>('[data-hall-guide] [data-guide-call]')
+    if (where === 'status') (statusRef.current ?? call())?.focus()
+    if (where === 'idea') document.querySelector<HTMLElement>('[data-idea-step] textarea')?.focus()
+    if (where === 'call') call()?.focus()
+  }, [visit.place, visit.idea, guideSettings.quiet])
+
+  const setQuiet = (quiet: boolean) => {
+    focusNext.current = quiet ? 'call' : 'status'
+    setGuideSettings((settings) => ({ ...settings, quiet }))
+    setAnnouncement(SETTING_SAID.quiet(quiet))
+  }
+  const guide = {
+    words: guideSettings.kiroWords ? ('with-kiro' as const) : ('plain' as const),
+    quiet: guideSettings.quiet,
+    onStepBack: () => setQuiet(true),
+    onCallWarden: () => setQuiet(false),
+    statusRef,
+  }
+
+  // Each choice in the hall is one of the Foyer's own actions, or a step of the visit. Nothing else.
+  const pressHall = (option: HallOption, from: HTMLElement, hall: FoyerHall) => {
+    if (option.id.startsWith('enter:') || option.id.startsWith('watch:')) hall.open(option.id.slice(option.id.indexOf(':') + 1), from)
+    else if (option.id === 'build-new') {
+      focusNext.current = 'idea'
+      tell({ type: 'idea_opened' })
+    } else if (option.id === 'name-myself') {
+      tell({ type: 'idea_closed' })
+      document.querySelector<HTMLElement>('.hh-create input')?.focus()
+    } else if (option.id === 'step-outside') {
+      focusNext.current = 'status'
+      tell({ type: 'stepped_outside' })
+    }
+  }
+  const renderGuide = (hall: FoyerHall) => {
+    // Also asked for on the way back out of a mansion, a moment before the visit hears of it.
+    if (visit.place !== 'hall' && visit.place !== 'mansion') return null
+    const view = hallGuide(visit, hall.mansions, hall.selectedName, invite?.mansion ?? null)
+    return (
+      <HallGuide {...guide} status={view.status} question={view.question} options={view.options} pose={view.pose} poseLabel={view.poseLabel} onPress={(option, from) => pressHall(option, from, hall)}>
+        {visit.idea ? <IdeaStep mansions={hall.mansions} ready={hall.ready} mutation={hall.mutation} made={hall.made} onBuild={hall.build} /> : null}
+      </HallGuide>
+    )
+  }
+
   const renderShell = useCallback(
     (mansion: MansionDescriptor, onReturn: () => void) => (
       <House
@@ -229,17 +315,22 @@ export default function HauntedHouseApp({ landing }: HauntedHouseAppProps = {}) 
     [announcement, guideSettings, state],
   )
   return (
-    <main className="hh-house" aria-labelledby="hh-status-title" data-landing={reachable && !inMansion}>
-      <style>{STYLES + ROOM_PAINT_STYLES}</style>
+    <main className="hh-house" aria-labelledby="hh-status-title" data-landing={reachable && !inMansion} data-place={reachable ? visit.place : undefined}>
+      <style>{STYLES + ROOM_PAINT_STYLES + GUIDE_BALLOON_STYLES + FIRST_VISIT_STYLES}</style>
       {reachable && !inMansion ? (
-        <>
-          <span className="hh-landing-door" aria-hidden="true">
-            <FrontDoorPainting />
-          </span>
-          <span className="hh-landing-keeper" aria-hidden="true">
-            <WardenArt pose="watching" />
-          </span>
-        </>
+        <span className="hh-landing-door" aria-hidden="true">
+          <FrontDoorPainting knocker={visit.place !== 'hall'} />
+          {atGate ? (
+            <span
+              className="hh-landing-knocker"
+              data-knocker
+              onClick={() => {
+                const form = document.getElementById(gateFormId)
+                if (form instanceof HTMLFormElement) form.requestSubmit()
+              }}
+            />
+          ) : null}
+        </span>
       ) : null}
       <div className="hh-status" data-compact={inMansion} data-quiet={reachable && !inMansion}>
         <h1 id="hh-status-title">Haunted House</h1>
@@ -267,14 +358,30 @@ export default function HauntedHouseApp({ landing }: HauntedHouseAppProps = {}) 
           </>
         )}
       </div>
+      {/* The Gate: one question and one Knock. The Foyer below is mounted and reading its list, but its hall is put away. */}
+      {atGate ? (
+        <div className="hh-gate" data-gate-screen>
+          <HallGuide {...guide} status={GATE_STATUS} question={null} options={NO_OPTIONS} pose="watching" poseLabel={POSE_LABEL.watching} onPress={() => {}}>
+            <Gate
+              formId={gateFormId}
+              onKnock={(name) => {
+                focusNext.current = 'status'
+                tell({ type: 'knocked', name })
+              }}
+            />
+          </HallGuide>
+        </div>
+      ) : null}
       {/* Mounted only once the backend answers, so an outage has one retry path. */}
       {reachable ? (
         <Foyer
           onAnnounce={setAnnouncement}
-          onMansionChange={setOpenMansion}
+          onMansionChange={onMansionChange}
+          onLoad={onLoad}
           renderShell={renderShell}
           preselect={invite?.mansion}
           invitation={invite?.text}
+          visit={{ hidden: visit.place === 'gate' || (visit.place === 'loading' && listLoading), renderGuide }}
         />
       ) : null}
     </main>

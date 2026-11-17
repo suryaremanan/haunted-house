@@ -1,13 +1,15 @@
 // Replay DOM parity for the Foyer journey (task 9.3; Requirements 9.1, 9.2, 9.3).
 // Renders the replay entry, replay/main.tsx, with the SDK mapped to the replay
 // stand-in as vite.replay.config.ts maps it, and walks list, create, select,
-// open, and return. Every way out of the page is stubbed to throw and recorded.
+// open, and return. A recording always starts at the Gate, so each walk knocks
+// first. Every way out of the page is stubbed to throw and recorded.
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { isValidElement } from 'react'
 import type { Root } from 'react-dom/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import recordedMansions from '../../../fixtures/replay/mansions.json'
 import { liveRegions } from './rooms/foyer/foyer-test-kit'
+import { atGate, knock } from './test/first-visit-kit'
 
 // replay/main.tsx doesn't export its root. This pass-through keeps each root
 // and what it rendered, so the test can check the root component and unmount it.
@@ -68,8 +70,12 @@ function blocked(name: string) {
   }
 }
 
-/** Mounts the replay entry in a fresh #root and waits for the mansion list state. */
-async function mountReplay(): Promise<HTMLElement> {
+/**
+ * Mounts the replay entry in a fresh #root and waits for its first screen. A
+ * recording always starts at the Gate: the Foyer is mounted behind it and has
+ * read its list, but its hall is put away until the knock.
+ */
+async function mountReplayAtGate(): Promise<HTMLElement> {
   const container = document.createElement('div')
   container.id = 'root'
   document.body.append(container)
@@ -77,6 +83,18 @@ async function mountReplay(): Promise<HTMLElement> {
     await import('../replay/main')
   })
   await screen.findByText(SUMMARY)
+  await screen.findByRole('button', { name: 'Knock' })
+  expect(atGate(container)).toBe(true)
+  expect(container.querySelector('.hh-foyer-hall')).toHaveAttribute('hidden')
+  expect(screen.queryByRole('region', { name: 'Foyer' })).not.toBeInTheDocument()
+  return container
+}
+
+/** Mounts the replay entry, knocks at the Gate, and waits for the mansion list state. */
+async function mountReplay(): Promise<HTMLElement> {
+  const container = await mountReplayAtGate()
+  await knock()
+  expect(atGate(container)).toBe(false)
   await screen.findByRole('region', { name: 'Foyer' })
   await waitFor(() => expect(screen.queryByText('Loading mansions…')).not.toBeInTheDocument())
   return container
@@ -100,6 +118,26 @@ async function createMansion(name: string): Promise<void> {
 /** Markup with generated ids removed, so two renders of the same state compare equal. */
 function markup(container: Element): string {
   return container.innerHTML.replace(/:r[0-9a-z]+:/g, ':id:')
+}
+
+/**
+ * The Foyer's markup without the Warden's balloon block. That block differs by
+ * design: a recording invites the visitor to watch, a live hall counts its
+ * mansions. What each says and offers is read with `hallBalloon` instead.
+ */
+function hallMarkup(container: Element): string {
+  const copy = container.querySelector('.hh-foyer')!.cloneNode(true) as Element
+  copy.querySelectorAll('[data-foyer-guide]').forEach((guide) => guide.remove())
+  return markup(copy)
+}
+
+/** What the Warden's balloon in the hall says, and the choices it offers. */
+function hallBalloon(container: Element): { says: string | null; offers: (string | null)[] } {
+  const guide = container.querySelector('[data-foyer-guide]')!
+  return {
+    says: guide.querySelector('[data-guide-text]')!.textContent,
+    offers: Array.from(guide.querySelectorAll('[data-guide-primary] .hh-guide-option-label'), (label) => label.textContent),
+  }
 }
 
 /**
@@ -162,7 +200,7 @@ afterEach(() => {
 
 describe('replay Foyer', () => {
   it('renders the live root component with the Foyer listing the recorded mansions', async () => {
-    const container = await mountReplay()
+    const container = await mountReplayAtGate()
 
     // The element rendered into #root is the default export of src/App.tsx,
     // the module the live build ships, which mounts the one Foyer component.
@@ -174,6 +212,13 @@ describe('replay Foyer', () => {
 
     const page = within(container)
     const main = page.getByRole('main', { name: 'Haunted House' })
+    // At the Gate nothing of the hall can be reached: no list, no Open, no Create. The knock shows it.
+    expect(main).toHaveAttribute('data-place', 'gate')
+    expect(page.queryByRole('radiogroup')).not.toBeInTheDocument()
+    expect(page.queryByRole('button', { name: /^Open\b/ })).not.toBeInTheDocument()
+    expect(page.queryByRole('button', { name: 'Create mansion' })).not.toBeInTheDocument()
+    await knock()
+    expect(main).toHaveAttribute('data-place', 'hall')
     expect(within(main).getByRole('region', { name: 'Foyer' })).toBeInTheDocument()
     const group = page.getByRole('radiogroup', { name: 'Mansions' })
     expect(radioValues()).toEqual(recordedMansions.mansions.map(({ name }) => name).sort())
@@ -296,7 +341,13 @@ describe('replay Foyer', () => {
 
   it('renders the same markup as the live build for the same list, shell, and return', async () => {
     const replay = await mountReplay()
-    const replayList = markup(replay.querySelector('.hh-foyer')!)
+    // The hall is compared without the Warden's balloon, and each balloon is read by name instead.
+    // A recording's greets the visitor who knocked and invites them to watch.
+    expect(hallBalloon(replay)).toEqual({
+      says: 'Come in. This house holds a recording of demo-mansion being built.',
+      offers: ['Watch demo-mansion get built', 'Step outside'],
+    })
+    const replayList = hallMarkup(replay)
     fireEvent.click(radio('weather-station'))
     await act(async () => {
       fireEvent.click(screen.getByRole('button', { name: 'Open weather-station' }))
@@ -346,7 +397,13 @@ describe('replay Foyer', () => {
     // The same root with the same landing props: the replay entry passes its invitation, nothing else differs.
     const live = render(<LiveApp landing={REPLAY_LANDING} />)
     await screen.findByRole('radiogroup', { name: 'Mansions' })
-    expect(markup(live.container.querySelector('.hh-foyer')!)).toBe(replayList)
+    // A live page that holds mansions has no Gate. Its balloon counts them and offers the way back in.
+    expect(atGate(live.container)).toBe(false)
+    expect(hallBalloon(live.container)).toEqual({
+      says: '4 mansions stand here.',
+      offers: ['Go back into demo-mansion', 'Build something new', 'Step outside'],
+    })
+    expect(hallMarkup(live.container)).toBe(replayList)
 
     fireEvent.click(radio('weather-station'))
     await act(async () => {

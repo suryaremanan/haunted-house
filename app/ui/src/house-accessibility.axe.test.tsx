@@ -286,15 +286,27 @@ describe('the static replay entry', () => {
     vi.resetModules()
   })
 
-  it('has no axe violation on the replay Foyer, the opened recorded mansion, and its Attic', async () => {
+  it('has no axe violation at the Gate, on the replay Foyer, the opened recorded mansion, and its Attic', async () => {
     const container = document.createElement('div')
     container.id = 'root'
     document.body.append(container)
     await act(async () => {
       await import('../replay/main')
     })
+    // A recording starts at the Gate: the Warden, one field and one Knock.
+    const knock = await screen.findByRole('button', { name: 'Knock' })
+    expect(container.querySelector('[data-gate-screen]')).not.toBeNull()
+    expect(await axeViolations(container)).toEqual([])
+    // With "Something else" open: the Word Book in his balloon.
+    fireEvent.click(screen.getByRole('button', { name: 'Something else…' }))
+    expect(container.querySelector('[data-word-book]')).not.toBeNull()
+    expect(await axeViolations(container)).toEqual([])
+
+    fireEvent.click(knock)
     await screen.findByRole('region', { name: 'Foyer' })
     await waitFor(() => expect(screen.queryByText('Loading mansions…')).not.toBeInTheDocument())
+    // The hall, with the Warden's balloon above it.
+    expect(container.querySelector('[data-foyer-guide] [data-guide-balloon]')).not.toBeNull()
     expect(await axeViolations(container)).toEqual([])
 
     fireEvent.click(screen.getByRole('radio', { name: /^demo-mansion\b/ }))

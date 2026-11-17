@@ -40,7 +40,7 @@ const RECORDING = visit(true, { type: 'list_loaded', mansionCount: 1 }, { type: 
 const RECORDING_NAMED = visit(true, { type: 'list_loaded', mansionCount: 1 }, { type: 'knocked', name: 'Ada' })
 
 const HALL_QUESTION = 'What do you want to do?'
-const STEP_OUTSIDE = { id: 'step-outside', label: 'Step outside', consequence: 'Shows the front gate again. Nothing is removed.' }
+const STEP_OUTSIDE = { id: 'step-outside', label: 'Step outside', consequence: 'Shows the front gate again and forgets your name. Nothing else changes.' }
 const BUILD_NEW = { id: 'build-new', label: 'Build something new', consequence: 'Asks what you want to build. Nothing is made yet.' }
 const NAME_MYSELF = {
   id: 'name-myself',

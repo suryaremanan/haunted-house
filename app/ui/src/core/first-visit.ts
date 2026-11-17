@@ -90,7 +90,7 @@ export const MAX_IDEA_NAME_LENGTH = 24
 const OPENERS: ReadonlySet<string> = new Set(['i', 'we', 'id', 'want', 'need', 'would', 'like', 'please', 'to', 'build', 'make', 'create', 'write', 'me', 'us', 'lets', 'let', 'just', 'can', 'you'])
 const ARTICLES: ReadonlySet<string> = new Set(['a', 'an', 'the', 'some', 'my', 'our'])
 /** Words a name stops at once it has two words: what follows describes the thing, it does not name it. */
-const CONNECTORS: ReadonlySet<string> = new Set(['that', 'which', 'who', 'to', 'for', 'with', 'and', 'or', 'in', 'on', 'of', 'from', 'by', 'as', 'so', 'when', 'where', 'it', 'is'])
+const CONNECTORS: ReadonlySet<string> = new Set('that which who to for with and or in on of from by as so when where it is'.split(' '))
 /** Latin letters that do not come apart into a plain letter and a mark. */
 const PLAIN_LETTER: Readonly<Record<string, string>> = { ø: 'o', ß: 'ss', ł: 'l', đ: 'd', æ: 'ae', œ: 'oe', þ: 'th', ð: 'd', ı: 'i' }
 
@@ -257,7 +257,7 @@ export interface HallMansion {
   readonly status: string
 }
 
-const STEP_OUTSIDE: HallOption = { id: 'step-outside', label: 'Step outside', consequence: 'Shows the front gate again. Nothing is removed.' }
+const STEP_OUTSIDE: HallOption = { id: 'step-outside', label: 'Step outside', consequence: 'Shows the front gate again and forgets your name. Nothing else changes.' }
 
 /**
  * What the Warden says in the hall. `invited` is the mansion the page invites

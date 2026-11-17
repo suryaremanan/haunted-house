@@ -203,9 +203,10 @@ describe('MVP scope', () => {
   })
 
   it('has no chat composer: the only text field in a Mansion is the bounded revision request', () => {
+    // Before a Mansion is open the Foyer has its own bounded fields: a mansion's name and brief, the visitor's name at the Gate, and the idea.
     const fields = offenders(/<textarea\b|<input\b|contentEditable/)
     expect(fields.sort()).toEqual(
-      ['src/rooms/foyer/CreateMansionForm.tsx', 'src/rooms/foyer/MansionList.tsx', 'src/rooms/house/RevisionRequest.tsx', 'src/rooms/workshop/WorkshopTaskBoard.tsx', 'src/rooms/attic/ReplayControls.tsx', 'src/rooms/attic/ReplayBar.tsx']
+      ['src/rooms/foyer/CreateMansionForm.tsx', 'src/rooms/foyer/Gate.tsx', 'src/rooms/foyer/IdeaStep.tsx', 'src/rooms/foyer/MansionList.tsx', 'src/rooms/house/RevisionRequest.tsx', 'src/rooms/workshop/WorkshopTaskBoard.tsx', 'src/rooms/attic/ReplayControls.tsx', 'src/rooms/attic/ReplayBar.tsx']
         .filter((file) => fields.includes(file))
         .sort(),
     )

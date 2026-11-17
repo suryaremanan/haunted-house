@@ -188,8 +188,8 @@ const SCRIPT_SAMPLES = chars(
 const cleanUnit = fc.oneof(
   { weight: 5, arbitrary: fc.constantFrom(...Array.from('ADLZadeghilnortvy0123456789')) },
   { weight: 3, arbitrary: fc.constantFrom(...SCRIPT_SAMPLES) },
-  // Any letter or decimal digit the engine knows.
-  { weight: 2, arbitrary: fc.string({ unit: 'binary', minLength: 1, maxLength: 1 }).filter((char) => LETTER_OR_DIGIT.test(char)) },
+  // Any letter or decimal digit the engine knows, except the few letters that draw nothing: those count as spaces, so a clean name has none.
+  { weight: 2, arbitrary: fc.string({ unit: 'binary', minLength: 1, maxLength: 1 }).filter((char) => LETTER_OR_DIGIT.test(char) && !BLANK_SET.has(char)) },
 )
 
 /** Whole words joined by single spaces for as long as the line stays within the limit. */
