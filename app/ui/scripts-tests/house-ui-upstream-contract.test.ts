@@ -33,7 +33,18 @@ const FIXTURE = path.join(REPO, 'spikes/fixtures/house-ui-upstream-contract.json
 const DEMO_LOG = path.join(REPO, 'fixtures/replay/demo.jsonl')
 
 /** The House UI core modules of this feature. They may read upstream core modules and nothing else. */
-const HOUSE_UI_CORE = ['house-registry.ts', 'house-projection.ts', 'motion-policy.ts', 'interruption-policy.ts']
+const HOUSE_UI_CORE = [
+  'house-registry.ts',
+  'house-projection.ts',
+  'motion-policy.ts',
+  'interruption-policy.ts',
+  // Spec 8: the guide, its words, its layout table, the first visit and the built view.
+  'house-guide.ts',
+  'house-words.ts',
+  'guide-layout.ts',
+  'first-visit.ts',
+  'house-built.ts',
+]
 
 function coreSources(): Map<string, string> {
   const sources = new Map<string, string>()

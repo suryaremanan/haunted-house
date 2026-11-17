@@ -39,7 +39,7 @@ The guide adds no reducer, command, approval path, endpoint, live region, toast,
     - _Writes: `app/ui/src/core/house-words.test.ts`_
     - _Requirements: 7.9, 7.10_
 
-- [ ] 3. Build the guide as a pure reading of the house (MVP)
+- [x] 3. Build the guide as a pure reading of the house (MVP)
   - [x] 3.1 Extend the guide module
     - Extend `app/ui/src/core/house-guide.ts` with `guideView`, `wardenPose` and `landingRoom`; keep the precedence of `guideText` exactly. Write every sentence as a template with Word Book slots; compose the door sentence here and quote the upstream risky-action and tool-prompt sentences unchanged.
     - Produce options as press plans (`map`, `control`, `fill`, `every`, `shell`) following the option table of the design: at most four Primary Options, the full list, the approved verbs, a consequence for each, bounded lengths, the ready-made change requests, and no `start`, `decide` or `ask` option where the room's mutation is off or the house is a recording.
@@ -52,7 +52,7 @@ The guide adds no reducer, command, approval path, endpoint, live region, toast,
     - _Writes: `app/ui/src/core/guide-layout.ts`_
     - _Requirements: 1.6, 5.6, 5.7, 8.4, 8.8_
 
-  - [ ] 3.3 Add the new core modules to the purity check
+  - [x] 3.3 Add the new core modules to the purity check
     - Extend `HOUSE_UI_CORE` in `app/ui/scripts-tests/house-ui-upstream-contract.test.ts` with `house-guide.ts`, `house-words.ts`, `guide-layout.ts`, `first-visit.ts` and `house-built.ts`.
     - _Writes: `app/ui/scripts-tests/house-ui-upstream-contract.test.ts`_
     - _Requirements: 14.4_
@@ -95,44 +95,44 @@ The guide adds no reducer, command, approval path, endpoint, live region, toast,
     - _Writes: `app/ui/src/core/house-guide.test.ts`_
     - _Requirements: 3.2, 3.4, 3.9, 11.2, 11.4, 11.5, 12.1_
 
-- [ ] 4. Model the first visit and the built page (MVP)
-  - [ ] 4.1 Implement the first-visit helpers
+- [x] 4. Model the first visit and the built page (MVP)
+  - [x] 4.1 Implement the first-visit helpers
     - Add `app/ui/src/core/first-visit.ts`: `visitReducer`, `visitorName`, `greeting`, `mansionNameFromIdea`, `EXAMPLE_IDEAS` and `hallGuide`. The reducer starts no request; only `mansion_opened` reaches the mansion.
     - _Writes: `app/ui/src/core/first-visit.ts`_
     - _Requirements: 9.1, 9.3, 9.4, 9.5, 9.6, 9.9, 9.10, 10.1, 10.4, 10.10, 10.11, 10.12_
 
-  - [ ] 4.2 Implement the built view
+  - [x] 4.2 Implement the built view
     - Add `app/ui/src/core/house-built.ts` with `builtView`: a row only for a phase whose door is open, in phase order, with the Word Book's words and the real path; finished tasks only; the folder; the fixed steps; the replay sentence.
     - _Writes: `app/ui/src/core/house-built.ts`_
     - _Requirements: 13.2, 13.3, 13.4, 13.5, 13.8, 13.9_
 
-  - [ ]* 4.3 Write the property test for the visitor's name
+  - [x]* 4.3 Write the property test for the visitor's name
     - **Property 6: A visitor's name is bounded and inert**
     - **Validates: Requirements 9.4, 9.5, 9.6**
     - _Writes: `app/ui/src/core/visitor-name.property.test.ts`_
 
-  - [ ]* 4.4 Write the property test for the mansion name of an idea
+  - [x]* 4.4 Write the property test for the mansion name of an idea
     - **Property 7: Every idea yields a new, valid mansion name**
     - **Validates: Requirements 10.4**
     - _Writes: `app/ui/src/core/idea-name.property.test.ts`_
 
-  - [ ]* 4.5 Write the property test for the visit
+  - [x]* 4.5 Write the property test for the visit
     - Event sequences up to 40 long, live and replay.
     - **Property 8: The visit never moves without a press**
     - **Validates: Requirements 9.1, 9.3, 9.9, 9.10**
     - _Writes: `app/ui/src/core/visit-flow.property.test.ts`_
 
-  - [ ]* 4.6 Write the property test for the built view
+  - [x]* 4.6 Write the property test for the built view
     - **Property 11: The built page lists exactly what was approved**
     - **Validates: Requirements 13.2, 13.3, 13.4, 13.8, 13.9**
     - _Writes: `app/ui/src/core/house-built.property.test.ts`_
 
-  - [ ]* 4.7 Write the example tests of the first visit
+  - [x]* 4.7 Write the example tests of the first visit
     - The three example ideas are valid briefs with valid names; greeting vectors; hall guide vectors for a first-time visitor, a returning visitor and the Replay Build.
     - _Writes: `app/ui/src/core/first-visit.test.ts`_
     - _Requirements: 9.6, 10.1, 10.10, 10.11_
 
-- [ ] 5. Checkpoint: the core says the right things
+- [x] 5. Checkpoint: the core says the right things
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 6. Draw the Warden (MVP)
