@@ -159,7 +159,7 @@ const TERMS: readonly Term[]
 | build | the build | implementation | | Implementation is the work of carrying out the tasks. Each finished task leaves code in the project folder. |
 | ghost | ghost | agent | | An agent is an AI worker with one job and its own limits. Each ghost in this house is one Kiro agent. |
 | approve | open the door | approve | | Approving says a document is good enough to build on. Nothing moves to the next step until you approve. |
-| reject | keep the door shut | reject | | Rejecting says a document is not good enough yet. The door stays shut until a new version is approved. |
+| reject | keep the door shut | reject | | To reject a document says it is not good enough yet. The door stays shut until a new version is approved. |
 | revise | ask for a change | revision request | | A revision request is one note to the ghost that wrote the document. It writes a new version, and the door stays shut meanwhile. |
 | steering | house rules | steering | | Steering is the standing guidance every agent reads before it works. It keeps the work in line with how the project is run. |
 | wall | wall | path limit | | A path limit is the list of folders an agent may read and write. An attempt to go outside it is refused. |
