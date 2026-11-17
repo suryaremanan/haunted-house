@@ -160,7 +160,7 @@ const TERMS: readonly Term[]
 | ghost | ghost | agent | | An agent is an AI worker with one job and its own limits. Each ghost in this house is one Kiro agent. |
 | approve | open the door | approve | | Approving says a document is good enough to build on. Nothing moves to the next step until you approve. |
 | reject | keep the door shut | reject | | To reject a document says it is not good enough yet. The door stays shut until a new version is approved. |
-| revise | ask for a change | revision request | | A revision request is one note to the ghost that wrote the document. It writes a new version, and the door stays shut meanwhile. |
+| revise | ask for a change | revision request | | A revision request is one note that asks the ghost who wrote a document to change it. It writes a new version, and the door stays shut meanwhile. |
 | steering | house rules | steering | | Steering is the standing guidance every agent reads before it works. It keeps the work in line with how the project is run. |
 | wall | wall | path limit | | A path limit is the list of folders an agent may read and write. An attempt to go outside it is refused. |
 
@@ -180,8 +180,10 @@ type PressStep =
   | { readonly kind: 'map'; readonly target: HouseSurfaceTarget; readonly focus: 'heading' | { readonly proposal: string } | { readonly section: 'built' } }
   | { readonly kind: 'control'; readonly key: string }            // [data-guide-control="<key>"] in the open surface
   | { readonly kind: 'fill'; readonly key: string; readonly text: string }
+  | { readonly kind: 'focus'; readonly key: string }              // puts focus in the field marked with the key
   | { readonly kind: 'every'; readonly keyPrefix: string }        // every enabled, unticked control whose key starts so
-  | { readonly kind: 'shell'; readonly action: 'map' | 'quiet' | 'reveal' | 'kiro-words' | 'needs-you' | 'close' | 'exit' }
+  | { readonly kind: 'shell'; readonly action: 'map' | 'reveal' | 'kiro-words' | 'needs-you' | 'close' | 'exit' }
+  | { readonly kind: 'task'; readonly task: GuideTask | null }    // sets or clears the task in hand; page state only
 
 interface GuideOption {
   readonly id: string
@@ -207,6 +209,11 @@ interface GuideContext {
   readonly task: { readonly kind: 'revise'; readonly phase: 'requirements' | 'design' | 'tasks'; readonly filled: boolean } | null
   readonly quiet: boolean
   readonly words: WordMode
+  /** Whether the labels of the working objects are on show, and whether the map lies over the room: they only turn two setting labels around. */
+  readonly reveal: boolean
+  readonly mapOpen: boolean
+  /** False on a page that cannot leave the Mansion. */
+  readonly canLeave: boolean
 }
 
 interface GuideView {
@@ -214,6 +221,8 @@ interface GuideView {
   readonly statusKind: StatusKind
   /** Terms named in the status line; each gets a "What is this?". */
   readonly terms: readonly TermId[]
+  /** Why some things are not offered: the room's own sentence (a recording, an unconfirmed state), or null. Upstream text, not guide copy. */
+  readonly note: string | null
   readonly question: 'What do you want to do?'
   /** At most four. */
   readonly options: readonly GuideOption[]
@@ -226,7 +235,7 @@ interface GuideView {
 }
 
 function guideView(projection: HouseProjection, context: GuideContext): GuideView | null
-function wardenPose(room: RoomPresentation, quiet: boolean): { pose: WardenPose; label: string }
+function wardenPose(room: RoomPresentation, projection: HouseProjection, quiet: boolean): { pose: WardenPose; label: string }
 function landingRoom(projection: HouseProjection): RoomId
 ```
 
@@ -239,10 +248,10 @@ function landingRoom(projection: HouseProjection): RoomId
 | 2 | First waiting item is a risky action | "Tinker 2 is held. Tinker 2 asks to run a command. Nothing runs until you decide." | holding | The Warden is holding Tinker 2. |
 | 2 | First waiting item is a Crew tool prompt | The upstream sentence ("… Answer it in Crew.") | holding | The Warden is holding a ghost. |
 | 2 | First waiting item is a door | "The Archivist has finished what it must do. The door waits for you." | offering a key | The Warden holds out a key. |
-| 3 | A ghost failed | "The Archivist failed: <safe reason>." plus "It can be tried again." when a retry is offered | pointing when a retry is offered, else watching | The Warden points to your next step. |
-| 4 | A ghost is blocked | "The Draughtsman is held: <safe reason>." | holding | The Warden is holding the Draughtsman. |
-| 5 | A ghost is working | "The Archivist is writing. This door stays shut until you open it." | watching | The Warden is watching. |
-| 6 | The phase can be started | "This is the Study. The Archivist writes what it must do here. Nothing is written yet." | pointing | The Warden points to your next step. |
+| 3 | A ghost failed | "The Archivist failed. <safe reason>" plus "It can be tried again." when its own run can be retried ("A failed run can be tried again." when the retry is another ghost's) | pointing when a retry is offered, else watching | The Warden points to your next step. |
+| 4 | A ghost is blocked | "The Draughtsman is held. <safe reason>" | holding | The Warden is holding the Draughtsman. |
+| 5 | A ghost is working | "The Archivist is writing. This door stays shut until you open it." (the door is named only while a door of the room is still shut) | watching | The Warden is watching. |
+| 6 | The phase can be started (for the build, also while it is under way: it is started piece by piece) | "This is the Study. The Archivist writes what it must do here. Nothing is written yet." | pointing | The Warden points to your next step. |
 | 7 | The room's doors are open | "This door is open. The Drafting Room is next." or, with every door open, "The house is built. Every door is open." | pointing | The Warden points to your next step. |
 | 8 | Otherwise | What the room is for (`ROOM_GUIDE_TEXT`, rewritten with term slots) | watching | The Warden is watching. |
 
@@ -254,17 +263,17 @@ function landingRoom(projection: HouseProjection): RoomId
 | Room, no surface | Ghost working | "Watch the Archivist work"; "See the whole house" | `map` room; `shell map` |
 | Room, no surface | Door waiting | "Read what it must do"; "Ask for a change"; "Go to the door" | `map` room; `map` room, then `control revise:<phase>`; `map` door, focus on the proposal |
 | Door surface open | Proposal pending, decisions on | "Open the door"; "Ask for a change"; "Read it again" | `control approve:<proposal>`; `map` room, then `control revise:<phase>`; `map` room |
-| Revision form open | | "Write: <ready-made 1>"; "Write: <ready-made 2>"; "Write: <ready-made 3>"; "Write my own" | `fill revise-text:<phase>`; focus the field |
-| Revision form filled | | "Send this change"; "Write my own" | `control revise-send:<phase>` |
+| Revision form open | | "Ask for a shorter version" and two more ready-made changes; "Write my own" | `fill revise-text:<phase>`, then `task` (filled); `focus revise-text:<phase>` |
+| Revision form filled | | "Send this change"; "Choose a different change"; "Write my own" | `control revise-send:<phase>`, then `task` (cleared) |
 | Room, no surface | Risky action waiting | "See exactly what it asked" | `map` room, focus on the proposal |
 | Room surface open | Risky proposal shown | "Allow it once"; "Refuse it" | `control approve:<proposal>`; `control reject:<proposal>` |
 | Room, no surface | Ghost blocked | "See why the Draughtsman is held" | `map` ghost |
 | Room, no surface | Run failed, retry offered | "Try the Archivist again"; "See what went wrong" | `map` room, then `control retry:<run>`; `map` ghost |
-| Workshop | Tasks approved, work can start | "Build every task that is ready"; "Choose tasks myself" | `map` room, `every task:`, then `control start-workshop`; `map` room |
+| Workshop | Tasks approved, work can start | "Build everything that is ready"; "Choose what to build myself" | `map` room, `every task:`, then `control start-workshop`; `map` room |
 | Room, no surface | Door open, later room exists | "Go to the Drafting Room"; "Read what it must do again" | `map` next room; `map` room |
-| Attic | | "Watch how this house was built"; "Step through it" | `map` attic, then `control replay:play`; `map` attic |
+| Attic | | "Watch how this house was built"; "Step through it myself" | `map` attic, then `control attic:toggle`; `map` attic |
 | Any room | Every door open | "See what was made" comes first | `map` foyer, focus on the built section |
-| Replay Build | Any | Start, decide and ask options are left out; "Play the recording" or "Pause the recording" and "Step forward" are added | `control replay:<action>` on the replay bar |
+| Replay Build | Any | Start, decide and ask options are left out; "Play or pause the recording" and "Play it from the start" are added | `control replay:toggle`, `control replay:restart` on the replay bar |
 
 Always under "Something else…": go to each visible room, look around this room, see the whole house or put the map away, go to what needs you (when something does), show or hide Kiro's words, show or hide what can be pressed, what these words mean (the Word Book), keep the door shut (at a pending door), and leave for the Foyer Hall. "Step back" is its own control beside it.
 
@@ -276,9 +285,9 @@ Ready-made change requests, per document, held beside the guide copy:
 
 | Document | Ready-made texts |
 |---|---|
-| requirements | "Make it shorter. Keep only what the first version needs." · "Add one example to each requirement." · "Use simpler words." |
-| design | "Make it simpler, with fewer parts." · "Explain each part in one sentence." · "Say how each requirement is tested." |
-| tasks | "Split the large tasks into smaller ones." · "Put the most important task first." · "Remove anything the first version does not need." |
+| requirements | "Ask for a shorter version": "Make it shorter. Keep only what the first version needs." · "Ask for an example in each one": "Add one example to each requirement." · "Ask for simpler words": "Use simpler words." |
+| design | "Ask for fewer parts": "Make it simpler, with fewer parts." · "Ask for one sentence on each part": "Explain each part in one sentence." · "Ask how each point is tested": "Say how each requirement is tested." |
+| tasks | "Ask for smaller steps": "Split the large steps into smaller ones." · "Ask for the most important first": "Put the most important step first." · "Ask to drop what can wait": "Remove anything the first version does not need." |
 
 ### Pressing
 
@@ -295,11 +304,12 @@ Ready-made change requests, per document, held beside the guide copy:
   | `task:<taskId>` | Task checkbox |
   | `start-workshop` | Task board start (today's `data-control`) |
   | `retry:<run>` | Retry button |
-  | `replay:<action>` | Replay bar and Attic buttons (today's `data-action`) |
+  | `replay:toggle`, `replay:restart` | Replay bar buttons |
+  | `attic:toggle`, `attic:next` | The Attic's own playback buttons |
 
 - A `fill` step types into the one real field through the browser's own input event, so the field's limit, counter and validation apply as if typed.
 - An `every` step ticks each enabled, unticked checkbox whose key starts with the prefix.
-- **One press per commit.** The runner issues the next step from an effect after React has committed the previous one, so each control sees current state. A plan stops at the first step whose control is missing or carries `aria-disabled="true"`; the balloon then shows the room's diagnostic, or the text the control's `aria-describedby` points to, and the one live region says it once because the visitor asked.
+- **One press per commit.** The runner issues the next step from an effect after React has committed the previous one, so each control sees current state. Each step checks its own control at the moment it is pressed, and a plan that has not finished after a dozen renders is dropped. A plan stops at the first step whose control is missing or carries `aria-disabled="true"`; the balloon then shows the room's diagnostic, or the text the control's `aria-describedby` points to, and the one live region says it once because the visitor asked.
 - **Decisions are never one stray Enter away.** A `decide` option exists only in a view whose surface already shows that decision. When a press plan opens such a surface, focus goes to the proposal heading; when the option list changes under the visitor's focus, focus moves to the status line. A repeated Enter therefore cannot land on a button that decides.
 
 ### Stage layout
@@ -311,20 +321,29 @@ interface Box { readonly left: number; readonly top: number; readonly width: num
 
 const GHOST_WIDTH = 9                              // percent of the scene width
 const GHOST_ASPECT = 170 / 160                     // height over width
-const WARDEN_ASPECT = 250 / 190
-/** Twice a ghost's height, whatever the window: 14.535 percent of the scene width. */
+const WARDEN_ASPECT = 300 / 200                    // his drawing is 200 by 300
+/** Twice a ghost's height, whatever the window: 12.75 percent of the scene width. */
 const WARDEN_WIDTH = (2 * GHOST_WIDTH * GHOST_ASPECT) / WARDEN_ASPECT
 const GUIDE_RESERVE: Box = { left: 84, top: 82, width: 16, height: 18 }
 
-function ghostBox(index: number, count: number, state: PresentationGhostState): Box
-function workingObjects(room: RoomPresentation, view: GuideView): readonly { key: string; box: Box; label: string; steps: readonly PressStep[] }[]
+/** `backDoor`: the room has a door in its back wall, so the ghosts' band ends before it. */
+function ghostBox(index: number, count: number, state: PresentationGhostState, backDoor?: boolean): Box
+/** In reading order. `label` is what the object wears; `name` starts with the label and says what a press does. */
+function workingObjects(room: RoomPresentation, view: Pick<GuideView, 'previous' | 'next'>, words: WordMode, needsYou: number):
+  readonly { key: string; kind: string; box: Box; label: string; name: string; steps: readonly PressStep[] }[]
 ```
 
-At 900 CSS pixels and wider, the balloon lies in an apron: a strip directly under the room scene and exactly as wide. The Warden stands at the right end of the apron with his feet on its lower edge. He is taller than the apron, so his head and shoulders rise into the scene, and only inside the Guide Reserve: the bottom-right corner in front of the desk, where the scene holds decoration only. The right-wall door ends at 81 percent of the scene height, the ledger and the bell lie left of 56 percent of its width, and every ghost slot ends above 80 percent, so none of them reaches the reserve. The room panel and the map sheet lie over the scene, never over the apron.
+There are three layouts, and in none of them does the balloon lie over the room.
 
-Below 900 CSS pixels the same block follows the scene in the page. Nothing overlaps.
+- **Below 900 CSS pixels:** the room, then the labels (as a plain list when they are on), then the room's name plate, then the balloon, the guide's settings and the Warden, one after another in the page.
+- **From 900 CSS pixels:** the same order, with an apron under the room. The balloon and the guide's settings lie in the apron; the Warden stands at its right end with his feet on its lower edge. He is taller than a short apron, so his head and shoulders may rise into the room, and only inside the Guide Reserve.
+- **From 1100 CSS pixels in a window at least 3:2:** the room takes the height of the window and the balloon stands in a column beside it. The Warden stands in the room's own corner, in front of the right end of the desk, on the floor line of the strip under the room; again only the Guide Reserve is touched. This keeps the room large on a short, wide window, where an apron would shrink it.
 
-On a short window the scene's width is capped so that the scene, the apron and the toolbar fit one screen; the art is vector and scales.
+The Guide Reserve is the bottom-right corner in front of the desk, where the scene holds decoration only. The right-wall door ends at 81 percent of the scene height, the ledger and the bell lie left of 56 percent of its width, and every ghost slot ends above 80 percent, so none of them reaches the reserve. In a room with a door in its back wall the ghosts' band ends before that door.
+
+The room is sized as one length (`--hh-scene-w`), from which the Warden (12.75 percent of it wide, so twice a ghost's height), the open room sheet and the map sheet take their sizes. The room, what stands under or beside it and the toolbar are sized to fit one window; a recording's bar is counted too. The art is vector and scales.
+
+The open room sheet and the map sheet share the room's grid row, so they lie over the room and never over the apron.
 
 ### The Warden
 
@@ -368,8 +387,11 @@ interface VisitState {
   readonly visitorName: string
   /** True once the visitor came in through the Gate in this visit. */
   readonly firstTime: boolean
-  readonly idea: 'open' | 'closed'
+  /** Whether the hall is asking what to build. */
+  readonly idea: boolean
   readonly replay: boolean
+  /** Where the visitor stood when a mansion opened, and so where leaving it returns them. */
+  readonly cameFrom: 'gate' | 'hall'
 }
 type VisitEvent =
   | { type: 'list_loaded'; mansionCount: number }
@@ -379,17 +401,17 @@ type VisitEvent =
   | { type: 'mansion_opened' } | { type: 'mansion_left' }
 
 function visitReducer(state: VisitState, event: VisitEvent): VisitState
-/** One line, at most 40 code points, no control character. Idempotent. */
+/** One line, at most 40 code points, no control or formatting character; a joiner between two letters is kept. Idempotent. */
 function visitorName(raw: string): string
 function greeting(name: string): string            // "Come in, Ada." or "Come in."
-/** A valid, unused Mansion name for an idea. */
-function mansionNameFromIdea(idea: string, taken: ReadonlySet<string>): string
+/** A valid, unused Mansion name for an idea. `preferred` is the name of the example the idea started from. */
+function mansionNameFromIdea(idea: string, taken: ReadonlySet<string>, preferred?: string | null): string
 const EXAMPLE_IDEAS: readonly { readonly name: string; readonly title: string; readonly brief: string }[]
-function hallGuide(state: VisitState, mansions: readonly MansionDescriptor[], selected: string | null, words: WordMode): HallGuideView
+function hallGuide(state: VisitState, mansions: readonly { name: string; status: string }[], selected: string | null, invited: string | null): HallGuideView
 ```
 
-- `list_loaded` decides the first place: the Gate when the list is empty or the page is the Replay Build, else the Foyer Hall. `knocked` moves the Gate to the hall and sets the name. `stepped_outside` returns to the Gate and clears the name. Only `mansion_opened` reaches `mansion`. The reducer starts no request.
-- `mansionNameFromIdea` lower-cases, strips marks, turns every run of other characters into one hyphen, keeps whole words up to 24 characters, falls back to `my-house`, and adds `-2`, `-3`, … until the name is free, never past 40 characters.
+- `list_loaded` decides the first place: the Gate when the list is empty or the page is the Replay Build, else the Foyer Hall. `knocked` moves the Gate to the hall and sets the name. `stepped_outside` acts in the hall only: it returns to the Gate and clears the name. Only `mansion_opened` reaches `mansion`, and `mansion_left` returns the visitor to where they stood when it opened (an open asked for in the hall can land after the visitor stepped outside). The reducer starts no request.
+- `mansionNameFromIdea` reads the idea word by word (a hyphen inside a word is kept, so "to-do" stays one word), drops what opens a request ("I want to build a") and the articles, and stops at the first connecting word once it has two words ("that", "to", "for"), or at 24 characters. Accented letters lose their marks; a few Latin letters that do not come apart are spelled out. An idea with nothing nameable becomes `my-house`. A name that is taken gets `-2`, `-3`, … and never passes 40 characters. An example keeps its own name while that is free, also after its words are edited.
 - Example ideas are small on purpose, so a ghost can finish them in one sitting: a word counter, a to-do list and a unit converter, each "a command-line tool … in one file of Python with its tests". Each carries its own name.
 - The Gate (`components/Gate.tsx`) reuses the front-door painting as the exterior. The knocker is painted; the press target is a real "Knock" button, which the painted knocker forwards to for pointer users. The name field is labelled "Who is knocking?" and may be left empty.
 - The Idea Step (`rooms/foyer/IdeaStep.tsx`, `use-idea-step.ts`) shows the three ideas as buttons that fill one textarea, the derived name ("Project folder: word-counter"), the existing brief counter and errors (`use-mansion-brief.ts`), and "Build this". It calls the Foyer controller's `create(name, brief)` and, on success, `open(name)`; it imports no API of its own. The existing mansion list and create form stay in the hall, under the guided step for a first-time visitor and above it for a returning one.
@@ -410,11 +432,14 @@ interface BuiltInput {
 interface BuiltView {
   readonly built: boolean
   readonly rows: readonly { readonly term: TermId; readonly plain: string; readonly kiro: string; readonly path: string }[]
-  readonly tasks: readonly { readonly title: string; readonly files: readonly string[] }[]
+  readonly tasks: readonly { readonly taskId: string; readonly title: string; readonly files: readonly string[] }[]
   readonly folder: string
+  /** Set in a recording: the folder was on the computer that made it. */
+  readonly folderNote: string | null
+  /** How to open the folder in Kiro. Empty in a recording. */
   readonly steps: readonly string[]
 }
-function builtView(projection: HouseProjection, input: BuiltInput, mode: 'live' | 'replay'): BuiltView
+function builtView(projection: HouseProjection, input: BuiltInput): BuiltView   // live or replay is read from the projection
 ```
 
 `House.tsx` fills `BuiltInput` from values it already holds: the joined room documents (`documentPath`), the Workshop task board rows (`complete`, `writes`) and `mansion.displayPath`. A row appears only for a phase whose door is `open`. The steps are fixed copy: open Kiro; choose File, then Open Folder; pick this folder; the plan is under Specs. In the Replay Build the folder line reads that the folder is not on this computer. A verified link (WG-S1) may be added beside the steps; a guessed one is never shown.
@@ -467,7 +492,7 @@ For all House Projections, visible rooms, open surfaces and guide settings, `gui
 
 ### Property 2: The most pressing thing comes first, in words and in pose
 
-For all rooms, the status kind equals the first match of the reference order (locked, waiting decision, failed ghost, blocked ghost, working ghost, startable phase, open door, room description), and the pose equals the pose of that kind: stepped back exactly when Quiet Mode is on; holding only when the first match is a catch, with a label that names the held ghost when it has a name; offering a key exactly when the first match is a waiting door; and exactly one of the five poses with a non-empty label in every case.
+For all rooms, the status kind equals the first match of the reference order (locked, waiting decision, failed ghost, blocked ghost, working ghost, startable phase, open door, room description), and the pose equals the pose of that kind: stepped back exactly when Quiet Mode is on; holding only when the first match is a catch, with a label that names the held ghost when it has a name; offering a key exactly when the first match is a waiting door; pointing only where the room's state is confirmed (in a room whose controls are off for doubt he watches); and exactly one of the five poses with a non-empty label in every case.
 
 **Validates: Requirements 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.8, 3.2, 11.3, 12.1, 12.4, 12.5**
 
@@ -485,13 +510,13 @@ For all upstream house inputs, building the House Projection in live mode and in
 
 ### Property 5: Plain words by default, Kiro's words on request
 
-For all terms, `word(id, 'plain')` is the plain word and `word(id, 'with-kiro')` is the plain word followed by the Kiro word in brackets; every term has exactly two sentences; and for all House Projections and contexts with Kiro's words off, no text the guide composes contains a Kiro word of the book as a whole word, while with Kiro's words on each term the guide names carries its Kiro word.
+For all terms, `word(id, 'plain')` is the plain word and `word(id, 'with-kiro')` is the plain word followed by the Kiro word in brackets; every term has exactly two sentences; and for all House Projections and contexts with Kiro's words off, no text the guide composes contains a Kiro word of the book as a whole word (the house's own sentences that the status line quotes are named by the view and are not the guide's), while with Kiro's words on each term the guide names carries its Kiro word.
 
 **Validates: Requirements 7.1, 7.2, 7.3, 7.4, 7.5**
 
 ### Property 6: A visitor's name is bounded and inert
 
-For all strings, `visitorName` returns one line of at most 40 code points with no control character, and normalising its result again changes nothing; `greeting` contains the normalised name exactly once when it is not empty and is the nameless greeting when it is.
+For all strings, `visitorName` returns one line of at most 40 code points with no control character, and normalising its result again changes nothing; `greeting` is exactly "Come in, <name>." around the normalised name when it is not empty and is the nameless greeting when it is.
 
 **Validates: Requirements 9.4, 9.5, 9.6**
 
@@ -503,7 +528,7 @@ For all idea texts and all sets of existing names, `mansionNameFromIdea` returns
 
 ### Property 8: The visit never moves without a press
 
-For all finite sequences of visit events, the place is one of loading, gate, hall and mansion; the Gate is shown first exactly when the list is empty or the page is the Replay Build; a live page that loads with a mansion is never shown the Gate unless the visitor steps outside; the place is `mansion` only after a `mansion_opened` event; and the name is not empty only after a `knocked` event with a non-empty name and is empty again after `stepped_outside`.
+For all finite sequences of visit events, the place is one of loading, gate, hall and mansion; the Gate is shown first exactly when the list is empty or the page is the Replay Build; a live page that loads with a mansion is never shown the Gate unless the visitor steps outside; the place is `mansion` only after a `mansion_opened` event; and the name is not empty only after a `knocked` event with a non-empty name and is empty again after stepping outside from the hall.
 
 **Validates: Requirements 9.1, 9.3, 9.9, 9.10**
 
@@ -521,7 +546,7 @@ For all rooms, door layouts, ghost counts from zero to four and ghost states, ev
 
 ### Property 11: The built page lists exactly what was approved
 
-For all House Projections and built inputs, `builtView` reports `built` exactly when every phase door is open; lists a document row exactly for each phase whose door is open, in phase order, with the Word Book's plain and Kiro words and a path that ends in that term's file name; lists a task only when it is complete; and in replay mode says the folder is not on this computer.
+For all House Projections and built inputs, `builtView` reports `built` exactly when every phase door is open; lists a document row exactly for each phase whose door is open and whose supplied path has that term's file name as its last segment, in phase order, with the Word Book's plain and Kiro words; lists a task only when it is complete; and in replay mode says the folder is not on this computer.
 
 **Validates: Requirements 13.2, 13.3, 13.4, 13.8, 13.9**
 
@@ -532,7 +557,7 @@ For all House Projections and built inputs, `builtView` reports `built` exactly 
 | A press step's control is not in the page | The plan stops; the balloon shows the room's diagnostic | Nothing is sent |
 | The control carries `aria-disabled="true"` | The plan stops; the balloon shows the text the control is described by | The control's own guard already refuses |
 | A command is on its way when an option is pressed | As above: the real button is off until the answer comes | No second command |
-| The projection changes while a plan runs | The plan is dropped; the balloon re-reads the house | No press from stale data |
+| The projection changes while a plan runs | The next step looks its control up afresh and stops if it is gone or off; the balloon re-reads the house | No press from stale data |
 | The open surface closes under an option | Options are recomputed for the bare room; focus goes to the status line | No decision option remains |
 | The room is locked, read-only, uncertain, corrupt or incompatible | No start, decide or ask option; the status line is the room's own text | Unchanged upstream gating |
 | Replay Build | Playback options only; the fixed read-only sentence stays where it is today | No request of any kind |
@@ -621,5 +646,6 @@ No other existing test is edited. `scripts/check-release.sh` must exit 0 before 
 8. **The balloon leaves the painting.** Overlaying the corner hid part of the room's own door. The apron keeps the room at full width, gives the copy room for a consequence under every option, and makes "never covers content" a fact of layout that a property can check.
 9. **No memory of earlier catches.** A first-time explanation would need history the House Projection does not carry and would break live and replay parity. Every catch reads the same, and the longer explanation is always one press away.
 10. **The Warden never moves on his own.** No loop, no timer, no idle gesture. A still figure is more menacing than a busy one, and a guide that performs is the failure being designed against.
-11. **The guide writes its own door sentence.** The upstream sentence names the phase in Kiro's word. Composing it from the Word Book keeps "no Kiro word unless asked" checkable.
-12. **Small example ideas.** The first visit should end with working code in one sitting and on a small credit budget, so the three ideas are single-file command-line tools.
+11. **In a recording he stands as he did then.** The pose is read from the house, not from what the page can do, so a recording shows the same pose as the live house it was made from. He points only where the room's state is confirmed; in a live room whose controls are off for doubt he watches, because there is no step to point at.
+12. **The guide writes its own door sentence.** The upstream sentence names the phase in Kiro's word. Composing it from the Word Book keeps "no Kiro word unless asked" checkable.
+13. **Small example ideas.** The first visit should end with working code in one sitting and on a small credit budget, so the three ideas are single-file command-line tools.

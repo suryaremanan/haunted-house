@@ -10561,7 +10561,95 @@ var Uf = `
   .hh-ui[data-motion='low-frequency'] .hh-stage-figure .hh-paint-spectre { animation: hh-stage-hover 4s ease-in-out infinite; }
   .hh-ui[data-motion='low-frequency'] .hh-stage-caretaker .hh-paint-caretaker { animation: hh-stage-hover 6s ease-in-out infinite; }
 }
-`, Kf = {
+`, Kf = [
+	{
+		id: "plan",
+		plain: "plan",
+		kiro: "spec",
+		about: ["A spec is Kiro's name for the written plan of one feature.", "It is three files: requirements, design and tasks."],
+		file: null
+	},
+	{
+		id: "requirements",
+		plain: "what it must do",
+		kiro: "requirements",
+		about: ["Requirements say what the software must do, one testable statement at a time.", "Kiro keeps them in requirements.md."],
+		file: "requirements.md"
+	},
+	{
+		id: "design",
+		plain: "how it will work",
+		kiro: "design",
+		about: ["The design says how the software will be built to meet the requirements.", "Kiro keeps it in design.md."],
+		file: "design.md"
+	},
+	{
+		id: "tasks",
+		plain: "to-do list",
+		kiro: "tasks",
+		about: ["Tasks are the ordered to-do list that turns the design into code.", "Kiro keeps them in tasks.md and ticks each one off."],
+		file: "tasks.md"
+	},
+	{
+		id: "build",
+		plain: "the build",
+		kiro: "implementation",
+		about: ["Implementation is the work of carrying out the tasks.", "Each finished task leaves code in the project folder."],
+		file: null
+	},
+	{
+		id: "ghost",
+		plain: "ghost",
+		kiro: "agent",
+		about: ["An agent is an AI worker with one job and its own limits.", "Each ghost in this house is one Kiro agent."],
+		file: null
+	},
+	{
+		id: "approve",
+		plain: "open the door",
+		kiro: "approve",
+		about: ["Approving says a document is good enough to build on.", "Nothing moves to the next step until you approve."],
+		file: null
+	},
+	{
+		id: "reject",
+		plain: "keep the door shut",
+		kiro: "reject",
+		about: ["To reject a document says it is not good enough yet.", "The door stays shut until a new version is approved."],
+		file: null
+	},
+	{
+		id: "revise",
+		plain: "ask for a change",
+		kiro: "revision request",
+		about: ["A revision request is one note that asks the ghost who wrote a document to change it.", "It writes a new version, and the door stays shut meanwhile."],
+		file: null
+	},
+	{
+		id: "steering",
+		plain: "house rules",
+		kiro: "steering",
+		about: ["Steering is the standing guidance every agent reads before it works.", "It keeps the work in line with how the project is run."],
+		file: null
+	},
+	{
+		id: "wall",
+		plain: "wall",
+		kiro: "path limit",
+		about: ["A path limit is the list of folders an agent may read and write.", "An attempt to go outside it is refused."],
+		file: null
+	}
+];
+new Map(Kf.map((e) => [e.id, e]));
+function qf(e) {
+	return e.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+RegExp(`(?<![A-Za-z0-9_$])(?:${Kf.map((e) => qf(e.kiro)).join("|")})(?![A-Za-z0-9_$])`, "i");
+// src/core/house-guide.ts
+function Jf(e) {
+	return e.length <= 1 ? e[0] ?? "" : `${e.slice(0, -1).join(", ")} and ${e[e.length - 1]}`;
+}
+var Yf = {
 	foyer: "This is the Foyer, the way in and out. The rooms open off it in the order the work is done.",
 	study: "This is the Study. The Archivist writes the requirements here.",
 	"drafting-room": "This is the Drafting Room. The Draughtsman turns the requirements into a design here.",
@@ -10569,21 +10657,18 @@ var Uf = `
 	attic: "This is the Attic. It keeps the recording of everything that happened, ready to play back.",
 	"seance-room": "This is the Séance Room, where finished work is reviewed."
 };
-function qf(e) {
-	return e.length <= 1 ? e[0] ?? "" : `${e.slice(0, -1).join(", ")} and ${e[e.length - 1]}`;
-}
-function Jf(e) {
+function Xf(e) {
 	if (e.locked) return e.diagnostic ?? "This room is locked.";
 	let t = e.waitingItems.length;
 	if (t > 0) return t === 1 ? "One thing in this room is waiting for you. It is on this room's sheet." : `${t} things in this room are waiting for you. They are on this room's sheet.`;
 	let n = (t) => e.ghosts.filter((e) => e.state === t).map((e) => e.name), r = n("failed");
-	if (r.length > 0) return `${qf(r)} ${r.length === 1 ? "has" : "have"} failed. This room's sheet says why.`;
+	if (r.length > 0) return `${Jf(r)} ${r.length === 1 ? "has" : "have"} failed. This room's sheet says why.`;
 	let i = n("blocked");
-	if (i.length > 0) return `${qf(i)} ${i.length === 1 ? "is" : "are"} blocked. This room's sheet says why.`;
+	if (i.length > 0) return `${Jf(i)} ${i.length === 1 ? "is" : "are"} blocked. This room's sheet says why.`;
 	let a = n("working");
-	return a.length > 0 ? `${qf(a)} ${a.length === 1 ? "is" : "are"} at work. A door opens only when you approve it.` : Kf[e.roomId];
+	return a.length > 0 ? `${Jf(a)} ${a.length === 1 ? "is" : "are"} at work. A door opens only when you approve it.` : Yf[e.roomId];
 }
-function Yf(e, t) {
+function Zf(e, t) {
 	let n = e.rooms.findIndex((e) => e.roomId === t);
 	if (n < 0) return null;
 	let r = (e) => e === void 0 ? null : {
@@ -10591,17 +10676,17 @@ function Yf(e, t) {
 		name: e.name
 	};
 	return {
-		text: Jf(e.rooms[n]),
+		text: Xf(e.rooms[n]),
 		previous: r(e.rooms[n - 1]),
 		next: r(e.rooms[n + 1])
 	};
 }
 // src/components/RoomStage.tsx
-var Xf = "To open something, press it. Or choose:";
-function Zf(e, t) {
+var Qf = "To open something, press it. Or choose:";
+function $f(e, t) {
 	e.closest(".hh-ui")?.querySelector(t)?.click();
 }
-function Qf(e, t, n, r) {
+function ep(e, t, n, r) {
 	return {
 		left: `${e}%`,
 		top: `${t}%`,
@@ -10609,9 +10694,9 @@ function Qf(e, t, n, r) {
 		height: `${r}%`
 	};
 }
-var $f = Qf(2.5, 28, 8.5, 53), ep = Qf(89, 28, 8.5, 53), tp = Qf(69.7, 28, 12.3, 41.5), np = Qf(15.8, 84.5, 23.4, 11.5), rp = Qf(46.5, 82.5, 9.4, 11);
-function ip({ projection: n, roomId: r, open: a = !1, onReturn: o, mapOpen: s = !1, onToggleMap: c }) {
-	let l = n.rooms.find((e) => e.roomId === r), u = Yf(n, r);
+var tp = ep(2.5, 28, 8.5, 53), np = ep(89, 28, 8.5, 53), rp = ep(69.7, 28, 12.3, 41.5), ip = ep(15.8, 84.5, 23.4, 11.5), ap = ep(46.5, 82.5, 9.4, 11);
+function op({ projection: n, roomId: r, open: a = !1, onReturn: o, mapOpen: s = !1, onToggleMap: c }) {
+	let l = n.rooms.find((e) => e.roomId === r), u = Zf(n, r);
 	if (l === void 0 || u === null) return null;
 	let d = l.ghosts.some((e) => e.state === "working" || e.state === "waiting"), [f, p] = l.doors, m = (e) => ({
 		kind: "room",
@@ -10658,14 +10743,14 @@ function ip({ projection: n, roomId: r, open: a = !1, onReturn: o, mapOpen: s = 
 						className: "hh-stage-spots",
 						"aria-hidden": "true",
 						children: [
-							u.previous === null ? null : g("previous", `To the ${u.previous.name}`, $f, (e) => Ff(e, m(u.previous.roomId))),
-							f === void 0 ? u.next === null ? null : g("next", `To the ${u.next.name}`, ep, (e) => Ff(e, m(u.next.roomId))) : g("door", `${f.phaseName} door: ${oa(f.state)}`, ep, (e) => Ff(e, {
+							u.previous === null ? null : g("previous", `To the ${u.previous.name}`, tp, (e) => Ff(e, m(u.previous.roomId))),
+							f === void 0 ? u.next === null ? null : g("next", `To the ${u.next.name}`, np, (e) => Ff(e, m(u.next.roomId))) : g("door", `${f.phaseName} door: ${oa(f.state)}`, np, (e) => Ff(e, {
 								kind: "door",
 								roomId: r,
 								phase: f.phase,
 								proposalId: f.proposalId
 							})),
-							p === void 0 ? null : g("door-2", `${p.phaseName} door: ${oa(p.state)}`, tp, (e) => Ff(e, {
+							p === void 0 ? null : g("door-2", `${p.phaseName} door: ${oa(p.state)}`, rp, (e) => Ff(e, {
 								kind: "door",
 								roomId: r,
 								phase: p.phase,
@@ -10695,7 +10780,7 @@ function ip({ projection: n, roomId: r, open: a = !1, onReturn: o, mapOpen: s = 
 					/* @__PURE__ */ R("div", {
 						className: "hh-stage-spots",
 						"aria-hidden": "true",
-						children: [g("ledger", `Open the ${l.name}`, np, (e) => Ff(e, m(r))), g("bell", "What needs you", rp, (e) => Zf(e, "[data-opener-key=\"needs-you\"]"))]
+						children: [g("ledger", `Open the ${l.name}`, ip, (e) => Ff(e, m(r))), g("bell", "What needs you", ap, (e) => $f(e, "[data-opener-key=\"needs-you\"]"))]
 					})
 				]
 			}),
@@ -10711,7 +10796,7 @@ function ip({ projection: n, roomId: r, open: a = !1, onReturn: o, mapOpen: s = 
 						}),
 						/* @__PURE__ */ L("p", {
 							className: "hh-stage-balloon-hint",
-							children: Xf
+							children: Qf
 						}),
 						/* @__PURE__ */ R("ul", {
 							className: "hh-stage-options",
@@ -10746,30 +10831,30 @@ function ip({ projection: n, roomId: r, open: a = !1, onReturn: o, mapOpen: s = 
 	});
 }
 // src/adapters/house-sound.ts
-var ap = .22, op = .16;
-function sp(e, t, n, r, i, a = 0) {
+var sp = .22, cp = .16;
+function lp(e, t, n, r, i, a = 0) {
 	let o = e.ctx.createGain(), s = e.at + a;
 	return o.gain.setValueAtTime(1e-4, s), o.gain.exponentialRampToValueAtTime(t, s + n), o.gain.setValueAtTime(t, s + n + r), o.gain.exponentialRampToValueAtTime(1e-4, s + n + r + i), o.connect(e.out), o;
 }
-function cp(e, t, n) {
+function up(e, t, n) {
 	let r = e.ctx.createBufferSource();
 	return r.buffer = e.noise, r.loop = !0, r.start(e.at + t), r.stop(e.at + t + n), r;
 }
-function lp(e, t, n, r) {
+function dp(e, t, n, r) {
 	let i = e.ctx.createOscillator();
 	return i.type = t, i.start(e.at + n), i.stop(e.at + n + r), i;
 }
-function up(e, t, n, r, i = .5, a = 0) {
-	let o = e.at + a, s = lp(e, "sawtooth", a, t), c = Math.max(6, Math.round(t * 14));
+function fp(e, t, n, r, i = .5, a = 0) {
+	let o = e.at + a, s = dp(e, "sawtooth", a, t), c = Math.max(6, Math.round(t * 14));
 	for (let e = 0; e <= c; e += 1) {
 		let i = e / c, a = e % 2 == 0 ? 1 : .9;
 		s.frequency.setValueAtTime((n + (r - n) * i ** 1.6) * a, o + i * t);
 	}
-	let l = lp(e, "square", a, t);
+	let l = dp(e, "square", a, t);
 	l.frequency.setValueAtTime(34, o), l.frequency.exponentialRampToValueAtTime(11, o + t);
 	let u = e.ctx.createGain();
 	u.gain.value = .45;
-	let d = sp(e, i, .05, t * .55, t * .4, a), f = e.ctx.createGain();
+	let d = lp(e, i, .05, t * .55, t * .4, a), f = e.ctx.createGain();
 	f.gain.value = .55, l.connect(u).connect(f.gain);
 	for (let [n, r] of [[760, 9], [1900, 12]]) {
 		let i = e.ctx.createBiquadFilter();
@@ -10777,67 +10862,67 @@ function up(e, t, n, r, i = .5, a = 0) {
 	}
 	f.connect(d);
 }
-function dp(e, t, n = .9, r = 92) {
-	let i = e.at + t, a = lp(e, "sine", t, .3);
-	a.frequency.setValueAtTime(r, i), a.frequency.exponentialRampToValueAtTime(r * .45, i + .22), a.connect(sp(e, n, .004, .02, .2, t));
+function pp(e, t, n = .9, r = 92) {
+	let i = e.at + t, a = dp(e, "sine", t, .3);
+	a.frequency.setValueAtTime(r, i), a.frequency.exponentialRampToValueAtTime(r * .45, i + .22), a.connect(lp(e, n, .004, .02, .2, t));
 	let o = e.ctx.createBiquadFilter();
-	o.type = "lowpass", o.frequency.value = 420, cp(e, t, .12).connect(o).connect(sp(e, n * .5, .003, .01, .08, t));
+	o.type = "lowpass", o.frequency.value = 420, up(e, t, .12).connect(o).connect(lp(e, n * .5, .003, .01, .08, t));
 }
-function fp(e, t) {
+function mp(e, t) {
 	let n = e.at, r = e.ctx.createBiquadFilter();
-	r.type = "bandpass", r.Q.value = 2.2, r.frequency.setValueAtTime(260, n), r.frequency.exponentialRampToValueAtTime(1300, n + t * .45), r.frequency.exponentialRampToValueAtTime(380, n + t), cp(e, 0, t).connect(r).connect(sp(e, .5, t * .35, .05, t * .55));
-	let i = lp(e, "sine", 0, t);
-	i.frequency.setValueAtTime(330, n), i.frequency.linearRampToValueAtTime(495, n + t * .5), i.frequency.linearRampToValueAtTime(392, n + t), i.connect(sp(e, .12, t * .3, .1, t * .5));
+	r.type = "bandpass", r.Q.value = 2.2, r.frequency.setValueAtTime(260, n), r.frequency.exponentialRampToValueAtTime(1300, n + t * .45), r.frequency.exponentialRampToValueAtTime(380, n + t), up(e, 0, t).connect(r).connect(lp(e, .5, t * .35, .05, t * .55));
+	let i = dp(e, "sine", 0, t);
+	i.frequency.setValueAtTime(330, n), i.frequency.linearRampToValueAtTime(495, n + t * .5), i.frequency.linearRampToValueAtTime(392, n + t), i.connect(lp(e, .12, t * .3, .1, t * .5));
 }
-function pp(e, t, n, r = .4, i = 1.1) {
+function hp(e, t, n, r = .4, i = 1.1) {
 	for (let [a, o] of [
 		[1, 1],
 		[2.76, .35],
 		[5.4, .12]
 	]) {
-		let s = lp(e, "sine", n, i + .1);
-		s.frequency.value = t * a, s.connect(sp(e, r * o, .004, .01, i * (a === 1 ? 1 : .5), n));
+		let s = dp(e, "sine", n, i + .1);
+		s.frequency.value = t * a, s.connect(lp(e, r * o, .004, .01, i * (a === 1 ? 1 : .5), n));
 	}
 }
-function mp(e) {
-	let t = e.at, n = lp(e, "triangle", 0, .95);
+function gp(e) {
+	let t = e.at, n = dp(e, "triangle", 0, .95);
 	n.frequency.setValueAtTime(410, t), n.frequency.exponentialRampToValueAtTime(150, t + .9);
-	let r = lp(e, "sine", 0, .95);
+	let r = dp(e, "sine", 0, .95);
 	r.frequency.value = 6;
 	let i = e.ctx.createGain();
-	i.gain.value = 14, r.connect(i).connect(n.frequency), n.connect(sp(e, .3, .06, .4, .45));
+	i.gain.value = 14, r.connect(i).connect(n.frequency), n.connect(lp(e, .3, .06, .4, .45));
 }
-var hp = {
+var _p = {
 	"door-open": (e) => {
-		up(e, 1.25, 96, 178), dp(e, 1.22, .3, 70);
+		fp(e, 1.25, 96, 178), pp(e, 1.22, .3, 70);
 	},
 	"door-knock": (e) => {
-		dp(e, 0, .8, 140), dp(e, .19, .7, 132), dp(e, .44, .9, 120);
+		pp(e, 0, .8, 140), pp(e, .19, .7, 132), pp(e, .44, .9, 120);
 	},
 	"door-seal": (e) => {
-		up(e, .5, 170, 110, .35), dp(e, .48, .9, 84);
+		fp(e, .5, 170, 110, .35), pp(e, .48, .9, 84);
 	},
 	"door-slam": (e) => {
-		dp(e, 0, 1, 76), dp(e, .07, .5, 58), up(e, .3, 240, 200, .18, .12);
+		pp(e, 0, 1, 76), pp(e, .07, .5, 58), fp(e, .3, 240, 200, .18, .12);
 	},
-	"ghost-wake": (e) => fp(e, .95),
+	"ghost-wake": (e) => mp(e, .95),
 	"ghost-done": (e) => {
-		pp(e, 659.25, 0, .32), pp(e, 987.77, .16, .26);
+		hp(e, 659.25, 0, .32), hp(e, 987.77, .16, .26);
 	},
-	"ghost-fail": (e) => mp(e),
+	"ghost-fail": (e) => gp(e),
 	"needs-you": (e) => {
-		pp(e, 783.99, 0, .3, .8), pp(e, 622.25, .22, .3, 1.2);
+		hp(e, 783.99, 0, .3, .8), hp(e, 622.25, .22, .3, 1.2);
 	},
-	"panel-open": (e) => up(e, .42, 130, 205, .3),
-	"panel-close": (e) => dp(e, 0, .45, 110)
+	"panel-open": (e) => fp(e, .42, 130, 205, .3),
+	"panel-close": (e) => pp(e, 0, .45, 110)
 };
-function gp() {
+function vp() {
 	if (typeof window > "u") return null;
 	let e = window;
 	return e.AudioContext ?? e.webkitAudioContext ?? null;
 }
-function _p() {
-	let e = gp();
+function yp() {
+	let e = vp();
 	if (e === null) return null;
 	let t;
 	try {
@@ -10846,7 +10931,7 @@ function _p() {
 		return null;
 	}
 	let n = t.createGain();
-	n.gain.value = ap, n.connect(t.destination);
+	n.gain.value = sp, n.connect(t.destination);
 	let r = t.createBuffer(1, t.sampleRate * 2, t.sampleRate), i = r.getChannelData(0);
 	for (let e = 0; e < i.length; e += 1) i[e] = Math.random() * 2 - 1;
 	let a = t.createBufferSource();
@@ -10854,18 +10939,18 @@ function _p() {
 	let o = t.createBiquadFilter();
 	o.type = "bandpass", o.Q.value = .9, o.frequency.value = 380;
 	let s = t.createGain();
-	s.gain.value = op;
+	s.gain.value = cp;
 	let c = t.createOscillator();
 	c.frequency.value = .07;
 	let l = t.createGain();
 	l.gain.value = 190;
 	let u = t.createGain();
-	u.gain.value = op * .6, c.connect(l).connect(o.frequency), c.connect(u).connect(s.gain), a.connect(o).connect(s).connect(n), a.start(), c.start();
+	u.gain.value = cp * .6, c.connect(l).connect(o.frequency), c.connect(u).connect(s.gain), a.connect(o).connect(s).connect(n), a.start(), c.start();
 	let d = !1;
 	return {
 		play: (e) => {
 			if (!d) try {
-				t.state === "suspended" && t.resume(), hp[e]({
+				t.state === "suspended" && t.resume(), _p[e]({
 					ctx: t,
 					out: n,
 					noise: r,
@@ -10878,17 +10963,17 @@ function _p() {
 		}
 	};
 }
-var vp = {
+var bp = {
 	open: "door-open",
 	waiting: "door-knock",
 	rejected: "door-slam",
 	sealed: "door-seal"
-}, yp = {
+}, xp = {
 	working: "ghost-wake",
 	done: "ghost-done",
 	failed: "ghost-fail"
 };
-function bp(e, t) {
+function Sp(e, t) {
 	if (e === null || e.mansionName !== t.mansionName) return [];
 	let n = [], r = (e) => {
 		e !== void 0 && !n.includes(e) && n.push(e);
@@ -10897,19 +10982,19 @@ function bp(e, t) {
 		let t = i.get(e.roomId);
 		if (t !== void 0) for (let n of e.doors) {
 			let e = t.doors.find((e) => e.phase === n.phase);
-			e !== void 0 && e.state !== n.state && r(vp[n.state]);
+			e !== void 0 && e.state !== n.state && r(bp[n.state]);
 		}
 	}
 	for (let e of t.rooms) {
 		let t = i.get(e.roomId);
 		if (t !== void 0) for (let n of e.ghosts) {
 			let e = t.ghosts.find((e) => e.ghostId === n.ghostId);
-			(e === void 0 ? n.state === "working" : e.state !== n.state) && r(yp[n.state]);
+			(e === void 0 ? n.state === "working" : e.state !== n.state) && r(xp[n.state]);
 		}
 	}
 	return t.needsYou.length > e.needsYou.length && r("needs-you"), n.slice(0, 3);
 }
-function xp(e, t, n = _p) {
+function Cp(e, t, n = yp) {
 	let [r, i] = F(!1), [a, o] = F(!0), s = P(null), c = P([]), l = A(() => {
 		for (let e of c.current) clearTimeout(e);
 		c.current = [], s.current?.close(), s.current = null;
@@ -10929,7 +11014,7 @@ function xp(e, t, n = _p) {
 	}, [n, l]), f = P(null);
 	j(() => {
 		let t = f.current;
-		f.current = e, s.current !== null && u(bp(t, e));
+		f.current = e, s.current !== null && u(Sp(t, e));
 	}, [e, u]);
 	let p = P(t);
 	return j(() => {
@@ -10942,7 +11027,7 @@ function xp(e, t, n = _p) {
 	};
 }
 // src/components/HouseToolbar.tsx
-var Sp = "This browser cannot play the house sounds.", Cp = "Your browser asks for reduced motion, so the house is still either way.", wp = ue(function({ mansionName: e, needsYou: t, onNeedsYou: n, motion: i, onToggleStillHouse: a, status: o, sound: s, view: c }, l) {
+var wp = "This browser cannot play the house sounds.", Tp = "Your browser asks for reduced motion, so the house is still either way.", Ep = ue(function({ mansionName: e, needsYou: t, onNeedsYou: n, motion: i, onToggleStillHouse: a, status: o, sound: s, view: c }, l) {
 	let u = M(), d = M(), f = Sl(t), p = t.length === 0;
 	return /* @__PURE__ */ R("div", {
 		className: "hh-ui-toolbar",
@@ -10990,7 +11075,7 @@ var Sp = "This browser cannot play the house sounds.", Cp = "Your browser asks f
 			i.prefersReducedMotion ? /* @__PURE__ */ L("span", {
 				className: "hh-ui-reason",
 				id: u,
-				children: Cp
+				children: Tp
 			}) : null,
 			s === void 0 ? null : /* @__PURE__ */ R("button", {
 				type: "button",
@@ -11015,7 +11100,7 @@ var Sp = "This browser cannot play the house sounds.", Cp = "Your browser asks f
 			s === void 0 || s.available ? null : /* @__PURE__ */ L("span", {
 				className: "hh-ui-reason",
 				id: d,
-				children: Sp
+				children: wp
 			}),
 			c === void 0 ? null : /* @__PURE__ */ R("button", {
 				type: "button",
@@ -11048,7 +11133,7 @@ var Sp = "This browser cannot play the house sounds.", Cp = "Your browser asks f
 	});
 });
 // src/components/LiveAnnouncer.tsx
-function Tp({ message: e, turn: t = 0 }) {
+function Dp({ message: e, turn: t = 0 }) {
 	return /* @__PURE__ */ L("p", {
 		className: "hh-ui-announcer",
 		"aria-live": "polite",
@@ -11058,10 +11143,10 @@ function Tp({ message: e, turn: t = 0 }) {
 	});
 }
 // src/components/RoomPanelHost.tsx
-function Ep(e) {
+function Op(e) {
 	return e.replace(/["\\]/g, "\\$&");
 }
-function Dp(e, t, n = null) {
+function kp(e, t, n = null) {
 	let [r, i] = F([]), a = P(r);
 	a.current = r;
 	let o = P(null), s = P(null), c = P(null), l = A((e, t, n = {}) => {
@@ -11103,7 +11188,7 @@ function Dp(e, t, n = null) {
 			let t = e.focus.kind === "selector" ? c.current?.querySelector(e.focus.selector) : null;
 			if (t != null && (t.hasAttribute("tabindex") || t.setAttribute("tabindex", "-1"), t.focus(), document.activeElement === t)) return;
 			s.current?.focus();
-		} else ((e.opener !== null && e.opener.isConnected ? e.opener : null) ?? n?.querySelector(`[data-opener-key="${Ep(e.openerKey)}"]`) ?? null ?? n?.querySelector(`[data-room-control="${Ep(e.target.roomId)}"]`) ?? null ?? n?.querySelector("[data-map-title]") ?? null)?.focus();
+		} else ((e.opener !== null && e.opener.isConnected ? e.opener : null) ?? n?.querySelector(`[data-opener-key="${Op(e.openerKey)}"]`) ?? null ?? n?.querySelector(`[data-room-control="${Op(e.target.roomId)}"]`) ?? null ?? n?.querySelector("[data-map-title]") ?? null)?.focus();
 	}, [r, t]);
 	let f = P(null);
 	return j(() => {
@@ -11120,8 +11205,8 @@ function Dp(e, t, n = null) {
 		panelRef: c
 	};
 }
-var Op = "button, [href], input, select, textarea, summary, [tabindex]:not([tabindex=\"-1\"])";
-function kp({ id: e, title: t, mode: n, stack: r, closeLabel: i, children: a }) {
+var Ap = "button, [href], input, select, textarea, summary, [tabindex]:not([tabindex=\"-1\"])";
+function jp({ id: e, title: t, mode: n, stack: r, closeLabel: i, children: a }) {
 	let o = r.top;
 	if (o === null) return null;
 	let s = `${e}-title`, c = o.target, l = /* @__PURE__ */ R("section", {
@@ -11138,7 +11223,7 @@ function kp({ id: e, title: t, mode: n, stack: r, closeLabel: i, children: a }) 
 		ref: r.panelRef,
 		onKeyDown: (e) => {
 			if (n !== "dialog" || e.key !== "Tab") return;
-			let t = e.currentTarget, i = Array.from(t.querySelectorAll(Op)).filter((e) => !e.hasAttribute("disabled"));
+			let t = e.currentTarget, i = Array.from(t.querySelectorAll(Ap)).filter((e) => !e.hasAttribute("disabled"));
 			if (i.length === 0) return;
 			let a = i[0], o = i[i.length - 1], s = document.activeElement;
 			e.shiftKey && (s === a || s === r.headingRef.current) ? (e.preventDefault(), o.focus()) : !e.shiftKey && s === o && (e.preventDefault(), a.focus());
@@ -11171,18 +11256,18 @@ function kp({ id: e, title: t, mode: n, stack: r, closeLabel: i, children: a }) 
 	}), l] }) : l;
 }
 // src/components/use-reduced-motion.ts
-var Ap = "(prefers-reduced-motion: reduce)";
-function jp() {
+var Mp = "(prefers-reduced-motion: reduce)";
+function Np() {
 	try {
-		return typeof window < "u" && typeof window.matchMedia == "function" ? window.matchMedia(Ap) : null;
+		return typeof window < "u" && typeof window.matchMedia == "function" ? window.matchMedia(Mp) : null;
 	} catch {
 		return null;
 	}
 }
-function Mp() {
-	let [e, t] = F(() => Ef(jp()?.matches));
+function Pp() {
+	let [e, t] = F(() => Ef(Np()?.matches));
 	return j(() => {
-		let e = jp();
+		let e = Np();
 		if (e === null) {
 			t(!0);
 			return;
@@ -11194,12 +11279,12 @@ function Mp() {
 	}, []), e;
 }
 // src/components/MansionShell.tsx
-var Np = {
+var Fp = {
 	room: "Close room",
 	ghost: "Close ghost details",
 	door: "Close door details"
 };
-function Pp(e, t) {
+function Ip(e, t) {
 	let n = e.rooms.find((e) => e.roomId === t.roomId);
 	if (n === void 0) return "";
 	switch (t.kind) {
@@ -11208,20 +11293,20 @@ function Pp(e, t) {
 		case "door": return `${n.doors.find((e) => e.phase === t.phase)?.phaseName ?? n.name} door`;
 	}
 }
-function Fp(e) {
+function Lp(e) {
 	return e.replace(/["\\]/g, "\\$&");
 }
-function Ip(e) {
+function Rp(e) {
 	let t = e.id.indexOf(":"), n = e.kind === "door-decision" || e.kind === "risky-decision" ? e.id.slice(t + 1) : null;
 	return n === null || n === "" ? { kind: "heading" } : {
 		kind: "selector",
-		selector: `[data-proposal="${Fp(n)}"]`
+		selector: `[data-proposal="${Lp(n)}"]`
 	};
 }
-function Lp({ projection: e, renderSurface: t, host: n, message: r = "", status: i, notes: a, banner: o, busy: s = !1, onReturn: c, panelMode: l = "region", inFlight: u = null, panelStyles: d = "" }) {
-	let f = P(null), p = P(null), m = M(), h = Dp(e, f, u), [g, _] = F(!1), v = Df({
+function zp({ projection: e, renderSurface: t, host: n, message: r = "", status: i, notes: a, banner: o, busy: s = !1, onReturn: c, panelMode: l = "region", inFlight: u = null, panelStyles: d = "" }) {
+	let f = P(null), p = P(null), m = M(), h = kp(e, f, u), [g, _] = F(!1), v = Df({
 		stillHouse: g,
-		prefersReducedMotion: Mp()
+		prefersReducedMotion: Pp()
 	}), [y, b] = F({
 		text: r,
 		turn: 0
@@ -11257,7 +11342,7 @@ function Lp({ projection: e, renderSurface: t, host: n, message: r = "", status:
 			roomId: t
 		}, e, {
 			placement: "replace",
-			focus: Ip(n)
+			focus: Rp(n)
 		});
 	}, [te, h.open]), E = P({
 		open: h.top !== null,
@@ -11280,7 +11365,7 @@ function Lp({ projection: e, renderSurface: t, host: n, message: r = "", status:
 		};
 		return document.addEventListener("keydown", e), () => document.removeEventListener("keydown", e);
 	}, []);
-	let D = h.top, re = D === null ? null : Dl(D.target), O = xp(e, re), [ie, k] = F(!1), [ae, oe] = F(null), se = D === null ? null : D.target.roomId;
+	let D = h.top, re = D === null ? null : Dl(D.target), O = Cp(e, re), [ie, k] = F(!1), [ae, oe] = F(null), se = D === null ? null : D.target.roomId;
 	j(() => {
 		se !== null && oe(se);
 	}, [se]);
@@ -11317,7 +11402,7 @@ function Lp({ projection: e, renderSurface: t, host: n, message: r = "", status:
 				className: "hh-ui-behind",
 				...pe,
 				children: [
-					/* @__PURE__ */ L(wp, {
+					/* @__PURE__ */ L(Ep, {
 						ref: p,
 						mansionName: e.mansionName,
 						needsYou: te,
@@ -11336,7 +11421,7 @@ function Lp({ projection: e, renderSurface: t, host: n, message: r = "", status:
 						}
 					}),
 					o,
-					/* @__PURE__ */ L(ip, {
+					/* @__PURE__ */ L(op, {
 						projection: e,
 						roomId: fe,
 						open: D !== null && D.target.roomId === fe,
@@ -11347,12 +11432,12 @@ function Lp({ projection: e, renderSurface: t, host: n, message: r = "", status:
 					a
 				]
 			}),
-			D === null ? null : /* @__PURE__ */ L(kp, {
+			D === null ? null : /* @__PURE__ */ L(jp, {
 				id: m,
-				title: Pp(e, D.target),
+				title: Ip(e, D.target),
 				mode: l,
 				stack: h,
-				closeLabel: Np[D.target.kind],
+				closeLabel: Fp[D.target.kind],
 				children: t(D, ee)
 			}, `${h.depth}:${Dl(D.target)}`),
 			/* @__PURE__ */ L("div", {
@@ -11368,7 +11453,7 @@ function Lp({ projection: e, renderSurface: t, host: n, message: r = "", status:
 					view: ie ? "turned" : "front"
 				})
 			}),
-			/* @__PURE__ */ L(Tp, {
+			/* @__PURE__ */ L(Dp, {
 				message: y.text,
 				turn: y.turn
 			})
@@ -11376,42 +11461,42 @@ function Lp({ projection: e, renderSurface: t, host: n, message: r = "", status:
 	});
 }
 // src/components/room-output-styles.ts
-var Rp = "\n.hh-output { display: grid; gap: 10px; }\n.hh-artifact { border: 1px solid var(--border, currentColor); border-top: 3px solid var(--border-strong, currentColor);\n  border-radius: 6px; padding: 10px 12px; display: grid; gap: 8px; }\n.hh-artifact[data-validation='invalid'] { border-top-style: double; border-top-width: 5px; }\n.hh-artifact[data-validation='unwritten'] { border-style: dashed; }\n.hh-artifact-head { display: flex; align-items: flex-start; gap: 6px; }\n.hh-artifact-head svg { flex: none; margin-top: 2px; color: var(--hh-candle); }\n.hh-artifact-note { margin: 0; font-size: 0.875rem; color: var(--muted, inherit); }\n.hh-document { max-height: 24rem; overflow: auto; border: 1px solid var(--border, currentColor); border-radius: 4px;\n  padding: 8px 12px; background: var(--input, transparent); font-size: 0.875rem; overflow-wrap: anywhere; }\n.hh-document:focus-visible { outline: 2px solid var(--ring, currentColor); outline-offset: 2px; }\n.hh-document > :first-child { margin-top: 0; }\n.hh-document > :last-child { margin-bottom: 0; }\n.hh-md-heading { font-weight: 600; margin: 12px 0 4px; }\n.hh-md-heading[data-level='1'] { font-size: 1.0625rem; }\n.hh-md-heading[data-level='2'] { font-size: 1rem; }\n.hh-document p { margin: 6px 0; }\n.hh-md-quote { border-left: 3px solid var(--border-strong, currentColor); padding-left: 8px; }\n.hh-md-list { list-style: none; margin: 6px 0; padding: 0; display: grid; gap: 2px; }\n.hh-md-item { display: flex; align-items: flex-start; gap: 6px; }\n.hh-md-item svg { flex: none; margin-top: 3px; }\n.hh-md-marker { flex: none; min-width: 0.75rem; color: var(--muted, inherit); }\n.hh-document pre { margin: 6px 0; padding: 6px 8px; overflow: auto; border: 1px solid var(--border, currentColor);\n  border-radius: 4px; }\n.hh-document code, .hh-document pre, .hh-task code, .hh-run code, .hh-findings code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n  font-size: 0.8125rem; }\n.hh-document hr { border: 0; border-top: 1px solid var(--border, currentColor); margin: 8px 0; }\n.hh-findings { margin: 0; padding: 0 0 0 1.25rem; font-size: 0.875rem; display: grid; gap: 2px; }\n.hh-finding-code { color: var(--muted, inherit); }\n.hh-scope { list-style: none; margin: 0; padding: 0; }\n\n.hh-run { display: grid; gap: 4px; }\n.hh-run-summary { margin: 0; font-size: 0.875rem; overflow-wrap: anywhere; }\n.hh-runs { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }\n.hh-runs > li { display: grid; gap: 6px; }\n.hh-session-link { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin: 0; font-size: 0.875rem; }\n.hh-button-quiet { border-style: dotted; padding: 3px 10px; font-size: 0.875rem; }\n.hh-session-link-note { color: var(--muted, inherit); }\n\n.hh-board { border: 1px solid var(--border, currentColor); border-radius: 6px; padding: 10px 12px; display: grid; gap: 8px; }\n.hh-wave { display: grid; gap: 6px; }\n.hh-tasks { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }\n.hh-task { border: 1px solid var(--border, currentColor); border-left: 4px solid var(--border-strong, currentColor);\n  border-radius: 6px; padding: 8px 10px; display: grid; gap: 4px; }\n.hh-task[data-status='active'] { border-left-style: double; border-left-width: 6px; }\n.hh-task[data-status='not_selected'], .hh-task[data-status='skipped'] { border-left-style: dotted; }\n.hh-task[data-status='failed'], .hh-task[data-status='blocked'], .hh-task[data-status='cancelled'] { border-left-style: dashed; }\n.hh-task-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; font-size: 0.875rem; }\n.hh-task-head input { margin: 0; width: 1rem; height: 1rem; align-self: center; accent-color: var(--accent, auto); }\n.hh-task-head input:focus-visible { outline: 2px solid var(--ring, currentColor); outline-offset: 2px; }\n.hh-task-id { font-weight: 600; }\n.hh-tag { border: 1px solid var(--border-strong, currentColor); border-radius: 999px; padding: 0 8px; font-size: 0.75rem; }\n.hh-task-detail { margin: 0; font-size: 0.875rem; overflow-wrap: anywhere; }\n\n.hh-revision { display: grid; gap: 6px; }\n.hh-revision label { font-weight: 600; font-size: 0.875rem; }\n.hh-revision textarea { font: inherit; color: inherit; background: var(--input, transparent);\n  border: 1px solid var(--border-strong, currentColor); border-radius: 6px; padding: 6px 10px; min-height: 5rem;\n  resize: vertical; width: 100%; box-sizing: border-box; }\n.hh-revision textarea:focus-visible { outline: 2px solid var(--ring, currentColor); outline-offset: 2px; }\n.hh-revision textarea[aria-invalid='true'] { border-width: 2px; }\n\n.hh-visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden;\n  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; }\n", zp = "This is a recording. It is read-only: nothing here starts, approves, rejects, retries or opens a Crew session.", Bp = "The Attic replays this mansion’s séance log. Replaying changes nothing: the rooms keep showing the live house.", Vp = "Reading the séance log…", Hp = "This log has no events yet. There is nothing to replay.", Up = "No problems were found in this log.", Wp = "Start of replay. No event has been shown yet.", Gp = "Now showing";
-function Kp(e) {
+var Bp = "\n.hh-output { display: grid; gap: 10px; }\n.hh-artifact { border: 1px solid var(--border, currentColor); border-top: 3px solid var(--border-strong, currentColor);\n  border-radius: 6px; padding: 10px 12px; display: grid; gap: 8px; }\n.hh-artifact[data-validation='invalid'] { border-top-style: double; border-top-width: 5px; }\n.hh-artifact[data-validation='unwritten'] { border-style: dashed; }\n.hh-artifact-head { display: flex; align-items: flex-start; gap: 6px; }\n.hh-artifact-head svg { flex: none; margin-top: 2px; color: var(--hh-candle); }\n.hh-artifact-note { margin: 0; font-size: 0.875rem; color: var(--muted, inherit); }\n.hh-document { max-height: 24rem; overflow: auto; border: 1px solid var(--border, currentColor); border-radius: 4px;\n  padding: 8px 12px; background: var(--input, transparent); font-size: 0.875rem; overflow-wrap: anywhere; }\n.hh-document:focus-visible { outline: 2px solid var(--ring, currentColor); outline-offset: 2px; }\n.hh-document > :first-child { margin-top: 0; }\n.hh-document > :last-child { margin-bottom: 0; }\n.hh-md-heading { font-weight: 600; margin: 12px 0 4px; }\n.hh-md-heading[data-level='1'] { font-size: 1.0625rem; }\n.hh-md-heading[data-level='2'] { font-size: 1rem; }\n.hh-document p { margin: 6px 0; }\n.hh-md-quote { border-left: 3px solid var(--border-strong, currentColor); padding-left: 8px; }\n.hh-md-list { list-style: none; margin: 6px 0; padding: 0; display: grid; gap: 2px; }\n.hh-md-item { display: flex; align-items: flex-start; gap: 6px; }\n.hh-md-item svg { flex: none; margin-top: 3px; }\n.hh-md-marker { flex: none; min-width: 0.75rem; color: var(--muted, inherit); }\n.hh-document pre { margin: 6px 0; padding: 6px 8px; overflow: auto; border: 1px solid var(--border, currentColor);\n  border-radius: 4px; }\n.hh-document code, .hh-document pre, .hh-task code, .hh-run code, .hh-findings code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n  font-size: 0.8125rem; }\n.hh-document hr { border: 0; border-top: 1px solid var(--border, currentColor); margin: 8px 0; }\n.hh-findings { margin: 0; padding: 0 0 0 1.25rem; font-size: 0.875rem; display: grid; gap: 2px; }\n.hh-finding-code { color: var(--muted, inherit); }\n.hh-scope { list-style: none; margin: 0; padding: 0; }\n\n.hh-run { display: grid; gap: 4px; }\n.hh-run-summary { margin: 0; font-size: 0.875rem; overflow-wrap: anywhere; }\n.hh-runs { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }\n.hh-runs > li { display: grid; gap: 6px; }\n.hh-session-link { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin: 0; font-size: 0.875rem; }\n.hh-button-quiet { border-style: dotted; padding: 3px 10px; font-size: 0.875rem; }\n.hh-session-link-note { color: var(--muted, inherit); }\n\n.hh-board { border: 1px solid var(--border, currentColor); border-radius: 6px; padding: 10px 12px; display: grid; gap: 8px; }\n.hh-wave { display: grid; gap: 6px; }\n.hh-tasks { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }\n.hh-task { border: 1px solid var(--border, currentColor); border-left: 4px solid var(--border-strong, currentColor);\n  border-radius: 6px; padding: 8px 10px; display: grid; gap: 4px; }\n.hh-task[data-status='active'] { border-left-style: double; border-left-width: 6px; }\n.hh-task[data-status='not_selected'], .hh-task[data-status='skipped'] { border-left-style: dotted; }\n.hh-task[data-status='failed'], .hh-task[data-status='blocked'], .hh-task[data-status='cancelled'] { border-left-style: dashed; }\n.hh-task-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; font-size: 0.875rem; }\n.hh-task-head input { margin: 0; width: 1rem; height: 1rem; align-self: center; accent-color: var(--accent, auto); }\n.hh-task-head input:focus-visible { outline: 2px solid var(--ring, currentColor); outline-offset: 2px; }\n.hh-task-id { font-weight: 600; }\n.hh-tag { border: 1px solid var(--border-strong, currentColor); border-radius: 999px; padding: 0 8px; font-size: 0.75rem; }\n.hh-task-detail { margin: 0; font-size: 0.875rem; overflow-wrap: anywhere; }\n\n.hh-revision { display: grid; gap: 6px; }\n.hh-revision label { font-weight: 600; font-size: 0.875rem; }\n.hh-revision textarea { font: inherit; color: inherit; background: var(--input, transparent);\n  border: 1px solid var(--border-strong, currentColor); border-radius: 6px; padding: 6px 10px; min-height: 5rem;\n  resize: vertical; width: 100%; box-sizing: border-box; }\n.hh-revision textarea:focus-visible { outline: 2px solid var(--ring, currentColor); outline-offset: 2px; }\n.hh-revision textarea[aria-invalid='true'] { border-width: 2px; }\n\n.hh-visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden;\n  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; }\n", Vp = "This is a recording. It is read-only: nothing here starts, approves, rejects, retries or opens a Crew session.", Hp = "The Attic replays this mansion’s séance log. Replaying changes nothing: the rooms keep showing the live house.", Up = "Reading the séance log…", Wp = "This log has no events yet. There is nothing to replay.", Gp = "No problems were found in this log.", Kp = "Start of replay. No event has been shown yet.", qp = "Now showing";
+function Jp(e) {
 	return e === 0 ? "No events recorded" : e === 1 ? "1 event recorded" : `${e} events recorded`;
 }
-function qp(e) {
+function Yp(e) {
 	return `${e}×`;
 }
-var Jp = Tc.map((e) => ({
+var Xp = Tc.map((e) => ({
 	speed: e,
-	text: qp(e)
+	text: Yp(e)
 }));
-function Yp(e, t, n) {
+function Zp(e, t, n) {
 	return e === "playing" ? "Playing" : e === "complete" ? n === 0 ? "Nothing to replay" : "Replay complete" : t === 0 ? "Paused at the start" : "Paused";
 }
-var Xp = {
+var Qp = {
 	enabled: !0,
 	reason: null
-}, Zp = (e) => ({
+}, $p = (e) => ({
 	enabled: !1,
 	reason: e
-}), Qp = "There are no events to replay.", $p = "The replay is at its start.", em = "This is the last event.";
-function tm(e, t) {
+}), em = "There are no events to replay.", tm = "The replay is at its start.", nm = "This is the last event.";
+function rm(e, t) {
 	let n = e.records.length, r = n === 0, i = t.cursor >= n, a = t.cursor === 0, o = t.status === "playing" ? "pause" : a || i ? "play" : "resume";
 	return {
 		playAction: o,
 		playLabel: o === "pause" ? "Pause" : o === "resume" ? "Resume" : "Play",
-		play: o === "pause" ? Xp : r ? Zp(Qp) : Xp,
-		restart: r ? Zp(Qp) : a && t.status !== "playing" ? Zp($p) : Xp,
-		previous: r ? Zp(Qp) : a ? Zp($p) : Xp,
-		next: r ? Zp(Qp) : i ? Zp(em) : Xp,
-		seek: r ? Zp(Qp) : Xp,
+		play: o === "pause" ? Qp : r ? $p(em) : Qp,
+		restart: r ? $p(em) : a && t.status !== "playing" ? $p(tm) : Qp,
+		previous: r ? $p(em) : a ? $p(tm) : Qp,
+		next: r ? $p(em) : i ? $p(nm) : Qp,
+		seek: r ? $p(em) : Qp,
 		previousCursor: Math.max(t.cursor - 1, 0),
 		nextCursor: Math.min(t.cursor + 1, n)
 	};
 }
-function nm(e, t) {
+function im(e, t) {
 	return e.timeline.map((e, n) => ({
 		key: e.recordId,
 		position: n + 1,
@@ -11421,23 +11506,23 @@ function nm(e, t) {
 		played: n < t
 	}));
 }
-function rm(e, t) {
+function am(e, t) {
 	let n = e.timeline[t - 1];
-	return t <= 0 || n === void 0 ? Wp : `${Ic(e, t)}. ${n.actorLabel}: ${n.summary}.`;
+	return t <= 0 || n === void 0 ? Kp : `${Ic(e, t)}. ${n.actorLabel}: ${n.summary}.`;
 }
-function im(e) {
+function om(e) {
 	return `Replay complete. ${Ic(e, e.records.length)}.`;
 }
-function am(e) {
+function sm(e) {
 	return e <= 0 ? null : e === 1 ? "1 decision waiting at this point" : `${e} decisions waiting at this point`;
 }
-function om(e, t, n) {
+function cm(e, t, n) {
 	let r = e.records.length, i = t.projection, a = Ps(i, n), o = e.timeline[t.cursor - 1];
 	return {
-		statusText: Yp(t.status, t.cursor, r),
+		statusText: Zp(t.status, t.cursor, r),
 		positionText: Ic(e, t.cursor),
-		totalText: Kp(r),
-		currentText: t.cursor <= 0 || o === void 0 ? Wp : `${o.actorLabel}: ${o.summary}`,
+		totalText: Jp(r),
+		currentText: t.cursor <= 0 || o === void 0 ? Kp : `${o.actorLabel}: ${o.summary}`,
 		phases: a === null ? [] : a.phases.map((e) => ({
 			phase: e.phase,
 			status: e.status,
@@ -11449,17 +11534,17 @@ function om(e, t, n) {
 			state: e.state,
 			text: `${Gi(e.ghost_id)}: ${zi[e.state]}`
 		})),
-		waitingText: am(a?.waitingCount ?? 0)
+		waitingText: sm(a?.waitingCount ?? 0)
 	};
 }
-function sm(e) {
+function lm(e) {
 	return e.line === void 0 ? e.safeDetail : `Line ${e.line}: ${e.safeDetail}`;
 }
-function cm(e, t) {
+function um(e, t) {
 	let n = [
 		...t.commandError === null ? [] : [t.commandError.safeDetail],
-		...e.diagnostics.map(sm),
-		...t.projection.diagnostics.map(sm)
+		...e.diagnostics.map(lm),
+		...t.projection.diagnostics.map(lm)
 	], r = Array.from(new Set(n)), i = r.slice(0, 20), a = r.length - i.length;
 	return {
 		rows: i.map((e, t) => ({
@@ -11471,9 +11556,9 @@ function cm(e, t) {
 	};
 }
 // src/rooms/attic/attic-styles.ts
-var lm = "\n.hh-attic { display: grid; gap: 14px; min-width: 0; }\n.hh-attic h4 { margin: 0 0 6px; font-size: 0.9375rem; }\n.hh-attic p { margin: 0; overflow-wrap: anywhere; }\n.hh-attic-section { min-width: 0; display: grid; gap: 8px; }\n.hh-attic-note { display: flex; align-items: flex-start; gap: 6px; min-width: 0; padding: 8px 10px;\n  border: 1px solid var(--hh-border, currentColor); border-left-width: 6px; border-left-style: double; border-radius: 6px;\n  background: var(--hh-surface, transparent); }\n.hh-attic-note svg, .hh-attic-line svg { flex: none; margin-top: 2px; }\n.hh-attic-line { display: flex; align-items: flex-start; gap: 6px; min-width: 0; }\n.hh-attic-status { font-weight: 600; }\n.hh-attic-muted { color: var(--hh-text-muted, inherit); }\n.hh-attic-buttons { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; min-width: 0; }\n.hh-attic-button { display: inline-flex; align-items: center; gap: 6px; min-width: 0; max-width: 100%; min-height: 2.25rem;\n  font: inherit; text-align: left; color: var(--hh-text, inherit); background: var(--hh-surface-raised, transparent);\n  border: 1px solid var(--hh-border, currentColor); border-radius: 6px; padding: 6px 12px; cursor: pointer; }\n.hh-attic-button[data-variant='primary'] { color: var(--hh-primary-text, inherit); background: var(--hh-primary, transparent);\n  border-width: 2px; font-weight: 600; }\n.hh-attic-button[aria-disabled='true'] { cursor: not-allowed; border-style: dashed; color: var(--hh-text-muted, inherit);\n  background: var(--hh-surface, transparent); font-weight: 400; }\n.hh-attic-button:focus-visible, .hh-attic-range:focus-visible, .hh-attic-speed input:focus-visible,\n.hh-attic-timeline:focus-visible { outline: 2px solid var(--hh-focus, currentColor); outline-offset: 2px; }\n.hh-attic-reasons { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; font-size: 0.875rem;\n  color: var(--hh-text-muted, inherit); }\n.hh-attic-speed { border: 1px solid var(--hh-border-soft, currentColor); border-radius: 6px; margin: 0; padding: 6px 10px;\n  display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: center; min-width: 0; }\n.hh-attic-speed legend { display: inline-flex; align-items: center; gap: 6px; padding: 0 4px; }\n.hh-attic-speed label { display: inline-flex; align-items: center; gap: 4px; min-height: 2rem; cursor: pointer; }\n.hh-attic-speed input:checked + span { font-weight: 700; text-decoration: underline; }\n.hh-attic-seek { display: grid; gap: 4px; min-width: 0; }\n.hh-attic-range { width: 100%; min-width: 0; margin: 0; accent-color: var(--hh-primary, auto); }\n.hh-attic-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; min-width: 0; }\n.hh-attic-timeline { max-height: 18rem; overflow-y: auto; min-width: 0; padding: 4px;\n  border: 1px solid var(--hh-border-soft, currentColor); border-radius: 6px; }\n.hh-attic-entries { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; min-width: 0; }\n.hh-attic-entry { display: grid; grid-template-columns: 1.25rem 2.5rem minmax(0, 1fr); column-gap: 6px; align-items: start;\n  padding: 4px 6px; border: 1px solid transparent; border-left: 4px solid transparent; border-radius: 4px; }\n.hh-attic-entry[data-played='false'] { color: var(--hh-text-muted, inherit); border-left: 4px dotted var(--hh-border-soft, currentColor); }\n.hh-attic-entry[data-played='true'] { border-left: 4px solid var(--hh-border, currentColor); }\n.hh-attic-entry[aria-current='step'] { font-weight: 700; border: 2px solid var(--hh-border, currentColor);\n  border-left: 6px double var(--hh-accent, currentColor); background: var(--hh-surface-raised, transparent); }\n.hh-attic-entry-mark svg { color: var(--hh-accent, currentColor); }\n.hh-attic-entry-number { font-variant-numeric: tabular-nums; }\n.hh-attic-entry-now { display: block; font-size: 0.8125rem; }\n.hh-attic-diagnostics li { display: flex; align-items: flex-start; gap: 6px; padding: 6px 8px;\n  border: 1px dashed var(--hh-border, currentColor); border-left: 4px solid var(--hh-danger, currentColor); border-radius: 6px; }\n.hh-attic-diagnostics svg { flex: none; margin-top: 2px; color: var(--hh-danger, currentColor); }\n@media (prefers-reduced-motion: no-preference) {\n  .hh-attic[data-motion='low-frequency'] .hh-attic-entry { transition: background-color 0.4s ease-out; }\n}\n.hh-attic[data-motion='none'] *, .hh-attic:not([data-motion]) * { animation: none !important; transition: none !important; }\n@media (prefers-reduced-motion: reduce) {\n  .hh-attic * { animation: none !important; transition: none !important; }\n}\n";
+var dm = "\n.hh-attic { display: grid; gap: 14px; min-width: 0; }\n.hh-attic h4 { margin: 0 0 6px; font-size: 0.9375rem; }\n.hh-attic p { margin: 0; overflow-wrap: anywhere; }\n.hh-attic-section { min-width: 0; display: grid; gap: 8px; }\n.hh-attic-note { display: flex; align-items: flex-start; gap: 6px; min-width: 0; padding: 8px 10px;\n  border: 1px solid var(--hh-border, currentColor); border-left-width: 6px; border-left-style: double; border-radius: 6px;\n  background: var(--hh-surface, transparent); }\n.hh-attic-note svg, .hh-attic-line svg { flex: none; margin-top: 2px; }\n.hh-attic-line { display: flex; align-items: flex-start; gap: 6px; min-width: 0; }\n.hh-attic-status { font-weight: 600; }\n.hh-attic-muted { color: var(--hh-text-muted, inherit); }\n.hh-attic-buttons { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; min-width: 0; }\n.hh-attic-button { display: inline-flex; align-items: center; gap: 6px; min-width: 0; max-width: 100%; min-height: 2.25rem;\n  font: inherit; text-align: left; color: var(--hh-text, inherit); background: var(--hh-surface-raised, transparent);\n  border: 1px solid var(--hh-border, currentColor); border-radius: 6px; padding: 6px 12px; cursor: pointer; }\n.hh-attic-button[data-variant='primary'] { color: var(--hh-primary-text, inherit); background: var(--hh-primary, transparent);\n  border-width: 2px; font-weight: 600; }\n.hh-attic-button[aria-disabled='true'] { cursor: not-allowed; border-style: dashed; color: var(--hh-text-muted, inherit);\n  background: var(--hh-surface, transparent); font-weight: 400; }\n.hh-attic-button:focus-visible, .hh-attic-range:focus-visible, .hh-attic-speed input:focus-visible,\n.hh-attic-timeline:focus-visible { outline: 2px solid var(--hh-focus, currentColor); outline-offset: 2px; }\n.hh-attic-reasons { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; font-size: 0.875rem;\n  color: var(--hh-text-muted, inherit); }\n.hh-attic-speed { border: 1px solid var(--hh-border-soft, currentColor); border-radius: 6px; margin: 0; padding: 6px 10px;\n  display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: center; min-width: 0; }\n.hh-attic-speed legend { display: inline-flex; align-items: center; gap: 6px; padding: 0 4px; }\n.hh-attic-speed label { display: inline-flex; align-items: center; gap: 4px; min-height: 2rem; cursor: pointer; }\n.hh-attic-speed input:checked + span { font-weight: 700; text-decoration: underline; }\n.hh-attic-seek { display: grid; gap: 4px; min-width: 0; }\n.hh-attic-range { width: 100%; min-width: 0; margin: 0; accent-color: var(--hh-primary, auto); }\n.hh-attic-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; min-width: 0; }\n.hh-attic-timeline { max-height: 18rem; overflow-y: auto; min-width: 0; padding: 4px;\n  border: 1px solid var(--hh-border-soft, currentColor); border-radius: 6px; }\n.hh-attic-entries { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; min-width: 0; }\n.hh-attic-entry { display: grid; grid-template-columns: 1.25rem 2.5rem minmax(0, 1fr); column-gap: 6px; align-items: start;\n  padding: 4px 6px; border: 1px solid transparent; border-left: 4px solid transparent; border-radius: 4px; }\n.hh-attic-entry[data-played='false'] { color: var(--hh-text-muted, inherit); border-left: 4px dotted var(--hh-border-soft, currentColor); }\n.hh-attic-entry[data-played='true'] { border-left: 4px solid var(--hh-border, currentColor); }\n.hh-attic-entry[aria-current='step'] { font-weight: 700; border: 2px solid var(--hh-border, currentColor);\n  border-left: 6px double var(--hh-accent, currentColor); background: var(--hh-surface-raised, transparent); }\n.hh-attic-entry-mark svg { color: var(--hh-accent, currentColor); }\n.hh-attic-entry-number { font-variant-numeric: tabular-nums; }\n.hh-attic-entry-now { display: block; font-size: 0.8125rem; }\n.hh-attic-diagnostics li { display: flex; align-items: flex-start; gap: 6px; padding: 6px 8px;\n  border: 1px dashed var(--hh-border, currentColor); border-left: 4px solid var(--hh-danger, currentColor); border-radius: 6px; }\n.hh-attic-diagnostics svg { flex: none; margin-top: 2px; color: var(--hh-danger, currentColor); }\n@media (prefers-reduced-motion: no-preference) {\n  .hh-attic[data-motion='low-frequency'] .hh-attic-entry { transition: background-color 0.4s ease-out; }\n}\n.hh-attic[data-motion='none'] *, .hh-attic:not([data-motion]) * { animation: none !important; transition: none !important; }\n@media (prefers-reduced-motion: reduce) {\n  .hh-attic * { animation: none !important; transition: none !important; }\n}\n";
 // src/rooms/attic/ReplayControls.tsx
-function um({ transport: e, speed: t, cursor: n, total: r, positionText: i, onPlay: a, onRestart: o, onPrevious: s, onNext: c, onSeek: l, onSpeed: u }) {
+function fm({ transport: e, speed: t, cursor: n, total: r, positionText: i, onPlay: a, onRestart: o, onPrevious: s, onNext: c, onSeek: l, onSpeed: u }) {
 	let d = M(), f = (e) => `${d}-${e}-reason`, m = (e, t) => t.enabled ? void 0 : f(e), h = [
 		[
 			"play",
@@ -11573,7 +11658,7 @@ function um({ transport: e, speed: t, cursor: n, total: r, positionText: i, onPl
 				children: [/* @__PURE__ */ R("legend", { children: [/* @__PURE__ */ L(p, {
 					size: 16,
 					"aria-hidden": !0
-				}), "Playback speed"] }), Jp.map((e) => /* @__PURE__ */ R("label", { children: [/* @__PURE__ */ L("input", {
+				}), "Playback speed"] }), Xp.map((e) => /* @__PURE__ */ R("label", { children: [/* @__PURE__ */ L("input", {
 					type: "radio",
 					name: `${d}-speed`,
 					value: e.speed,
@@ -11614,14 +11699,14 @@ function um({ transport: e, speed: t, cursor: n, total: r, positionText: i, onPl
 	});
 }
 // src/rooms/attic/ReplayDiagnostics.tsx
-function dm({ diagnostics: e }) {
+function pm({ diagnostics: e }) {
 	return e.rows.length === 0 ? /* @__PURE__ */ R("p", {
 		className: "hh-attic-line hh-attic-muted",
 		"data-attic": "diagnostics-empty",
 		children: [/* @__PURE__ */ L(o, {
 			size: 16,
 			"aria-hidden": !0
-		}), /* @__PURE__ */ L("span", { children: Up })]
+		}), /* @__PURE__ */ L("span", { children: Gp })]
 	}) : /* @__PURE__ */ R("div", {
 		className: "hh-attic-section",
 		"data-attic": "diagnostics",
@@ -11638,13 +11723,13 @@ function dm({ diagnostics: e }) {
 	});
 }
 // src/rooms/attic/ReplaySummary.tsx
-function fm({ status: e }) {
+function mm({ status: e }) {
 	return L(e === "playing" ? w : e === "complete" ? o : C, {
 		size: 16,
 		"aria-hidden": !0
 	});
 }
-function pm({ summary: e, status: t }) {
+function hm({ summary: e, status: t }) {
 	return /* @__PURE__ */ R("div", {
 		className: "hh-attic-section",
 		"data-attic": "summary",
@@ -11652,7 +11737,7 @@ function pm({ summary: e, status: t }) {
 			/* @__PURE__ */ R("p", {
 				className: "hh-attic-line hh-attic-status",
 				"data-status": t,
-				children: [/* @__PURE__ */ L(fm, { status: t }), /* @__PURE__ */ R("span", { children: [
+				children: [/* @__PURE__ */ L(mm, { status: t }), /* @__PURE__ */ R("span", { children: [
 					e.statusText,
 					". ",
 					e.positionText,
@@ -11704,7 +11789,7 @@ function pm({ summary: e, status: t }) {
 	});
 }
 // src/rooms/attic/ReplayTimeline.tsx
-function mm({ rows: e, label: t }) {
+function gm({ rows: e, label: t }) {
 	let n = P(null), r = e.find((e) => e.current)?.key ?? null;
 	return j(() => {
 		let e = n.current;
@@ -11720,7 +11805,7 @@ function mm({ rows: e, label: t }) {
 	}, [r]), e.length === 0 ? /* @__PURE__ */ L("p", {
 		className: "hh-attic-muted",
 		"data-attic": "timeline-empty",
-		children: Hp
+		children: Wp
 	}) : /* @__PURE__ */ L("div", {
 		className: "hh-attic-timeline",
 		role: "group",
@@ -11750,7 +11835,7 @@ function mm({ rows: e, label: t }) {
 					/* @__PURE__ */ R("span", { children: [
 						e.current ? /* @__PURE__ */ R("span", {
 							className: "hh-attic-entry-now",
-							children: [Gp, ". "]
+							children: [qp, ". "]
 						}) : null,
 						e.actor,
 						": ",
@@ -11762,14 +11847,14 @@ function mm({ rows: e, label: t }) {
 	});
 }
 // src/rooms/attic/use-attic-panel.ts
-function hm(e, t, { watch: n = !0, refresh: r = !0 } = {}) {
+function _m(e, t, { watch: n = !0, refresh: r = !0 } = {}) {
 	let { model: i, state: a, command: o, mansionId: s, source: c, mode: l, refresh: u } = e, d = P(t);
 	d.current = t;
-	let f = N(() => tm(i, a), [i, a]), p = N(() => om(i, a, s), [
+	let f = N(() => rm(i, a), [i, a]), p = N(() => cm(i, a, s), [
 		i,
 		a,
 		s
-	]), m = N(() => nm(i, a.cursor), [i, a.cursor]), h = N(() => cm(i, a), [i, a]), g = P({
+	]), m = N(() => im(i, a.cursor), [i, a.cursor]), h = N(() => um(i, a), [i, a]), g = P({
 		transport: f,
 		model: i
 	});
@@ -11782,7 +11867,7 @@ function hm(e, t, { watch: n = !0, refresh: r = !0 } = {}) {
 		e.play.enabled && o({ kind: e.playAction });
 	}, [o]), v = A(() => {
 		let { transport: e, model: t } = g.current;
-		e.restart.enabled && (o({ kind: "restart" }), d.current(rm(t, 0)));
+		e.restart.enabled && (o({ kind: "restart" }), d.current(am(t, 0)));
 	}, [o]), y = A((e) => {
 		let { transport: t, model: n } = g.current;
 		if (!t[e].enabled) return;
@@ -11790,7 +11875,7 @@ function hm(e, t, { watch: n = !0, refresh: r = !0 } = {}) {
 		o({
 			kind: "seek",
 			cursor: r
-		}), d.current(rm(n, r));
+		}), d.current(am(n, r));
 	}, [o]), b = A(() => y("previous"), [y]), x = A(() => y("next"), [y]), S = A((e) => o({
 		kind: "seek",
 		cursor: e
@@ -11800,7 +11885,7 @@ function hm(e, t, { watch: n = !0, refresh: r = !0 } = {}) {
 	}), [o]), w = P(a.status);
 	j(() => {
 		let e = w.current;
-		w.current = a.status, n && e === "playing" && a.status === "complete" && d.current(im(i));
+		w.current = a.status, n && e === "playing" && a.status === "complete" && d.current(om(i));
 	}, [
 		a.status,
 		i,
@@ -11834,8 +11919,8 @@ function hm(e, t, { watch: n = !0, refresh: r = !0 } = {}) {
 	};
 }
 // src/rooms/attic/AtticPanel.tsx
-function gm({ replay: e, onAnnounce: t, motion: n = "none", watch: r = !0 }) {
-	let i = hm(e, t, { watch: r }), a = M(), o = e.source === "loading" && i.total === 0;
+function vm({ replay: e, onAnnounce: t, motion: n = "none", watch: r = !0 }) {
+	let i = _m(e, t, { watch: r }), a = M(), o = e.source === "loading" && i.total === 0;
 	return /* @__PURE__ */ R("div", {
 		className: "hh-attic",
 		"data-attic-panel": !0,
@@ -11843,7 +11928,7 @@ function gm({ replay: e, onAnnounce: t, motion: n = "none", watch: r = !0 }) {
 		"data-motion": n,
 		"data-source": e.source,
 		children: [
-			/* @__PURE__ */ L("style", { children: lm }),
+			/* @__PURE__ */ L("style", { children: dm }),
 			/* @__PURE__ */ R("p", {
 				className: "hh-attic-note",
 				"data-attic": "mode",
@@ -11853,7 +11938,7 @@ function gm({ replay: e, onAnnounce: t, motion: n = "none", watch: r = !0 }) {
 				}) : /* @__PURE__ */ L(h, {
 					size: 16,
 					"aria-hidden": !0
-				}), /* @__PURE__ */ L("span", { children: e.readOnly ? zp : Bp })]
+				}), /* @__PURE__ */ L("span", { children: e.readOnly ? Vp : Hp })]
 			}),
 			o ? /* @__PURE__ */ R("p", {
 				className: "hh-attic-line hh-attic-muted",
@@ -11861,7 +11946,7 @@ function gm({ replay: e, onAnnounce: t, motion: n = "none", watch: r = !0 }) {
 				children: [/* @__PURE__ */ L(ee, {
 					size: 16,
 					"aria-hidden": !0
-				}), /* @__PURE__ */ L("span", { children: Vp })]
+				}), /* @__PURE__ */ L("span", { children: Up })]
 			}) : null,
 			/* @__PURE__ */ R("section", {
 				className: "hh-attic-section",
@@ -11869,7 +11954,7 @@ function gm({ replay: e, onAnnounce: t, motion: n = "none", watch: r = !0 }) {
 				children: [/* @__PURE__ */ L("h4", {
 					id: `${a}-controls`,
 					children: "Playback"
-				}), /* @__PURE__ */ L(um, {
+				}), /* @__PURE__ */ L(fm, {
 					transport: i.transport,
 					speed: i.speed,
 					cursor: i.cursor,
@@ -11889,7 +11974,7 @@ function gm({ replay: e, onAnnounce: t, motion: n = "none", watch: r = !0 }) {
 				children: [/* @__PURE__ */ L("h4", {
 					id: `${a}-summary`,
 					children: "The house at this point"
-				}), /* @__PURE__ */ L(pm, {
+				}), /* @__PURE__ */ L(hm, {
 					summary: i.summary,
 					status: e.state.status
 				})]
@@ -11900,7 +11985,7 @@ function gm({ replay: e, onAnnounce: t, motion: n = "none", watch: r = !0 }) {
 				children: [/* @__PURE__ */ L("h4", {
 					id: `${a}-timeline`,
 					children: "Timeline"
-				}), /* @__PURE__ */ L(mm, {
+				}), /* @__PURE__ */ L(gm, {
 					rows: i.rows,
 					label: "Timeline of recorded events"
 				})]
@@ -11911,14 +11996,14 @@ function gm({ replay: e, onAnnounce: t, motion: n = "none", watch: r = !0 }) {
 				children: [/* @__PURE__ */ L("h4", {
 					id: `${a}-diagnostics`,
 					children: "Diagnostics"
-				}), /* @__PURE__ */ L(dm, { diagnostics: i.diagnostics })]
+				}), /* @__PURE__ */ L(pm, { diagnostics: i.diagnostics })]
 			})
 		]
 	});
 }
 // src/rooms/attic/ReplayBar.tsx
-var _m = "Recording playback";
-function vm({ panel: e, readOnlyText: t, startText: n }) {
+var ym = "Recording playback";
+function bm({ panel: e, readOnlyText: t, startText: n }) {
 	let r = M(), { transport: i } = e, a = (e, t) => t.enabled ? null : /* @__PURE__ */ L("span", {
 		className: "hh-ui-visually-hidden",
 		id: `${r}-${e}`,
@@ -11927,7 +12012,7 @@ function vm({ panel: e, readOnlyText: t, startText: n }) {
 	return /* @__PURE__ */ R("div", {
 		className: "hh-ui-replay-bar",
 		role: "group",
-		"aria-label": _m,
+		"aria-label": ym,
 		"data-replay-bar": !0,
 		children: [
 			/* @__PURE__ */ R("span", {
@@ -11999,7 +12084,7 @@ function vm({ panel: e, readOnlyText: t, startText: n }) {
 				children: [/* @__PURE__ */ R("legend", { children: [/* @__PURE__ */ L(p, {
 					size: 14,
 					"aria-hidden": !0
-				}), " Speed"] }), Jp.map((t) => /* @__PURE__ */ R("label", { children: [/* @__PURE__ */ L("input", {
+				}), " Speed"] }), Xp.map((t) => /* @__PURE__ */ R("label", { children: [/* @__PURE__ */ L("input", {
 					type: "radio",
 					name: `${r}-speed`,
 					value: t.speed,
@@ -12023,7 +12108,7 @@ function vm({ panel: e, readOnlyText: t, startText: n }) {
 	});
 }
 // src/rooms/house/RoomNote.tsx
-function ym({ room: e }) {
+function xm({ room: e }) {
 	if (e.diagnostic === null) return null;
 	let t = e.integrity === "valid" ? e.locked ? "locked" : e.readOnly ? "read-only" : "diagnostic" : "diagnostic";
 	return /* @__PURE__ */ R("p", {
@@ -12037,7 +12122,7 @@ function ym({ room: e }) {
 	});
 }
 // src/rooms/house/DecisionButtons.tsx
-function bm({ approve: e, reject: t, busy: n, subject: r, describedBy: i, onSend: o }) {
+function Sm({ approve: e, reject: t, busy: n, subject: r, describedBy: i, onSend: o }) {
 	return /* @__PURE__ */ R("div", {
 		className: "hh-decide",
 		"aria-busy": n,
@@ -12071,7 +12156,7 @@ function bm({ approve: e, reject: t, busy: n, subject: r, describedBy: i, onSend
 	});
 }
 // src/rooms/house/DoorPanel.tsx
-function xm({ view: e, onSend: t }) {
+function Cm({ view: e, onSend: t }) {
 	let r = M(), i = M(), a = e.state === "pending";
 	return /* @__PURE__ */ R("article", {
 		className: "hh-proposal",
@@ -12117,7 +12202,7 @@ function xm({ view: e, onSend: t }) {
 						"aria-hidden": !0
 					}), /* @__PURE__ */ L("span", { children: e.blockedText })]
 				}),
-				/* @__PURE__ */ L(bm, {
+				/* @__PURE__ */ L(Sm, {
 					approve: e.approve,
 					reject: e.reject,
 					busy: e.busy,
@@ -12143,7 +12228,7 @@ function xm({ view: e, onSend: t }) {
 var $ = {
 	size: 16,
 	"aria-hidden": !0
-}, Sm = {
+}, wm = {
 	not_started: "plain",
 	ready: "plain",
 	starting: "plain",
@@ -12153,12 +12238,12 @@ var $ = {
 	approved: "ok",
 	failed: "attention",
 	done: "ok"
-}, Cm = {
+}, Tm = {
 	sealed: "plain",
 	waiting: "attention",
 	open: "ok",
 	rejected: "attention"
-}, wm = {
+}, Em = {
 	idle: "plain",
 	working: "plain",
 	waiting: "attention",
@@ -12166,7 +12251,7 @@ var $ = {
 	failed: "attention",
 	done: "ok"
 };
-function Tm({ status: e }) {
+function Dm({ status: e }) {
 	switch (e) {
 		case "not_started": return /* @__PURE__ */ L(s, { ...$ });
 		case "ready": return /* @__PURE__ */ L(w, { ...$ });
@@ -12182,7 +12267,7 @@ function Tm({ status: e }) {
 		case "done": return /* @__PURE__ */ L(o, { ...$ });
 	}
 }
-function Em({ status: e }) {
+function Om({ status: e }) {
 	switch (e) {
 		case "sealed": return /* @__PURE__ */ L(v, { ...$ });
 		case "waiting": return /* @__PURE__ */ L(l, { ...$ });
@@ -12190,7 +12275,7 @@ function Em({ status: e }) {
 		case "rejected": return /* @__PURE__ */ L(n, { ...$ });
 	}
 }
-function Dm({ state: e }) {
+function km({ state: e }) {
 	switch (e) {
 		case "idle": return /* @__PURE__ */ L(S, { ...$ });
 		case "working": return /* @__PURE__ */ L(_, {
@@ -12203,7 +12288,7 @@ function Dm({ state: e }) {
 		case "done": return /* @__PURE__ */ L(o, { ...$ });
 	}
 }
-function Om({ status: e }) {
+function Am({ status: e }) {
 	switch (e) {
 		case "pending": return /* @__PURE__ */ L(g, { ...$ });
 		case "approved":
@@ -12218,7 +12303,7 @@ function Om({ status: e }) {
 	}
 }
 // src/rooms/house/use-revision-request.ts
-function km(e, t) {
+function jm(e, t) {
 	let [n, r] = F(!1), [i, a] = F(""), [o, s] = F(null), c = P(null), l = P(null), u = P(!1);
 	return j(() => {
 		n && !u.current && l.current?.focus(), !n && u.current && c.current?.focus(), u.current = n;
@@ -12254,8 +12339,8 @@ function km(e, t) {
 	};
 }
 // src/rooms/house/RevisionRequest.tsx
-function Am({ view: e, onSend: t }) {
-	let n = km(e, t), r = M(), i = M(), a = M(), o = M(), s = M();
+function Mm({ view: e, onSend: t }) {
+	let n = jm(e, t), r = M(), i = M(), a = M(), o = M(), s = M();
 	return /* @__PURE__ */ R("div", {
 		className: "hh-revision",
 		"data-revision": e.phase,
@@ -12349,7 +12434,7 @@ function Am({ view: e, onSend: t }) {
 	});
 }
 // src/rooms/house/RiskyActionPanel.tsx
-function jm({ title: e, lines: t, empty: n }) {
+function Nm({ title: e, lines: t, empty: n }) {
 	return /* @__PURE__ */ R(I, { children: [/* @__PURE__ */ L("p", {
 		className: "hh-proposal-group",
 		children: e
@@ -12364,7 +12449,7 @@ function jm({ title: e, lines: t, empty: n }) {
 		}, `${e.label}-${t}`))
 	})] });
 }
-function Mm({ view: e, onSend: t }) {
+function Pm({ view: e, onSend: t }) {
 	let n = e.ghostName, r = M(), i = M(), a = e.status === "pending";
 	return /* @__PURE__ */ R("article", {
 		className: "hh-proposal",
@@ -12375,7 +12460,7 @@ function Mm({ view: e, onSend: t }) {
 		children: [
 			/* @__PURE__ */ R("div", {
 				className: "hh-proposal-head",
-				children: [/* @__PURE__ */ L(Om, { status: e.status }), /* @__PURE__ */ R("h5", {
+				children: [/* @__PURE__ */ L(Am, { status: e.status }), /* @__PURE__ */ R("h5", {
 					id: r,
 					children: [
 						n,
@@ -12389,17 +12474,17 @@ function Mm({ view: e, onSend: t }) {
 				children: e.statusText
 			}),
 			e.complete ? /* @__PURE__ */ R(I, { children: [
-				/* @__PURE__ */ L(jm, {
+				/* @__PURE__ */ L(Nm, {
 					title: "Scope",
 					lines: e.scope,
 					empty: "No scope."
 				}),
-				/* @__PURE__ */ L(jm, {
+				/* @__PURE__ */ L(Nm, {
 					title: "Exact arguments",
 					lines: e.arguments,
 					empty: "No arguments."
 				}),
-				/* @__PURE__ */ L(jm, {
+				/* @__PURE__ */ L(Nm, {
 					title: "Paths it may touch",
 					lines: e.paths,
 					empty: "No paths."
@@ -12422,7 +12507,7 @@ function Mm({ view: e, onSend: t }) {
 						"aria-hidden": !0
 					}), /* @__PURE__ */ L("span", { children: e.blockedText })]
 				}),
-				/* @__PURE__ */ L(bm, {
+				/* @__PURE__ */ L(Sm, {
 					approve: e.approve,
 					reject: e.reject,
 					busy: e.busy,
@@ -12433,20 +12518,20 @@ function Mm({ view: e, onSend: t }) {
 			] }) : e.outcomeText === null ? null : /* @__PURE__ */ R("p", {
 				className: "hh-proposal-note hh-proposal-outcome",
 				"data-outcome": e.status,
-				children: [/* @__PURE__ */ L(Om, { status: e.status }), /* @__PURE__ */ L("span", { children: e.outcomeText })]
+				children: [/* @__PURE__ */ L(Am, { status: e.status }), /* @__PURE__ */ L("span", { children: e.outcomeText })]
 			})
 		]
 	});
 }
 // src/core/markdown-blocks.ts
-var Nm = 1500, Pm = /* @__PURE__ */ RegExp("[\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f-\\u009f\u2028\u2029\\u202a-\\u202e\\u2066-\\u2069]", "g");
-function Fm(e) {
-	return e.replace(/\r\n?/g, "\n").replace(Pm, "");
-}
-var Im = /(`[^`\n]+`)|(\*\*[^*\n]+\*\*)|(\*[^*\s][^*\n]*\*)|((?<![A-Za-z0-9_])_(?![\s_])[^_\n]+(?<!\s)_(?![A-Za-z0-9_]))/g;
+var Fm = 1500, Im = /* @__PURE__ */ RegExp("[\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f-\\u009f\u2028\u2029\\u202a-\\u202e\\u2066-\\u2069]", "g");
 function Lm(e) {
+	return e.replace(/\r\n?/g, "\n").replace(Im, "");
+}
+var Rm = /(`[^`\n]+`)|(\*\*[^*\n]+\*\*)|(\*[^*\s][^*\n]*\*)|((?<![A-Za-z0-9_])_(?![\s_])[^_\n]+(?<!\s)_(?![A-Za-z0-9_]))/g;
+function zm(e) {
 	let t = [], n = 0;
-	for (let r of e.matchAll(Im)) {
+	for (let r of e.matchAll(Rm)) {
 		let i = r.index ?? 0;
 		i > n && t.push({
 			kind: "text",
@@ -12469,12 +12554,12 @@ function Lm(e) {
 		text: e.slice(n)
 	}), t;
 }
-var Rm = /^ {0,3}(#{1,6})\s+(.*?)\s*#*\s*$/, zm = /^ {0,3}(`{3,}|~{3,})\s*([A-Za-z0-9_+-]{0,24})/, Bm = /^ {0,3}(?:-{3,}|\*{3,}|_{3,})\s*$/, Vm = /^(\s*)(?:([-*+])|(\d{1,4})[.)])\s+(.*)$/, Hm = /^\[( |x|X)\](\*?)\s+(.*)$/, Um = /^\s*\|.*\|\s*$/;
-function Wm(e, t = Nm) {
-	let n = Fm(e).split("\n"), r = [], i = [], a = [], o = !1, s = () => {
+var Bm = /^ {0,3}(#{1,6})\s+(.*?)\s*#*\s*$/, Vm = /^ {0,3}(`{3,}|~{3,})\s*([A-Za-z0-9_+-]{0,24})/, Hm = /^ {0,3}(?:-{3,}|\*{3,}|_{3,})\s*$/, Um = /^(\s*)(?:([-*+])|(\d{1,4})[.)])\s+(.*)$/, Wm = /^\[( |x|X)\](\*?)\s+(.*)$/, Gm = /^\s*\|.*\|\s*$/;
+function Km(e, t = Fm) {
+	let n = Lm(e).split("\n"), r = [], i = [], a = [], o = !1, s = () => {
 		i.length > 0 && (r.push({
 			kind: "paragraph",
-			inlines: Lm(i.join(" "))
+			inlines: zm(i.join(" "))
 		}), i = []), a.length > 0 && (r.push({
 			kind: "list",
 			items: a
@@ -12485,7 +12570,7 @@ function Wm(e, t = Nm) {
 			o = !0;
 			break;
 		}
-		let c = n[e], l = zm.exec(c);
+		let c = n[e], l = Vm.exec(c);
 		if (l !== null) {
 			s();
 			let t = [];
@@ -12501,23 +12586,23 @@ function Wm(e, t = Nm) {
 			s();
 			continue;
 		}
-		let u = Rm.exec(c);
+		let u = Bm.exec(c);
 		if (u !== null) {
 			s(), r.push({
 				kind: "heading",
 				level: u[1].length,
-				inlines: Lm(u[2])
+				inlines: zm(u[2])
 			});
 			continue;
 		}
-		if (Bm.test(c)) {
+		if (Hm.test(c)) {
 			s(), r.push({ kind: "rule" });
 			continue;
 		}
-		if (Um.test(c)) {
+		if (Gm.test(c)) {
 			s();
 			let t = [c];
-			for (; e + 1 < n.length && Um.test(n[e + 1]);) e += 1, t.push(n[e]);
+			for (; e + 1 < n.length && Gm.test(n[e + 1]);) e += 1, t.push(n[e]);
 			r.push({
 				kind: "code",
 				language: "table",
@@ -12525,20 +12610,20 @@ function Wm(e, t = Nm) {
 			});
 			continue;
 		}
-		let d = Vm.exec(c);
+		let d = Um.exec(c);
 		if (d !== null) {
 			i.length > 0 && s();
-			let e = Hm.exec(d[4]);
+			let e = Wm.exec(d[4]);
 			a.push({
 				depth: Math.min(Math.floor(d[1].replace(/\t/g, "  ").length / 2), 5),
 				checked: e === null ? null : e[1] !== " ",
 				optional: e !== null && e[2] === "*",
 				number: d[3] === void 0 ? null : `${d[3]}.`,
-				inlines: Lm(e === null ? d[4] : e[3])
+				inlines: zm(e === null ? d[4] : e[3])
 			});
 		} else c.trimStart().startsWith(">") ? (s(), r.push({
 			kind: "quote",
-			inlines: Lm(c.trimStart().replace(/^>\s?/, ""))
+			inlines: zm(c.trimStart().replace(/^>\s?/, ""))
 		})) : (a.length > 0 && s(), i.push(c.trim()));
 	}
 	return o || s(), {
@@ -12547,7 +12632,7 @@ function Wm(e, t = Nm) {
 	};
 }
 // src/components/MarkdownView.tsx
-function Gm({ parts: e }) {
+function qm({ parts: e }) {
 	return /* @__PURE__ */ L(I, { children: e.map((e, t) => {
 		switch (e.kind) {
 			case "code": return /* @__PURE__ */ L("code", { children: e.text }, t);
@@ -12557,7 +12642,7 @@ function Gm({ parts: e }) {
 		}
 	}) });
 }
-function Km({ item: e }) {
+function Jm({ item: e }) {
 	return /* @__PURE__ */ R("li", {
 		className: "hh-md-item",
 		style: { marginLeft: `${e.depth * 1.25}rem` },
@@ -12585,7 +12670,7 @@ function Km({ item: e }) {
 					" "
 				]
 			}),
-			/* @__PURE__ */ L(Gm, { parts: e.inlines }),
+			/* @__PURE__ */ L(qm, { parts: e.inlines }),
 			e.optional ? /* @__PURE__ */ L("span", {
 				"aria-hidden": !0,
 				children: " (optional)"
@@ -12593,27 +12678,27 @@ function Km({ item: e }) {
 		] })]
 	});
 }
-var qm = 6;
-function Jm(e, t) {
-	return Math.min(qm, e + t - 1);
+var Ym = 6;
+function Xm(e, t) {
+	return Math.min(Ym, e + t - 1);
 }
-function Ym({ block: e, baseLevel: t }) {
+function Zm({ block: e, baseLevel: t }) {
 	switch (e.kind) {
 		case "heading": return /* @__PURE__ */ L("p", {
 			className: "hh-md-heading",
 			role: "heading",
-			"aria-level": Jm(t, e.level),
+			"aria-level": Xm(t, e.level),
 			"data-level": e.level,
-			children: /* @__PURE__ */ L(Gm, { parts: e.inlines })
+			children: /* @__PURE__ */ L(qm, { parts: e.inlines })
 		});
-		case "paragraph": return /* @__PURE__ */ L("p", { children: /* @__PURE__ */ L(Gm, { parts: e.inlines }) });
+		case "paragraph": return /* @__PURE__ */ L("p", { children: /* @__PURE__ */ L(qm, { parts: e.inlines }) });
 		case "quote": return /* @__PURE__ */ L("p", {
 			className: "hh-md-quote",
-			children: /* @__PURE__ */ L(Gm, { parts: e.inlines })
+			children: /* @__PURE__ */ L(qm, { parts: e.inlines })
 		});
 		case "list": return /* @__PURE__ */ L("ul", {
 			className: "hh-md-list",
-			children: e.items.map((e, t) => /* @__PURE__ */ L(Km, { item: e }, t))
+			children: e.items.map((e, t) => /* @__PURE__ */ L(Jm, { item: e }, t))
 		});
 		case "code": return /* @__PURE__ */ L("pre", {
 			"data-language": e.language === "" ? void 0 : e.language,
@@ -12622,9 +12707,9 @@ function Ym({ block: e, baseLevel: t }) {
 		case "rule": return /* @__PURE__ */ L("hr", {});
 	}
 }
-function Xm({ text: e, baseLevel: t = 6 }) {
-	let n = N(() => Wm(e), [e]);
-	return /* @__PURE__ */ R(I, { children: [n.blocks.map((e, n) => /* @__PURE__ */ L(Ym, {
+function Qm({ text: e, baseLevel: t = 6 }) {
+	let n = N(() => Km(e), [e]);
+	return /* @__PURE__ */ R(I, { children: [n.blocks.map((e, n) => /* @__PURE__ */ L(Zm, {
 		block: e,
 		baseLevel: t
 	}, n)), n.truncated ? /* @__PURE__ */ L("p", {
@@ -12633,13 +12718,13 @@ function Xm({ text: e, baseLevel: t = 6 }) {
 	}) : null] });
 }
 // src/components/ArtifactView.tsx
-var Zm = {
+var $m = {
 	unwritten: "plain",
 	unknown: "plain",
 	valid: "ok",
 	invalid: "attention"
 };
-function Qm({ state: e }) {
+function eh({ state: e }) {
 	let t = {
 		size: 16,
 		"aria-hidden": !0
@@ -12650,7 +12735,7 @@ function Qm({ state: e }) {
 		default: return /* @__PURE__ */ L(s, { ...t });
 	}
 }
-function $m({ view: e }) {
+function th({ view: e }) {
 	let t = M();
 	return /* @__PURE__ */ R("article", {
 		className: "hh-artifact",
@@ -12678,7 +12763,7 @@ function $m({ view: e }) {
 				"aria-label": `${e.title} text`,
 				tabIndex: 0,
 				"data-content": "text",
-				children: /* @__PURE__ */ L(Xm, { text: e.content })
+				children: /* @__PURE__ */ L(Qm, { text: e.content })
 			}),
 			e.doorNote === null ? null : /* @__PURE__ */ R("p", {
 				className: "hh-proposal-note hh-proposal-blocked",
@@ -12690,9 +12775,9 @@ function $m({ view: e }) {
 			}),
 			/* @__PURE__ */ R("p", {
 				className: "hh-room-line",
-				"data-tone": Zm[e.validation],
+				"data-tone": $m[e.validation],
 				"data-validation-line": !0,
-				children: [/* @__PURE__ */ L(Qm, { state: e.validation }), /* @__PURE__ */ R("span", { children: [e.validationText, e.findings.length > 0 ? `. ${e.findingsText}:` : ""] })]
+				children: [/* @__PURE__ */ L(eh, { state: e.validation }), /* @__PURE__ */ R("span", { children: [e.validationText, e.findings.length > 0 ? `. ${e.findingsText}:` : ""] })]
 			}),
 			e.findings.length === 0 ? null : /* @__PURE__ */ L("ul", {
 				className: "hh-findings",
@@ -12740,7 +12825,7 @@ function $m({ view: e }) {
 	});
 }
 // src/components/GhostOutputSummary.tsx
-function eh({ run: e }) {
+function nh({ run: e }) {
 	return /* @__PURE__ */ R("div", {
 		className: "hh-run",
 		"data-run": e.runId,
@@ -12749,11 +12834,11 @@ function eh({ run: e }) {
 		children: [
 			/* @__PURE__ */ R("p", {
 				className: "hh-room-line",
-				"data-tone": e.state === null ? "plain" : wm[e.state],
+				"data-tone": e.state === null ? "plain" : Em[e.state],
 				children: [e.state === null ? /* @__PURE__ */ L(s, {
 					size: 16,
 					"aria-hidden": !0
-				}) : /* @__PURE__ */ L(Dm, { state: e.state }), /* @__PURE__ */ R("span", { children: [
+				}) : /* @__PURE__ */ L(km, { state: e.state }), /* @__PURE__ */ R("span", { children: [
 					e.ghostName,
 					": ",
 					e.stateText,
@@ -12793,7 +12878,7 @@ function eh({ run: e }) {
 	});
 }
 // src/components/RunRecoveryControls.tsx
-function th({ view: e, kind: t, describedBy: r, onSend: i }) {
+function rh({ view: e, kind: t, describedBy: r, onSend: i }) {
 	let a = e.command;
 	return /* @__PURE__ */ R("button", {
 		type: "button",
@@ -12810,7 +12895,7 @@ function th({ view: e, kind: t, describedBy: r, onSend: i }) {
 		}), e.busy ? "Sending…" : e.label]
 	});
 }
-function nh({ run: e, onSend: t }) {
+function ih({ run: e, onSend: t }) {
 	let n = M(), r = e.cancel?.blockedText ?? e.retry?.blockedText ?? null;
 	return e.cancel === null && e.retry === null && e.exhaustedText === null ? null : /* @__PURE__ */ R("div", {
 		className: "hh-recovery",
@@ -12819,12 +12904,12 @@ function nh({ run: e, onSend: t }) {
 			e.cancel === null && e.retry === null ? null : /* @__PURE__ */ R("div", {
 				className: "hh-decide",
 				"aria-busy": (e.cancel?.busy ?? !1) || (e.retry?.busy ?? !1),
-				children: [e.cancel === null ? null : /* @__PURE__ */ L(th, {
+				children: [e.cancel === null ? null : /* @__PURE__ */ L(rh, {
 					view: e.cancel,
 					kind: "cancel",
 					describedBy: n,
 					onSend: t
-				}), e.retry === null ? null : /* @__PURE__ */ L(th, {
+				}), e.retry === null ? null : /* @__PURE__ */ L(rh, {
 					view: e.retry,
 					kind: "retry",
 					describedBy: n,
@@ -12850,7 +12935,7 @@ function nh({ run: e, onSend: t }) {
 		]
 	});
 }
-function rh({ view: e, onOpen: t }) {
+function ah({ view: e, onOpen: t }) {
 	let n = M(), r = e.slotKey, i = r === null || t === null, a = e.disabledText ?? (t === null ? "This version of Crew offers no way to open the session from here. Find it in Crew by its name." : null);
 	return /* @__PURE__ */ R("p", {
 		className: "hh-session-link",
@@ -12876,7 +12961,7 @@ function rh({ view: e, onOpen: t }) {
 	});
 }
 // src/rooms/workshop/use-task-selection.ts
-function ih(e) {
+function oh(e) {
 	let [t, n] = F(() => /* @__PURE__ */ new Set()), r = N(() => {
 		let n = new Set(e.waves.flatMap((e) => e.tasks.filter((e) => e.selectable).map((e) => e.taskId)));
 		return new Set([...t].filter((e) => n.has(e)));
@@ -12894,7 +12979,7 @@ function ih(e) {
 	};
 }
 // src/rooms/workshop/WorkshopTaskBoard.tsx
-var ah = {
+var sh = {
 	not_selected: "plain",
 	queued: "plain",
 	backpressure: "attention",
@@ -12905,7 +12990,7 @@ var ah = {
 	blocked: "attention",
 	skipped: "plain"
 };
-function oh({ status: e }) {
+function ch({ status: e }) {
 	let t = {
 		size: 16,
 		"aria-hidden": !0
@@ -12925,7 +13010,7 @@ function oh({ status: e }) {
 		case "skipped": return /* @__PURE__ */ L(s, { ...t });
 	}
 }
-function sh({ row: e, chosen: t, onToggle: n, onSend: r, onOpenSession: i }) {
+function lh({ row: e, chosen: t, onToggle: n, onSend: r, onOpenSession: i }) {
 	let a = M();
 	return /* @__PURE__ */ R("li", {
 		className: "hh-task",
@@ -12961,9 +13046,9 @@ function sh({ row: e, chosen: t, onToggle: n, onSend: r, onOpenSession: i }) {
 			}),
 			/* @__PURE__ */ R("p", {
 				className: "hh-room-line",
-				"data-tone": ah[e.status],
+				"data-tone": sh[e.status],
 				"data-task-status": !0,
-				children: [/* @__PURE__ */ L(oh, { status: e.status }), /* @__PURE__ */ R("span", { children: [e.statusText, e.attemptText === null ? "" : `. ${e.attemptText}`] })]
+				children: [/* @__PURE__ */ L(ch, { status: e.status }), /* @__PURE__ */ R("span", { children: [e.statusText, e.attemptText === null ? "" : `. ${e.attemptText}`] })]
 			}),
 			e.detail === null ? null : /* @__PURE__ */ L("p", {
 				className: "hh-task-detail",
@@ -12980,12 +13065,12 @@ function sh({ row: e, chosen: t, onToggle: n, onSend: r, onOpenSession: i }) {
 				]
 			}),
 			e.run === null ? null : /* @__PURE__ */ R(I, { children: [
-				/* @__PURE__ */ L(eh, { run: e.run }),
-				/* @__PURE__ */ L(nh, {
+				/* @__PURE__ */ L(nh, { run: e.run }),
+				/* @__PURE__ */ L(ih, {
 					run: e.run,
 					onSend: r
 				}),
-				/* @__PURE__ */ L(rh, {
+				/* @__PURE__ */ L(ah, {
 					view: e.run.sessionLink,
 					onOpen: i
 				})
@@ -12993,8 +13078,8 @@ function sh({ row: e, chosen: t, onToggle: n, onSend: r, onOpenSession: i }) {
 		]
 	});
 }
-function ch({ board: e, onSend: t, onOpenSession: n }) {
-	let r = ih(e), i = M(), a = M(), o = r.chosen.size, s = e.startBlockedText ?? (o === 0 ? "Tick at least one open task to start." : null);
+function uh({ board: e, onSend: t, onOpenSession: n }) {
+	let r = oh(e), i = M(), a = M(), o = r.chosen.size, s = e.startBlockedText ?? (o === 0 ? "Tick at least one open task to start." : null);
 	return /* @__PURE__ */ R("section", {
 		className: "hh-board",
 		"aria-labelledby": i,
@@ -13040,9 +13125,9 @@ function ch({ board: e, onSend: t, onOpenSession: n }) {
 					]
 				}, `${e.code}-${e.location}-${t}`))
 			}),
-			e.waves.map((e) => /* @__PURE__ */ L(lh, {
+			e.waves.map((e) => /* @__PURE__ */ L(dh, {
 				title: e.title,
-				children: e.tasks.map((e) => /* @__PURE__ */ L(sh, {
+				children: e.tasks.map((e) => /* @__PURE__ */ L(lh, {
 					row: e,
 					chosen: r.chosen.has(e.taskId),
 					onToggle: r.toggle,
@@ -13079,7 +13164,7 @@ function ch({ board: e, onSend: t, onOpenSession: n }) {
 		]
 	});
 }
-function lh({ title: e, children: t }) {
+function dh({ title: e, children: t }) {
 	let n = M();
 	return /* @__PURE__ */ R("div", {
 		className: "hh-wave",
@@ -13096,7 +13181,7 @@ function lh({ title: e, children: t }) {
 	});
 }
 // src/rooms/house/RoomOutput.tsx
-function uh({ output: e, onSend: t, onOpenSession: n }) {
+function fh({ output: e, onSend: t, onOpenSession: n }) {
 	return /* @__PURE__ */ R("div", {
 		className: "hh-output",
 		"data-room-output": e.room,
@@ -13109,8 +13194,8 @@ function uh({ output: e, onSend: t, onOpenSession: n }) {
 					"aria-hidden": !0
 				}), /* @__PURE__ */ L("span", { children: e.outputNote })]
 			}),
-			e.documents.map((e) => /* @__PURE__ */ L($m, { view: e }, e.phase)),
-			e.taskBoard === null ? null : /* @__PURE__ */ L(ch, {
+			e.documents.map((e) => /* @__PURE__ */ L(th, { view: e }, e.phase)),
+			e.taskBoard === null ? null : /* @__PURE__ */ L(uh, {
 				board: e.taskBoard,
 				onSend: t,
 				onOpenSession: n
@@ -13119,7 +13204,7 @@ function uh({ output: e, onSend: t, onOpenSession: n }) {
 	});
 }
 // src/rooms/house/RoomRuns.tsx
-function dh({ output: e, onSend: t, onOpenSession: n }) {
+function ph({ output: e, onSend: t, onOpenSession: n }) {
 	let r = new Set(e.taskBoard?.waves.flatMap((e) => e.tasks.flatMap((e) => e.run === null ? [] : [e.run.runId])) ?? []), i = e.runs.filter((e) => !r.has(e.runId));
 	return i.length === 0 ? null : /* @__PURE__ */ R("div", {
 		className: "hh-phase",
@@ -13130,12 +13215,12 @@ function dh({ output: e, onSend: t, onOpenSession: n }) {
 		}), /* @__PURE__ */ L("ul", {
 			className: "hh-runs",
 			children: i.map((e) => /* @__PURE__ */ R("li", { children: [
-				/* @__PURE__ */ L(eh, { run: e }),
-				/* @__PURE__ */ L(nh, {
+				/* @__PURE__ */ L(nh, { run: e }),
+				/* @__PURE__ */ L(ih, {
 					run: e,
 					onSend: t
 				}),
-				/* @__PURE__ */ L(rh, {
+				/* @__PURE__ */ L(ah, {
 					view: e.sessionLink,
 					onOpen: n
 				})
@@ -13144,14 +13229,14 @@ function dh({ output: e, onSend: t, onOpenSession: n }) {
 	});
 }
 // src/rooms/house/RoomPanel.tsx
-var fh = () => {};
-function ph({ detail: e, onSend: t, output: n = null, onRoomSend: r = fh, onOpenSession: i = null }) {
+var mh = () => {};
+function hh({ detail: e, onSend: t, output: n = null, onRoomSend: r = mh, onOpenSession: i = null }) {
 	let { room: a } = e;
 	return /* @__PURE__ */ R("div", {
 		className: "hh-room-panel",
 		"data-room-body": a.id,
 		children: [
-			n === null ? null : /* @__PURE__ */ L(uh, {
+			n === null ? null : /* @__PURE__ */ L(fh, {
 				output: n,
 				onSend: r,
 				onOpenSession: i
@@ -13163,8 +13248,8 @@ function ph({ detail: e, onSend: t, output: n = null, onRoomSend: r = fh, onOpen
 				children: [
 					/* @__PURE__ */ R("p", {
 						className: "hh-room-line",
-						"data-tone": Sm[e.status],
-						children: [/* @__PURE__ */ L(Tm, { status: e.status }), /* @__PURE__ */ R("span", { children: [
+						"data-tone": wm[e.status],
+						children: [/* @__PURE__ */ L(Dm, { status: e.status }), /* @__PURE__ */ R("span", { children: [
 							e.name,
 							": ",
 							e.statusText
@@ -13172,8 +13257,8 @@ function ph({ detail: e, onSend: t, output: n = null, onRoomSend: r = fh, onOpen
 					}),
 					/* @__PURE__ */ R("p", {
 						className: "hh-room-line",
-						"data-tone": Cm[e.doorStatus],
-						children: [/* @__PURE__ */ L(Em, { status: e.doorStatus }), /* @__PURE__ */ L("span", { children: e.doorHint })]
+						"data-tone": Tm[e.doorStatus],
+						children: [/* @__PURE__ */ L(Om, { status: e.doorStatus }), /* @__PURE__ */ L("span", { children: e.doorHint })]
 					}),
 					i === null || e.phase === "implementation" && n?.ownsImplementationStart === !0 ? null : /* @__PURE__ */ L("div", {
 						className: "hh-decide",
@@ -13191,11 +13276,11 @@ function ph({ detail: e, onSend: t, output: n = null, onRoomSend: r = fh, onOpen
 							}), i.busy ? "Starting…" : i.label]
 						})
 					}),
-					a === null ? null : /* @__PURE__ */ L(xm, {
+					a === null ? null : /* @__PURE__ */ L(Cm, {
 						view: a,
 						onSend: t
 					}),
-					n?.documents.map((t) => t.phase === e.phase && t.feedback !== null ? /* @__PURE__ */ L(Am, {
+					n?.documents.map((t) => t.phase === e.phase && t.feedback !== null ? /* @__PURE__ */ L(Mm, {
 						view: t.feedback,
 						onSend: r
 					}, t.phase) : null)
@@ -13208,14 +13293,14 @@ function ph({ detail: e, onSend: t, output: n = null, onRoomSend: r = fh, onOpen
 					children: "Ghosts in this room"
 				}), a.ghosts.length === 0 ? /* @__PURE__ */ R("p", {
 					className: "hh-room-line",
-					children: [/* @__PURE__ */ L(Dm, { state: "idle" }), /* @__PURE__ */ L("span", { children: "No ghost here yet" })]
+					children: [/* @__PURE__ */ L(km, { state: "idle" }), /* @__PURE__ */ L("span", { children: "No ghost here yet" })]
 				}) : /* @__PURE__ */ L("ul", {
 					className: "hh-ghost-lines",
 					children: a.ghosts.map((e) => /* @__PURE__ */ R("li", {
 						className: "hh-room-line",
-						"data-tone": wm[e.state],
+						"data-tone": Em[e.state],
 						"data-ghost": e.ghostId,
-						children: [/* @__PURE__ */ L(Dm, { state: e.state }), /* @__PURE__ */ R("span", { children: [
+						children: [/* @__PURE__ */ L(km, { state: e.state }), /* @__PURE__ */ R("span", { children: [
 							e.name,
 							": ",
 							e.stateText,
@@ -13230,12 +13315,12 @@ function ph({ detail: e, onSend: t, output: n = null, onRoomSend: r = fh, onOpen
 				children: [/* @__PURE__ */ L("p", {
 					className: "hh-proposal-group",
 					children: "Risky actions"
-				}), e.risky.map((e) => /* @__PURE__ */ L(Mm, {
+				}), e.risky.map((e) => /* @__PURE__ */ L(Pm, {
 					view: e,
 					onSend: t
 				}, e.proposalId))]
 			}),
-			n === null ? null : /* @__PURE__ */ L(dh, {
+			n === null ? null : /* @__PURE__ */ L(ph, {
 				output: n,
 				onSend: r,
 				onOpenSession: i
@@ -13244,13 +13329,13 @@ function ph({ detail: e, onSend: t, output: n = null, onRoomSend: r = fh, onOpen
 	});
 }
 // src/rooms/house/room-house-panel.ts
-var mh = "This room's state has not been read yet.";
+var gh = "This room's state has not been read yet.";
 // src/rooms/drafting-room/DraftingHousePanel.tsx
-function hh({ room: e, detail: t, output: n, onSend: r, onRoomSend: i, onOpenSession: a }) {
-	return /* @__PURE__ */ R(I, { children: [/* @__PURE__ */ L(ym, { room: e }), t === null ? /* @__PURE__ */ L("p", {
+function _h({ room: e, detail: t, output: n, onSend: r, onRoomSend: i, onOpenSession: a }) {
+	return /* @__PURE__ */ R(I, { children: [/* @__PURE__ */ L(xm, { room: e }), t === null ? /* @__PURE__ */ L("p", {
 		className: "hh-ui-reason",
-		children: mh
-	}) : /* @__PURE__ */ L(ph, {
+		children: gh
+	}) : /* @__PURE__ */ L(hh, {
 		detail: t,
 		output: n,
 		onSend: r,
@@ -13259,10 +13344,10 @@ function hh({ room: e, detail: t, output: n, onSend: r, onRoomSend: i, onOpenSes
 	})] });
 }
 // src/rooms/foyer/ActiveMansionFoyerPanel.tsx
-var gh = "Escape also returns to the Foyer when no room is open.";
-function _h({ room: t, mansion: n, onReturn: r }) {
+var vh = "Escape also returns to the Foyer when no room is open.";
+function yh({ room: t, mansion: n, onReturn: r }) {
 	return /* @__PURE__ */ R(I, { children: [
-		/* @__PURE__ */ L(ym, { room: t }),
+		/* @__PURE__ */ L(xm, { room: t }),
 		/* @__PURE__ */ R("dl", {
 			className: "hh-shell-facts",
 			"data-active-mansion": n.name,
@@ -13287,13 +13372,13 @@ function _h({ room: t, mansion: n, onReturn: r }) {
 				}), "Return to Foyer"]
 			}), /* @__PURE__ */ L("span", {
 				className: "hh-foyer-hint",
-				children: gh
+				children: vh
 			})]
 		})
 	] });
 }
 // src/rooms/seance-room/LockedSeancePanel.tsx
-function vh() {
+function bh() {
 	return /* @__PURE__ */ R("p", {
 		className: "hh-ui-note",
 		"data-kind": "locked",
@@ -13305,7 +13390,7 @@ function vh() {
 	});
 }
 // src/rooms/seance-room/SeanceRoomPanel.tsx
-function yh({ status: e }) {
+function xh({ status: e }) {
 	let t = {
 		size: 16,
 		"aria-hidden": !0
@@ -13320,7 +13405,7 @@ function yh({ status: e }) {
 		case "blocked": return /* @__PURE__ */ L(v, { ...t });
 	}
 }
-function bh({ view: e, onOpenSession: t }) {
+function Sh({ view: e, onOpenSession: t }) {
 	return /* @__PURE__ */ R("div", {
 		className: "hh-room-panel",
 		"data-review": e.status,
@@ -13331,7 +13416,7 @@ function bh({ view: e, onOpenSession: t }) {
 					className: "hh-room-line",
 					"data-tone": e.status === "pass" ? "ok" : e.status === "reviewing" ? "plain" : "attention",
 					"data-verdict": !0,
-					children: [/* @__PURE__ */ L(yh, { status: e.status }), /* @__PURE__ */ R("span", { children: [
+					children: [/* @__PURE__ */ L(xh, { status: e.status }), /* @__PURE__ */ R("span", { children: [
 						e.statusText,
 						". ",
 						e.cycleText,
@@ -13392,13 +13477,13 @@ function bh({ view: e, onOpenSession: t }) {
 			className: "hh-phase",
 			children: [/* @__PURE__ */ R("p", {
 				className: "hh-room-line",
-				"data-tone": e.state === null ? "plain" : wm[e.state],
-				children: [/* @__PURE__ */ L(Dm, { state: e.state ?? "idle" }), /* @__PURE__ */ R("span", { children: [
+				"data-tone": e.state === null ? "plain" : Em[e.state],
+				children: [/* @__PURE__ */ L(km, { state: e.state ?? "idle" }), /* @__PURE__ */ R("span", { children: [
 					e.ghostName,
 					": ",
 					e.stateText
 				] })]
-			}), /* @__PURE__ */ L(rh, {
+			}), /* @__PURE__ */ L(ah, {
 				view: e.sessionLink,
 				onOpen: t
 			})]
@@ -13406,23 +13491,23 @@ function bh({ view: e, onOpenSession: t }) {
 	});
 }
 // src/rooms/seance-room/SeanceHousePanel.tsx
-var xh = "No review yet. The Medium reviews only when the house asks it to.";
-function Sh({ room: e, review: t, onOpenSession: n }) {
-	return /* @__PURE__ */ R(I, { children: [/* @__PURE__ */ L(ym, { room: e }), t === null ? /* @__PURE__ */ L("p", {
+var Ch = "No review yet. The Medium reviews only when the house asks it to.";
+function wh({ room: e, review: t, onOpenSession: n }) {
+	return /* @__PURE__ */ R(I, { children: [/* @__PURE__ */ L(xm, { room: e }), t === null ? /* @__PURE__ */ L("p", {
 		className: "hh-ui-reason",
 		"data-seance": "empty",
-		children: xh
-	}) : /* @__PURE__ */ L(bh, {
+		children: Ch
+	}) : /* @__PURE__ */ L(Sh, {
 		view: t,
 		onOpenSession: n
 	})] });
 }
 // src/rooms/study/StudyHousePanel.tsx
-function Ch({ room: e, detail: t, output: n, onSend: r, onRoomSend: i, onOpenSession: a }) {
-	return /* @__PURE__ */ R(I, { children: [/* @__PURE__ */ L(ym, { room: e }), t === null ? /* @__PURE__ */ L("p", {
+function Th({ room: e, detail: t, output: n, onSend: r, onRoomSend: i, onOpenSession: a }) {
+	return /* @__PURE__ */ R(I, { children: [/* @__PURE__ */ L(xm, { room: e }), t === null ? /* @__PURE__ */ L("p", {
 		className: "hh-ui-reason",
-		children: mh
-	}) : /* @__PURE__ */ L(ph, {
+		children: gh
+	}) : /* @__PURE__ */ L(hh, {
 		detail: t,
 		output: n,
 		onSend: r,
@@ -13431,11 +13516,11 @@ function Ch({ room: e, detail: t, output: n, onSend: r, onRoomSend: i, onOpenSes
 	})] });
 }
 // src/rooms/workshop/WorkshopHousePanel.tsx
-function wh({ room: e, detail: t, output: n, onSend: r, onRoomSend: i, onOpenSession: a }) {
-	return /* @__PURE__ */ R(I, { children: [/* @__PURE__ */ L(ym, { room: e }), t === null ? /* @__PURE__ */ L("p", {
+function Eh({ room: e, detail: t, output: n, onSend: r, onRoomSend: i, onOpenSession: a }) {
+	return /* @__PURE__ */ R(I, { children: [/* @__PURE__ */ L(xm, { room: e }), t === null ? /* @__PURE__ */ L("p", {
 		className: "hh-ui-reason",
-		children: mh
-	}) : /* @__PURE__ */ L(ph, {
+		children: gh
+	}) : /* @__PURE__ */ L(hh, {
 		detail: t,
 		output: n,
 		onSend: r,
@@ -13444,12 +13529,12 @@ function wh({ room: e, detail: t, output: n, onSend: r, onRoomSend: i, onOpenSes
 	})] });
 }
 // src/rooms/house/DoorSurface.tsx
-function Th({ room: e, door: t, decision: n, onSend: r, onOpenRoom: i }) {
+function Dh({ room: e, door: t, decision: n, onSend: r, onOpenRoom: i }) {
 	return /* @__PURE__ */ R("div", {
 		className: "hh-door-surface",
 		"data-door-surface": t.phase,
 		children: [
-			/* @__PURE__ */ L(ym, { room: e }),
+			/* @__PURE__ */ L(xm, { room: e }),
 			/* @__PURE__ */ R("p", {
 				className: "hh-ui-state",
 				"data-door": t.state,
@@ -13466,7 +13551,7 @@ function Th({ room: e, door: t, decision: n, onSend: r, onOpenRoom: i }) {
 				className: "hh-ui-reason",
 				children: t.phaseText
 			}),
-			n === null ? null : /* @__PURE__ */ L(xm, {
+			n === null ? null : /* @__PURE__ */ L(Cm, {
 				view: n,
 				onSend: r
 			}),
@@ -13494,7 +13579,7 @@ function Th({ room: e, door: t, decision: n, onSend: r, onOpenRoom: i }) {
 	});
 }
 // src/rooms/house/GhostSurface.tsx
-function Eh({ room: e, ghost: t, onOpenRoom: n }) {
+function Oh({ room: e, ghost: t, onOpenRoom: n }) {
 	return /* @__PURE__ */ R("div", {
 		className: "hh-ghost-surface",
 		"data-ghost-surface": t.ghostId,
@@ -13551,8 +13636,8 @@ function Eh({ room: e, ghost: t, onOpenRoom: n }) {
 	});
 }
 // src/rooms/house/panel-styles.ts
-var Dh = "\n.hh-room-panel h5, .hh-proposal h5, .hh-artifact h5 { font-size: 0.875rem; margin: 0; overflow-wrap: anywhere; }\n[data-surface] .hh-button { display: inline-flex; align-items: center; gap: 6px; font: inherit; cursor: pointer; min-width: 0;\n  max-width: 100%; text-align: left; color: var(--hh-text); background: var(--hh-surface-raised);\n  border: 1px solid var(--hh-border); border-radius: 6px; padding: 6px 12px; overflow-wrap: anywhere; }\n[data-surface] .hh-button-primary { color: var(--hh-primary-text); background: var(--hh-primary); }\n[data-surface] .hh-button:focus-visible { outline: 2px solid var(--hh-focus); outline-offset: 2px; }\n[data-surface] .hh-button[aria-disabled='true'] { cursor: not-allowed; border-style: dashed; color: var(--hh-text-muted);\n  background: var(--hh-surface); }\n[data-surface] .hh-button-reject { border-style: double; border-width: 3px; padding: 4px 10px; }\n[data-surface] .hh-button-reject[aria-disabled='true'] { border-style: dashed; border-width: 1px; padding: 6px 12px; }\n\n.hh-room-panel { display: grid; gap: 12px; min-width: 0; }\n.hh-room-line { display: flex; align-items: flex-start; gap: 6px; font-size: 0.875rem; overflow-wrap: anywhere; margin: 0; }\n.hh-room-line svg { flex: none; margin-top: 2px; color: var(--hh-text-muted); }\n.hh-room-line[data-tone='ok'] svg { color: var(--hh-ok); }\n.hh-room-line[data-tone='attention'] svg { color: var(--hh-accent); }\n.hh-house-note { display: flex; align-items: flex-start; gap: 6px; margin: 0; overflow-wrap: anywhere; }\n.hh-house-note svg { flex: none; margin-top: 2px; }\n.hh-house-muted { color: var(--hh-text-muted); }\n.hh-phase { display: grid; gap: 6px; border-top: 1px solid var(--hh-border-soft); padding-top: 10px; min-width: 0; }\n.hh-facts { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 12px; margin: 0; font-size: 0.875rem; }\n.hh-facts dt { color: var(--hh-text-muted); }\n.hh-facts dd { margin: 0; overflow-wrap: anywhere; min-width: 0; }\n.hh-facts code, .hh-proposal code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n  font-size: 0.8125rem; overflow-wrap: anywhere; }\n.hh-ghost-lines { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }\n.hh-ghost-surface, .hh-door-surface { display: grid; gap: 10px; min-width: 0; }\n.hh-ghost-surface p, .hh-door-surface p { margin: 0; }\n.hh-shell-facts { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 12px; margin: 0; }\n.hh-shell-facts dt { font-weight: 600; }\n.hh-shell-facts dd { margin: 0; overflow-wrap: anywhere; min-width: 0; }\n\n.hh-proposal { border: 1px solid var(--hh-border-soft); border-left: 4px solid var(--hh-border);\n  border-radius: 6px; padding: 10px 12px; display: grid; gap: 8px; min-width: 0; }\n.hh-proposal:focus-visible { outline: 2px solid var(--hh-focus); outline-offset: 2px; }\n.hh-proposal[data-state='pending'] { border-left-style: double; border-left-width: 6px; }\n.hh-proposal[data-blocked='true'] { border-style: dashed; border-left-style: dashed; }\n.hh-proposal-head { display: flex; align-items: flex-start; gap: 6px; }\n.hh-proposal-head svg { flex: none; margin-top: 2px; color: var(--hh-accent); }\n.hh-proposal-sub { font-size: 0.875rem; margin: 0; }\n.hh-proposal-group { font-size: 0.8125rem; font-weight: 600; margin: 4px 0 0; color: var(--hh-text-muted); }\n.hh-proposal-note { display: flex; align-items: flex-start; gap: 6px; margin: 0; font-size: 0.875rem; overflow-wrap: anywhere; }\n.hh-proposal-note svg { flex: none; margin-top: 2px; }\n.hh-proposal-blocked svg { color: var(--hh-accent); }\n.hh-proposal-outcome[data-outcome='approved'] svg { color: var(--hh-ok); }\n.hh-decide { display: flex; flex-wrap: wrap; gap: 8px; min-width: 0; }\n\n@keyframes hh-house-spin { to { transform: rotate(360deg); } }\n@media (prefers-reduced-motion: no-preference) {\n  [data-motion='low-frequency'] .hh-spin { animation: hh-house-spin 2s linear infinite; }\n}\n", Oh = "locked", kh = "The recording is paused at its start. Press Play to watch the house fill, or open the Attic to step through it.", Ah = "This is a recording. Nothing can be started, approved or rejected here.", jh = Dh + Rp;
-function Mh({ mansion: e, onReturn: t, announcement: n = "", status: r, ghostNames: i, seanceRoom: a = Oh, panelMode: o, replayScheduler: s, now: c }) {
+var kh = "\n.hh-room-panel h5, .hh-proposal h5, .hh-artifact h5 { font-size: 0.875rem; margin: 0; overflow-wrap: anywhere; }\n[data-surface] .hh-button { display: inline-flex; align-items: center; gap: 6px; font: inherit; cursor: pointer; min-width: 0;\n  max-width: 100%; text-align: left; color: var(--hh-text); background: var(--hh-surface-raised);\n  border: 1px solid var(--hh-border); border-radius: 6px; padding: 6px 12px; overflow-wrap: anywhere; }\n[data-surface] .hh-button-primary { color: var(--hh-primary-text); background: var(--hh-primary); }\n[data-surface] .hh-button:focus-visible { outline: 2px solid var(--hh-focus); outline-offset: 2px; }\n[data-surface] .hh-button[aria-disabled='true'] { cursor: not-allowed; border-style: dashed; color: var(--hh-text-muted);\n  background: var(--hh-surface); }\n[data-surface] .hh-button-reject { border-style: double; border-width: 3px; padding: 4px 10px; }\n[data-surface] .hh-button-reject[aria-disabled='true'] { border-style: dashed; border-width: 1px; padding: 6px 12px; }\n\n.hh-room-panel { display: grid; gap: 12px; min-width: 0; }\n.hh-room-line { display: flex; align-items: flex-start; gap: 6px; font-size: 0.875rem; overflow-wrap: anywhere; margin: 0; }\n.hh-room-line svg { flex: none; margin-top: 2px; color: var(--hh-text-muted); }\n.hh-room-line[data-tone='ok'] svg { color: var(--hh-ok); }\n.hh-room-line[data-tone='attention'] svg { color: var(--hh-accent); }\n.hh-house-note { display: flex; align-items: flex-start; gap: 6px; margin: 0; overflow-wrap: anywhere; }\n.hh-house-note svg { flex: none; margin-top: 2px; }\n.hh-house-muted { color: var(--hh-text-muted); }\n.hh-phase { display: grid; gap: 6px; border-top: 1px solid var(--hh-border-soft); padding-top: 10px; min-width: 0; }\n.hh-facts { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 12px; margin: 0; font-size: 0.875rem; }\n.hh-facts dt { color: var(--hh-text-muted); }\n.hh-facts dd { margin: 0; overflow-wrap: anywhere; min-width: 0; }\n.hh-facts code, .hh-proposal code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n  font-size: 0.8125rem; overflow-wrap: anywhere; }\n.hh-ghost-lines { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }\n.hh-ghost-surface, .hh-door-surface { display: grid; gap: 10px; min-width: 0; }\n.hh-ghost-surface p, .hh-door-surface p { margin: 0; }\n.hh-shell-facts { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 12px; margin: 0; }\n.hh-shell-facts dt { font-weight: 600; }\n.hh-shell-facts dd { margin: 0; overflow-wrap: anywhere; min-width: 0; }\n\n.hh-proposal { border: 1px solid var(--hh-border-soft); border-left: 4px solid var(--hh-border);\n  border-radius: 6px; padding: 10px 12px; display: grid; gap: 8px; min-width: 0; }\n.hh-proposal:focus-visible { outline: 2px solid var(--hh-focus); outline-offset: 2px; }\n.hh-proposal[data-state='pending'] { border-left-style: double; border-left-width: 6px; }\n.hh-proposal[data-blocked='true'] { border-style: dashed; border-left-style: dashed; }\n.hh-proposal-head { display: flex; align-items: flex-start; gap: 6px; }\n.hh-proposal-head svg { flex: none; margin-top: 2px; color: var(--hh-accent); }\n.hh-proposal-sub { font-size: 0.875rem; margin: 0; }\n.hh-proposal-group { font-size: 0.8125rem; font-weight: 600; margin: 4px 0 0; color: var(--hh-text-muted); }\n.hh-proposal-note { display: flex; align-items: flex-start; gap: 6px; margin: 0; font-size: 0.875rem; overflow-wrap: anywhere; }\n.hh-proposal-note svg { flex: none; margin-top: 2px; }\n.hh-proposal-blocked svg { color: var(--hh-accent); }\n.hh-proposal-outcome[data-outcome='approved'] svg { color: var(--hh-ok); }\n.hh-decide { display: flex; flex-wrap: wrap; gap: 8px; min-width: 0; }\n\n@keyframes hh-house-spin { to { transform: rotate(360deg); } }\n@media (prefers-reduced-motion: no-preference) {\n  [data-motion='low-frequency'] .hh-spin { animation: hh-house-spin 2s linear infinite; }\n}\n", Ah = "locked", jh = "The recording is paused at its start. Press Play to watch the house fill, or open the Attic to step through it.", Mh = "This is a recording. Nothing can be started, approved or rejected here.", Nh = kh + Bp;
+function Ph({ mansion: e, onReturn: t, announcement: n = "", status: r, ghostNames: i, seanceRoom: a = Ah, panelMode: o, replayScheduler: s, now: c }) {
 	let [l, u] = F(n);
 	j(() => u(n), [n]);
 	let d = A((e) => u(e), []), f = Kc(e.name, s), p = f.mode, m = cf({
@@ -13563,7 +13648,7 @@ function Mh({ mansion: e, onReturn: t, announcement: n = "", status: r, ghostNam
 		replay: f.upstream,
 		replayed: f.house,
 		onAnnounce: d
-	}), { projection: h } = m, g = hm(f, d, {
+	}), { projection: h } = m, g = _m(f, d, {
 		watch: p === "replay",
 		refresh: !1
 	}), _ = N(() => ({
@@ -13585,7 +13670,7 @@ function Mh({ mansion: e, onReturn: t, announcement: n = "", status: r, ghostNam
 		let o = m.details.get(a.roomId) ?? null, s = m.outputs.get(a.roomId) ?? null;
 		if (i.kind === "ghost") {
 			let e = a.ghosts.find((e) => e.ghostId === i.ghostId);
-			return e === void 0 ? null : /* @__PURE__ */ L(Eh, {
+			return e === void 0 ? null : /* @__PURE__ */ L(Oh, {
 				room: a,
 				ghost: e,
 				onOpenRoom: r.openNested
@@ -13595,7 +13680,7 @@ function Mh({ mansion: e, onReturn: t, announcement: n = "", status: r, ghostNam
 			let e = a.doors.find((e) => e.phase === i.phase);
 			if (e === void 0) return null;
 			let t = o?.phases.find((e) => e.line.phase === i.phase)?.door ?? null;
-			return /* @__PURE__ */ L(Th, {
+			return /* @__PURE__ */ L(Dh, {
 				room: a,
 				door: e,
 				decision: t,
@@ -13612,14 +13697,14 @@ function Mh({ mansion: e, onReturn: t, announcement: n = "", status: r, ghostNam
 			onOpenSession: m.openSession
 		};
 		switch (a.roomId) {
-			case "foyer": return /* @__PURE__ */ L(_h, {
+			case "foyer": return /* @__PURE__ */ L(yh, {
 				room: a,
 				mansion: e,
 				onReturn: t
 			});
-			case "study": return /* @__PURE__ */ L(Ch, { ...c });
-			case "drafting-room": return /* @__PURE__ */ L(hh, { ...c });
-			case "workshop": return /* @__PURE__ */ L(wh, { ...c });
+			case "study": return /* @__PURE__ */ L(Th, { ...c });
+			case "drafting-room": return /* @__PURE__ */ L(_h, { ...c });
+			case "workshop": return /* @__PURE__ */ L(Eh, { ...c });
 			case "attic": return /* @__PURE__ */ R(I, { children: [a.diagnostic === null || a.readOnly && a.integrity === "valid" ? null : /* @__PURE__ */ R("p", {
 				className: "hh-ui-note",
 				"data-kind": "diagnostic",
@@ -13628,13 +13713,13 @@ function Mh({ mansion: e, onReturn: t, announcement: n = "", status: r, ghostNam
 					size: 16,
 					"aria-hidden": !0
 				}), /* @__PURE__ */ L("span", { children: a.diagnostic })]
-			}), /* @__PURE__ */ L(gm, {
+			}), /* @__PURE__ */ L(vm, {
 				replay: f,
 				onAnnounce: d,
 				motion: r.stillHouse ? "none" : "low-frequency",
 				watch: p !== "replay"
 			})] });
-			case "seance-room": return a.locked ? /* @__PURE__ */ L(vh, {}) : /* @__PURE__ */ L(Sh, {
+			case "seance-room": return a.locked ? /* @__PURE__ */ L(bh, {}) : /* @__PURE__ */ L(wh, {
 				room: a,
 				review: m.review,
 				onOpenSession: m.openSession
@@ -13684,27 +13769,27 @@ function Mh({ mansion: e, onReturn: t, announcement: n = "", status: r, ghostNam
 			})
 		]
 	});
-	return /* @__PURE__ */ L(Lp, {
+	return /* @__PURE__ */ L(zp, {
 		projection: h,
 		renderSurface: y,
 		host: _,
 		message: l,
 		status: r,
 		notes: b,
-		banner: p === "replay" ? /* @__PURE__ */ L(vm, {
+		banner: p === "replay" ? /* @__PURE__ */ L(bm, {
 			panel: g,
-			readOnlyText: m.authority.block === "read_only" && m.authority.text !== null ? m.authority.text : Ah,
-			startText: f.state.cursor === 0 ? kh : null
+			readOnlyText: m.authority.block === "read_only" && m.authority.text !== null ? m.authority.text : Mh,
+			startText: f.state.cursor === 0 ? jh : null
 		}) : void 0,
 		busy: m.loading,
 		onReturn: t,
 		panelMode: o,
 		inFlight: m.inFlight,
-		panelStyles: jh
+		panelStyles: Nh
 	});
 }
 // src/App.tsx
-var Nh = {
+var Fh = {
 	denied: {
 		short: "Refused the app token",
 		long: "Gateway refused the app token. Re-enable the app or approve its permissions on the app page."
@@ -13722,10 +13807,10 @@ var Nh = {
 		long: "Gateway settings for this app are missing or not local, so the backend did not call it."
 	}
 };
-function Ph(e) {
+function Ih(e) {
 	return e === void 0 ? "" : ` (HTTP ${e})`;
 }
-function Fh(e) {
+function Lh(e) {
 	switch (e.kind) {
 		case "loading": return {
 			tone: "pending",
@@ -13737,12 +13822,12 @@ function Fh(e) {
 		};
 		case "unreachable": return {
 			tone: "problem",
-			text: `Not reachable${Ph(e.status)}`,
+			text: `Not reachable${Ih(e.status)}`,
 			detail: e.message
 		};
 	}
 }
-function Ih(e) {
+function Rh(e) {
 	switch (e.kind) {
 		case "loading": return {
 			tone: "pending",
@@ -13757,18 +13842,18 @@ function Ih(e) {
 			text: `Version ${e.gateway.version}`
 		} : {
 			tone: "problem",
-			text: Nh[e.gateway.error].short
+			text: Fh[e.gateway.error].short
 		};
 	}
 }
-function Lh(e) {
+function zh(e) {
 	switch (e.kind) {
 		case "loading": return "Checking the backend…";
-		case "unreachable": return `Backend not reachable${Ph(e.status)}`;
-		case "ok": return "version" in e.gateway ? `Backend reachable · Gateway ${e.gateway.version}` : `Backend reachable · ${Nh[e.gateway.error].long}`;
+		case "unreachable": return `Backend not reachable${Ih(e.status)}`;
+		case "ok": return "version" in e.gateway ? `Backend reachable · Gateway ${e.gateway.version}` : `Backend reachable · ${Fh[e.gateway.error].long}`;
 	}
 }
-function Rh({ tone: e }) {
+function Bh({ tone: e }) {
 	let t = {
 		size: 18,
 		"aria-hidden": !0
@@ -13792,12 +13877,12 @@ function Rh({ tone: e }) {
 		});
 	}
 }
-function zh({ name: e, view: t }) {
+function Vh({ name: e, view: t }) {
 	return /* @__PURE__ */ R("li", {
 		className: "hh-row",
 		"data-tone": t.tone,
 		children: [
-			/* @__PURE__ */ L(Rh, { tone: t.tone }),
+			/* @__PURE__ */ L(Bh, { tone: t.tone }),
 			/* @__PURE__ */ L("span", {
 				className: "hh-row-name",
 				children: e
@@ -13813,7 +13898,7 @@ function zh({ name: e, view: t }) {
 		]
 	});
 }
-var Bh = `
+var Hh = `
 .hh-house { ${Bn("light")} ${Wn("light")}
   font-family: var(--font-sans, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
   color: var(--card-fg, var(--text, var(--hh-fb-text))); line-height: 1.45;
@@ -13891,27 +13976,27 @@ var Bh = `
   .hh-icon-pending { animation: hh-spin 2s linear infinite; }
 }
 `;
-function Vh({ state: e }) {
+function Uh({ state: e }) {
 	return /* @__PURE__ */ R("ul", {
 		className: "hh-rows",
 		"aria-label": "Status",
-		children: [/* @__PURE__ */ L(zh, {
+		children: [/* @__PURE__ */ L(Vh, {
 			name: "Backend",
-			view: Fh(e)
-		}), /* @__PURE__ */ L(zh, {
+			view: Lh(e)
+		}), /* @__PURE__ */ L(Vh, {
 			name: "Gateway",
-			view: Ih(e)
+			view: Rh(e)
 		})]
 	});
 }
-function Hh({ landing: e } = {}) {
-	let { state: t, retry: n } = ot(), r = e ?? (wt === null ? void 0 : Kn), [i, a] = F(""), [o, s] = F(null), c = t.kind === "ok", l = c && o !== null, u = A((e, n) => /* @__PURE__ */ L(Mh, {
+function Wh({ landing: e } = {}) {
+	let { state: t, retry: n } = ot(), r = e ?? (wt === null ? void 0 : Kn), [i, a] = F(""), [o, s] = F(null), c = t.kind === "ok", l = c && o !== null, u = A((e, n) => /* @__PURE__ */ L(Ph, {
 		mansion: e,
 		onReturn: n,
 		announcement: i,
-		status: /* @__PURE__ */ R(I, { children: [/* @__PURE__ */ L(Vh, { state: t }), /* @__PURE__ */ L("p", {
+		status: /* @__PURE__ */ R(I, { children: [/* @__PURE__ */ L(Uh, { state: t }), /* @__PURE__ */ L("p", {
 			className: "hh-summary",
-			children: Lh(t)
+			children: zh(t)
 		})] })
 	}), [i, t]);
 	return /* @__PURE__ */ R("main", {
@@ -13919,7 +14004,7 @@ function Hh({ landing: e } = {}) {
 		"aria-labelledby": "hh-status-title",
 		"data-landing": c && !l,
 		children: [
-			/* @__PURE__ */ L("style", { children: Bh + Pn }),
+			/* @__PURE__ */ L("style", { children: Hh + Pn }),
 			c && !l ? /* @__PURE__ */ R(I, { children: [/* @__PURE__ */ L("span", {
 				className: "hh-landing-door",
 				"aria-hidden": "true",
@@ -13941,11 +14026,11 @@ function Hh({ landing: e } = {}) {
 						className: "hh-tagline",
 						children: Gn
 					}) : null,
-					/* @__PURE__ */ L(Vh, { state: t }),
+					/* @__PURE__ */ L(Uh, { state: t }),
 					/* @__PURE__ */ R("p", {
 						className: "hh-summary",
 						"aria-live": "polite",
-						children: [Lh(t), c && i !== "" ? /* @__PURE__ */ R(I, { children: [" ", /* @__PURE__ */ L("span", {
+						children: [zh(t), c && i !== "" ? /* @__PURE__ */ R(I, { children: [" ", /* @__PURE__ */ L("span", {
 							className: "hh-announcement",
 							children: i
 						})] }) : null]
@@ -13974,4 +14059,4 @@ function Hh({ landing: e } = {}) {
 		]
 	});
 }
-export { Hh as default };
+export { Wh as default };

@@ -89,7 +89,7 @@ export const TERMS: readonly Term[] = [
     id: 'revise',
     plain: 'ask for a change',
     kiro: 'revision request',
-    about: ['A revision request is one note to the ghost that wrote the document.', 'It writes a new version, and the door stays shut meanwhile.'],
+    about: ['A revision request is one note that asks the ghost who wrote a document to change it.', 'It writes a new version, and the door stays shut meanwhile.'],
     file: null,
   },
   {
