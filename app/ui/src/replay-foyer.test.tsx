@@ -106,12 +106,14 @@ function markup(container: Element): string {
  * The markup both builds must share for an opened mansion: everything but the
  * mode attribute and what only a recording shows. The replay bar (with the
  * start note and the one read-only sentence) replaces the live build's
- * read-only note. Attributes are compared as a set, so the order React
- * happened to write them in does not count.
+ * read-only note, and the Warden's first choices in a recording are its
+ * playback (the guide's own parity property compares the choices one by one).
+ * Attributes are compared as a set, so the order React happened to write them
+ * in does not count.
  */
 function sharedMarkup(container: Element): string {
   const copy = container.cloneNode(true) as Element
-  copy.querySelectorAll('[data-replay-start], [data-replay-bar], .hh-ui-notes > [data-block="read_only"]').forEach((note) => note.remove())
+  copy.querySelectorAll('[data-replay-start], [data-replay-bar], .hh-ui-notes > [data-block="read_only"], [data-guide-primary]').forEach((note) => note.remove())
   copy.querySelectorAll('[data-mode]').forEach((node) => node.removeAttribute('data-mode'))
   for (const node of [copy, ...Array.from(copy.querySelectorAll('*'))]) {
     const attributes = Array.from(node.attributes, ({ name, value }) => [name, value] as const).sort(([a], [b]) => (a < b ? -1 : 1))

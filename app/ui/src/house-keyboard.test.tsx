@@ -66,7 +66,12 @@ function tabStops(scope: ParentNode): HTMLElement[] {
   )
 }
 
-const label = (element: HTMLElement) => element.getAttribute('aria-label') ?? element.textContent?.trim() ?? ''
+/** The name a control goes by: its aria-label, else the text it is labelled by, else its own text. */
+const label = (element: HTMLElement) => {
+  const named = element.getAttribute('aria-labelledby')
+  const by = named === null ? null : document.getElementById(named)
+  return element.getAttribute('aria-label') ?? by?.textContent?.trim() ?? element.textContent?.trim() ?? ''
+}
 
 beforeEach(() => {
   onReturn.mockReset()
@@ -91,9 +96,18 @@ describe.each(MOTION_MODES)('keyboard with %s', (mode) => {
       mode === 'Still House' ? 'Still house: on' : 'Still house: off',
       'Sound: off',
       'Side view: off',
-      'Go to the Foyer',
-      'Go to the Drafting Room',
+      // The Warden's balloon: the term in his first line, his four choices, the rest, and the way to send him back.
+      'What is “what it must do”?',
+      'Open the door',
+      'Ask for a change',
+      'Close this sheet',
       'See the whole house',
+      'Something else…',
+      'Step back',
+      // The guide's own settings, which stay when he steps back.
+      'House map: closed',
+      "Show Kiro's words: off",
+      'Show me what I can press: off',
       'Exit to the Foyer',
       'Close room',
       'Requirements document text',

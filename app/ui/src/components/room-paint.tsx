@@ -10,6 +10,7 @@
 // Scene Palette through the `hh-p-*` classes of house-stage-styles.ts. There
 // are no outlines: form is carried by lighter and darker shapes.
 import type { ReactNode } from 'react'
+import type { WardenPose } from '../core/house-guide'
 import type { PresentationDoorState, PresentationGhostState, RoomId } from '../core/house-registry'
 import { Svg } from './house-art'
 
@@ -864,7 +865,7 @@ export function DeskPainting() {
 }
 
 // ---------------------------------------------------------------------------
-// Figures: the ghosts of a room, and the Caretaker.
+// Figures: the ghosts of a room.
 
 export const SPECTRE_ROLES = ['plain', 'archivist', 'draughtsman', 'foreman', 'tinker', 'medium'] as const
 export type SpectreRole = (typeof SPECTRE_ROLES)[number]
@@ -982,35 +983,191 @@ export function SpectreArt({ state, role = 'plain' }: SpectreArtProps) {
   )
 }
 
-/** The Caretaker: an old spectre in a tall hat, carrying a lantern, standing on his plinth. */
-export function CaretakerArt() {
+// ---------------------------------------------------------------------------
+// The Warden: the guide. A tall hooded figure with two lantern eyes, a ring of
+// heavy keys at his hands and a chain trailing from one cuff. He is the
+// house's guardrail drawn as a person: a danger to a ghost that strays, never
+// to the visitor. He does not move on his own; he only changes how he stands.
+//
+// The drawing is 200 by 300, so at the width `core/guide-layout.ts` gives him
+// he is exactly twice as tall as a ghost of the room.
+
+const WARDEN_BODY =
+  'M110 4 C94 10 82 34 80 62 C80 74 80 82 78 88 C70 92 66 100 66 110 C64 170 62 230 56 288 L66 281 L76 294 L88 282 L100 295 L112 283 L124 295 L136 282 L148 294 L158 282 L166 290 C160 230 158 170 154 110 C154 100 150 92 142 88 C140 82 140 74 140 62 C138 34 126 10 110 4 Z'
+/** The side turned from the light. */
+const WARDEN_SHADE =
+  'M110 4 C126 10 138 34 140 62 C140 74 140 82 142 88 C150 92 154 100 154 110 C158 170 160 230 166 290 L158 282 L148 294 L136 282 L124 295 L118 289 C122 230 124 170 122 116 C120 80 116 40 110 4 Z'
+/** The edge the moon catches. */
+const WARDEN_RIM = 'M110 4 C94 10 82 34 80 62 C80 74 80 82 78 88 C70 92 66 100 66 110 C64 170 62 230 56 288 L62 284 C67 230 69 170 71 112 C71 104 75 97 83 93 C85 86 85 76 85 64 C87 38 97 16 110 4 Z'
+/** The dark inside the hood. */
+const WARDEN_VOID = 'M110 22 C98 26 89 42 89 62 C89 78 98 88 110 88 C122 88 131 78 131 62 C131 42 122 26 110 22 Z'
+
+type Link = readonly [x: number, y: number, turn: number]
+
+/** The chain that hangs from his right cuff and trails along the floor. */
+const WARDEN_CHAIN: readonly Link[] = [
+  [144, 196, 8],
+  [146, 211, -8],
+  [148, 226, 8],
+  [150, 241, -8],
+  [152, 256, 8],
+  [155, 270, -14],
+  [163, 282, -52],
+  [176, 289, -80],
+  [190, 291, -90],
+]
+
+function Links({ at }: { at: readonly Link[] }) {
   return (
-    <Svg viewBox="-40 -50 190 250" className="hh-paint hh-paint-caretaker">
+    <>
+      {at.map(([x, y, turn]) => (
+        <ellipse key={`${x}-${y}`} className={ps('chain')} cx={x} cy={y} rx={4} ry={8.5} strokeWidth={3} transform={`rotate(${turn} ${x} ${y})`} />
+      ))}
+    </>
+  )
+}
+
+/** One key of the ring, hanging from (110, 221) and turned by `turn` degrees. */
+function HangingKey({ turn }: { turn: number }) {
+  return (
+    <g transform={`rotate(${turn} 110 221)`}>
+      <circle className={ps('brass')} cx={110} cy={226} r={4.5} strokeWidth={3} />
+      <rect className={p('brass')} x={108} y={231} width={4} height={34} />
+      <rect className={p('brass')} x={112} y={252} width={8} height={4} />
+      <rect className={p('brass')} x={112} y={259} width={6} height={4} />
+      <rect className={p('brass-d')} x={108} y={231} width={1.5} height={34} />
+    </g>
+  )
+}
+
+/** The ring of keys he keeps at his hands: the visitor's approvals. */
+function KeyRing({ keys = 3 }: { keys?: number }) {
+  return (
+    <g>
+      {[-26, 0, 24].slice(0, keys).map((turn) => (
+        <HangingKey key={turn} turn={turn} />
+      ))}
+      <circle className={ps('brass-d')} cx={110} cy={206} r={17.5} strokeWidth={1.5} />
+      <circle className={ps('brass')} cx={110} cy={206} r={15} strokeWidth={4.5} />
+    </g>
+  )
+}
+
+/** The right sleeve, which comes to the middle and holds the ring in every standing pose. */
+function RingArm() {
+  return (
+    <g>
+      <path className={p('robe')} d="M152 106 C154 140 148 170 134 196 C126 190 118 184 110 180 L110 168 C124 150 134 128 138 102 Z" />
+      <ellipse className={p('hood')} cx={112} cy={180} rx={9} ry={7} />
+      <path className={p('bone')} d="M105 185 q5 5 12 0 l0 5 q-7 5 -12 0 Z" />
+    </g>
+  )
+}
+
+/** The arms, which are the whole difference between the standing poses. */
+const WARDEN_ARMS: Readonly<Record<Exclude<WardenPose, 'stepped-back'>, ReactNode>> = {
+  // Both hands on the ring of keys.
+  watching: (
+    <g>
+      <KeyRing />
+      <RingArm />
+      <path className={p('robe-l')} d="M68 106 C66 140 72 170 86 196 C94 190 102 184 110 180 L110 168 C96 150 86 128 82 102 Z" />
+      <path className={p('robe-rim')} d="M68 106 C66 140 72 170 86 196 L90 193 C78 168 73 140 74 108 Z" />
+      <ellipse className={p('hood')} cx={108} cy={180} rx={9} ry={7} />
+      <path className={p('bone')} d="M103 185 q5 5 12 0 l0 5 q-7 5 -12 0 Z" />
+    </g>
+  ),
+  // One arm out toward the room.
+  pointing: (
+    <g>
+      <KeyRing />
+      <RingArm />
+      <path className={p('robe-l')} d="M80 100 L16 118 L18 134 C34 142 50 158 58 178 C68 162 76 144 82 128 Z" />
+      <path className={p('robe-rim')} d="M80 100 L16 118 L17 124 L80 108 Z" />
+      <ellipse className={p('hood')} cx={18} cy={126} rx={4} ry={8} />
+      <path className={p('bone')} d="M19 120 L1 123 L1 127 L10 128 L10 133 L19 134 Z" />
+    </g>
+  ),
+  // One key held out on the open hand.
+  'offering-key': (
+    <g>
+      <KeyRing keys={2} />
+      <RingArm />
+      <circle className={p('lamp-glow')} cx={24} cy={152} r={38} />
+      <circle className={p('moon-halo')} cx={24} cy={152} r={24} />
+      <path className={p('robe-l')} d="M80 102 C58 112 36 132 26 156 L30 172 C44 176 60 172 72 160 C78 146 82 132 84 122 Z" />
+      <path className={p('robe-rim')} d="M80 102 C58 112 36 132 26 156 L28 162 C38 138 58 120 80 110 Z" />
+      <ellipse className={p('hood')} cx={29} cy={164} rx={5} ry={9} transform="rotate(-20 29 164)" />
+      <path className={p('bone')} d="M4 163 L28 159 L30 167 L6 173 Z" />
+      <g transform="rotate(-9 22 152)">
+        <rect className={p('brass')} x={0} y={150} width={38} height={5} />
+        <rect className={p('brass')} x={0} y={155} width={5} height={9} />
+        <rect className={p('brass')} x={8} y={155} width={4} height={6} />
+        <rect className={p('brass-l')} x={2} y={151} width={34} height={1.5} />
+        <circle className={ps('brass')} cx={45} cy={152.5} r={8} strokeWidth={4.5} />
+      </g>
+    </g>
+  ),
+  // The chain drawn tight around a small ghost at his side.
+  holding: (
+    <g>
+      <KeyRing />
+      <RingArm />
+      <path className={p('ghost')} d="M26 208 C12 208 5 221 5 236 C5 250 8 258 6 270 C10 266 14 272 18 267 C21 273 25 266 29 270 C34 274 42 272 48 264 C41 266 39 260 41 252 C43 243 46 238 46 234 C46 220 39 208 26 208 Z" />
+      <path className={p('ghost-d')} d="M26 208 C39 208 46 220 46 234 C46 238 43 243 41 252 C39 260 41 266 48 264 C42 272 34 274 29 270 C32 262 36 250 36 234 C36 222 32 212 26 208 Z" />
+      <ellipse className={p('ink')} cx={18} cy={230} rx={3} ry={4.5} />
+      <ellipse className={p('ink')} cx={30} cy={230} rx={3} ry={4.5} />
+      <ellipse className={p('ink')} cx={24} cy={241} rx={2.5} ry={3} />
+      <path className={p('robe-l')} d="M80 102 C68 120 56 150 50 182 L64 190 C73 170 80 146 86 126 Z" />
+      <path className={p('robe-rim')} d="M80 102 C68 120 56 150 50 182 L55 185 C60 154 70 126 84 108 Z" />
+      <circle className={p('bone')} cx={56} cy={190} r={6} />
+      <Links
+        at={[
+          [52, 201, 28],
+          [44, 211, 46],
+          [9, 251, 72],
+          [20, 254, 94],
+          [31, 254, 86],
+          [42, 250, 108],
+        ]}
+      />
+    </g>
+  ),
+}
+
+export interface WardenArtProps {
+  readonly pose: WardenPose
+}
+
+/** The Warden, standing as the moment asks. Decoration: the words beside him say the same thing. */
+export function WardenArt({ pose }: WardenArtProps) {
+  const away = pose === 'stepped-back'
+  return (
+    <Svg viewBox="0 0 200 300" className="hh-paint hh-paint-warden" data={{ 'data-pose': pose }}>
       <g stroke="none">
-        <circle className={p('lamp-glow')} cx={-4} cy={70} r={46} />
-        <ellipse className={p('ecto-glow')} cx={52} cy={70} rx={76} ry={92} />
-        <path className={p('ghost')} d={SPECTRE_BODY} />
-        <path className={p('ghost-d')} d={SPECTRE_SHADE} />
-        {/* Hat. */}
-        <rect className={p('ink')} x={22} y={-36} width={56} height={40} />
-        <rect className={p('ink')} x={8} y={2} width={84} height={9} />
-        <rect className={p('cloth')} x={22} y={-8} width={56} height={9} />
-        {/* Face, a moustache and a bow tie. */}
-        <ellipse className={p('ink')} cx={38} cy={42} rx={6} ry={8} />
-        <ellipse className={p('ink')} cx={62} cy={42} rx={6} ry={8} />
-        <path className={p('bone-d')} d="M50 56 q-10 -6 -22 4 q12 4 22 0 q10 4 22 0 q-12 -10 -22 -4 Z" />
-        <path className={p('cloth')} d="M50 80 l-18 -9 v18 Z M50 80 l18 -9 v18 Z" />
-        <circle className={p('cloth-d')} cx={50} cy={80} r={4} />
-        {/* The arm and its lantern. */}
-        <path className={p('ghost')} d="M18 78 L2 60 l7 -5 L26 72 Z" />
-        <path className={p('brass-d')} d="M-14 46 h22 v7 h-22 Z M-12 53 h18 v30 h-18 Z M-14 83 h22 v6 h-22 Z" />
-        <rect className={p('lamp')} x={-8} y={57} width={10} height={22} />
-        <path className={p('moon')} d="M-3 60 q4 8 0 15 q-4 -7 0 -15 Z" />
-        <path className={p('brass-d')} d="M-8 46 q5 -12 10 0 h-3 q-2 -6 -4 0 Z" />
-        {/* The plinth. */}
-        <path className={p('wood-d')} d="M-6 138 h112 v14 h-10 v32 h-92 v-32 h-10 Z" />
-        <rect className={p('wood-l')} x={-6} y={138} width={112} height={4} />
-        <rect className={p('wood-dd')} x={4} y={152} width={92} height={5} />
+        <ellipse className={p('shade')} cx={110} cy={291} rx={62} ry={6} />
+        {/* Stepped back: turned away, smaller and dimmer, hands out of sight. */}
+        <g transform={away ? 'translate(110 292) scale(0.84) translate(-110 -292)' : undefined} opacity={away ? 0.6 : 1}>
+          <path className={p('robe')} d={WARDEN_BODY} />
+          <path className={p('robe-d')} d={WARDEN_SHADE} />
+          <path className={p('robe-rim')} d={WARDEN_RIM} />
+          <path className={p('robe-d')} opacity={0.55} d="M84 196 C82 226 80 258 76 290 L82 286 C86 258 88 226 89 198 Z M100 204 C100 234 100 262 98 291 L103 288 C105 262 105 234 104 206 Z" />
+          <Links at={WARDEN_CHAIN} />
+          {away ? (
+            <path className={p('robe-d')} d="M110 8 C107 60 106 130 107 286 L113 286 C114 130 113 60 110 8 Z" />
+          ) : (
+            <>
+              <path className={p('hood')} d={WARDEN_VOID} />
+              <circle className={p('lamp-glow')} cx={100} cy={57} r={13} />
+              <circle className={p('lamp-glow')} cx={120} cy={57} r={13} />
+              <path className={p('lamp')} d="M93 52 L108 58 L106 62.5 L94 57.5 Z M127 52 L112 58 L114 62.5 L126 57.5 Z" />
+              <path className={p('moon')} d="M97 55 L106 58.6 L105 60.3 L98 57.4 Z M123 55 L114 58.6 L115 60.3 L122 57.4 Z" />
+              {WARDEN_ARMS[pose]}
+            </>
+          )}
+        </g>
+        <ellipse className={p('ghost-faint')} cx={84} cy={293} rx={26} ry={4.5} />
+        <ellipse className={p('ghost-faint')} cx={140} cy={294} rx={28} ry={4.5} />
       </g>
     </Svg>
   )

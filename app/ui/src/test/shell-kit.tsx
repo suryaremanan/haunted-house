@@ -114,7 +114,7 @@ export function surfaceBody(recorded: Recorded) {
         )}
         {target.kind === 'room' && target.roomId === 'study' ? (
           <article data-proposal="door-requirements-1" aria-label="Requirements door">
-            <button type="button" onClick={() => recorded.decisions.push(target)}>
+            <button type="button" data-guide-control="approve:door-requirements-1" onClick={() => recorded.decisions.push(target)}>
               Approve
             </button>
           </article>

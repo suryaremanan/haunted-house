@@ -17,6 +17,7 @@
 //   preference, and no loop is shorter than the Motion Policy's 2 seconds.
 // - The same ordered list in every layout: a model with one vanishing point
 //   from 900px, separate small boxes below it.
+import { GUIDE_RESERVE, SCENE_HEIGHT, SCENE_WIDTH, STAGE_GUTTER_PX, STAGE_REM, STRIP_OF_SCENE, WARDEN_WIDTH } from '../core/guide-layout'
 import { MIN_MOTION_CYCLE_SECONDS } from '../core/motion-policy'
 import { sceneCssVariables } from './house-palette'
 import { LINEAR_BREAKPOINT_PX, WIDE_BREAKPOINT_PX } from './house-styles'
@@ -26,6 +27,16 @@ export const TURNED_VIEW_DEGREES = 16
 /** The Door leaf's swing, in seconds. It answers a state change; it does not loop. */
 export const DOOR_SWING_SECONDS = 1.2
 export const STAGE_MIN_LOOP_SECONDS = MIN_MOTION_CYCLE_SECONDS
+
+/** The room's height over its width, and the reverse. */
+const SCENE_H_OF_W = SCENE_HEIGHT / SCENE_WIDTH
+const SCENE_W_OF_H = SCENE_WIDTH / SCENE_HEIGHT
+/** The open sheet and the map sheet start this far in from the room's left edge, in parts of its width. */
+export const SHEET_LEFT = 0.03
+/** The map sheet's width, in parts of the room's: it ends before the Guide Reserve begins. */
+export const MAP_SHEET_WIDTH = 0.8
+/** The open room sheet's width, in parts of the room's. */
+export const ROOM_SHEET_WIDTH = 0.6
 
 const shade = (token: string, percent: number) => `color-mix(in srgb, var(${token}) ${percent}%, black)`
 const tint = (token: string, percent: number) => `color-mix(in srgb, var(${token}) ${percent}%, transparent)`
@@ -195,19 +206,18 @@ export const HOUSE_STAGE_STYLES = `
 .hh-ui-toolbar .hh-ui-status-body { color: var(--hh-text); background: var(--hh-surface); border: 2px solid var(--hh-sc-ink); }
 .hh-ui-needs-list { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
-.hh-stage-room { position: relative; display: grid; min-width: 0; background: var(--hh-sc-poche); }
-.hh-stage-room-title { position: absolute; z-index: 3; left: 12px; bottom: 12px; max-width: 46%; padding: 2px 12px; font-size: 0.9375rem;
+/* The walk-in room, top to bottom: the painted room, the labels of its working things, its name plate, and the apron. */
+.hh-stage-room { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: 'scene' 'labels' 'title' 'apron';
+  min-width: 0; background: var(--hh-sc-poche); }
+.hh-stage-room-title { grid-area: title; justify-self: start; margin: 10px 12px 0; padding: 2px 12px; font-size: 0.9375rem;
   color: var(--hh-sc-ink); background: var(--hh-sc-brass); border: 2px solid var(--hh-sc-ink); border-radius: 4px; }
-.hh-stage-room-scene { position: relative; min-width: 0; width: 100%; aspect-ratio: 1200 / 750; overflow: hidden; background: var(--hh-sc-poche); }
+.hh-stage-room-scene { grid-area: scene; position: relative; min-width: 0; width: 100%; aspect-ratio: ${SCENE_WIDTH} / ${SCENE_HEIGHT}; overflow: hidden; background: var(--hh-sc-poche); }
 .hh-stage-room-scene::after { content: ''; position: absolute; inset: 0; pointer-events: none;
   background: radial-gradient(ellipse at 50% 46%, transparent 52%, ${tint('--hh-sc-ink', 62)} 100%); }
 .hh-stage-spots { position: absolute; inset: 0; pointer-events: none; }
+/* Each spot and figure is placed by the layout table (core/guide-layout.ts), in percent of the room. */
 .hh-stage-spot, .hh-stage-figure { position: absolute; display: block; pointer-events: auto; cursor: pointer; }
 .hh-stage-spot:hover { background: ${tint('--hh-sc-moon', 14)}; outline: 2px solid var(--hh-sc-moon); outline-offset: -2px; border-radius: 4px; }
-.hh-stage-figure { width: 9%; aspect-ratio: 160 / 170; bottom: 27%;
-  left: calc(26% + (var(--hh-i) + 0.5) / var(--hh-n) * 46% - 4.5%); }
-.hh-stage-figure[data-ghost='failed'], .hh-stage-figure[data-ghost='blocked'] { bottom: 21%; }
-.hh-stage-figure[data-ghost='working'] { bottom: 30%; }
 .hh-stage-figure .hh-paint-spectre { filter: drop-shadow(0 0 10px var(--hh-sc-ecto)); }
 .hh-stage-figure[data-ghost='waiting'] .hh-paint-spectre { filter: drop-shadow(0 0 12px var(--hh-sc-lamp)); }
 .hh-stage-figure[data-ghost='failed'] .hh-paint-spectre { filter: drop-shadow(0 0 10px var(--hh-sc-cloth)); }
@@ -219,26 +229,67 @@ export const HOUSE_STAGE_STYLES = `
 .hh-stage-spot[data-spot='door']:hover::after, .hh-stage-spot[data-spot='next']:hover::after { left: auto; right: 0; translate: 0 -4px; }
 .hh-stage-spot[data-spot='previous']:hover::after { left: 0; translate: 0 -4px; }
 
-.hh-stage-guide { display: flex; align-items: flex-end; gap: 8px; min-width: 0; padding: 12px; }
-.hh-stage-balloon { position: relative; flex: 1 1 auto; min-width: 0; display: grid; gap: 5px; padding: 10px 14px 12px; margin-bottom: 30px;
-  color: var(--hh-sc-ink); background: var(--hh-sc-balloon); border: 2px solid var(--hh-sc-ink); border-radius: 10px;
-  box-shadow: 3px 4px 0 ${tint('--hh-sc-ink', 55)}; }
-.hh-stage-balloon::after { content: ''; position: absolute; right: 40px; bottom: -11px; width: 18px; aspect-ratio: 1;
-  background: var(--hh-sc-balloon); border-right: 2px solid var(--hh-sc-ink); border-bottom: 2px solid var(--hh-sc-ink);
-  transform: skewX(18deg) rotate(45deg); }
-.hh-stage-balloon-title { font-family: var(--hh-font-serif); font-weight: 700; font-size: 1.0625rem; line-height: 1.25; }
-.hh-stage-balloon-hint { font-family: var(--hh-font-serif); font-size: 0.875rem; }
-.hh-stage-options { list-style: none; margin: 2px 0 0; padding: 0; display: grid; gap: 1px; min-width: 0; }
-.hh-stage-option { display: flex; align-items: center; gap: 8px; width: 100%; min-width: 0; font: inherit; font-family: var(--hh-font-serif);
-  font-size: 0.9375rem; text-align: left; color: var(--hh-sc-ink); background: transparent; border: 2px solid transparent; border-radius: 999px;
-  padding: 2px 12px 2px 3px; cursor: pointer; overflow-wrap: anywhere; }
-.hh-stage-option:hover { border-color: var(--hh-sc-ink); background: ${tint('--hh-sc-brass', 40)}; }
-.hh-stage-bullet { flex: none; display: inline-grid; place-items: center; width: 1.375rem; aspect-ratio: 1; border-radius: 50%;
-  color: var(--hh-sc-ink); border: 2px solid var(--hh-sc-ink);
+/* The labels of the working things. On a narrow page they are a plain list under the room. */
+.hh-stage-labels { grid-area: labels; list-style: none; margin: 0; padding: 8px 12px 0; display: flex; flex-wrap: wrap; gap: 6px; min-width: 0; }
+.hh-stage-label { font: inherit; font-family: var(--hh-font-serif); font-size: 0.8125rem; font-weight: 700; line-height: 1.25; text-align: left;
+  color: var(--hh-sc-ink); background: var(--hh-sc-balloon); border: 2px solid var(--hh-sc-ink); border-radius: 4px; padding: 2px 10px; cursor: pointer;
+  overflow-wrap: anywhere; }
+.hh-stage-label:hover { background: var(--hh-sc-brass); }
+.hh-stage-label:focus-visible { outline: 3px solid var(--hh-sc-lamp); outline-offset: 2px; }
+
+/* The apron: the Warden's balloon, the guide's settings and the Warden. None of it lies over the room. */
+.hh-stage-apron { grid-area: apron; display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; gap: 8px; padding: 8px 12px 12px; min-width: 0; }
+.hh-guide-balloon { position: relative; display: flex; flex-direction: column; min-width: 0; min-height: 0; color: var(--hh-sc-ink); background: var(--hh-sc-balloon);
+  border: 2px solid var(--hh-sc-ink); border-radius: 10px; box-shadow: 3px 4px 0 ${tint('--hh-sc-ink', 55)}; }
+/* What is true now stays in view. What can be done lies under it, and scrolls where the layout gives the balloon a height. */
+.hh-guide-head, .hh-guide-body { display: grid; gap: 6px; min-width: 0; padding: 0 16px; }
+.hh-guide-head { flex: none; padding-top: 12px; padding-bottom: 6px; }
+.hh-guide-body { flex: 0 1 auto; min-height: 0; padding-bottom: 12px; }
+.hh-guide-head:empty, .hh-guide-body:empty { display: none; }
+.hh-guide-balloon p, .hh-guide-balloon ul, .hh-guide-balloon dl, .hh-guide-balloon dd { margin: 0; }
+.hh-guide-status { font-family: var(--hh-font-serif); font-weight: 700; font-size: 1.125rem; line-height: 1.25; overflow-wrap: anywhere; }
+.hh-guide-status:focus-visible { outline: 3px solid var(--hh-sc-ink); outline-offset: 3px; border-radius: 2px; }
+.hh-guide-terms { display: flex; flex-wrap: wrap; gap: 2px 12px; font-size: 0.8125rem; }
+.hh-guide-term { display: contents; }
+.hh-guide-what { font: inherit; font-family: var(--hh-font-serif); color: var(--hh-sc-ink); background: none; border: 0; padding: 0;
+  text-decoration: underline; cursor: pointer; }
+.hh-guide-what:focus-visible { outline: 3px solid var(--hh-sc-ink); outline-offset: 2px; }
+.hh-guide-about { flex-basis: 100%; font-size: 0.875rem; line-height: 1.35; padding: 4px 8px; border-left: 4px solid var(--hh-sc-ink); }
+.hh-guide-note { font-size: 0.875rem; line-height: 1.35; padding: 4px 8px; border-left: 4px solid var(--hh-sc-ink); background: ${tint('--hh-sc-brass', 30)}; }
+.hh-guide-question { font-family: var(--hh-font-serif); font-size: 0.9375rem; }
+.hh-guide-options { list-style: none; padding: 0; display: grid; gap: 2px 14px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); min-width: 0; }
+.hh-guide-option { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: 8px; width: 100%; min-width: 0; font: inherit;
+  font-family: var(--hh-font-serif); text-align: left; color: var(--hh-sc-ink); background: transparent; border: 2px solid transparent; border-radius: 10px;
+  padding: 3px 10px 3px 4px; cursor: pointer; }
+.hh-guide-option:hover { border-color: var(--hh-sc-ink); background: ${tint('--hh-sc-brass', 40)}; }
+.hh-guide-option:focus-visible { outline: 3px solid var(--hh-sc-ink); outline-offset: 1px; background: ${tint('--hh-sc-brass', 40)}; }
+.hh-guide-bullet { width: 1.25rem; aspect-ratio: 1; margin-top: 1px; border-radius: 50%; border: 2px solid var(--hh-sc-ink);
   background: radial-gradient(circle at 35% 30%, var(--hh-sc-moon), var(--hh-sc-brass) 62%); }
-.hh-stage-option:focus-visible { outline: 3px solid var(--hh-sc-ink); outline-offset: 1px; background: ${tint('--hh-sc-brass', 40)}; }
-.hh-stage-keeper { flex: none; display: grid; justify-items: center; gap: 2px; }
-.hh-stage-caretaker { position: relative; display: block; width: clamp(72px, 13vw, 132px); aspect-ratio: 190 / 250; }
+.hh-guide-option-words { display: grid; min-width: 0; }
+.hh-guide-option-label { font-size: 1rem; font-weight: 700; line-height: 1.25; overflow-wrap: anywhere; }
+.hh-guide-consequence { font-size: 0.8125rem; line-height: 1.3; overflow-wrap: anywhere; }
+.hh-guide-kiro { font-weight: 400; font-style: italic; }
+.hh-guide-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-top: 2px; }
+.hh-guide-foot-button, .hh-stage-setting, .hh-stage-call { display: inline-flex; align-items: center; gap: 4px; font: inherit; font-family: var(--hh-font-serif);
+  font-size: 0.875rem; font-weight: 700; color: var(--hh-sc-ink); background: var(--hh-sc-balloon); border: 2px solid var(--hh-sc-ink); border-radius: 999px;
+  padding: 1px 12px; cursor: pointer; }
+.hh-guide-foot-button:hover, .hh-stage-setting:hover, .hh-stage-call:hover { background: var(--hh-sc-brass); }
+.hh-guide-foot-button:focus-visible { outline: 3px solid var(--hh-sc-ink); outline-offset: 2px; }
+.hh-stage-setting:focus-visible, .hh-stage-call:focus-visible { outline: 3px solid var(--hh-sc-lamp); outline-offset: 2px; }
+.hh-stage-setting[aria-pressed='true'] { background: var(--hh-sc-brass); border-style: double; border-width: 4px; padding: 0 10px; }
+/* The map is always on the page of a narrow layout, so there is nothing to put away there. */
+.hh-stage-setting[data-map-toggle] { display: none; }
+.hh-guide-everything { display: grid; gap: 8px; padding-top: 8px; border-top: 2px dashed var(--hh-sc-ink); min-width: 0; }
+.hh-guide-book-title { font-family: var(--hh-font-serif); font-size: 0.9375rem; font-weight: 700; }
+.hh-guide-book { display: grid; gap: 6px; font-size: 0.8125rem; line-height: 1.35; }
+.hh-guide-book dt { font-weight: 700; }
+.hh-guide-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.hh-stage-settings { display: flex; flex-wrap: wrap; gap: 6px 8px; min-width: 0; }
+
+.hh-stage-keeper { display: flex; align-items: flex-end; gap: 10px; min-width: 0; }
+.hh-stage-caption { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; min-width: 0; }
+.hh-stage-warden { position: relative; display: block; flex: none; width: clamp(56px, 18vw, 96px); aspect-ratio: 200 / 300; }
+.hh-stage-pose { margin: 0; font-family: var(--hh-font-serif); font-size: 0.8125rem; line-height: 1.3; color: var(--hh-sc-balloon); }
 .hh-stage-exit { display: inline-flex; align-items: center; gap: 4px; font: inherit; font-family: var(--hh-font-serif); font-weight: 700;
   font-size: 0.8125rem; color: var(--hh-sc-ecto); background: var(--hh-sc-ink); border: 2px solid var(--hh-sc-ecto); border-radius: 3px;
   padding: 1px 12px; cursor: pointer; }
@@ -289,27 +340,90 @@ export const HOUSE_STAGE_STYLES = `
   .hh-ui-room-control .hh-ui-state[data-field='door'], .hh-ui-room-control .hh-ui-state[data-field='ghost'] {
     position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .hh-ui-view-toggle { display: inline-flex; }
-  .hh-ui { grid-template-columns: minmax(0, 1fr); --hh-stage-w: min(100%, 138vh); }
-  .hh-ui > .hh-ui-behind:first-of-type { grid-area: 1 / 1; display: grid; grid-template-columns: minmax(0, 1fr); justify-items: center; }
-  .hh-ui > .hh-ui-behind:first-of-type > * { width: var(--hh-stage-w); }
+  /* The room is sized as one length (--hh-scene-w), so that it and what stands under it fit one window, and so the
+     Warden and the sheets laid over the room can be sized from it. How much the page has above the room
+     (--hh-scene-top) and how tall the toolbar has wrapped (--hh-toolbar-h) are measured (use-stage-metrics.ts);
+     the values here stand until then. The same lengths are in core/guide-layout.ts (stageFit). */
+  .hh-ui { container-type: inline-size; grid-template-columns: minmax(0, 1fr); justify-items: center; --hh-scene-top: 7rem; --hh-toolbar-h: 3.4rem;
+    --hh-scene-w: min(100cqw, max(${STAGE_REM.sceneMinStacked}rem, calc((100vh - var(--hh-scene-top) - ${STAGE_REM.apron}rem) * ${SCENE_W_OF_H})));
+    --hh-stage-w: var(--hh-scene-w); --hh-scene-h: calc(var(--hh-scene-w) * ${SCENE_H_OF_W}); }
+  .hh-ui[data-mode='replay'] { --hh-scene-top: 14rem; }
+  /* The toolbar, the room and the notes sit on the house's own grid, so the open sheet can share the room's row. */
+  .hh-ui > .hh-ui-behind:first-of-type { display: contents; }
+  .hh-ui > .hh-ui-behind:first-of-type > * { width: var(--hh-stage-w); grid-column: 1; }
   .hh-ui-replay-bar { grid-row: 1; margin: 10px 0; }
-  .hh-stage-room { grid-row: 2; grid-column: 1; }
-  .hh-ui-toolbar { grid-row: 2; grid-column: 1; align-self: start; z-index: 5; }
+  .hh-stage-room { grid-row: 2; }
+  .hh-ui-toolbar { grid-row: 2; align-self: start; z-index: 5; }
   .hh-ui-notes { grid-row: 3; }
-  .hh-stage-guide { position: absolute; z-index: 3; right: 1.2%; bottom: 1.6%; width: min(22rem, 34%); padding: 0;
-    flex-direction: column; align-items: flex-end; gap: 0; }
-  .hh-stage-balloon { flex: none; width: 100%; margin-bottom: 14px; }
-  .hh-ui-panel[data-mode='region'] { grid-area: 1 / 1; align-self: center; justify-self: center; z-index: 4;
-    width: calc(var(--hh-stage-w) * 0.6); max-width: 54rem; translate: calc(var(--hh-stage-w) * -0.17) 0;
-    max-height: min(80vh, 54vw); overflow-y: auto; margin: 0; }
-  .hh-ui > .hh-ui-behind ~ .hh-ui-behind { position: absolute; z-index: 6; left: 50%; top: 3.5rem; translate: -50% 0;
-    width: calc(var(--hh-stage-w) * 0.92); max-height: min(82vh, 56vw); overflow-y: auto; border: 2px solid var(--hh-sc-ink);
-    border-radius: 6px; box-shadow: 0 14px 40px ${tint('--hh-sc-ink', 80)}; }
-  .hh-ui[data-map='closed'] > .hh-ui-behind ~ .hh-ui-behind:not(:focus-within) { width: 1px; height: 1px; padding: 0; border: 0;
+  .hh-ui-announcer { grid-row: 4; }
+  /* The labels lie over the room, each above its object. */
+  .hh-stage-labels { position: absolute; z-index: 2; left: 0; top: 0; width: var(--hh-scene-w); aspect-ratio: ${SCENE_WIDTH} / ${SCENE_HEIGHT}; padding: 0;
+    display: block; pointer-events: none; }
+  .hh-stage-label-place { position: absolute; padding-bottom: 4px; pointer-events: auto; }
+  .hh-stage-label-place[data-anchor='centre'] { translate: -50% 0; }
+  .hh-stage-label { white-space: nowrap; }
+  .hh-stage-setting[data-map-toggle] { display: inline-flex; }
+  /* The Warden stands at the right end of the apron, twice a ghost's height: his width is WARDEN_WIDTH percent of the
+     room's width, at his drawing's proportions. The apron is kept tall enough that he rises into the room only inside
+     the Guide Reserve. */
+  .hh-stage-apron { padding-right: calc(var(--hh-scene-w) * ${(WARDEN_WIDTH + 4) / 100}); min-height: calc(var(--hh-scene-w) * 0.085 + 4.5rem); }
+  .hh-guide-balloon { grid-column: 1; grid-row: 1; align-self: start;
+    max-height: max(15rem, calc(100vh - var(--hh-scene-top) - var(--hh-scene-h) - 6.5rem)); }
+  .hh-guide-body { overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--hh-sc-ink) transparent; }
+  .hh-stage-settings { grid-column: 1; grid-row: 2; align-self: start; }
+  .hh-stage-room[data-quiet='true'] .hh-stage-settings { grid-row: 1; }
+  .hh-guide-balloon::after { content: ''; position: absolute; right: -11px; bottom: 30px; width: 18px; aspect-ratio: 1; background: var(--hh-sc-balloon);
+    border-top: 2px solid var(--hh-sc-ink); border-right: 2px solid var(--hh-sc-ink); transform: rotate(45deg); }
+  .hh-stage-keeper { position: absolute; z-index: 3; right: calc(var(--hh-scene-w) * 0.016); bottom: 8px; width: calc(var(--hh-scene-w) * ${WARDEN_WIDTH / 100});
+    display: grid; justify-items: center; gap: 3px; text-align: center; }
+  .hh-stage-caption { justify-content: center; }
+  .hh-stage-warden { width: 100%; }
+  /* The open sheet and the map of the whole house lie over the left of the room: under the toolbar's tags, however
+     many rows they take, and inside the room, so neither reaches the name plate, the balloon or the Guide Reserve. */
+  .hh-ui-panel[data-mode='region'], .hh-ui > .hh-ui-behind ~ .hh-ui-behind { grid-row: 2; grid-column: 1; align-self: start; justify-self: start;
+    margin: calc(var(--hh-toolbar-h) + 4px) 0 0 calc((100cqw - var(--hh-stage-w)) / 2 + var(--hh-scene-w) * ${SHEET_LEFT});
+    max-height: calc(var(--hh-scene-h) - var(--hh-toolbar-h) - 1rem); min-height: 10rem; overflow-y: auto; }
+  .hh-ui-panel[data-mode='region'] { z-index: 4; width: calc(var(--hh-scene-w) * ${ROOM_SHEET_WIDTH}); max-width: 54rem; }
+  /* The map is laid over the room on request, and put away again. */
+  .hh-ui > .hh-ui-behind ~ .hh-ui-behind { z-index: 6; width: calc(var(--hh-scene-w) * ${MAP_SHEET_WIDTH});
+    border: 2px solid var(--hh-sc-ink); border-radius: 6px; box-shadow: 0 14px 40px ${tint('--hh-sc-ink', 80)}; }
+  .hh-ui[data-map='closed'] > .hh-ui-behind ~ .hh-ui-behind:not(:focus-within) { position: absolute; width: 1px; height: 1px; min-height: 0; margin: -1px; padding: 0; border: 0;
     overflow: hidden; clip-path: inset(50%); }
   .hh-ui-door-control .hh-ui-door-words { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .hh-ui-house[data-view='turned'] { perspective-origin: 30% 44%; }
   .hh-ui-house[data-view='turned'] .hh-ui-rooms, .hh-ui-house[data-view='turned'] .hh-stage-roof-art { transform: rotateY(${TURNED_VIEW_DEGREES}deg); transform-origin: 50% 50%; }
+}
+
+/* A window too short for the balloon to lie under the room: the room takes the height and the Warden's balloon stands
+   beside it. The shell asks for this layout where it gives the larger room (core/guide-layout.ts, stageFit). */
+@media (min-width: ${WIDE_BREAKPOINT_PX}px) {
+  .hh-ui[data-layout='side'] {
+    --hh-fit-w: max(${STAGE_REM.sceneMinSide}rem, min(calc((100vh - var(--hh-scene-top) - ${STAGE_REM.strip}rem) * ${SCENE_W_OF_H}), calc((100vh - var(--hh-scene-top)) / ${SCENE_H_OF_W + STRIP_OF_SCENE})));
+    --hh-guide-w: clamp(${STAGE_REM.guideMin}rem, calc(100cqw - ${STAGE_GUTTER_PX}px - var(--hh-fit-w)), ${STAGE_REM.guideMax}rem);
+    --hh-scene-w: min(calc(100cqw - var(--hh-guide-w) - ${STAGE_GUTTER_PX}px), var(--hh-fit-w));
+    --hh-stage-w: calc(var(--hh-scene-w) + var(--hh-guide-w) + ${STAGE_GUTTER_PX}px); }
+  /* The tags of the toolbar stay over the room; the balloon's column is its own. */
+  .hh-ui[data-layout='side'] > .hh-ui-behind:first-of-type > .hh-ui-toolbar { width: var(--hh-scene-w); justify-self: start; margin-left: calc((100cqw - var(--hh-stage-w)) / 2); }
+  /* Two columns that do not push each other. Left: the room, and under it a strip with the guide's settings. Right:
+     the room's name plate, the balloon and the words beside the Warden. The first two rows are exactly as tall as
+     the room, so a tall balloon grows down past the strip and never opens a gap under the room. The strip and the
+     last row together are tall enough that the Warden, whose head rises into the Guide Reserve, has floor to stand on. */
+  .hh-ui[data-layout='side'] .hh-stage-room { grid-template-columns: var(--hh-scene-w) var(--hh-guide-w); column-gap: ${STAGE_GUTTER_PX}px;
+    grid-template-rows: 2.75rem calc(var(--hh-scene-h) - 2.75rem) minmax(calc(var(--hh-scene-w) * ${STRIP_OF_SCENE} - 2.4rem), auto) auto;
+    grid-template-areas: 'scene title' 'scene balloon' 'settings balloon' '. caption'; }
+  .hh-ui[data-layout='side'] .hh-stage-room-scene { align-self: start; }
+  .hh-ui[data-layout='side'] .hh-stage-room-title { align-self: start; margin: 10px 0 0; }
+  .hh-ui[data-layout='side'] .hh-stage-apron, .hh-ui[data-layout='side'] .hh-stage-keeper { display: contents; }
+  /* The balloon rises from where he stands. It may be as tall as the window has room for; past that it scrolls inside. */
+  .hh-ui[data-layout='side'] .hh-guide-balloon { grid-area: balloon; align-self: end; margin: 0 10px 0 0; max-height: max(12rem, calc(100vh - var(--hh-scene-top) - 6rem)); }
+  .hh-ui[data-layout='side'] .hh-guide-balloon::after { right: auto; left: -11px; bottom: 3.5rem; border-top: 0; border-right: 0; border-left: 2px solid var(--hh-sc-ink);
+    border-bottom: 2px solid var(--hh-sc-ink); }
+  .hh-ui[data-layout='side'] .hh-guide-options { grid-template-columns: minmax(0, 1fr); }
+  .hh-ui[data-layout='side'] .hh-stage-settings { grid-area: settings; align-self: start; margin: 10px calc(var(--hh-scene-w) * ${(WARDEN_WIDTH + 4) / 100}) 8px 12px; }
+  /* He stands in the room's own corner, in front of the right end of the desk: his head at the top of the Guide Reserve. */
+  .hh-ui[data-layout='side'] .hh-stage-warden { position: absolute; z-index: 3; left: calc(var(--hh-scene-w) * ${(100 - WARDEN_WIDTH - 1.2) / 100});
+    top: calc(var(--hh-scene-h) * ${GUIDE_RESERVE.top / 100} + 2px); width: calc(var(--hh-scene-w) * ${WARDEN_WIDTH / 100}); }
+  .hh-ui[data-layout='side'] .hh-stage-caption { grid-area: caption; align-self: end; justify-content: flex-start; margin: 6px 10px 8px 0; }
 }
 
 @keyframes hh-stage-hover { 0%, 100% { translate: 0 0; } 50% { translate: 0 -7px; } }
@@ -325,6 +439,5 @@ export const HOUSE_STAGE_STYLES = `
   .hh-ui[data-motion='low-frequency'] .hh-stage-eyes { animation: hh-stage-breathe 4s ease-in-out infinite; }
   .hh-ui[data-motion='low-frequency'] .hh-stage-mist { animation: hh-stage-breathe 7s ease-in-out infinite; }
   .hh-ui[data-motion='low-frequency'] .hh-stage-figure .hh-paint-spectre { animation: hh-stage-hover 4s ease-in-out infinite; }
-  .hh-ui[data-motion='low-frequency'] .hh-stage-caretaker .hh-paint-caretaker { animation: hh-stage-hover 6s ease-in-out infinite; }
 }
 `

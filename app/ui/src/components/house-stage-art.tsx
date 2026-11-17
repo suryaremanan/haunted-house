@@ -338,12 +338,3 @@ export function StageDeskArt({ item }: { readonly item: DeskItem }) {
   )
 }
 
-/** The Caretaker's stand: a short turned plinth. */
-export function StagePlinthArt() {
-  return (
-    <Svg viewBox="0 0 80 30" className="hh-stage-art hh-stage-plinth-art" preserveAspectRatio="none">
-      <path className={f('wood-dark')} d="M6 4 h68 v8 h-6 v14 h-56 v-14 h-6 z" />
-      <path d="M12 12 h56" strokeWidth={1.5} />
-    </Svg>
-  )
-}

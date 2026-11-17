@@ -68,6 +68,7 @@ function TaskItem({ row, chosen, onToggle, onSend, onOpenSession }: TaskItemProp
         {row.selectable ? (
           <input
             type="checkbox"
+            data-guide-control={`task:${row.taskId}`}
             checked={chosen}
             aria-label={`Select task ${row.taskId}: ${row.title}`}
             onChange={() => onToggle(row.taskId)}
@@ -157,6 +158,7 @@ export function WorkshopTaskBoard({ board, onSend, onOpenSession }: WorkshopTask
           type="button"
           className="hh-button hh-button-primary"
           data-control="start-workshop"
+          data-guide-control="start-workshop"
           aria-disabled={selection.command === null}
           aria-describedby={selection.command === null && startBlocked !== null ? blockedId : undefined}
           onClick={() => {

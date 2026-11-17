@@ -11,13 +11,14 @@ export interface RunRecoveryControlsProps {
   onSend: (command: RoomCommand) => void
 }
 
-function Control({ view, kind, describedBy, onSend }: { view: ControlView; kind: 'cancel' | 'retry'; describedBy: string; onSend: (command: RoomCommand) => void }) {
+function Control({ view, kind, runId, describedBy, onSend }: { view: ControlView; kind: 'cancel' | 'retry'; runId: string; describedBy: string; onSend: (command: RoomCommand) => void }) {
   const command = view.command
   return (
     <button
       type="button"
       className={kind === 'cancel' ? 'hh-button hh-button-reject' : 'hh-button'}
       data-control={kind}
+      data-guide-control={kind === 'retry' ? `retry:${runId}` : undefined}
       aria-disabled={command === null}
       aria-describedby={command === null && view.blockedText !== null ? describedBy : undefined}
       onClick={() => {
@@ -38,8 +39,8 @@ export function RunRecoveryControls({ run, onSend }: RunRecoveryControlsProps) {
     <div className="hh-recovery" data-recovery={run.runId}>
       {run.cancel === null && run.retry === null ? null : (
         <div className="hh-decide" aria-busy={(run.cancel?.busy ?? false) || (run.retry?.busy ?? false)}>
-          {run.cancel === null ? null : <Control view={run.cancel} kind="cancel" describedBy={blockedId} onSend={onSend} />}
-          {run.retry === null ? null : <Control view={run.retry} kind="retry" describedBy={blockedId} onSend={onSend} />}
+          {run.cancel === null ? null : <Control view={run.cancel} kind="cancel" runId={run.runId} describedBy={blockedId} onSend={onSend} />}
+          {run.retry === null ? null : <Control view={run.retry} kind="retry" runId={run.runId} describedBy={blockedId} onSend={onSend} />}
         </div>
       )}
       {blockedText === null ? null : (

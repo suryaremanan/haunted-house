@@ -26,6 +26,7 @@ export function RevisionRequest({ view, onSend }: RevisionRequestProps) {
         <button
           type="button"
           className="hh-button hh-button-quiet"
+          data-guide-control={`revise:${view.phase}`}
           ref={form.toggleRef}
           aria-expanded={form.open}
           aria-controls={form.open ? panelId : undefined}
@@ -56,6 +57,7 @@ export function RevisionRequest({ view, onSend }: RevisionRequestProps) {
           <textarea
             id={fieldId}
             ref={form.fieldRef}
+            data-guide-control={`revise-text:${view.phase}`}
             value={form.text}
             maxLength={view.maxCharacters}
             rows={4}
@@ -83,6 +85,7 @@ export function RevisionRequest({ view, onSend }: RevisionRequestProps) {
             <button
               type="submit"
               className="hh-button hh-button-primary"
+              data-guide-control={`revise-send:${view.phase}`}
               aria-disabled={!view.enabled}
               aria-describedby={view.blockedText === null ? undefined : blockedId}
             >

@@ -6,9 +6,10 @@
 import { CircleCheck, CircleDashed, LoaderCircle, RotateCw, TriangleAlert } from 'lucide-react'
 import { useCallback, useState } from 'react'
 import { REPLAY_RECORDING, useBackendStatus, type BackendStatus, type GatewayErrorKind } from './adapters/sdk'
-import { CaretakerArt, FrontDoorPainting } from './components/room-paint'
+import { FrontDoorPainting, WardenArt } from './components/room-paint'
 import { ROOM_PAINT_STYLES } from './components/room-paint-styles'
 import { paletteCssVariables, sceneCssVariables } from './components/house-palette'
+import { NO_GUIDE_SETTINGS, type GuideSettings } from './components/MansionShell'
 import type { MansionDescriptor } from './core/mansion-api'
 import { REPLAY_LANDING, TAGLINE, type LandingInvitation } from './landing'
 import { Foyer } from './rooms/foyer/Foyer'
@@ -108,6 +109,8 @@ const STYLES = `
   color: var(--card-fg, var(--text, var(--hh-fb-text))); line-height: 1.45;
   display: block; max-width: 76rem; margin: 0 auto; padding: 8px 12px 32px; box-sizing: border-box; }
 @media (prefers-color-scheme: dark) { .hh-house { ${paletteCssVariables('dark')} ${sceneCssVariables('dark')} } }
+/* Inside a mansion the room is sized to the window, so the page keeps little under it. */
+.hh-house:has(.hh-ui) { padding-bottom: 12px; }
 .hh-status { color: var(--card-fg, var(--text, var(--hh-fb-text))); background: var(--card, var(--hh-fb-surface));
   border: 1px solid var(--border, var(--hh-fb-border)); border-radius: 12px; padding: 16px 20px;
   max-width: 48rem; margin: 16px auto 0; font: inherit; }
@@ -167,7 +170,7 @@ const STYLES = `
   color: var(--hh-fb-text); background: var(--hh-sc-balloon); border: 2px solid var(--hh-sc-ink); border-radius: 10px;
   box-shadow: 4px 5px 0 var(--hh-sc-ink); }
 @media (min-width: 900px) {
-  .hh-landing-keeper { display: block; position: fixed; z-index: 1; right: 2.5%; bottom: 2%; width: clamp(96px, 11vw, 170px); aspect-ratio: 190 / 250; }
+  .hh-landing-keeper { display: block; position: fixed; z-index: 1; right: 2.5%; bottom: 2%; width: clamp(96px, 11vw, 170px); aspect-ratio: 200 / 300; }
 }
 @media (max-width: 640px) {
   .hh-status[data-quiet='true'] { grid-template-columns: minmax(0, 1fr); }
@@ -204,6 +207,8 @@ export default function HauntedHouseApp({ landing }: HauntedHouseAppProps = {}) 
   // plain text inside the toolbar's status disclosure.
   const [announcement, setAnnouncement] = useState('')
   const [openMansion, setOpenMansion] = useState<MansionDescriptor | null>(null)
+  // The guide's settings last for the visit: held here so they outlast one Mansion, and written nowhere.
+  const [guideSettings, setGuideSettings] = useState<GuideSettings>(NO_GUIDE_SETTINGS)
   const reachable = state.kind === 'ok'
   const inMansion = reachable && openMansion !== null
   const renderShell = useCallback(
@@ -212,6 +217,7 @@ export default function HauntedHouseApp({ landing }: HauntedHouseAppProps = {}) 
         mansion={mansion}
         onReturn={onReturn}
         announcement={announcement}
+        guide={{ settings: guideSettings, onChange: setGuideSettings }}
         status={
           <>
             <StatusRows state={state} />
@@ -220,7 +226,7 @@ export default function HauntedHouseApp({ landing }: HauntedHouseAppProps = {}) 
         }
       />
     ),
-    [announcement, state],
+    [announcement, guideSettings, state],
   )
   return (
     <main className="hh-house" aria-labelledby="hh-status-title" data-landing={reachable && !inMansion}>
@@ -231,7 +237,7 @@ export default function HauntedHouseApp({ landing }: HauntedHouseAppProps = {}) 
             <FrontDoorPainting />
           </span>
           <span className="hh-landing-keeper" aria-hidden="true">
-            <CaretakerArt />
+            <WardenArt pose="watching" />
           </span>
         </>
       ) : null}

@@ -13,15 +13,18 @@ export interface DecisionButtonsProps {
   subject: string
   /** The id of the text that says why a control is off. */
   describedBy?: string
+  /** The proposal these two controls decide. It names them for the guide (`data-guide-control`); it changes nothing they do. */
+  proposalId?: string
   onSend: (command: WorkflowCommand) => void
 }
 
-export function DecisionButtons({ approve, reject, busy, subject, describedBy, onSend }: DecisionButtonsProps) {
+export function DecisionButtons({ approve, reject, busy, subject, describedBy, proposalId, onSend }: DecisionButtonsProps) {
   return (
     <div className="hh-decide" aria-busy={busy}>
       <button
         type="button"
         className="hh-button hh-button-primary"
+        data-guide-control={proposalId === undefined ? undefined : `approve:${proposalId}`}
         aria-label={`Approve ${subject}`}
         aria-disabled={approve === null}
         aria-describedby={approve === null ? describedBy : undefined}
@@ -35,6 +38,7 @@ export function DecisionButtons({ approve, reject, busy, subject, describedBy, o
       <button
         type="button"
         className="hh-button hh-button-reject"
+        data-guide-control={proposalId === undefined ? undefined : `reject:${proposalId}`}
         aria-label={`Reject ${subject}`}
         aria-disabled={reject === null}
         aria-describedby={reject === null ? describedBy : undefined}

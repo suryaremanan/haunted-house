@@ -9,7 +9,7 @@ import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react
 import { useAtticReplay } from '../../adapters/attic-replay'
 import { useHouseProjection } from '../../adapters/house-projection'
 import type { ReplayScheduler } from '../../adapters/replay-controller'
-import { MansionShell, type SurfaceApi } from '../../components/MansionShell'
+import { MansionShell, type MansionShellProps, type SurfaceApi } from '../../components/MansionShell'
 import type { PanelMode } from '../../components/RoomPanelHost'
 import { ROOM_OUTPUT_STYLES } from '../../components/room-output-styles'
 import type { OpenSurface } from '../../core/house-projection'
@@ -58,6 +58,8 @@ export interface HouseProps {
   replayScheduler?: ReplayScheduler
   /** Milliseconds clock for the interruption window. Defaults to Date.now. */
   now?: () => number
+  /** The guide's settings, held by the page so they last for the visit and not for one Mansion. */
+  guide?: MansionShellProps['guide']
 }
 
 export function House({
@@ -70,6 +72,7 @@ export function House({
   panelMode,
   replayScheduler,
   now,
+  guide,
 }: HouseProps) {
   // The latest thing the Operator asked for and got an answer to. The shell says it once.
   const [message, setMessage] = useState(announcement)
@@ -199,6 +202,7 @@ export function House({
       panelMode={panelMode}
       inFlight={house.inFlight}
       panelStyles={PANEL_STYLES}
+      guide={guide}
     />
   )
 }

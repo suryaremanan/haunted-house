@@ -1,76 +1,105 @@
-// The room the Operator stands in (the walk-in view): one painted room fills
-// the stage from edge to edge, a desk runs across the front, and the
-// Caretaker waits in the corner with a speech balloon that says what is
-// going on and lists what can be done next.
+// The room the visitor stands in (the walk-in view): one painted room fills
+// the stage, a desk runs across the front, and the Warden stands on the apron
+// below it with his balloon. The balloon says what is true now and lists what
+// can be done; the Warden's pose says what kind of moment it is.
 //
 // Everything painted is decoration. A pointer may press a ghost, a door or a
-// thing on the desk as a shortcut; each press is forwarded to the one real
-// control for that thing elsewhere on the page. Keyboard and assistive
-// technology use the balloon's choices, which are ordinary buttons, and the
-// map of the whole house. Nothing here decides anything.
-import { ArrowLeft, ArrowRight, BookOpen, LogOut, Map as MapIcon } from 'lucide-react'
-import type { CSSProperties, ReactNode } from 'react'
-import { guideFor } from '../core/house-guide'
-import type { HouseProjection, HouseSurfaceTarget } from '../core/house-projection'
-import { stateWord, type RoomId } from '../core/house-registry'
-import { pressMapControl } from './RoomDiorama'
-import { CaretakerArt, DeskPainting, RoomPainting, SpectreArt, spectreRoleOf } from './room-paint'
+// thing on the desk as a shortcut, and with labels on show each of those has a
+// real, labelled button. Every press, from the painting, a label or the
+// balloon, is a press plan: the page presses the one real control for it
+// elsewhere. Nothing here decides anything.
+import { Languages, LogOut, Map as MapIcon, Megaphone, MousePointerClick } from 'lucide-react'
+import { useId, type CSSProperties, type RefObject } from 'react'
+import { workingObjects, type Box, type WorkingObject } from '../core/guide-layout'
+import type { GuideView, PressStep } from '../core/house-guide'
+import type { HouseProjection } from '../core/house-projection'
+import type { RoomId } from '../core/house-registry'
+import type { WordMode } from '../core/house-words'
+import { GuideBalloon } from './GuideBalloon'
+import { ObjectLabels } from './ObjectLabels'
+import { DeskPainting, RoomPainting, SpectreArt, WardenArt, spectreRoleOf } from './room-paint'
+
+/** The guide's own settings, kept on the apron so they work while the Warden has stepped back. */
+export interface StageSettings {
+  /** Whether the map of the whole house lies over the room. */
+  readonly mapOpen: boolean
+  readonly onToggleMap: () => void
+  readonly kiroWords: boolean
+  readonly onToggleWords: () => void
+  readonly reveal: boolean
+  readonly onToggleReveal: () => void
+}
 
 export interface RoomStageProps {
   projection: HouseProjection
   roomId: RoomId
+  /** What the Warden says, offers and how he stands, for this room. */
+  view: GuideView
+  words: WordMode
+  /** The Warden has stepped back: no balloon. */
+  quiet?: boolean
+  settings: StageSettings
   /** True while a surface of this room is open over the stage. */
   open?: boolean
+  /** Runs a press plan: the page presses the real controls. `from` is the control the visitor pressed. */
+  onPress: (steps: readonly PressStep[], from?: HTMLElement | null) => void
+  onStepBack: () => void
+  onCallWarden: () => void
   /** Leaves the Mansion for the Foyer. Omitted on a page that cannot. */
   onReturn?: () => void
-  /** Whether the map of the whole house is laid over the room. */
-  mapOpen?: boolean
-  /** Lays the map over the room, or puts it away. */
-  onToggleMap?: () => void
+  /** Why the last press did nothing. */
+  refusal?: string | null
+  statusRef?: RefObject<HTMLParagraphElement>
 }
 
-export const GUIDE_HINT = 'To open something, press it. Or choose:'
+export const CALL_WARDEN_LABEL = 'Call the Warden'
+export const CALL_WARDEN_HINT = 'He says what is going on in this room and lists what you can do.'
+export const GUIDE_SETTINGS_NAME = 'Guide settings'
+export const MAP_TOGGLE_LABEL = 'House map'
+export const WORDS_TOGGLE_LABEL = "Show Kiro's words"
+export const REVEAL_TOGGLE_LABEL = 'Show me what I can press'
 
-/** Presses the first control matching `selector` in the same house. */
-function pressControl(from: Element, selector: string): void {
-  from.closest('.hh-ui')?.querySelector<HTMLElement>(selector)?.click()
+function placed(box: Box): CSSProperties {
+  return { left: `${box.left}%`, top: `${box.top}%`, width: `${box.width}%`, height: `${box.height}%` }
 }
 
-/** Where a pressable part of the painting sits, in percent of the stage. */
-function place(left: number, top: number, width: number, height: number): CSSProperties {
-  return { left: `${left}%`, top: `${top}%`, width: `${width}%`, height: `${height}%` }
-}
+const ON_DESK: readonly WorkingObject['kind'][] = ['ledger', 'bell']
 
-const LEFT_DOOR = place(2.5, 28, 8.5, 53)
-const RIGHT_DOOR = place(89, 28, 8.5, 53)
-const BACK_DOOR = place(69.7, 28, 12.3, 41.5)
-const LEDGER = place(15.8, 84.5, 23.4, 11.5)
-const BELL = place(46.5, 82.5, 9.4, 11)
-
-export function RoomStage({ projection, roomId, open = false, onReturn, mapOpen = false, onToggleMap }: RoomStageProps) {
+export function RoomStage({
+  projection,
+  roomId,
+  view,
+  words,
+  quiet = false,
+  settings,
+  open = false,
+  onPress,
+  onStepBack,
+  onCallWarden,
+  onReturn,
+  refusal = null,
+  statusRef,
+}: RoomStageProps) {
+  const callHintId = useId()
   const room = projection.rooms.find((candidate) => candidate.roomId === roomId)
-  const guide = guideFor(projection, roomId)
-  if (room === undefined || guide === null) return null
+  if (room === undefined) return null
   const lit = room.ghosts.some((ghost) => ghost.state === 'working' || ghost.state === 'waiting')
   const [firstDoor, secondDoor] = room.doors
-  const toRoom = (target: RoomId): HouseSurfaceTarget => ({ kind: 'room', roomId: target })
+  const objects = workingObjects(room, view, words, projection.needsYou.length)
 
-  const option = (key: string, icon: ReactNode, text: string, onPress: (from: HTMLElement) => void) => (
-    <li key={key}>
-      <button type="button" className="hh-stage-option" data-guide-option={key} onClick={(event) => onPress(event.currentTarget)}>
-        <span className="hh-stage-bullet" aria-hidden="true">
-          {icon}
-        </span>
-        <span>{text}</span>
-      </button>
-    </li>
-  )
-  const spot = (key: string, label: string, where: CSSProperties, onPress: (from: HTMLElement) => void) => (
-    <span key={key} className="hh-stage-spot" data-spot={key} data-label={label} style={where} onClick={(event) => onPress(event.currentTarget)} />
-  )
+  const spot = (object: WorkingObject) => {
+    const ghost = object.kind === 'ghost' ? room.ghosts.find((candidate) => `ghost:${candidate.ghostId}` === object.key) : undefined
+    return ghost === undefined ? (
+      <span key={object.key} className="hh-stage-spot" data-spot={object.key} data-label={object.label} style={placed(object.box)} onClick={() => onPress(object.steps)} />
+    ) : (
+      <span key={object.key} className="hh-stage-figure" data-ghost={ghost.state} data-label={object.label} style={placed(object.box)} onClick={() => onPress(object.steps)}>
+        <SpectreArt state={ghost.state} role={spectreRoleOf(ghost.ghostId)} />
+      </span>
+    )
+  }
 
   return (
-    <div className="hh-stage-room" data-stage-room={roomId} data-open={open}>
+    <div className="hh-stage-room" data-stage-room={roomId} data-open={open} data-quiet={quiet} data-reveal={settings.reveal}>
       <h3 className="hh-stage-room-title" data-stage-title>
         You are in the {room.name}
       </h3>
@@ -80,65 +109,60 @@ export function RoomStage({ projection, roomId, open = false, onReturn, mapOpen 
           door={firstDoor === undefined ? null : firstDoor.state}
           secondDoor={secondDoor === undefined ? null : secondDoor.state}
           lit={lit}
-          hasPrevious={guide.previous !== null}
-          hasNext={guide.next !== null}
+          hasPrevious={view.previous !== null}
+          hasNext={view.next !== null}
         />
         <div className="hh-stage-spots" aria-hidden="true">
-          {guide.previous === null ? null : spot('previous', `To the ${guide.previous.name}`, LEFT_DOOR, (from) => pressMapControl(from, toRoom(guide.previous!.roomId)))}
-          {firstDoor !== undefined
-            ? spot('door', `${firstDoor.phaseName} door: ${stateWord(firstDoor.state)}`, RIGHT_DOOR, (from) =>
-                pressMapControl(from, { kind: 'door', roomId, phase: firstDoor.phase, proposalId: firstDoor.proposalId }),
-              )
-            : guide.next === null
-              ? null
-              : spot('next', `To the ${guide.next.name}`, RIGHT_DOOR, (from) => pressMapControl(from, toRoom(guide.next!.roomId)))}
-          {secondDoor === undefined
-            ? null
-            : spot('door-2', `${secondDoor.phaseName} door: ${stateWord(secondDoor.state)}`, BACK_DOOR, (from) =>
-                pressMapControl(from, { kind: 'door', roomId, phase: secondDoor.phase, proposalId: secondDoor.proposalId }),
-              )}
-          {room.ghosts.map((ghost, index) => (
-            <span
-              key={ghost.ghostId}
-              className="hh-stage-figure"
-              data-ghost={ghost.state}
-              data-label={`${ghost.name}: ${stateWord(ghost.state)}`}
-              style={{ '--hh-i': index, '--hh-n': room.ghosts.length } as CSSProperties}
-              onClick={(event) => pressMapControl(event.currentTarget, { kind: 'ghost', roomId, ghostId: ghost.ghostId })}
-            >
-              <SpectreArt state={ghost.state} role={spectreRoleOf(ghost.ghostId)} />
-            </span>
-          ))}
+          {objects.filter((object) => !ON_DESK.includes(object.kind)).map(spot)}
         </div>
         <DeskPainting />
         <div className="hh-stage-spots" aria-hidden="true">
-          {spot('ledger', `Open the ${room.name}`, LEDGER, (from) => pressMapControl(from, toRoom(roomId)))}
-          {spot('bell', 'What needs you', BELL, (from) => pressControl(from, '[data-opener-key="needs-you"]'))}
+          {objects.filter((object) => ON_DESK.includes(object.kind)).map(spot)}
         </div>
       </div>
-      <div className="hh-stage-guide">
-        <div className="hh-stage-balloon">
-          <p className="hh-stage-balloon-title" data-guide-text>
-            {guide.text}
-          </p>
-          <p className="hh-stage-balloon-hint">{GUIDE_HINT}</p>
-          <ul className="hh-stage-options">
-            {open ? null : option('open', <BookOpen size={13} />, `Look around the ${room.name}`, (from) => pressMapControl(from, toRoom(roomId)))}
-            {guide.previous === null ? null : option('previous', <ArrowLeft size={13} />, `Go to the ${guide.previous.name}`, (from) => pressMapControl(from, toRoom(guide.previous!.roomId)))}
-            {guide.next === null ? null : option('next', <ArrowRight size={13} />, `Go to the ${guide.next.name}`, (from) => pressMapControl(from, toRoom(guide.next!.roomId)))}
-            {onToggleMap === undefined ? null : option('map', <MapIcon size={13} />, mapOpen ? 'Put the house map away' : 'See the whole house', onToggleMap)}
-          </ul>
+      {settings.reveal ? <ObjectLabels objects={objects} onPress={onPress} /> : null}
+      <div className="hh-stage-apron" data-stage-apron>
+        {quiet ? null : <GuideBalloon view={view} words={words} onPress={(option, from) => onPress(option.steps, from)} onStepBack={onStepBack} refusal={refusal} statusRef={statusRef} />}
+        <div className="hh-stage-settings" role="group" aria-label={GUIDE_SETTINGS_NAME} data-guide-settings>
+          <button type="button" className="hh-stage-setting" data-map-toggle aria-pressed={settings.mapOpen} onClick={settings.onToggleMap}>
+            <MapIcon size={13} aria-hidden />
+            {MAP_TOGGLE_LABEL}: {settings.mapOpen ? 'open' : 'closed'}
+          </button>
+          <button type="button" className="hh-stage-setting" data-words-toggle aria-pressed={settings.kiroWords} onClick={settings.onToggleWords}>
+            <Languages size={13} aria-hidden />
+            {WORDS_TOGGLE_LABEL}: {settings.kiroWords ? 'on' : 'off'}
+          </button>
+          <button type="button" className="hh-stage-setting" data-reveal-toggle aria-pressed={settings.reveal} onClick={settings.onToggleReveal}>
+            <MousePointerClick size={13} aria-hidden />
+            {REVEAL_TOGGLE_LABEL}: {settings.reveal ? 'on' : 'off'}
+          </button>
         </div>
-        <div className="hh-stage-keeper">
-          <span className="hh-stage-caretaker" aria-hidden="true">
-            <CaretakerArt />
+        <div className="hh-stage-keeper" data-guide-keeper>
+          <span className="hh-stage-warden" aria-hidden="true">
+            <WardenArt pose={view.pose} />
           </span>
-          {onReturn === undefined ? null : (
-            <button type="button" className="hh-stage-exit" data-guide-exit aria-label="Exit to the Foyer" onClick={onReturn}>
-              <LogOut size={13} aria-hidden />
-              Exit
-            </button>
-          )}
+          <div className="hh-stage-caption">
+            <p className="hh-stage-pose" data-guide-pose={view.pose}>
+              {view.poseLabel}
+            </p>
+            {quiet ? (
+              <>
+                <button type="button" className="hh-stage-call" data-guide-call aria-describedby={callHintId} onClick={onCallWarden}>
+                  <Megaphone size={13} aria-hidden />
+                  {CALL_WARDEN_LABEL}
+                </button>
+                <span className="hh-guide-hidden" id={callHintId}>
+                  {CALL_WARDEN_HINT}
+                </span>
+              </>
+            ) : null}
+            {onReturn === undefined ? null : (
+              <button type="button" className="hh-stage-exit" data-guide-exit aria-label="Exit to the Foyer" onClick={onReturn}>
+                <LogOut size={13} aria-hidden />
+                Exit
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>

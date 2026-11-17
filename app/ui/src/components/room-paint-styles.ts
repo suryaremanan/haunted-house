@@ -63,6 +63,12 @@ const FILLS: Readonly<Record<string, string>> = {
   iron: 'var(--hh-sc-iron)',
   'iron-l': light('--hh-sc-iron', 72),
   vignette: 'transparent',
+  // The Warden: a dark robe with one lit side, so he reads as a shape first.
+  robe: dark('--hh-sc-night2', 62),
+  'robe-l': 'var(--hh-sc-night2)',
+  'robe-d': 'var(--hh-sc-night1)',
+  'robe-rim': 'var(--hh-sc-night3)',
+  hood: 'var(--hh-sc-iron)',
 }
 
 const LINES: Readonly<Record<string, string>> = {
@@ -74,6 +80,8 @@ const LINES: Readonly<Record<string, string>> = {
   'wood-dd': dark('--hh-sc-wood-dark', 56),
   'brass-d': dark('--hh-sc-brass', 62),
   'ink-soft': veil('--hh-sc-ink', 50),
+  brass: 'var(--hh-sc-brass)',
+  chain: light('--hh-sc-stone', 62),
 }
 
 export const PAINT_FILL_NAMES = Object.keys(FILLS)
@@ -93,4 +101,6 @@ ${Object.entries(FILLS)
 ${Object.entries(LINES)
   .map(([name, color]) => `.hh-ps-${name} { fill: none; stroke: ${color}; }`)
   .join('\n')}
+/* The Warden is told from the dark behind him by the light at his edge. */
+.hh-paint-warden { filter: drop-shadow(0 0 9px var(--hh-sc-night3)) drop-shadow(0 0 2px var(--hh-sc-night3)); }
 `

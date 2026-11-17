@@ -42,6 +42,7 @@ export function ReplayBar({ panel, readOnlyText, startText }: ReplayBarProps) {
           className="hh-ui-button"
           data-variant="primary"
           data-action={transport.playAction}
+          data-guide-control="replay:toggle"
           aria-disabled={!transport.play.enabled}
           aria-describedby={transport.play.enabled ? undefined : `${id}-play`}
           onClick={panel.onPlay}
@@ -53,6 +54,7 @@ export function ReplayBar({ panel, readOnlyText, startText }: ReplayBarProps) {
           type="button"
           className="hh-ui-button"
           data-action="restart"
+          data-guide-control="replay:restart"
           aria-disabled={!transport.restart.enabled}
           aria-describedby={transport.restart.enabled ? undefined : `${id}-restart`}
           onClick={panel.onRestart}
