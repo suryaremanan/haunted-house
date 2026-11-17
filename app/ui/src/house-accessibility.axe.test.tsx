@@ -4,10 +4,16 @@
 // colour are off (see `test/axe-audit.ts`); the hand-written structural audit
 // in house-accessibility.test.tsx keeps running beside this suite.
 // **Validates: Requirements 3.1, 3.9, 3.10, 4.1, 4.2, 4.3, 4.4, 4.8, 4.9, 10.4, 10.6**
+//
+// The Warden and the first visit (Spec 8, Requirement 14.6) have their own
+// block: the Gate, the Idea Step, each pose, Quiet Mode, the labels, the Word
+// Book and what was made, in light, dark and reduced-motion states.
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import type { Root } from 'react-dom/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import demo from '../../../fixtures/replay/demo.jsonl?raw'
+import HauntedHouseApp from './App'
+import { WARDEN_POSES, guideView, type WardenPose } from './core/house-guide'
 import type { HouseProjection } from './core/house-projection'
 import { PRESENTATION_DOOR_STATES, PRESENTATION_GHOST_STATES } from './core/house-registry'
 import type { RoomGhosts } from './core/room-projection'
@@ -22,7 +28,7 @@ import { MANSION_DESCRIPTOR } from './test/house-projection-kit'
 import { FakeRoomBackend } from './test/room-house-kit'
 import { REQUIREMENTS_WAITING, TASKS_APPROVED, requirementsWritten, roomGhosts, run, workshopAtWork } from './test/room-kit'
 import { Shell, WAITING_WORKFLOW, houseOf, installMatchMedia, newRecorded, quietHouse, waitingHouse, withRoomState } from './test/shell-kit'
-import { projection, riskyProposal } from './test/workflow-arbitraries'
+import { decision, doorProposal, projection, riskyProposal } from './test/workflow-arbitraries'
 
 // axe walks every node of every opened surface: up to ~2.5 s per test alone,
 // more while the whole suite runs in parallel.
@@ -259,6 +265,138 @@ describe('the House with its real panels', () => {
     recording.unmount()
     const unread = await mountHouse(projection({ version: 10, integrity: 'uncertain' }), roomGhosts({ integrity: 'uncertain' }))
     expect((await auditHouse(unread.container)).problems).toEqual([])
+  })
+})
+
+describe('the Warden and the first visit', () => {
+  let media: ReturnType<typeof installMatchMedia> | null = null
+  afterEach(() => {
+    media?.restore()
+    media = null
+  })
+
+  /** The three states every case is checked in: light, dark, and dark with motion reduced. */
+  const STATES = [
+    ['light', 'light', false],
+    ['dark', 'dark', false],
+    ['reduced motion', 'dark', true],
+  ] as const
+  const enter = (mode: 'light' | 'dark', reduced: boolean) => {
+    host.theme = { mode, accent: '', colorTheme: 'default' }
+    media = installMatchMedia(reduced)
+  }
+  /** One polite live region, and the Warden's drawing hidden from assistive technology. */
+  const expectOneVoice = (container: HTMLElement) => {
+    expect(container.querySelectorAll('[aria-live], [role="status"], [role="alert"]')).toHaveLength(1)
+    for (const art of container.querySelectorAll('.hh-paint-warden')) expect(art.closest('[aria-hidden="true"]')).not.toBeNull()
+  }
+
+  /** A house and a room of it in which the Warden stands as wanted. */
+  function houseFor(pose: Exclude<WardenPose, 'stepped-back'>): { house: HouseProjection; roomId: string } {
+    for (const house of [waitingHouse(), quietHouse()]) {
+      for (const room of house.rooms) {
+        const view = guideView(house, { roomId: room.roomId, surface: null, task: null, quiet: false, words: 'plain', reveal: false, mapOpen: false, canLeave: true })
+        if (view?.pose === pose) return { house, roomId: room.roomId }
+      }
+    }
+    throw new Error(`no fixture room with the Warden ${pose}`)
+  }
+
+  it.each(STATES)('has no axe violation with the Warden in each pose (%s)', async (_name, mode, reduced) => {
+    enter(mode, reduced)
+    for (const pose of WARDEN_POSES) {
+      const { house, roomId } = houseFor(pose === 'stepped-back' ? 'watching' : pose)
+      const { container, unmount } = render(<Shell projection={house} recorded={newRecorded()} />)
+      // Walk to the room through the map, and put its sheet away again.
+      fireEvent.click(container.querySelector<HTMLElement>(`[data-room-control="${roomId}"]`)!)
+      fireEvent.keyDown(document.body, { key: 'Escape' })
+      if (pose === 'stepped-back') fireEvent.click(screen.getByRole('button', { name: 'Step back' }))
+      expect(container.querySelector('[data-guide-pose]')).toHaveAttribute('data-guide-pose', pose)
+      expect(await axeViolations(container), pose).toEqual([])
+      expectOneVoice(container)
+      unmount()
+    }
+  })
+
+  it.each(STATES)('has no axe violation with the labels on, with the Word Book open, and with a refusal shown (%s)', async (_name, mode, reduced) => {
+    enter(mode, reduced)
+    const { container } = render(<Shell projection={quietHouse()} recorded={newRecorded()} />)
+    fireEvent.click(screen.getByRole('button', { name: 'Show me what I can press: off' }))
+    expect(container.querySelector('[data-object-labels]')).not.toBeNull()
+    expect(await axeViolations(container)).toEqual([])
+    fireEvent.click(screen.getByRole('button', { name: "Show Kiro's words: off" }))
+    fireEvent.click(screen.getByRole('button', { name: 'Something else…' }))
+    expect(container.querySelector('[data-word-book]')).not.toBeNull()
+    expect(await axeViolations(container)).toEqual([])
+    // A choice whose control is not there (the stand-in sheet has no start): the reason is shown in the balloon.
+    fireEvent.click(container.querySelector<HTMLElement>('[data-guide-primary] [data-guide-option]')!)
+    expect(container.querySelector('[data-guide-refusal]')).not.toBeNull()
+    expect(await axeViolations(container)).toEqual([])
+    expectOneVoice(container)
+  })
+
+  it.each(STATES)('has no axe violation at the Gate and on the Idea Step: empty, filled from an example, and refused (%s)', async (_name, mode, reduced) => {
+    enter(mode, reduced)
+    host.backend = {
+      get: async (path) => (path.endsWith('/whoami') ? { backend: 'ok', gateway: { version: '0.12.2' } } : listBody()),
+      post: async () => {
+        throw new Error('refused')
+      },
+    }
+    const { container } = render(<HauntedHouseApp />)
+    const knock = await screen.findByRole('button', { name: 'Knock' })
+    expect(await axeViolations(container)).toEqual([])
+    expectOneVoice(container)
+
+    fireEvent.click(knock)
+    await screen.findByRole('textbox', { name: 'Your idea, in your own words' })
+    expect(await axeViolations(container)).toEqual([])
+    fireEvent.click(screen.getByRole('button', { name: 'A word counter' }))
+    expect(await axeViolations(container)).toEqual([])
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: 'Build this' }))
+    })
+    await waitFor(() => expect(container.querySelector('[data-idea-error]')).not.toBeNull())
+    expect(await axeViolations(container)).toEqual([])
+    // With the Warden stepped back the form is still there, on its own.
+    fireEvent.click(screen.getByRole('button', { name: 'Step back' }))
+    expect(container.querySelector('[data-guide-balloon]')).toBeNull()
+    expect(await axeViolations(container)).toEqual([])
+    expectOneVoice(container)
+  })
+
+  it.each(STATES)('has no axe violation in the hall of a returning visitor (%s)', async (_name, mode, reduced) => {
+    enter(mode, reduced)
+    host.backend = {
+      get: async (path) => (path.endsWith('/whoami') ? { backend: 'ok', gateway: { version: '0.12.2' } } : listBody(mansion('weather-station'), mansion('attic-radio'))),
+      post: async () => ({}),
+    }
+    const { container } = render(<HauntedHouseApp />)
+    await screen.findByRole('radio', { name: /^weather-station\b/ })
+    expect(container.querySelector('[data-foyer-guide] [data-guide-balloon]')).not.toBeNull()
+    expect(await axeViolations(container)).toEqual([])
+    expectOneVoice(container)
+  })
+
+  it.each(STATES)('has no axe violation on what was made, in the Foyer sheet of a built house (%s)', async (_name, mode, reduced) => {
+    enter(mode, reduced)
+    const open = (phase: 'requirements' | 'design' | 'tasks' | 'implementation') => ({ status: 'open' as const, proposal: doorProposal(phase, { status: 'approved', decision: decision('approved', 30) }) })
+    const built = projection({
+      version: 40,
+      phaseOverrides: {
+        requirements: { status: 'approved', ghostIds: ['archivist'], door: open('requirements') },
+        design: { status: 'approved', ghostIds: ['draughtsman'], door: open('design') },
+        tasks: { status: 'approved', ghostIds: ['foreman'], door: open('tasks') },
+        implementation: { status: 'done', door: open('implementation') },
+      },
+    })
+    host.backend = new FakeRoomBackend(built, { ...workshopAtWork(40), runs: [] })
+    const { container } = render(<House mansion={MANSION_DESCRIPTOR} onReturn={() => {}} />)
+    await waitFor(() => expect(container.querySelector('.hh-ui')).toHaveAttribute('aria-busy', 'false'))
+    fireEvent.click(container.querySelector<HTMLElement>('[data-room-control="foyer"]')!)
+    await waitFor(() => expect(container.querySelector('[data-section="built"]')).not.toBeNull())
+    expect(await axeViolations(container)).toEqual([])
+    expectOneVoice(container)
   })
 })
 

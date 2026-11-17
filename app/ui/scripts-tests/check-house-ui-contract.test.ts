@@ -11,8 +11,11 @@ import { describe, expect, it } from 'vitest'
 import { HOUSE_PALETTES, CONTRAST_PAIRS, contrastRatio } from '../src/components/house-palette'
 import { HOUSE_UI_STYLES } from '../src/components/house-styles'
 import { ROOM_OUTPUT_STYLES } from '../src/components/room-output-styles'
+import { GUIDE_BALLOON_STYLES } from '../src/components/guide-balloon-styles'
+import { namesKiroWord } from '../src/core/house-words'
 import { MIN_MOTION_CYCLE_SECONDS } from '../src/core/motion-policy'
 import { ATTIC_STYLES } from '../src/rooms/attic/attic-styles'
+import { FIRST_VISIT_STYLES } from '../src/rooms/foyer/first-visit-styles'
 import { FOYER_STYLES } from '../src/rooms/foyer/foyer-styles'
 import { HOUSE_SEANCE_ROOM } from '../src/rooms/house/House'
 import { HOUSE_PANEL_STYLES } from '../src/rooms/house/panel-styles'
@@ -253,5 +256,109 @@ describe('committed bundle', () => {
     expect(source).not.toMatch(/@tailwind|tailwindcss/)
     expect(source).not.toMatch(/url\(/)
     expect(source).not.toMatch(/\bfetch\(|new WebSocket|XMLHttpRequest|EventSource/)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// The Warden guide and the first visit (Spec 8, Requirements 7.3, 14.3, 14.4,
+// 14.5 and 14.11): what the guide's own sources may and may not hold.
+
+/** The guide: what it says, where it stands, what it shows and how it presses. */
+const GUIDE_SOURCES = [
+  'src/core/house-guide.ts',
+  'src/core/guide-layout.ts',
+  'src/core/first-visit.ts',
+  'src/core/house-built.ts',
+  'src/components/GuideBalloon.tsx',
+  'src/components/ObjectLabels.tsx',
+  'src/components/use-guide-press.ts',
+  'src/components/use-stage-metrics.ts',
+  'src/rooms/foyer/Gate.tsx',
+  'src/rooms/foyer/HallGuide.tsx',
+  'src/rooms/foyer/IdeaStep.tsx',
+  'src/rooms/foyer/use-idea-step.ts',
+  'src/rooms/foyer/BuiltPage.tsx',
+].map((file) => path.join(UI, file))
+
+describe('the Warden guide', () => {
+  it('has every source it is made of', () => {
+    for (const file of GUIDE_SOURCES) expect(existsSync(file), relative(file)).toBe(true)
+  })
+
+  it('sends nothing, stores nothing, starts no timer and asks the host for nothing', () => {
+    // No adapter, no SDK, no request, no storage, no timer, no toast, no badge and no sound in the guide's own sources.
+    expect(offenders(/from '(?:\.\.\/)+adapters\/|@kirocrew\/app-sdk/, GUIDE_SOURCES)).toEqual([])
+    expect(offenders(/\bfetch\(|XMLHttpRequest|new WebSocket|EventSource|\.post\(|\.get\(\s*['"`\/]/, GUIDE_SOURCES)).toEqual([])
+    expect(offenders(/localStorage|sessionStorage|indexedDB|document\.cookie/, GUIDE_SOURCES)).toEqual([])
+    expect(offenders(/setTimeout|setInterval|requestAnimationFrame|requestIdleCallback/, GUIDE_SOURCES)).toEqual([])
+    expect(offenders(/useNotify|useNavBadge|use-house-sound|host-effects|AudioContext/, GUIDE_SOURCES)).toEqual([])
+    // The whole UI keeps nothing in the browser between visits.
+    expect(offenders(/localStorage|sessionStorage|indexedDB|document\.cookie/)).toEqual([])
+  })
+
+  /** The quoted strings of one line of code, read left to right, so what lies between two strings is not taken for one. */
+  function stringsOf(line: string): string[] {
+    const found: string[] = []
+    for (let at = 0; at < line.length; at += 1) {
+      const quote = line[at]
+      if (quote !== "'" && quote !== '"' && quote !== '`') continue
+      let end = at + 1
+      while (end < line.length && line[end] !== quote) end += line[end] === '\\' ? 2 : 1
+      // A string that runs on to the next line is put together at run time: Property 5 reads those.
+      if (end >= line.length) break
+      found.push(line.slice(at + 1, end))
+      at = end
+    }
+    return found
+  }
+
+  it('writes no Word Book word outside the book: its sentences take every term from a slot', () => {
+    // The guide's fixed sentences: each quoted string on one line that has a space in it. Slots (`{term}`) are
+    // filled from the book, so they are removed first; what is left must hold none of Kiro's words. (Sentences
+    // put together at run time are checked by Property 5, over generated houses.)
+    // Each file, and at least how many sentences it is known to hold: an empty scan proves nothing.
+    for (const [name, atLeast] of [
+      ['src/core/house-guide.ts', 100],
+      ['src/core/guide-layout.ts', 10],
+      ['src/core/first-visit.ts', 20],
+    ] as const) {
+      const file = path.join(UI, name)
+      const sentences = code(read(file))
+        .split('\n')
+        .flatMap(stringsOf)
+        .filter((text) => text.includes(' '))
+      expect(sentences.length, relative(file)).toBeGreaterThan(atLeast)
+      const typed = sentences.map((sentence) => sentence.replace(/\$?\{[^}]*\}/g, ' ')).filter((sentence) => namesKiroWord(sentence))
+      expect(typed, relative(file)).toEqual([])
+    }
+  })
+
+  it('moves nothing: the balloon and the first visit have no animation and no transition', () => {
+    for (const [name, sheet] of Object.entries({ 'guide-balloon-styles': GUIDE_BALLOON_STYLES, 'first-visit-styles': FIRST_VISIT_STYLES })) {
+      expect(sheet, name).not.toMatch(/animation|transition|@keyframes/)
+      expect(sheet, name).not.toMatch(/https?:|url\(/)
+    }
+  })
+
+  it('has one fast-check property test for each correctness property of the design, of at least 200 cases', () => {
+    const design = read(path.join(REPO, '.kiro/specs/warden-guide-and-first-visit/design.md'))
+    const properties = Array.from(design.matchAll(/^### Property (\d+): (.+)$/gm), (match) => ({ number: Number(match[1]), title: match[2].trim() }))
+    expect(properties.map((property) => property.number)).toEqual(Array.from({ length: properties.length }, (_, index) => index + 1))
+    expect(properties.length).toBeGreaterThanOrEqual(12)
+    const tests = walk(path.join(SRC, 'core')).filter((file) => file.endsWith('.property.test.ts'))
+    for (const property of properties) {
+      const comment = `Feature: warden-guide-and-first-visit, Property ${property.number}: ${property.title}`
+      const carrying = tests.filter((file) => read(file).includes(comment))
+      expect(carrying.map(relative), comment).toHaveLength(1)
+      const source = read(carrying[0])
+      expect(source).toMatch(/from 'fast-check'/)
+      // Every run count in the file, written as a number or through a constant, is at least 200.
+      const constants = new Map(Array.from(source.matchAll(/^const ([A-Z_]+) = (\d+)$/gm), (match) => [match[1], Number(match[2])]))
+      // A sample drawn for an example is not a property run.
+      const asserted = source.split('\n').filter((line) => !line.includes('fc.sample(')).join('\n')
+      const runs = Array.from(asserted.matchAll(/numRuns: ([A-Z_]+|\d+)/g), (match) => (/^\d+$/.test(match[1]) ? Number(match[1]) : constants.get(match[1])))
+      expect(runs.length, relative(carrying[0])).toBeGreaterThan(0)
+      for (const count of runs) expect(count, relative(carrying[0])).toBeGreaterThanOrEqual(200)
+    }
   })
 })

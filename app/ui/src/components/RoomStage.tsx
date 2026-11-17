@@ -11,7 +11,7 @@
 import { Languages, LogOut, Map as MapIcon, Megaphone, MousePointerClick } from 'lucide-react'
 import { useId, type CSSProperties, type RefObject } from 'react'
 import { workingObjects, type Box, type WorkingObject } from '../core/guide-layout'
-import type { GuideView, PressStep } from '../core/house-guide'
+import { pressedControls, type GuideView, type PressStep } from '../core/house-guide'
 import type { HouseProjection } from '../core/house-projection'
 import type { RoomId } from '../core/house-registry'
 import type { WordMode } from '../core/house-words'
@@ -122,7 +122,17 @@ export function RoomStage({
       </div>
       {settings.reveal ? <ObjectLabels objects={objects} onPress={onPress} /> : null}
       <div className="hh-stage-apron" data-stage-apron>
-        {quiet ? null : <GuideBalloon view={view} words={words} onPress={(option, from) => onPress(option.steps, from)} onStepBack={onStepBack} refusal={refusal} statusRef={statusRef} />}
+        {quiet ? null : (
+          <GuideBalloon
+            view={view}
+            words={words}
+            onPress={(option, from) => onPress(option.steps, from)}
+            onStepBack={onStepBack}
+            refusal={refusal}
+            pressesOf={(option) => pressedControls(option.steps).join(' ')}
+            statusRef={statusRef}
+          />
+        )}
         <div className="hh-stage-settings" role="group" aria-label={GUIDE_SETTINGS_NAME} data-guide-settings>
           <button type="button" className="hh-stage-setting" data-map-toggle aria-pressed={settings.mapOpen} onClick={settings.onToggleMap}>
             <MapIcon size={13} aria-hidden />

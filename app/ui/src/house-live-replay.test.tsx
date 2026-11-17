@@ -47,6 +47,8 @@ interface Shown {
   readonly atticDiagnostic: string
   readonly liveRegions: number
   readonly components: readonly string[]
+  /** One line per room: the room, the Warden's status line, his pose and its label. */
+  readonly guide: readonly string[]
 }
 
 function read(container: HTMLElement): Shown {
@@ -65,7 +67,22 @@ function read(container: HTMLElement): Shown {
     components: ['[data-toolbar]', 'nav.hh-ui-map', '.hh-stage-roof-art', '.hh-ui-needs', '.hh-ui-toggle', '[data-announcer]'].filter(
       (selector) => shell.querySelector(selector) !== null,
     ),
+    guide: readGuide(shell),
   }
+}
+
+/**
+ * What the Warden says and how he stands in every room (Spec 8, Requirement
+ * 14.1): each room is walked to through its map control, read, and put away.
+ */
+function readGuide(shell: HTMLElement): string[] {
+  return Array.from(shell.querySelectorAll<HTMLElement>('[data-room-control]'), (room) => {
+    fireEvent.click(room)
+    const pose = shell.querySelector<HTMLElement>('[data-guide-pose]')
+    const line = `${room.getAttribute('data-room-control')} | ${shell.querySelector('[data-guide-text]')?.textContent} | ${pose?.getAttribute('data-guide-pose')} | ${pose?.textContent}`
+    fireEvent.keyDown(document.body, { key: 'Escape' })
+    return line
+  })
 }
 
 /** Opens the recorded Mansion from the Foyer. `settle` lets pending reads finish (fake or real time). */
@@ -237,6 +254,10 @@ describe('equivalent canonical records, live and replayed', () => {
     expect(replayed.atticDiagnostic).toBe(shown.atticDiagnostic)
     expect(replayed.components).toEqual(shown.components)
     expect(shown.components).toHaveLength(6)
+    // The Warden says the same thing and stands the same way in every room of both.
+    expect(shown.guide).toHaveLength(6)
+    expect(shown.guide.every((line) => !line.includes('undefined') && !line.includes('null'))).toBe(true)
+    expect(replayed.guide).toEqual(shown.guide)
     expect([replayed.liveRegions, shown.liveRegions]).toEqual([1, 1])
     expect(unexpected).toEqual([])
     expect(live.host.writes).toEqual([])
