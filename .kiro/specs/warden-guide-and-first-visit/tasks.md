@@ -195,22 +195,23 @@ The guide adds no reducer, command, approval path, endpoint, live region, toast,
     - _Writes: `app/ui/src/components/object-labels.test.tsx`_
     - _Requirements: 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 8.8, 8.9_
 
-- [ ] 9. Build the Gate and the idea step (MVP)
-  - [ ] 9.1 Implement the Gate
-    - Add `app/ui/src/components/Gate.tsx`: the front-door painting as the exterior, the Warden, "Who is knocking?" as the label of one name field, and one "Knock" button that the painted knocker forwards to. Enter in the field knocks. The name goes to `visitorName` and nowhere else.
-    - _Writes: `app/ui/src/components/Gate.tsx`, `app/ui/src/components/room-paint.tsx`, `app/ui/src/components/room-paint-styles.ts`_
+- [x] 9. Build the Gate and the idea step (MVP)
+  - [x] 9.1 Implement the Gate
+    - Add `app/ui/src/rooms/foyer/Gate.tsx` and `HallGuide.tsx`: the front-door painting as the exterior, the Warden beside his balloon, "Who is knocking?" as the label of one name field, and one "Knock" button that the painted knocker forwards to. Enter in the field knocks. The name goes to `visitorName` and nowhere else.
+    - _Writes: `app/ui/src/rooms/foyer/Gate.tsx`, `app/ui/src/rooms/foyer/HallGuide.tsx`, `app/ui/src/rooms/foyer/first-visit-styles.ts`, `app/ui/src/components/guide-balloon-styles.ts`, `app/ui/src/components/house-stage-styles.ts`, `app/ui/src/components/room-paint.tsx`_
     - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5, 9.7, 9.8, 9.11, 9.12_
 
-  - [ ] 9.2 Implement the Idea Step and wire the visit
+  - [x] 9.2 Implement the Idea Step and wire the visit
     - Add `app/ui/src/rooms/foyer/IdeaStep.tsx` and `use-idea-step.ts`: three example buttons that fill one textarea, the derived name, the existing brief counter and errors, and "Build this", which calls the Foyer controller's `create` and then `open`.
-    - In `App.tsx`, hold the visit state with `visitReducer`: Gate, hall or mansion; the hall balloon from `hallGuide` with the greeting, "Go back into …", "Build something new" and "Step outside". Keep the existing list and create form in the hall. Use the invitation of `landing.ts` for the Replay Build.
-    - _Writes: `app/ui/src/rooms/foyer/IdeaStep.tsx`, `app/ui/src/rooms/foyer/use-idea-step.ts`, `app/ui/src/rooms/foyer/foyer-styles.ts`, `app/ui/src/App.tsx`, `app/ui/src/landing.ts`_
+    - In `App.tsx`, hold the visit state with `visitReducer`: Gate, hall or mansion; the hall balloon from `hallGuide` with the greeting, "Go back into …", "Build something new" and "Step outside". In `Foyer.tsx`, hand the guide the hall's own list, open and create-then-open, keep the hall put away while the Gate is on show, and say each refusal once. Keep the existing list and create form in the hall.
+    - _Writes: `app/ui/src/rooms/foyer/IdeaStep.tsx`, `app/ui/src/rooms/foyer/use-idea-step.ts`, `app/ui/src/rooms/foyer/Foyer.tsx`, `app/ui/src/App.tsx`, `app/ui/src/core/first-visit.ts`_
     - _Requirements: 9.6, 9.9, 9.10, 10.1, 10.2, 10.3, 10.4, 10.5, 10.6, 10.7, 10.8, 10.9, 10.10, 10.11, 10.12, 10.13_
 
-  - [ ]* 9.3 Add Gate and Idea Step tests and update the first-screen tests
+  - [x]* 9.3 Add Gate and Idea Step tests and update the first-screen tests
     - Gate: one decision, empty name accepted, the name reaches no request, no Gate while the backend is unreachable. Idea Step: examples fill the field, create then open and nothing else, failures keep the text.
-    - Give the four page-level tests one knock, or a test-only start in the hall. Leave their assertions as they are.
-    - _Writes: `app/ui/src/components/Gate.test.tsx`, `app/ui/src/rooms/foyer/IdeaStep.test.tsx`, `app/ui/src/App.foyer.test.tsx`, `app/ui/src/App.states.test.tsx`, `app/ui/src/replay-foyer.test.tsx`, `app/ui/src/replay.test.tsx`_
+    - Add `first-visit.test.tsx`: the whole page with only the host client mocked, so each choice is seen to end in one of the Foyer's own requests or in none.
+    - Give the page-level tests that start at the Gate one knock (`test/first-visit-kit.ts`). Keep their assertions; where a test asserted the first screen, it asserts the Gate first.
+    - _Writes: `app/ui/src/rooms/foyer/Gate.test.tsx`, `app/ui/src/rooms/foyer/IdeaStep.test.tsx`, `app/ui/src/rooms/foyer/HallGuide.test.tsx`, `app/ui/src/first-visit.test.tsx`, `app/ui/src/test/first-visit-kit.ts`, `app/ui/src/App.foyer.test.tsx`, `app/ui/src/App.live.test.tsx`, `app/ui/src/replay-foyer.test.tsx`, `app/ui/src/attic-live-replay.test.tsx`, `app/ui/src/house-live-replay.test.tsx`, `app/ui/src/replay-submission.integration.test.tsx`, `app/ui/src/house-accessibility.axe.test.tsx`, `app/ui/scripts-tests/check-house-ui-contract.test.ts`_
     - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.7, 9.8, 9.11, 9.12, 10.2, 10.5, 10.6, 10.7, 10.9, 14.9_
 
 - [ ] 10. Finish the rhythm, the catch and the built page (MVP)
@@ -219,7 +220,7 @@ The guide adds no reducer, command, approval path, endpoint, live region, toast,
     - _Writes: `app/ui/src/components/GuideBalloon.tsx`, `app/ui/src/components/use-guide-press.ts`, `app/ui/src/components/MansionShell.tsx`_
     - _Requirements: 4.7, 11.6, 11.7, 11.9, 11.10, 12.2, 12.3, 13.1_
 
-  - [ ] 10.2 Implement the Built Page
+  - [x] 10.2 Implement the Built Page
     - Add `app/ui/src/rooms/foyer/BuiltPage.tsx` and show it inside `ActiveMansionFoyerPanel.tsx` when the house is built. `House.tsx` fills its input from the joined room documents, the task board rows and the mansion's display path. Show the folder and the fixed steps; no link unless WG-S1 proved one.
     - _Writes: `app/ui/src/rooms/foyer/BuiltPage.tsx`, `app/ui/src/rooms/foyer/ActiveMansionFoyerPanel.tsx`, `app/ui/src/rooms/house/House.tsx`, `app/ui/src/rooms/house/panel-styles.ts`_
     - _Requirements: 13.2, 13.3, 13.4, 13.5, 13.6, 13.7, 13.8, 13.9_

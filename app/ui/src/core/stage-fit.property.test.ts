@@ -50,6 +50,7 @@ function fits(stage: StageWindow): { readonly under: number; readonly beside: nu
 }
 
 describe('the stage fits its window', () => {
+  // Feature: warden-guide-and-first-visit, Property 12: The stage fits its window
   it('has the lengths the reference assumes', () => {
     expect(STAGE_WIDE_PX).toBe(900)
     expect(STAGE_GUTTER_PX).toBe(12)

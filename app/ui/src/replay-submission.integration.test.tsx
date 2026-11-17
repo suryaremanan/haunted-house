@@ -14,6 +14,7 @@ import recordedMansions from '../../../fixtures/replay/mansions.json'
 import { buildReplayModel, foldLive, parseCanonicalLog, replayFoldFor, workflowOf } from './core/replay-timeline'
 import { appEventToJson } from './core/seance-event'
 import { parseEventLog } from './core/seance-log'
+import { atGate } from './test/first-visit-kit'
 
 const FIXTURE_URL = './fixture.jsonl'
 const MANSION = 'demo-mansion'
@@ -137,6 +138,7 @@ const mapSignature = (mounted: Mounted) =>
 
 async function openMansion(mounted: Mounted) {
   for (let turn = 0; turn < 5; turn += 1) await mounted.advance(1)
+  if (atGate(mounted.container)) fireEvent.click(page(mounted).getByRole('button', { name: 'Knock' }))
   fireEvent.click(page(mounted).getByRole('radio', { name: /^demo-mansion\b/ }))
   await act(async () => {
     fireEvent.click(page(mounted).getByRole('button', { name: 'Open demo-mansion' }))

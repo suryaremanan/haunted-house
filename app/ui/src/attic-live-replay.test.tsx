@@ -3,7 +3,9 @@
 // exactly as the replay build maps it, and on a live client double that serves
 // the same canonical log. Both must reach the Attic through the same gates,
 // show the same Attic for the same Cursor, keep the house's keyboard and focus
-// contract, and say nothing while a replay plays.
+// contract, and say nothing while a replay plays. The way in differs by one
+// step: a recording starts at the Gate, where the visitor knocks, and a live
+// page that already holds a mansion starts in the Foyer.
 // **Validates: Requirements 1.6, 3.1, 3.5, 3.6, 3.7, 3.8, 3.9, 4.1, 11.4**
 import { act, fireEvent, render, screen, within } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
@@ -12,6 +14,7 @@ import recordedMansions from '../../../fixtures/replay/mansions.json'
 import { buildReplayModel, parseCanonicalLog, replayFoldFor } from './core/replay-timeline'
 import { appEventToJson } from './core/seance-event'
 import { parseEventLog } from './core/seance-log'
+import { atGate } from './test/first-visit-kit'
 
 const FIXTURE_URL = './fixture.jsonl'
 const MANSION = 'demo-mansion'
@@ -140,16 +143,26 @@ const mapSignature = (mounted: Mounted) =>
     [control.dataset.doorControl ?? control.dataset.ghostControl, control.dataset.status ?? '', control.dataset.door ?? control.dataset.ghost].join(':'),
   ).join('|')
 
+/** At the Gate: knocks, giving no name. The Foyer is on show afterwards. The kit's `knock` waits for the button, and a query that waits never ends on the faked clock, so the button is pressed here. */
+const knock = (mounted: Mounted) => fireEvent.click(page(mounted).getByRole('button', { name: 'Knock' }))
+
 /** From the Foyer: selects the recorded mansion and opens it. */
-async function openMansion(mounted: Mounted) {
-  // Timers are faked, so the page's promise chains are settled by advancing, not by polling.
-  for (let turn = 0; turn < 5; turn += 1) await mounted.advance(1)
+async function openFromFoyer(mounted: Mounted) {
   fireEvent.click(page(mounted).getByRole('radio', { name: /^demo-mansion\b/ }))
   await act(async () => {
     fireEvent.click(page(mounted).getByRole('button', { name: 'Open demo-mansion' }))
   })
   for (let turn = 0; turn < 5; turn += 1) await mounted.advance(1)
   expect(mounted.container.querySelector('.hh-ui')).toHaveAttribute('aria-busy', 'false')
+}
+
+/** From the first screen: knocks where the page starts at the Gate, then opens the recorded mansion from the Foyer. */
+async function openMansion(mounted: Mounted) {
+  // Timers are faked, so the page's promise chains are settled by advancing, not by polling.
+  for (let turn = 0; turn < 5; turn += 1) await mounted.advance(1)
+  // A recording starts at the Gate. A live page that already holds a mansion starts in the Foyer.
+  if (mounted.mode === 'replay') knock(mounted)
+  await openFromFoyer(mounted)
 }
 
 async function openAttic(mounted: Mounted) {
@@ -174,15 +187,25 @@ function sharedAttic(mounted: Mounted): string {
 }
 
 describe.each(['replay', 'live'] as const)('Attic in the shared house (%s)', (mode) => {
-  it('is reached only through the status gate, the Foyer and the house map', async () => {
+  it('is reached only through the status gate, the Gate on a first visit, the Foyer and the house map', async () => {
     const mounted = await mountRoot(mode)
     // Before a Mansion is open there is no house, no Attic and no replay.
     expect(page(mounted).getByRole('heading', { level: 1, name: 'Haunted House' })).toBeInTheDocument()
+    if (mode === 'replay') {
+      // A recording starts at the Gate. The Foyer is put away until the visitor knocks, and nothing at the Gate leads to the Attic.
+      expect(atGate(mounted.container)).toBe(true)
+      expect(page(mounted).queryByRole('region', { name: 'Foyer' })).toBeNull()
+      expect(page(mounted).queryByRole('button', { name: /^Attic\./ })).toBeNull()
+      expect(atticPanel(mounted)).toBeNull()
+      knock(mounted)
+    }
+    // A live page that already holds a mansion starts in the Foyer. A recording is there after the knock.
+    expect(atGate(mounted.container)).toBe(false)
     expect(page(mounted).getByRole('region', { name: 'Foyer' })).toBeInTheDocument()
     expect(page(mounted).queryByRole('button', { name: /^Attic\./ })).toBeNull()
     expect(atticPanel(mounted)).toBeNull()
 
-    await openMansion(mounted)
+    await openFromFoyer(mounted)
     const map = page(mounted).getByRole('navigation', { name: 'Mansion rooms' })
     expect(within(map).getByRole('button', { name: /^Attic\./ })).toBe(atticControl(mounted))
     expect(atticPanel(mounted)).toBeNull()

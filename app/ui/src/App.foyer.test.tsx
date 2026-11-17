@@ -6,6 +6,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import HauntedHouseApp from './App'
 import { initialWorkflowProjection, workflowProjectionToJson } from './core/workflow-projection'
 import { MANSIONS, OPEN, deferred, httpError, listBody, liveRegions, mansion } from './rooms/foyer/foyer-test-kit'
+import { atGate, knock } from './test/first-visit-kit'
 
 // `house` answers the reads the opened mansion's house makes (its séance log and workflow).
 const client = vi.hoisted(() => ({ get: vi.fn(), post: vi.fn(), whoami: vi.fn(), mansions: vi.fn(), house: vi.fn() }))
@@ -21,6 +22,12 @@ vi.mock('@kirocrew/app-sdk', () => ({
 const WHOAMI = '/apps/haunted-house/api/whoami'
 const REACHABLE = { backend: 'ok', gateway: { version: '0.12.2' } }
 const SUMMARY = 'Backend reachable · Gateway 0.12.2'
+// The Warden's three choices in a hall that holds one ready mansion, as each reads: its label, then what pressing does.
+const HALL_CHOICES = [
+  'Go back into weather-stationOpens it in the room where the work is.',
+  'Build something newAsks what you want to build. Nothing is made yet.',
+  'Step outsideShows the front gate again and forgets your name. Nothing else changes.',
+]
 
 /** The page's single live region: the status summary line. */
 function summary(container: HTMLElement): HTMLElement {
@@ -112,8 +119,8 @@ describe('page with the Foyer', () => {
     const foyer = await within(main).findByRole('region', { name: 'Foyer' })
     const status = within(main).getByRole('list', { name: 'Status' })
     expect(status.compareDocumentPosition(foyer) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
-    // The status rows stay the page's only list items.
-    expect(screen.getAllByRole('listitem').map((row) => row.textContent)).toEqual(['BackendReachable', 'GatewayVersion 0.12.2'])
+    // The status rows, then the three choices in the Warden's balloon. The page has no other list items.
+    expect(screen.getAllByRole('listitem').map((row) => row.textContent)).toEqual(['BackendReachable', 'GatewayVersion 0.12.2', ...HALL_CHOICES])
   })
 
   it('keeps one polite live region for the whole journey and announces only completed results in it', async () => {
@@ -199,8 +206,17 @@ describe('page with the Foyer', () => {
       await screen.findByText('Could not load the mansion list. Mansion records are unavailable. Try again.'),
     ).toBeInTheDocument()
     expect(summary(container).textContent).toBe(SUMMARY)
+    // A failed list is shown in the hall itself: no Gate stands in front of it.
+    expect(atGate(container)).toBe(false)
+    expect(screen.getByRole('heading', { name: 'Foyer' })).toBeInTheDocument()
     // The only Retry on the page is the Foyer's; it asks for the list, not whoami.
     fireEvent.click(screen.getByRole('button', { name: 'Retry' }))
+    // The list comes back empty, so the Gate is shown first and the hall's empty state waits behind it.
+    await screen.findByRole('button', { name: 'Knock' })
+    expect(atGate(container)).toBe(true)
+    expect(container.querySelector('.hh-foyer-hall')).toHaveAttribute('hidden')
+    expect(screen.queryByRole('heading', { name: 'No mansions yet' })).not.toBeInTheDocument()
+    await knock()
     expect(await screen.findByRole('heading', { name: 'No mansions yet' })).toBeInTheDocument()
     expect(client.whoami).toHaveBeenCalledTimes(1)
     expect(client.mansions).toHaveBeenCalledTimes(2)
@@ -209,7 +225,8 @@ describe('page with the Foyer', () => {
   it('has no destructive or deferred control anywhere on the page', async () => {
     const { container } = render(<HauntedHouseApp />)
     await screen.findByRole('radio', { name: /^weather-station\b/ })
-    expect(screen.getAllByRole('button').map((button) => button.textContent)).toEqual(['Open mansion', 'Create mansion'])
+    // The Warden's balloon adds his three choices, "Something else…" and "Step back" before the hall's own two buttons.
+    expect(screen.getAllByRole('button').map((button) => button.textContent)).toEqual([...HALL_CHOICES, 'Something else…', 'Step back', 'Open mansion', 'Create mansion'])
     expect(container.querySelectorAll('a, select, input[type="file"]')).toHaveLength(0)
     // The one textarea is the optional feature brief (design decision 2026-11-16).
     expect([...container.querySelectorAll('textarea')].map((area) => area.name)).toEqual(['mansion-brief'])

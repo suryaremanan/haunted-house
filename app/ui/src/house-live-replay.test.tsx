@@ -102,6 +102,10 @@ async function renderReplay(text = demo) {
     act(async () => {
       await vi.advanceTimersByTimeAsync(50)
     })
+  // A recording starts at the Gate: the Foyer is put away until the visitor knocks. (A live page that already holds a mansion starts in the Foyer.)
+  // The kit's `knock` waits for the button, and a query that waits never ends on the faked clock, so the button is pressed here.
+  await settle()
+  fireEvent.click(screen.getByRole('button', { name: 'Knock' }))
   await openDemoMansion(settle)
   // The Attic plays the whole recording: the Cursor goes to its last record.
   fireEvent.click(screen.getByRole('button', { name: /^Attic\./ }))

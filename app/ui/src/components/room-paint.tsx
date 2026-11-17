@@ -1177,7 +1177,8 @@ export function WardenArt({ pose }: WardenArtProps) {
 // The front of the house, for the way in.
 
 /** The front door at night: panelled, with an iron knocker and a lit fanlight. */
-export function FrontDoorPainting() {
+/** The front door. From outside it carries its knocker; seen from the hall it is the same door without one. */
+export function FrontDoorPainting({ knocker = true }: { knocker?: boolean }) {
   return (
     <Svg viewBox={`0 0 ${PAINT_W} ${PAINT_H}`} className="hh-paint hh-paint-front" preserveAspectRatio="xMidYMid slice">
       <g stroke="none">
@@ -1197,17 +1198,21 @@ export function FrontDoorPainting() {
           </g>
         ))}
         <rect className={p('door-dd')} x={594} y={0} width={12} height={750} />
-        {/* The knocker: an iron bat holding a ring. */}
         <circle className={p('lamp-glow')} cx={600} cy={330} r={260} />
-        <path className={p('iron')} d="M600 250 q-30 -40 -80 -30 q20 10 22 30 q-40 -12 -70 14 q30 0 40 22 q40 -22 88 -6 q48 -16 88 6 q10 -22 40 -22 q-30 -26 -70 -14 q2 -20 22 -30 q-50 -10 -80 30 Z" />
-        <circle className={p('iron')} cx={600} cy={262} r={30} />
-        <circle className={p('lamp')} cx={589} cy={258} r={5} />
-        <circle className={p('lamp')} cx={611} cy={258} r={5} />
-        <path className={p('iron')} d="M588 232 l-6 -22 l16 14 Z M612 232 l6 -22 l-16 14 Z" />
-        <circle className={p('iron')} cx={600} cy={364} r={74} />
-        <circle className={p('door')} cx={600} cy={364} r={52} />
-        <circle className={p('iron-l')} cx={600} cy={438} r={20} />
-        <circle className={p('iron')} cx={600} cy={438} r={12} />
+        {/* The knocker: an iron bat holding a ring. */}
+        {knocker ? (
+          <g>
+            <path className={p('iron')} d="M600 250 q-30 -40 -80 -30 q20 10 22 30 q-40 -12 -70 14 q30 0 40 22 q40 -22 88 -6 q48 -16 88 6 q10 -22 40 -22 q-30 -26 -70 -14 q2 -20 22 -30 q-50 -10 -80 30 Z" />
+            <circle className={p('iron')} cx={600} cy={262} r={30} />
+            <circle className={p('lamp')} cx={589} cy={258} r={5} />
+            <circle className={p('lamp')} cx={611} cy={258} r={5} />
+            <path className={p('iron')} d="M588 232 l-6 -22 l16 14 Z M612 232 l6 -22 l-16 14 Z" />
+            <circle className={p('iron')} cx={600} cy={364} r={74} />
+            <circle className={p('door')} cx={600} cy={364} r={52} />
+            <circle className={p('iron-l')} cx={600} cy={438} r={20} />
+            <circle className={p('iron')} cx={600} cy={438} r={12} />
+          </g>
+        ) : null}
         <path className={p('vignette')} d="M0 0 H1200 V750 H0 Z" />
       </g>
     </Svg>

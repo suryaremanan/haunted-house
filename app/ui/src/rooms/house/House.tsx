@@ -12,6 +12,7 @@ import type { ReplayScheduler } from '../../adapters/replay-controller'
 import { MansionShell, type MansionShellProps, type SurfaceApi } from '../../components/MansionShell'
 import type { PanelMode } from '../../components/RoomPanelHost'
 import { ROOM_OUTPUT_STYLES } from '../../components/room-output-styles'
+import { builtView, type BuiltInput } from '../../core/house-built'
 import type { OpenSurface } from '../../core/house-projection'
 import type { SeanceRoomSetting } from '../../core/house-registry'
 import type { MansionDescriptor } from '../../core/mansion-api'
@@ -103,6 +104,18 @@ export function House({
     [mansion.name, mode, house.canonical, now],
   )
 
+  // What was made, for the Foyer's sheet: the rooms' documents and the Workshop's task rows, as the house holds them.
+  const builtInput: BuiltInput = useMemo(
+    () => ({
+      documents: Array.from(house.outputs.values()).flatMap((room) => room.documents.map((document) => ({ phase: document.phase, path: document.documentPath }))),
+      tasks: (house.outputs.get('workshop')?.taskBoard?.waves ?? []).flatMap((wave) =>
+        wave.tasks.map((task) => ({ taskId: task.taskId, title: task.title, complete: task.complete, writes: task.writes })),
+      ),
+      folder: mansion.displayPath,
+    }),
+    [house.outputs, mansion.displayPath],
+  )
+
   const renderSurface = (surface: OpenSurface, api: SurfaceApi): ReactNode => {
     const target = surface.target
     const room = projection.rooms.find((candidate) => candidate.roomId === target.roomId)
@@ -122,7 +135,7 @@ export function House({
     const panel = { room, detail, output, onSend: house.send, onRoomSend: house.sendRoom, onOpenSession: house.openSession }
     switch (room.roomId) {
       case 'foyer':
-        return <ActiveMansionFoyerPanel room={room} mansion={mansion} onReturn={onReturn} />
+        return <ActiveMansionFoyerPanel room={room} mansion={mansion} onReturn={onReturn} built={builtView(projection, builtInput)} />
       case 'study':
         return <StudyHousePanel {...panel} />
       case 'drafting-room':

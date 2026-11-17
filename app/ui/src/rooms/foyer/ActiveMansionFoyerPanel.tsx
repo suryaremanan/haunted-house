@@ -3,21 +3,28 @@
 // list. Return calls the Foyer's own action, which also puts focus back on
 // the control that opened this Mansion. Listing, creating and opening stay in
 // the Foyer; there is no second reducer here.
+//
+// Once every Door is open the same panel also shows what was made (Spec 8,
+// Requirement 13). That part is read from the house and sends nothing.
 import { ArrowLeft } from 'lucide-react'
+import type { BuiltView } from '../../core/house-built'
 import type { RoomPresentation } from '../../core/house-projection'
 import type { MansionDescriptor } from '../../core/mansion-api'
 import { RoomNote } from '../house/RoomNote'
+import { BuiltPage } from './BuiltPage'
 
 export interface ActiveMansionFoyerPanelProps {
   room: RoomPresentation
   mansion: MansionDescriptor
   /** The Foyer's return action. */
   onReturn: () => void
+  /** What was made. Shown once every Door is open. */
+  built?: BuiltView
 }
 
 export const FOYER_RETURN_HINT = 'Escape also returns to the Foyer when no room is open.'
 
-export function ActiveMansionFoyerPanel({ room, mansion, onReturn }: ActiveMansionFoyerPanelProps) {
+export function ActiveMansionFoyerPanel({ room, mansion, onReturn, built }: ActiveMansionFoyerPanelProps) {
   return (
     <>
       <RoomNote room={room} />
@@ -36,6 +43,7 @@ export function ActiveMansionFoyerPanel({ room, mansion, onReturn }: ActiveMansi
         </button>
         <span className="hh-foyer-hint">{FOYER_RETURN_HINT}</span>
       </div>
+      {built === undefined ? null : <BuiltPage view={built} />}
     </>
   )
 }

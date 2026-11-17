@@ -36,6 +36,19 @@ export const HOUSE_PANEL_STYLES = `
 .hh-house-note svg { flex: none; margin-top: 2px; }
 .hh-house-muted { color: var(--hh-text-muted); }
 .hh-phase { display: grid; gap: 6px; border-top: 1px solid var(--hh-border-soft); padding-top: 10px; min-width: 0; }
+/* What was made: a plain table of names and files, the finished work, and how to open the folder in Kiro. */
+.hh-built { display: grid; gap: 8px; min-width: 0; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--hh-border); }
+.hh-built:focus-visible { outline: 2px solid var(--hh-focus); outline-offset: 4px; }
+.hh-built h5 { margin: 0; font-size: 1rem; }
+.hh-built-lede { margin: 0; font-size: 0.875rem; color: var(--hh-text-muted); }
+.hh-built-group { margin: 6px 0 0; font-weight: 600; }
+.hh-built-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+.hh-built-table th, .hh-built-table td { text-align: left; vertical-align: top; padding: 4px 12px 4px 0; border-bottom: 1px solid var(--hh-border); overflow-wrap: anywhere; }
+.hh-built-table thead th { font-weight: 600; color: var(--hh-text-muted); }
+.hh-built-table code, .hh-built-tasks code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.8125rem; overflow-wrap: anywhere; }
+.hh-built-tasks { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: 0.875rem; }
+.hh-built-tasks li { display: flex; flex-wrap: wrap; gap: 2px 10px; min-width: 0; }
+.hh-built-steps { margin: 0; padding-left: 1.25rem; font-size: 0.875rem; }
 .hh-facts { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 12px; margin: 0; font-size: 0.875rem; }
 .hh-facts dt { color: var(--hh-text-muted); }
 .hh-facts dd { margin: 0; overflow-wrap: anywhere; min-width: 0; }
