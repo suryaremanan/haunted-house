@@ -20,6 +20,7 @@ Crew already ships two built-in apps that overlap with this idea: Spec Builder (
 | Ghost | A Kiro custom agent run by Crew, with its own steering and tool permissions |
 | Door | An approval gate. It opens only when you approve the room's output |
 | Séance log | Append-only record of every tool call, state change and decision. Replay reads only this log |
+| Warden | The guide. The guardrails made visible: he holds a ghost that strays and hands you the key when a door waits. A drawing, not an agent; it has no authority |
 
 ## Rooms
 | Room | Phase | Output | Ghost | Scope |

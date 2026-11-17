@@ -6,7 +6,7 @@ fileMatchPattern: ["app/ui/**", "app/assets/**", "docs/demo-script.md"]
 # Theme and accessibility
 
 ## Tone
-Cozy-spooky, not horror. Candlelight, dust, creaky doors, friendly ghosts. No gore, no jump scares, no screams.
+Menacing, never harmful. The house is old and watchful: candlelight, dust, creaky doors, tall still figures. The menace is aimed at ghosts that stray, never at the person using the house. No gore, no jump scares, no flashing, no screams.
 
 ## Visual style
 - Original SVG art only. The house is a cutaway drawing; each ghost has its own silhouette.
@@ -45,4 +45,4 @@ Everything else (progress, streaming text, tool calls) is ambient. It shows in p
 - Interruptions make no sound unless the user turned sound on.
 
 ## Copy
-Short and plain. Spooky flavor is welcome in titles, but every action and state also says what it means, for example "Sealed door: approve the requirements to open it."
+Short and plain. Adult and exact. No baby talk. Spooky flavor is welcome in titles, but every action and state also says what it means, for example "Sealed door: approve the requirements to open it."
