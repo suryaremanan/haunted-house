@@ -53,6 +53,7 @@ export function DoorPanel({ view, onSend }: DoorPanelProps) {
             busy={view.busy}
             subject={`${view.title}, ${view.revisionText.toLowerCase()}`}
             describedBy={view.blockedText === null ? undefined : blockedId}
+            proposalId={view.proposalId}
             onSend={onSend}
           />
         </>

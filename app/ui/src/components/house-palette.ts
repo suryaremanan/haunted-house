@@ -158,7 +158,7 @@ export function paletteCssVariables(mode: ThemeMode): string {
 // on. Unlike the tokens above, these never read a Crew theme variable: the
 // rooms are lamp-lit interiors and look the same in either theme; only the
 // drafting sheet around them changes. Text is set on a scene color in two
-// places only, both in `ink`: the Caretaker's `balloon` and the room's brass
+// places only, both in `ink`: the Warden's `balloon` and the room's brass
 // nameplate. Both pairs are far above 4.5:1 and are checked in the stage test.
 
 export interface ScenePalette {
@@ -174,7 +174,7 @@ export interface ScenePalette {
   readonly ink: string
   /** A ghost's sheet. */
   readonly bone: string
-  /** The Caretaker's speech balloon. The one scene color that carries text, always in `ink`. */
+  /** The Warden's speech balloon. The one scene color that carries text, always in `ink`. */
   readonly balloon: string
   readonly moon: string
   /** Lamp and candle light. */

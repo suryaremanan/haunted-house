@@ -53,6 +53,7 @@ export function RoomPanelBody({ detail, onSend, output = null, onRoomSend = igno
               <button
                 type="button"
                 className="hh-button hh-button-primary"
+                data-guide-control={`start:${line.phase}`}
                 aria-disabled={start.command === null}
                 onClick={() => {
                   if (start.command !== null) onSend(start.command)

@@ -3,7 +3,10 @@
 // the house as a whole, the one open panel, and the one polite live region.
 //
 // The shell takes a House Projection and typed callbacks. It holds only UI
-// state: which surface is open, the Still House toggle, the last announcement.
+// state: which surface is open, the Still House toggle, the guide's settings,
+// the last announcement. The Warden's words are read from the projection on
+// every render (`core/house-guide.ts`), and whatever he offers is carried out
+// by pressing a control that is already on this page (`use-guide-press.ts`).
 // It has no reducer for rooms, Doors, ghosts or approvals, no generic approve
 // function, no raw path and no composer. What a panel shows and sends is
 // decided by `renderSurface`, which the upstream room modules fill.
@@ -17,19 +20,23 @@ import {
   type NeedsYouItem,
   type OpenSurface,
 } from '../core/house-projection'
+import { guideView, landingRoom, type GuideTask } from '../core/house-guide'
+import type { WordMode } from '../core/house-words'
 import type { HostSummary } from '../core/interruption-policy'
 import { motionState } from '../core/motion-policy'
 import { HouseMap } from './HouseMap'
 import { HOUSE_STAGE_STYLES } from './house-stage-styles'
 import { ROOM_PAINT_STYLES } from './room-paint-styles'
-import { HOUSE_UI_STYLES } from './house-styles'
+import { HOUSE_UI_STYLES, WIDE_BREAKPOINT_PX } from './house-styles'
 import type { RoomId } from '../core/house-registry'
 import { RoomStage } from './RoomStage'
 import { useHouseSound } from './use-house-sound'
 import { HouseToolbar } from './HouseToolbar'
 import { LiveAnnouncer } from './LiveAnnouncer'
 import { RoomPanelHost, useSurfaceStack, type OpenFocus, type PanelMode } from './RoomPanelHost'
+import { useGuidePress } from './use-guide-press'
 import { useReducedMotion } from './use-reduced-motion'
+import { useStageMetrics } from './use-stage-metrics'
 
 /** What a panel may ask of the shell. Neither call is a decision. */
 export interface SurfaceApi {
@@ -38,6 +45,25 @@ export interface SurfaceApi {
   readonly close: () => void
   /** True while optional motion is off (Still House or the browser's reduced-motion preference). */
   readonly stillHouse: boolean
+}
+
+/** The guide's settings. Page state for the visit: off on every load and written nowhere. */
+export interface GuideSettings {
+  /** The Warden has stepped back. */
+  readonly quiet: boolean
+  /** Kiro's word is shown beside each plain word. */
+  readonly kiroWords: boolean
+  /** Every working object of the room wears its label. */
+  readonly reveal: boolean
+}
+
+export const NO_GUIDE_SETTINGS: GuideSettings = { quiet: false, kiroWords: false, reveal: false }
+
+/** What the one live region says when the visitor changes a setting. They asked, so it is said once. */
+export const SETTING_SAID: Readonly<Record<keyof GuideSettings, (on: boolean) => string>> = {
+  quiet: (on) => (on ? 'The Warden has stepped back. The house map and every control still work.' : 'The Warden is back.'),
+  kiroWords: (on) => (on ? "Kiro's words are shown beside the plain ones." : "Kiro's words are hidden."),
+  reveal: (on) => (on ? 'Everything you can press in this room now has a label.' : 'The labels are off.'),
 }
 
 export interface MansionShellProps {
@@ -71,6 +97,11 @@ export interface MansionShellProps {
   inFlight?: string | null
   /** Sheets of the room panels, appended to the house sheet in the one style element. */
   panelStyles?: string
+  /**
+   * The guide's settings, when the page holds them so they outlast one
+   * Mansion. Without it the shell holds them itself.
+   */
+  guide?: { readonly settings: GuideSettings; readonly onChange: (settings: GuideSettings) => void }
 }
 
 export const CLOSE_LABEL: Readonly<Record<HouseSurfaceTarget['kind'], string>> = {
@@ -91,6 +122,20 @@ export function surfaceTitle(projection: HouseProjection, target: HouseSurfaceTa
     case 'door':
       return `${room.doors.find((door) => door.phase === target.phase)?.phaseName ?? room.name} door`
   }
+}
+
+/** The layout in which the house map is a sheet that is put away: the wide one. */
+const WIDE_LAYOUT = `(min-width: ${WIDE_BREAKPOINT_PX}px)`
+
+/**
+ * True where the map is a put-away sheet. Asked of the browser, and believed
+ * only when the answer is about this very question, so a page that cannot say
+ * (or a stand-in that answers every question alike) counts as narrow.
+ */
+function mapIsPutAway(): boolean {
+  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return false
+  const answer = window.matchMedia(WIDE_LAYOUT)
+  return answer.media === WIDE_LAYOUT && answer.matches
 }
 
 function escapeAttribute(value: string): string {
@@ -127,11 +172,16 @@ export function MansionShell({
   panelMode = 'region',
   inFlight = null,
   panelStyles = '',
+  guide,
 }: MansionShellProps) {
   const root = useRef<HTMLElement>(null)
   const mansionTitle = useRef<HTMLHeadingElement>(null)
+  /** The Warden's first line, so focus can be put on it. */
+  const statusRef = useRef<HTMLParagraphElement>(null)
   const panelId = useId()
   const stack = useSurfaceStack(projection, root, inFlight)
+  // Whether the balloon lies under the room or stands beside it: whichever gives the larger room on this page.
+  const layout = useStageMetrics(root)
 
   // Motion: derived on every render from the two inputs, never stored.
   const [stillHouse, setStillHouse] = useState(false)
@@ -160,8 +210,13 @@ export function MansionShell({
     mansionTitle.current?.focus()
   }, [])
 
+  // A press plan that opens a surface says where focus should land in it (the
+  // thing being decided, never a control that decides) and which control the
+  // visitor pressed, so closing the surface returns focus there.
+  const opening = useRef<{ readonly focus: OpenFocus; readonly from: HTMLElement | null } | null>(null)
   const openFromMap = useCallback(
-    (target: HouseSurfaceTarget, opener: HTMLElement) => stack.open(target, opener, { placement: 'replace' }),
+    (target: HouseSurfaceTarget, opener: HTMLElement) =>
+      stack.open(target, opening.current?.from ?? opener, { placement: 'replace', focus: opening.current?.focus }),
     [stack.open],
   )
   const api: SurfaceApi = useMemo(
@@ -186,18 +241,31 @@ export function MansionShell({
 
   // Escape closes only the top surface. With none open it leaves the Mansion,
   // from anywhere on the page, unless something inside already handled the key.
-  const escape = useRef({ open: stack.top !== null, close: stack.close, onReturn, mapOpen: false, closeMap: () => {} })
-  escape.current = { open: stack.top !== null, close: stack.close, onReturn, mapOpen: escape.current.mapOpen, closeMap: escape.current.closeMap }
+  // Then the map sheet, then the labels, and only then the Mansion itself.
+  const escape = useRef({ open: stack.top !== null, close: stack.close, onReturn, mapOpen: false, closeMap: () => {}, reveal: false, setReveal: (_on: boolean) => {} })
+  escape.current = { ...escape.current, open: stack.top !== null, close: stack.close, onReturn }
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== 'Escape' || event.defaultPrevented) return
+      if (event.defaultPrevented) return
       const now = escape.current
+      // The ? key labels everything that can be pressed. Inside a text field it is just a question mark.
+      if (event.key === '?' && !event.ctrlKey && !event.metaKey && !event.altKey) {
+        const target = event.target instanceof Element ? event.target : null
+        if (target !== null && target.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])') !== null) return
+        event.preventDefault()
+        now.setReveal(!now.reveal)
+        return
+      }
+      if (event.key !== 'Escape') return
       if (now.open) {
         event.preventDefault()
         now.close()
       } else if (now.mapOpen) {
         event.preventDefault()
         now.closeMap()
+      } else if (now.reveal) {
+        event.preventDefault()
+        now.setReveal(false)
       } else if (now.onReturn !== undefined) {
         event.preventDefault()
         now.onReturn()
@@ -211,8 +279,8 @@ export function MansionShell({
   const openKey = top === null ? null : surfaceKey(top.target)
   const sound = useHouseSound(projection, openKey)
   const [turned, setTurned] = useState(false)
-  // The room the Operator is standing in: the one on show, else the last one visited,
-  // else the first that needs them, else the Foyer.
+  // The room the visitor is standing in: the one on show, else the last one visited,
+  // else where the work is (`landingRoom`).
   const [visited, setVisited] = useState<RoomId | null>(null)
   const shown = top === null ? null : top.target.roomId
   useEffect(() => {
@@ -230,21 +298,88 @@ export function MansionShell({
       setMapOpen(false)
       return
     }
-    // A surface just closed and focus went back to the control that opened it.
-    // Where the map is a sheet that is put away (the wide layout), that control
-    // is clipped out of sight, so the Caretaker's choices take focus instead.
+    // A surface just closed and focus went back to a control of the house map.
+    // Where the map is a sheet that is put away (the wide layout lays it over
+    // the room only on request), focus there would pull the sheet back out, so
+    // the Warden's first line takes it instead, or the control that calls him.
     const sheet = document.activeElement?.closest<HTMLElement>('[data-map-sheet]') ?? null
-    if (sheet !== null && typeof window !== 'undefined' && window.getComputedStyle(sheet).clipPath.startsWith('inset')) {
-      root.current?.querySelector<HTMLElement>('[data-guide-option]')?.focus()
+    if (sheet !== null && mapIsPutAway()) {
+      const line = statusRef.current ?? root.current?.querySelector<HTMLElement>('[data-guide-call]')
+      line?.focus()
     }
   }, [openKey])
   escape.current.mapOpen = mapOpen
   escape.current.closeMap = () => {
     setMapOpen(false)
-    root.current?.querySelector<HTMLElement>('[data-guide-option="map"]')?.focus()
+    root.current?.querySelector<HTMLElement>('[data-map-toggle]')?.focus()
   }
-  const wanted = shown ?? visited ?? needsYouTarget(projection.needsYou) ?? 'foyer'
+  const wanted = shown ?? visited ?? landingRoom(projection)
   const current = projection.rooms.some((room) => room.roomId === wanted) ? wanted : (projection.rooms[0]?.roomId ?? 'foyer')
+
+  // The guide's settings: quiet, Kiro's words, labels.
+  const [ownSettings, setOwnSettings] = useState<GuideSettings>(NO_GUIDE_SETTINGS)
+  const settings = guide?.settings ?? ownSettings
+  const changeSettings = guide?.onChange ?? setOwnSettings
+  const settingsNow = useRef(settings)
+  settingsNow.current = settings
+  const setSetting = useCallback(
+    (name: keyof GuideSettings, on: boolean) => {
+      if (settingsNow.current[name] === on) return
+      changeSettings({ ...settingsNow.current, [name]: on })
+      say(SETTING_SAID[name](on))
+    },
+    [changeSettings, say],
+  )
+  escape.current.reveal = settings.reveal
+  escape.current.setReveal = (on) => setSetting('reveal', on)
+
+  // What the visitor is in the middle of (asking for a change). It ends with the surface it belongs to.
+  const [task, setTask] = useState<GuideTask | null>(null)
+  useEffect(() => setTask(null), [openKey])
+
+  // The Warden's words for the room on show: read from the projection, held nowhere.
+  const words: WordMode = settings.kiroWords ? 'with-kiro' : 'plain'
+  const view = guideView(projection, {
+    roomId: current,
+    surface: top === null ? null : top.target,
+    task,
+    quiet: settings.quiet,
+    words,
+    reveal: settings.reveal,
+    mapOpen,
+    canLeave: onReturn !== undefined,
+  })
+  const note = useRef<string | null>(null)
+  note.current = view?.note ?? null
+  const press = useGuidePress({
+    root,
+    setOpening: (next) => {
+      opening.current = next
+    },
+    onTask: setTask,
+    fallbackReason: () => note.current,
+  })
+  // A press that could not be carried out: the visitor asked, so the reason is said once.
+  useEffect(() => {
+    if (press.refusal !== null) say(press.refusal)
+  }, [press.refusal, say])
+
+  // Stepping back puts focus on the control that calls him again; calling him puts it on his first line.
+  const guideFocus = useRef<'status' | 'call' | null>(null)
+  const stepBack = useCallback(() => {
+    guideFocus.current = 'call'
+    setSetting('quiet', true)
+  }, [setSetting])
+  const callWarden = useCallback(() => {
+    guideFocus.current = 'status'
+    setSetting('quiet', false)
+  }, [setSetting])
+  useEffect(() => {
+    const where = guideFocus.current
+    guideFocus.current = null
+    if (where === 'status') statusRef.current?.focus()
+    if (where === 'call') root.current?.querySelector<HTMLElement>('[data-guide-call]')?.focus()
+  }, [settings.quiet])
   const modal = panelMode === 'dialog' && top !== null
   // The page behind a modal dialog is inert. React 18 passes the attribute through as a string.
   const behind = modal ? { inert: '' } : {}
@@ -258,6 +393,7 @@ export function MansionShell({
       data-still={motion.effective === 'none'}
       data-mode={projection.mode}
       data-map={mapOpen ? 'open' : 'closed'}
+      data-layout={layout}
       ref={root}
       onKeyDown={(event) => {
         // Handled here first, so a listener further out sees the key as taken.
@@ -280,14 +416,30 @@ export function MansionShell({
           view={{ turned, onToggle: () => setTurned((value) => !value) }}
         />
         {banner}
-        <RoomStage
-          projection={projection}
-          roomId={current}
-          open={top !== null && top.target.roomId === current}
-          onReturn={onReturn}
-          mapOpen={mapOpen}
-          onToggleMap={toggleMap}
-        />
+        {view === null ? null : (
+          <RoomStage
+            projection={projection}
+            roomId={current}
+            view={view}
+            words={words}
+            quiet={settings.quiet}
+            settings={{
+              mapOpen,
+              onToggleMap: toggleMap,
+              kiroWords: settings.kiroWords,
+              onToggleWords: () => setSetting('kiroWords', !settingsNow.current.kiroWords),
+              reveal: settings.reveal,
+              onToggleReveal: () => setSetting('reveal', !settingsNow.current.reveal),
+            }}
+            open={top !== null && top.target.roomId === current}
+            onPress={press.run}
+            onStepBack={stepBack}
+            onCallWarden={callWarden}
+            onReturn={onReturn}
+            refusal={press.refusal}
+            statusRef={statusRef}
+          />
+        )}
         {notes}
       </div>
       {top === null ? null : (

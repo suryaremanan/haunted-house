@@ -2,9 +2,13 @@
 // (Spec 6 task 7.5): canonical records acknowledged by the backend drive the
 // real adapters, the pure policy, the host toast and the one live region.
 // **Validates: Requirements 4.4, 4.5, 4.6, 4.7, 8.1 to 8.10, 10.4**
-import { act, render } from '@testing-library/react'
+//
+// The last block is the Warden's (Spec 8, Requirements 5.1 to 5.5, 5.9 and 6.6):
+// a guide who is read, never heard.
+import { act, fireEvent, render, screen } from '@testing-library/react'
 import { useEffect } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { SETTING_SAID } from './components/MansionShell'
 import type { RoomGhosts } from './core/room-projection'
 import type { AppEvent } from './core/seance-event'
 import type { WorkflowProjection } from './core/workflow-projection'
@@ -196,5 +200,74 @@ describe('sidebar badge', () => {
     expect(host.badge).toHaveBeenLastCalledWith(0)
     await advance(60_000)
     expect(toasts()).toEqual([])
+  })
+})
+
+describe('the Warden stays inside the interruption budget', () => {
+  const words = () => document.querySelector<HTMLElement>('[data-guide-text]')!.textContent
+  const pose = () => document.querySelector<HTMLElement>('[data-guide-pose]')!.textContent
+  const press = (name: string) => fireEvent.click(screen.getByRole('button', { name }))
+  const lastBadge = () => host.badge.mock.calls.at(-1)?.[0]
+
+  it('changes his words in place when the house changes, and says nothing', async () => {
+    await mount()
+    // The visitor walks to the Workshop: their own press.
+    await act(async () => {
+      fireEvent.click(document.querySelector<HTMLElement>('[data-room-control="workshop"]')!)
+      await vi.advanceTimersByTimeAsync(20)
+    })
+    expect(document.querySelector('[data-stage-room]')).toHaveAttribute('data-stage-room', 'workshop')
+    const before = { words: words(), said: announcer().textContent, badge: lastBadge() }
+
+    // A ghost starts working under them. Working is ambient: the balloon changes, nothing is announced.
+    await acknowledge(started(1, 'tinker-1'))
+    expect(words()).not.toBe(before.words)
+    expect(words()).toContain('Tinker 1')
+    expect(announcer().textContent).toBe(before.said)
+    expect(toasts()).toEqual([])
+    expect(lastBadge()).toBe(before.badge)
+    // Not later either, and focus stayed where the visitor put it.
+    await advance(30_000)
+    expect(announcer().textContent).toBe(before.said)
+    expect(toasts()).toEqual([])
+    expect(document.querySelector('[data-guide-balloon]')!.contains(document.activeElement)).toBe(false)
+  })
+
+  it('asks the host for nothing and starts no timer, whatever he is asked to do', async () => {
+    await mount()
+    const badge = { calls: host.badge.mock.calls.length, value: lastBadge() }
+    const timers = vi.getTimerCount()
+    press('Something else…')
+    press("Show Kiro's words: off")
+    press('Show me what I can press: off')
+    press('Step back')
+    // The visitor changed a setting, so the one live region says it once. Nothing else speaks.
+    expect(announcer().textContent).toBe(SETTING_SAID.quiet(true))
+    expect(pose()).toBe('The Warden has stepped back.')
+    press('Call the Warden')
+    expect(announcer().textContent).toBe(SETTING_SAID.quiet(false))
+    expect(toasts()).toEqual([])
+    expect(host.badge.mock.calls).toHaveLength(badge.calls)
+    expect(lastBadge()).toBe(badge.value)
+    expect(vi.getTimerCount()).toBe(timers)
+    // One live region throughout, and the balloon is not one.
+    expect(liveRegions(document.body)).toHaveLength(1)
+    expect(document.querySelector('[data-guide-balloon]')!.closest('[aria-live], [role="status"], [role="alert"], [role="dialog"], [aria-modal]')).toBeNull()
+  })
+
+  it('emits the same summary with the Warden stepped back', async () => {
+    await mount()
+    press('Step back')
+    expect(document.querySelector('[data-guide-balloon]')).toBeNull()
+    await acknowledge(started(1, 'tinker-1'), ghostEvent(2, 'tinker-1', 'run_blocked', { reason: 'locked_door' }))
+    await advance(4_000)
+    await acknowledge(started(3, 'tinker-3'), ghostEvent(4, 'tinker-3', 'run_failed', { reason: 'crew_error' }))
+    await advance(10_100)
+    // Word for word what the house says with him talking (the first test of this file).
+    expect(toasts()).toEqual(['Tinker 1 is blocked. Tinker 3 failed. 2 events.'])
+    expect(announcer().textContent).toBe(toasts()[0])
+    expect(liveRegions(document.body)).toHaveLength(1)
+    // He stays back: the house changing does not bring the balloon out.
+    expect(document.querySelector('[data-guide-balloon]')).toBeNull()
   })
 })

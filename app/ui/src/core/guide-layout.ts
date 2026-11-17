@@ -56,6 +56,97 @@ export const STAGE_BOXES = {
  */
 export const GUIDE_RESERVE: Box = { left: 84, top: 82, width: 16, height: 18 }
 
+/** How far the Warden's feet stand below the room, in parts of the room's width. He rises into the room only inside the Guide Reserve. */
+export const WARDEN_BELOW = (WARDEN_WIDTH * WARDEN_ASPECT) / 100 - (GUIDE_RESERVE.height / 100) * (SCENE_HEIGHT / SCENE_WIDTH)
+
+// ---------------------------------------------------------------------------
+// Which layout the stage takes. The room and the guide should fit one window,
+// and the room should be as large as that allows. On a tall window the balloon
+// lies under the room; on a short one it stands beside it. Which of the two
+// gives the larger room depends on the window, on how wide the house is on the
+// page and on how much the page has above the room, so it is worked out here
+// from those numbers. The style sheet sizes the room with the same lengths.
+
+/** Below this window width the room, the balloon and the house map follow one another in the page. */
+export const STAGE_WIDE_PX = 900
+/** The gap between the room and the balloon's column, in CSS pixels. */
+export const STAGE_GUTTER_PX = 12
+
+/** The stage's lengths that do not scale with the room, in rem. */
+export const STAGE_REM = {
+  /** The balloon's column beside the room: at least, and at most. */
+  guideMin: 20,
+  guideMax: 26,
+  /** Under the room when the balloon stands beside it: the guide's settings (two rows at most) and the words beside the Warden. */
+  strip: 8,
+  /** Under the room when the balloon lies under it: the name plate, the balloon and the settings. */
+  apron: 22,
+  /** The smallest room beside the balloon, and above it. */
+  sceneMinSide: 30,
+  sceneMinStacked: 38,
+  /** The narrowest house in which the balloon stands beside the room. */
+  sideMin: 56,
+} as const
+
+/** The strip under the room is never shorter than this part of the room's width, so the Warden has floor to stand on. */
+export const STRIP_OF_SCENE = 0.085
+
+export type StageLayout = 'narrow' | 'stacked' | 'side'
+
+/** What the page measures. All lengths in CSS pixels. */
+export interface StageWindow {
+  readonly windowWidth: number
+  readonly windowHeight: number
+  /** The width the house has to itself on the page. */
+  readonly houseWidth: number
+  /** How far down the page the room starts: everything the page has above it. */
+  readonly sceneTop: number
+  /** One rem. */
+  readonly rem: number
+}
+
+export interface StageFit {
+  readonly layout: StageLayout
+  /** The room's width. Its height is that times 750 / 1200. */
+  readonly sceneWidth: number
+  /** The width of the balloon's column beside the room; 0 in the other layouts. */
+  readonly guideWidth: number
+}
+
+const SCENE_RATIO = SCENE_WIDTH / SCENE_HEIGHT
+
+/** The widest room whose height leaves `below` free under it on one screen. */
+function roomThatFits(stage: StageWindow, below: number): number {
+  return (stage.windowHeight - stage.sceneTop - below) * SCENE_RATIO
+}
+
+/** The widest room beside the balloon: it leaves the strip under it, and the strip grows with the room. */
+function roomBeside(stage: StageWindow): number {
+  const free = stage.windowHeight - stage.sceneTop
+  return Math.min(roomThatFits(stage, STAGE_REM.strip * stage.rem), free / (1 / SCENE_RATIO + STRIP_OF_SCENE))
+}
+
+/**
+ * The layout of the stage and the size of its room. The balloon stands beside
+ * the room where the house is wide enough and that gives a room at least as
+ * large as the balloon under it would.
+ */
+export function stageFit(stage: StageWindow): StageFit {
+  const { rem, houseWidth } = stage
+  if (stage.windowWidth < STAGE_WIDE_PX) return { layout: 'narrow', sceneWidth: Math.max(0, houseWidth), guideWidth: 0 }
+  const under = roomThatFits(stage, STAGE_REM.apron * rem)
+  const beside = roomBeside(stage)
+  const stackedFit = Math.min(houseWidth, under)
+  const sideFit = Math.min(houseWidth - STAGE_REM.guideMin * rem - STAGE_GUTTER_PX, beside)
+  if (houseWidth < STAGE_REM.sideMin * rem || sideFit < stackedFit) {
+    return { layout: 'stacked', sceneWidth: Math.max(0, Math.min(houseWidth, Math.max(STAGE_REM.sceneMinStacked * rem, under))), guideWidth: 0 }
+  }
+  const fit = Math.max(STAGE_REM.sceneMinSide * rem, beside)
+  // What the room does not need goes to the balloon, up to its widest.
+  const guideWidth = Math.min(STAGE_REM.guideMax * rem, Math.max(STAGE_REM.guideMin * rem, houseWidth - STAGE_GUTTER_PX - fit))
+  return { layout: 'side', sceneWidth: Math.min(houseWidth - guideWidth - STAGE_GUTTER_PX, fit), guideWidth }
+}
+
 /** How far above the floor line a ghost floats, in percent of the scene height. */
 const GHOST_BOTTOM: Readonly<Partial<Record<PresentationGhostState, number>>> = { failed: 21, blocked: 21, working: 30 }
 export const GHOST_BOTTOM_DEFAULT = 27

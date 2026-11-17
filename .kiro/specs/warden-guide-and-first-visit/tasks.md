@@ -135,56 +135,63 @@ The guide adds no reducer, command, approval path, endpoint, live region, toast,
 - [x] 5. Checkpoint: the core says the right things
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 6. Draw the Warden (MVP)
-  - [ ] 6.1 Replace the Caretaker art
+- [x] 6. Draw the Warden (MVP)
+  - [x] 6.1 Replace the Caretaker art
     - Add `WardenArt` with its five poses to `app/ui/src/components/room-paint.tsx` and remove `CaretakerArt`. Use the scene palette classes only; add any new scene token to both palettes in `house-palette.ts`.
-    - In the style sheets, size the Warden from `WARDEN_WIDTH` of `core/guide-layout.ts`, give him no animation, remove the Caretaker's loop, and gate the one pose cross-fade on `data-motion='low-frequency'` and the browser's motion preference.
-    - _Writes: `app/ui/src/components/room-paint.tsx`, `app/ui/src/components/room-paint-styles.ts`, `app/ui/src/components/house-palette.ts`, `app/ui/src/components/house-stage-styles.ts`_
+    - In the style sheets, size the Warden from `WARDEN_WIDTH` of `core/guide-layout.ts`, give him no animation and no transition, and remove the Caretaker's loop, his stand and his text.
+    - _Writes: `app/ui/src/components/room-paint.tsx`, `app/ui/src/components/room-paint-styles.ts`, `app/ui/src/components/house-palette.ts`, `app/ui/src/components/house-stage-styles.ts`, `app/ui/src/components/house-stage-art.tsx`, `app/ui/src/core/house-guide.ts`_
     - _Requirements: 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.9, 1.10, 1.11, 1.12, 1.13_
 
-  - [ ]* 6.2 Add art and style contract tests
-    - Five distinct poses; hidden from assistive technology; no image, external use, script, animation element or raster data; palette classes only; no animation on the Warden; the cross-fade is gated; the width equals the layout constant; no Caretaker name is left in source.
+  - [x]* 6.2 Add art and style contract tests
+    - Five distinct poses; hidden from assistive technology; no image, external use, script, animation element or raster data; palette classes only; no animation and no transition on the Warden; the width equals the layout constant; no Caretaker name is left in source.
     - _Writes: `app/ui/src/components/warden-art.test.tsx`_
     - _Requirements: 1.2, 1.3, 1.5, 1.6, 1.7, 1.9, 1.10, 1.11_
 
-- [ ] 7. Give the Warden his balloon (MVP)
-  - [ ] 7.1 Mark the real controls
-    - Add a `data-guide-control` attribute to the existing start, approve, reject, revision, task and retry controls, and reuse the existing `data-control` and `data-action` values. Change no label, name, handler or order.
-    - _Writes: `app/ui/src/rooms/house/RoomPanel.tsx`, `app/ui/src/rooms/house/DecisionButtons.tsx`, `app/ui/src/rooms/house/DoorPanel.tsx`, `app/ui/src/rooms/house/RiskyActionPanel.tsx`, `app/ui/src/rooms/house/RevisionRequest.tsx`, `app/ui/src/rooms/workshop/WorkshopTaskBoard.tsx`, `app/ui/src/components/RunRecoveryControls.tsx`_
+- [x] 7. Give the Warden his balloon (MVP)
+  - [x] 7.1 Mark the real controls
+    - Add a `data-guide-control` attribute to the existing start, approve, reject, revision, task, retry and playback controls. Change no label, name, handler or order.
+    - _Writes: `app/ui/src/rooms/house/RoomPanel.tsx`, `app/ui/src/rooms/house/DecisionButtons.tsx`, `app/ui/src/rooms/house/DoorPanel.tsx`, `app/ui/src/rooms/house/RiskyActionPanel.tsx`, `app/ui/src/rooms/house/RevisionRequest.tsx`, `app/ui/src/rooms/workshop/WorkshopTaskBoard.tsx`, `app/ui/src/components/RunRecoveryControls.tsx`, `app/ui/src/rooms/attic/ReplayBar.tsx`, `app/ui/src/rooms/attic/ReplayControls.tsx`_
     - _Requirements: 4.1, 7.10_
 
-  - [ ] 7.2 Implement the balloon and the press runner
+  - [x] 7.2 Implement the balloon and the press runner
     - Add `app/ui/src/components/GuideBalloon.tsx`: status line (focusable), "What is this?" per named term, the question, the Primary Options with their consequence as description, "Something else…" with the full list and the Word Book, and "Step back". Every option carries `data-guide-option`.
     - Add `app/ui/src/components/use-guide-press.ts`: run a press plan one press per commit; stop at a missing or disabled control and report the room's reason; drop a plan when the projection changes. Import no adapter and build no command.
     - _Writes: `app/ui/src/components/GuideBalloon.tsx`, `app/ui/src/components/use-guide-press.ts`_
     - _Requirements: 3.1, 3.5, 3.6, 4.1, 4.2, 4.4, 4.5, 4.7, 4.9, 5.1, 5.5, 5.9, 7.5, 7.7, 7.8_
 
-  - [ ] 7.3 Put the Warden on the stage
-    - In `RoomStage.tsx`, render the Warden, his pose label and the balloon in the apron under the scene; read press areas from `core/guide-layout.ts`; show "Call the Warden" in the stepped-back pose.
+  - [x] 7.3 Put the Warden on the stage
+    - In `RoomStage.tsx`, render the Warden, his pose label, the balloon and the guide's settings group ("House map", "Show Kiro's words", "Show me what I can press", each with `aria-pressed`) in the apron; read press areas from `core/guide-layout.ts`; show "Call the Warden" in the stepped-back pose.
     - In `MansionShell.tsx`, take the guide settings from the page, use `landingRoom` for the room on show, pass the open surface and the task in hand to `guideView`, move focus to the status line when the options change, and say a changed setting once through the one live region.
-    - In `HouseToolbar.tsx`, add "House map", "Show Kiro's words" and "Show me what I can press", each with `aria-pressed`. Hold the three guide settings in `App.tsx` and pass them through `rooms/house/House.tsx`.
-    - _Writes: `app/ui/src/components/RoomStage.tsx`, `app/ui/src/components/MansionShell.tsx`, `app/ui/src/components/HouseToolbar.tsx`, `app/ui/src/components/house-stage-styles.ts`, `app/ui/src/rooms/house/House.tsx`, `app/ui/src/App.tsx`_
+    - Hold the three guide settings in `App.tsx` and pass them through `rooms/house/House.tsx`.
+    - Add `stageFit` to `core/guide-layout.ts` and `components/use-stage-metrics.ts`: measure the page above the room and the toolbar's height for the style sheet, and take the wide layout that gives the larger room. Lay the open sheet and the house map under the toolbar and clear of the Guide Reserve.
+    - _Writes: `app/ui/src/components/RoomStage.tsx`, `app/ui/src/components/MansionShell.tsx`, `app/ui/src/components/use-stage-metrics.ts`, `app/ui/src/components/house-stage-styles.ts`, `app/ui/src/core/guide-layout.ts`, `app/ui/src/rooms/house/House.tsx`, `app/ui/src/App.tsx`_
     - _Requirements: 1.1, 1.6, 1.8, 5.2, 5.3, 5.4, 5.6, 5.7, 5.8, 6.1, 6.2, 6.3, 6.4, 6.7, 6.8, 6.9, 7.6, 7.11, 11.1_
 
-  - [ ]* 7.4 Add balloon tests and rewrite the Caretaker's
+  - [x]* 7.4 Add balloon tests and rewrite the Caretaker's
     - Add `guide-balloon.test.tsx` for the order of the five parts, descriptions, in-place disclosures, Kiro's words, "Step back" and "Call the Warden", and focus after the list changes.
-    - Rewrite the Caretaker assertions in the four files below for the Warden. Keep every assertion about map controls, focus return, parity and authority.
-    - _Writes: `app/ui/src/components/guide-balloon.test.tsx`, `app/ui/src/components/house-stage.test.tsx`, `app/ui/src/components/MansionShell.test.tsx`, `app/ui/src/house-keyboard.test.tsx`, `app/ui/src/house-live-replay.test.tsx`, `app/ui/src/components/HouseToolbar.test.tsx`_
+    - Add `guide-shell.test.tsx` for the press runner in the shell (real controls pressed, decision focus, refusals, one press per commit), Quiet Mode, the settings and the Escape order, and `stage-layout.test.tsx` for the measuring hook and the sheet facts.
+    - Rewrite the Caretaker assertions in the files below for the Warden. Keep every assertion about map controls, focus return, parity and authority.
+    - _Writes: `app/ui/src/components/guide-balloon.test.tsx`, `app/ui/src/components/guide-shell.test.tsx`, `app/ui/src/components/stage-layout.test.tsx`, `app/ui/src/components/house-stage.test.tsx`, `app/ui/src/house-keyboard.test.tsx`, `app/ui/src/replay-foyer.test.tsx`, `app/ui/src/test/shell-kit.tsx`_
     - _Requirements: 3.1, 4.4, 4.5, 6.1, 6.2, 6.3, 6.4, 6.7, 6.8, 7.6, 7.7, 14.9_
 
-  - [ ]* 7.5 Extend the interruption tests
+  - [x]* 7.5 Extend the interruption tests
     - A changing balloon leaves the live region as it was; the guide calls no toast, badge or sound; one live region in a mansion; Quiet Mode changes no summary; the guide starts no timer.
     - _Writes: `app/ui/src/house-interruptions.test.tsx`_
     - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5, 5.9, 6.6_
 
-- [ ] 8. Reveal what can be pressed (MVP)
-  - [ ] 8.1 Implement the object labels, the key and the Escape order
+  - [x]* 7.6 Write the property test for the stage fit
+    - **Property 12: The stage fits its window**
+    - **Validates: Requirements 5.6, 5.8**
+    - _Writes: `app/ui/src/core/stage-fit.property.test.ts`_
+
+- [x] 8. Reveal what can be pressed (MVP)
+  - [x] 8.1 Implement the object labels, the key and the Escape order
     - Add `app/ui/src/components/ObjectLabels.tsx`: nothing with Reveal Mode off; with it on, one button per working object in reading order, with visible text, a full accessible name and the object's own press plan.
     - Toggle on `?` unless the event target is an input, a textarea or editable content. Escape closes the top surface, then the map sheet, then Reveal Mode, and only then leaves the Mansion.
     - _Writes: `app/ui/src/components/ObjectLabels.tsx`, `app/ui/src/components/RoomStage.tsx`, `app/ui/src/components/MansionShell.tsx`, `app/ui/src/components/house-stage-styles.ts`_
     - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 8.8, 8.9, 8.10_
 
-  - [ ]* 8.2 Add reveal tests
+  - [x]* 8.2 Add reveal tests
     - _Writes: `app/ui/src/components/object-labels.test.tsx`_
     - _Requirements: 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 8.8, 8.9_
 
@@ -311,7 +318,7 @@ The guide adds no reducer, command, approval path, endpoint, live region, toast,
     },
     {
       "id": 6,
-      "tasks": ["7.4", "7.5", "8.1", "9.2", "10.2"]
+      "tasks": ["7.4", "7.5", "7.6", "8.1", "9.2", "10.2"]
     },
     {
       "id": 7,

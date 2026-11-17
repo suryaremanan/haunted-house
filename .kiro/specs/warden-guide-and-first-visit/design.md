@@ -335,15 +335,30 @@ function workingObjects(room: RoomPresentation, view: Pick<GuideView, 'previous'
 
 There are three layouts, and in none of them does the balloon lie over the room.
 
-- **Below 900 CSS pixels:** the room, then the labels (as a plain list when they are on), then the room's name plate, then the balloon, the guide's settings and the Warden, one after another in the page.
-- **From 900 CSS pixels:** the same order, with an apron under the room. The balloon and the guide's settings lie in the apron; the Warden stands at its right end with his feet on its lower edge. He is taller than a short apron, so his head and shoulders may rise into the room, and only inside the Guide Reserve.
-- **From 1100 CSS pixels in a window at least 3:2:** the room takes the height of the window and the balloon stands in a column beside it. The Warden stands in the room's own corner, in front of the right end of the desk, on the floor line of the strip under the room; again only the Guide Reserve is touched. This keeps the room large on a short, wide window, where an apron would shrink it.
+- **Narrow, below 900 CSS pixels of window width:** the room, then the labels (as a plain list when they are on), then the room's name plate, then the balloon, the guide's settings and the Warden, one after another in the page.
+- **Stacked:** the same order, with an apron under the room. The balloon and the guide's settings lie in the apron; the Warden stands at its right end with his feet on its lower edge. He is taller than a short apron, so his head and shoulders may rise into the room, and only inside the Guide Reserve.
+- **Side:** the room takes the height of the window and the balloon stands in a column beside it, under the room's name plate. Under the room is one strip with the guide's settings. The Warden stands in the room's own corner, in front of the right end of the desk, his head at the top of the Guide Reserve and his feet on the strip. The balloon rises from where he stands; the two columns do not push each other, so a tall balloon grows down past the strip and never opens a gap under the room.
+
+Which of the two wide layouts is used is not a fixed breakpoint. The room and the guide should fit one window, and the room should be as large as that allows: on a tall window that is the stacked layout, on a short one the side layout, and where the line falls depends on how wide the house is on the host's page and on how much the page has above the room (the host's own chrome, the page title, a recording's bar). `stageFit` in `core/guide-layout.ts` works it out from those numbers:
+
+```ts
+type StageLayout = 'narrow' | 'stacked' | 'side'
+interface StageWindow { windowWidth: number; windowHeight: number; houseWidth: number; sceneTop: number; rem: number }
+/** The layout, the room's width and the width of the balloon's column. */
+function stageFit(stage: StageWindow): { layout: StageLayout; sceneWidth: number; guideWidth: number }
+```
+
+It takes the side layout in a house of at least 56 rem when the room that fits beside a 20 rem balloon is at least as wide as the room that fits above a 22 rem apron. Beside the room, width the room cannot use goes to the balloon, up to 26 rem, which makes the balloon shorter.
+
+`components/use-stage-metrics.ts` measures what the style sheet cannot know and hands it over as two custom properties on the shell: `--hh-scene-top`, how far down the page the room starts, and `--hh-toolbar-h`, how tall the toolbar over the room has wrapped. It returns the layout for the shell's `data-layout`. It measures when the house or the window changes size (one `ResizeObserver`, one `resize` listener), never on a timer and never on scroll. Where the page cannot measure, the sheet's defaults stand and the layout is stacked. The style sheet sizes the room with the same lengths as `stageFit`, so the two agree.
+
+The balloon has two parts: what is true now (the status line, "What is this?", the question) stays in view, and what can be done (the choices, "Something else…" with its list and the Word Book) lies under it. In the two wide layouts the balloon is at most as tall as the window has room for, and its second part scrolls inside it; in the narrow layout it is as tall as its words.
 
 The Guide Reserve is the bottom-right corner in front of the desk, where the scene holds decoration only. The right-wall door ends at 81 percent of the scene height, the ledger and the bell lie left of 56 percent of its width, and every ghost slot ends above 80 percent, so none of them reaches the reserve. In a room with a door in its back wall the ghosts' band ends before that door.
 
-The room is sized as one length (`--hh-scene-w`), from which the Warden (12.75 percent of it wide, so twice a ghost's height), the open room sheet and the map sheet take their sizes. The room, what stands under or beside it and the toolbar are sized to fit one window; a recording's bar is counted too. The art is vector and scales.
+The room is sized as one length (`--hh-scene-w`), from which the Warden (12.75 percent of it wide, so twice a ghost's height), the open room sheet and the map sheet take their sizes. The art is vector and scales.
 
-The open room sheet and the map sheet share the room's grid row, so they lie over the room and never over the apron.
+The open room sheet and the map sheet share the room's grid row and lie over the left of the room: they start under the toolbar, however many rows its tags have wrapped onto, end inside the room, and are 60 and 80 percent of the room wide from 3 percent in, so both end before the Guide Reserve begins at 84 percent. Neither reaches the name plate, the balloon or the Warden.
 
 ### The Warden
 
@@ -355,7 +370,7 @@ interface WardenArtProps { readonly pose: WardenPose; readonly held?: SpectreRol
 
 - One silhouette, five poses: a hood with two lantern eyes and no face, a long robe that ends in mist, a ring of heavy keys at the belt, a chain that trails from one cuff. Watching: hands folded on the key ring. Pointing: one arm out toward the room. Offering a key: one key held out on the open hand. Holding: the chain taut around a small ghost shape at his side. Stepped back: turned three quarters away, hood lowered, smaller and dimmed.
 - Flat shapes from the scene palette, through the `hh-p-*` fill and `hh-ps-*` line classes. One wrapper, `aria-hidden="true"`, `focusable="false"`. No `<image>`, `<use>` to another document, script, animation element or raster data.
-- No loop. The lantern eyes are a steady fill. A pose change cross-fades once, only under `data-motion='low-frequency'` and `prefers-reduced-motion: no-preference`; otherwise it is instant. The Caretaker's hover loop is removed.
+- No loop and no transition. The lantern eyes are a steady fill, and a pose changes between one look and the next, under every motion setting. The Caretaker's hover loop, his stand and his text are removed.
 - The pose label is a line of real text under the figure. In the stepped-back pose the same block holds the "Call the Warden" button.
 - The character is original and must not resemble a known mascot or film ghost. A static scan cannot judge that, so the owner's originality review in `docs/assets-checklist.md` gains one line for the Warden.
 
@@ -373,9 +388,9 @@ interface WardenArtProps { readonly pose: WardenPose; readonly held?: SpectreRol
 
 `components/ObjectLabels.tsx` renders the `workingObjects` of the room. With Reveal Mode off it renders nothing; the painted spots stay pointer shortcuts hidden from assistive technology, as today. With it on, each object gets a button at its box: visible text ("Archivist: working", "Requirements door: waiting", "To the Foyer", "Open this room's sheet", "What needs you"), an accessible name that adds what pressing does, and the same press plan as the object. The list is in reading order (left to right, top to bottom). The `?` key toggles it unless the event target is an input, a textarea or editable content. Escape closes, in order: the top surface, the map sheet, Reveal Mode, and only then leaves the Mansion.
 
-### Toolbar
+### The guide's settings
 
-`HouseToolbar` gains three tags beside Still House and Sound: "House map" (the toggle that today exists only as a balloon option), "Show Kiro's words", and "Show me what I can press". Each exposes `aria-pressed`. They are what keeps every setting reachable while the Warden has stepped back.
+The apron holds a group named "Guide settings", outside the balloon, with three tags: "House map" (shown where the map is a put-away sheet), "Show Kiro's words" and "Show me what I can press". Each exposes `aria-pressed` and says its state in words, as the toolbar's tags do. They stay when the Warden has stepped back, which is what keeps every setting reachable in Quiet Mode. The toolbar itself is unchanged.
 
 ### First visit
 
@@ -459,9 +474,9 @@ function builtView(projection: HouseProjection, input: BuiltInput): BuiltView   
 | 2 | `wardenPose`, the status and pose table, no timer in the guide |
 | 3 | `guideView`, the option table, approved verbs, banned phrases, bounded lengths, `GuideBalloon` |
 | 4 | Press plans, `use-guide-press`, `data-guide-control`, decision focus rule, one press per commit |
-| 5 | In-place updates, no host effect from the guide, apron layout, Guide Reserve, one live region |
-| 6 | Quiet setting, stepped-back pose, "Call the Warden", toolbar "House map" |
-| 7 | Word Book, term slots, `word`, "What is this?", toolbar toggle, upstream word check |
+| 5 | In-place updates, no host effect from the guide, the three layouts and `stageFit`, Guide Reserve, one live region |
+| 6 | Quiet setting, stepped-back pose, "Call the Warden", the settings group's "House map" |
+| 7 | Word Book, term slots, `word`, "What is this?", the settings group's toggle, upstream word check |
 | 8 | `workingObjects`, `ObjectLabels`, `?` key, Escape order |
 | 9 | `visitReducer`, `visitorName`, `greeting`, `Gate` |
 | 10 | `EXAMPLE_IDEAS`, `mansionNameFromIdea`, `IdeaStep`, the Foyer controller's `create` and `open`, `hallGuide` |
@@ -550,6 +565,12 @@ For all House Projections and built inputs, `builtView` reports `built` exactly 
 
 **Validates: Requirements 13.2, 13.3, 13.4, 13.8, 13.9**
 
+### Property 12: The stage fits its window
+
+For all windows, house widths, amounts of page above the room and rem sizes, `stageFit` is narrow exactly below 900 pixels of window width; takes the side layout only in a house of at least 56 rem, and exactly when the room that fits beside the balloon is at least as wide as the room that fits above it; never makes the room and the balloon's column wider than the house; ends the room and what stands under it inside the window unless the room is at its smallest size; and never gives a smaller room to a taller window.
+
+**Validates: Requirements 5.6, 5.8**
+
 ## Error Handling
 
 | Condition | Guide behavior | Authority behavior |
@@ -598,6 +619,7 @@ Feature: warden-guide-and-first-visit, Property N: <property title>
 | 9 | `landing-room.property.test.ts` | Projections with and without Needs You items, every door combination |
 | 10 | `guide-layout.property.test.ts` | Every room, zero to four ghosts, every ghost state, one or two doors |
 | 11 | `house-built.property.test.ts` | Every door combination, partial task lists, both modes |
+| 12 | `stage-fit.property.test.ts` | Windows from a phone to a large display, houses narrower than their window, page chrome above the room, six rem sizes |
 
 The tests use independent reference tables. They read no SDK, DOM, network, filesystem or clock.
 

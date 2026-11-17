@@ -83,6 +83,7 @@ export function RiskyActionPanel({ view, onSend }: RiskyActionPanelProps) {
             busy={view.busy}
             subject={`${view.title.toLowerCase()} for ${ghostName}, digest ${view.digestPrefix}`}
             describedBy={view.blockedText === null ? undefined : blockedId}
+            proposalId={view.proposalId}
             onSend={onSend}
           />
         </>

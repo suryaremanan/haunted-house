@@ -53,6 +53,7 @@ export function ReplayControls({
           className="hh-attic-button"
           data-variant="primary"
           data-action={transport.playAction}
+          data-guide-control="attic:toggle"
           aria-disabled={!transport.play.enabled}
           aria-describedby={describedBy('play', transport.play)}
           onClick={onPlay}
@@ -86,6 +87,7 @@ export function ReplayControls({
           type="button"
           className="hh-attic-button"
           data-action="next"
+          data-guide-control="attic:next"
           aria-disabled={!transport.next.enabled}
           aria-describedby={describedBy('next', transport.next)}
           onClick={onNext}
