@@ -43,6 +43,7 @@ Static checks cannot prove authorship. Before submission a person confirms each 
 
 - [ ] Every image is an original capture or drawing of this project's own interface.
 - [ ] No third-party name, logo, character, artwork, sound or music appears in any asset.
+- [ ] The Warden is an original character: he resembles no known mascot, film ghost or software assistant.
 - [ ] No gore, jump scare, flash or scream; the tone is menacing, never harmful.
 - [ ] Light and dark screenshots show the same state, and state is readable without color.
 - [ ] No credential, token, account name or home folder path is visible in any capture.

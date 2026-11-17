@@ -14,37 +14,37 @@ The main route uses the static replay, so it works without Crew. The live route 
 
 ## Script
 
-### 0:00–0:15 The problem and the premise
+### 0:00–0:15 The gate, the problem and the premise
 
-**Action:** Show the house map of the demo mansion, with nothing selected.
+**Action:** The page opens at the front gate. Type a name and press Knock.
 
-**Say:** "When you run several AI agents, a chat log does not show who is working, who is waiting for you, or what each one may touch. Haunted House turns a project into a house you can walk through."
+**Say:** "When you run several AI agents, a chat log does not show who is working, who is waiting for you, or what each one may touch. Haunted House turns a project into a house you can walk through. This is the Warden. He keeps the keys."
 
-**Expect:** The cutaway house with its rooms, each showing its ghost and state as text and an icon.
+**Expect:** The front door with its knocker, the Warden beside his balloon, one question ("Who is knocking?") and one Knock. After the knock he greets the visitor by name.
 
-### 0:15–0:35 Open the mansion and read the rooms
+### 0:15–0:35 Into the house, room by room
 
-**Action:** Move through the rooms on the house map with the arrow keys: Study, Drafting Room, Workshop, Attic.
+**Action:** Press "Watch demo-mansion get built", then "Play or pause the recording". Press "See the whole house" and move through the rooms with the arrow keys: Study, Drafting Room, Workshop, Attic.
 
-**Say:** "Each room is a spec phase with its own ghost. The Study writes requirements, the Drafting Room writes the design, the Workshop plans and builds. Every ghost shows one of six states."
+**Say:** "Each room is a spec phase with its own ghost. The Study writes requirements, the Drafting Room writes the design, the Workshop plans and builds. In every room the Warden says what is true now and what I can do about it, in plain words."
 
-**Expect:** Focus moves room to room with a visible focus ring. Each room label names its phase, its door state and its ghost state.
+**Expect:** One painted room with the Warden in its corner and his balloon beside it; then the house map, where focus moves room to room with a visible focus ring. Each room label names its phase, its door state and its ghost state.
 
 ### 0:35–1:05 A door and an approval: visible authority
 
-**Action:** Open the room whose ghost is waiting. Show the approval request, the exact action it asks for, and the room's allowed paths.
+**Action:** Open the room whose ghost is waiting. Press "Go to the door". Show the approval request and the exact revision it covers. Press "Show Kiro's words".
 
-**Say:** "Doors are approvals. This ghost is waiting: it asked for one exact action and cannot go on until I approve it. The walls are real too. A ghost reads and writes only inside its room's paths, and the backend enforces that."
+**Say:** "Doors are approvals. The Warden holds out a key: this document waits for me, and nothing goes on until I open the door. Every choice he offers presses a control the house already has, and each says what pressing it does. One press shows Kiro's own word beside each plain one."
 
-**Expect:** The waiting ghost, the requested action, the approve and deny choices, and the sealed door of the next phase. In the static replay these controls are labelled read-only.
+**Expect:** The Warden holding out a key, the waiting ghost, the proposal, the approve and reject choices, and the sealed door of the next phase. In the static replay these controls are labelled read-only and the Warden offers nothing that decides.
 
 ### 1:05–1:30 The Workshop: bounded parallel ghosts
 
-**Action:** Open the Workshop. Point at the Foreman, the Tinkers and the paths each Tinker has claimed.
+**Action:** Go to the Workshop. Point at the Foreman, the Tinkers and the paths each Tinker has claimed. Press "Show me what I can press".
 
-**Say:** "The Workshop runs up to three Tinkers at once. Each one claims the files of its task, so two ghosts never write the same file. One here is blocked and one failed, and the house says so plainly."
+**Say:** "The Workshop runs up to three Tinkers at once. Each one claims the files of its task, so two ghosts never write the same file. When a ghost asks for something risky, the house stops it and the Warden holds it until I decide. One key labels everything in the room that works."
 
-**Expect:** The task plan, up to three Tinkers with separate path claims, and distinct working, waiting, blocked and failed states.
+**Expect:** The task plan, up to three Tinkers with separate path claims, distinct working, waiting, blocked and failed states, and a text label on every working object of the painted room.
 
 ### 1:30–2:15 The Attic: replay from the séance log
 
@@ -56,17 +56,17 @@ The main route uses the static replay, so it works without Crew. The live route 
 
 ### 2:15–2:35 Static replay and the optional live app
 
-**Action:** Show the address bar of the static replay page, then (optional live route) switch to the Crew dashboard: Apps, Library, Haunted House, and the trust prompt with its permission list.
+**Action:** Show the address bar of the static replay page, then (optional live route) switch to the Crew dashboard: Apps, Library, Haunted House, and the trust prompt with its permission list. At the live gate, knock, pick "A word counter" and show the project folder's name above "Build this".
 
-**Say:** "What you just saw is a static page: no Crew, no account, read-only. To run it live, one script installs the app, and you enable and trust it yourself. It asks for the smallest set of permissions it uses."
+**Say:** "What you just saw is a static page: no Crew, no account, read-only. To run it live, one script installs the app, and you enable and trust it yourself. A first visit asks one thing: what do you want to build?"
 
-**Expect:** The static replay page, then the live Haunted House page with "Backend reachable" in the status panel.
+**Expect:** The static replay page, then the live Haunted House page with "Backend reachable" on its plate, the gate, and the idea step with the folder name shown before anything is made.
 
 ### 2:35–2:45 Built with Kiro, and close
 
-**Action:** Show the `.kiro/specs/` folder with its seven specs, then the test run summary.
+**Action:** Show the `.kiro/specs/` folder with its eight specs, then the test run summary.
 
-**Say:** "Seven Kiro specs, each correctness property backed by a property-based test. Haunted House: see what your agents may do, not only what they say."
+**Say:** "Eight Kiro specs, each correctness property backed by a property-based test. Haunted House: see what your agents may do, not only what they say."
 
 **Expect:** The spec folders and a passing test summary.
 

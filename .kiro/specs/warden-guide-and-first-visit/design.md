@@ -388,6 +388,8 @@ interface WardenArtProps { readonly pose: WardenPose; readonly held?: SpectreRol
 
 `components/ObjectLabels.tsx` renders the `workingObjects` of the room. With Reveal Mode off it renders nothing; the painted spots stay pointer shortcuts hidden from assistive technology, as today. With it on, each object gets a button at its box: visible text ("Archivist: working", "Requirements door: waiting", "To the Foyer", "Open this room's sheet", "What needs you"), an accessible name that adds what pressing does, and the same press plan as the object. The list is in reading order (left to right, top to bottom). The `?` key toggles it unless the event target is an input, a textarea or editable content. Escape closes, in order: the top surface, the map sheet, Reveal Mode, and only then leaves the Mansion.
 
+Three facts of placement come from the rendered run (WG-S2), which found each as a fault: in the two wide layouts the list is placed against the room's own grid area, so it lies over the room and not over the apron; the label of a back-wall Door sits a line higher than its box, so it does not cover the label of the Door beside it; and on a small room the labels are set a little smaller, so the ledger's and the bell's do not touch.
+
 ### The guide's settings
 
 The apron holds a group named "Guide settings", outside the balloon, with three tags: "House map" (shown where the map is a put-away sheet), "Show Kiro's words" and "Show me what I can press". Each exposes `aria-pressed` and says its state in words, as the toolbar's tags do. They stay when the Warden has stepped back, which is what keeps every setting reachable in Quiet Mode. The toolbar itself is unchanged.

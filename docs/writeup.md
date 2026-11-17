@@ -24,6 +24,37 @@ The rooms follow spec-driven development: the Foyer (pick or create a mansion), 
 
 Chat is not the home screen. Rooms, doors and objects are the interface.
 
+## The Warden and the first visit
+
+A house you can walk through still has to be learned. The words on its controls are Kiro's (spec, requirements, design, tasks, approve), and someone who has never used Kiro does not know which room to open first. The Warden is the answer: one guide, in the corner of every room, who says what is true now and offers what can be done about it.
+
+He is a tall hooded figure with lantern eyes, a ring of keys and a trailing chain, twice the height of the room ghosts. The keys are your approvals. He stands in one of five poses, each also written in words beside him: watching, pointing to your next step, holding out a key when a door waits for you, holding a ghost that the house has stopped, and stepped back. He never moves on his own. The tone is menacing, never harmful: he is a danger to ghosts that stray, not to the person at the keyboard.
+
+His balloon always reads the same way. One line says what is true now. One line asks "What do you want to do?". Up to four choices follow, verb first, each with a second line that says what pressing it does. "Something else…" holds every other choice and the whole word list, and "Step back" puts the balloon away.
+
+**A first visit, start to finish.** A visitor with no mansion yet starts at the front gate: one question ("Who is knocking?"), one optional name, one Knock. In the hall the Warden asks "What do you want to build?"; three small examples fill one field, the project folder's name is shown before anything is made, and "Build this" makes the mansion and takes the visitor inside. In the Study the first choice is to have the Archivist write what the software must do. When that is written, the choices are to read it, to ask for a change (with ready-made requests that fill the real form), or to go to the door; at the door, the first choice is to open it. The Drafting Room and the Workshop ask the same things in the same order. When every door is open, the Foyer lists what was made, each document under its plain word, Kiro's word and its real file path, with the steps that open the same folder in Kiro.
+
+**He decides nothing and sends nothing.** What he says is a pure function of the same state the house map shows. Each choice is a short list of presses on controls the house already has: the map's room, ghost and door controls, and a panel's own start, approve, reject, revise, task and retry buttons. The page presses them one at a time, as a person would, and stops with the room's own reason if a control is missing or switched off. A choice that decides is offered only beside the thing being decided, and focus lands on that thing, never on the button. Each choice names the controls it presses (`data-presses`), so the claim can be read off the page. With the Warden stepped back, every one of those controls is still there, reached through the house map.
+
+**Plain words first, Kiro's words one press away.**
+
+| The Warden says | Kiro calls it |
+|---|---|
+| plan | spec |
+| what it must do | requirements |
+| how it will work | design |
+| to-do list | tasks |
+| ghost | agent |
+| open the door | approve |
+| house rules | steering |
+| wall | path limit |
+
+"Show Kiro's words" puts Kiro's word beside each plain one, and "What is this?" explains a word in two sentences. "Show me what I can press" (or the `?` key) puts a text label on every working object of the painted room, each a real button. Nothing is renamed: the house's own controls keep Kiro's words.
+
+**The same in a recording.** The static replay starts at the same gate and shows the same Warden. For the same log he says the same thing and stands the same way live and replayed; in a recording he offers nothing that starts, decides or asks for a change.
+
+The Warden is an original character drawn in code. No name, logo, character, artwork or sound of any earlier product is used.
+
 ## Architecture
 
 Haunted House is a gateway-managed Crew app (`resources` and `lifecycle` are both `gateway`). Crew runs the ghosts; the app owns phases, doors and the séance log.
@@ -118,6 +149,9 @@ Checked against a running Crew gateway:
 Checked by the offline release check, `scripts/check-release.sh` (all gates pass):
 
 - The Python and UI test suites, including one property-based test for each implemented correctness property, and the type check.
+- The first visit, walked end to end in the test harness over the real page with only the host client replaced: from the gate to an approved requirements door on the Warden's choices alone, once with pointer presses and once with the keyboard alone. The two requests that go out are compared with the ones the panels' own buttons send.
+- The Warden's twelve correctness properties (what he says, what he may offer, live and replay parity, plain and Kiro words, the visitor's name, the project folder's name, the visit, the landing room, the stage layout, what was made, and the window fit), each with a fast-check test.
+- Accessibility rules (axe) on the gate, the idea step, each pose, the stepped-back state, the labels, the word list and the list of what was made, in light, dark and reduced-motion states.
 - The live UI bundle: it imports only host modules and a fresh build leaves the committed file unchanged.
 - The static replay: its build, the publication gate, the transport-isolation tests and a local one-shot smoke request for the page, its module and the fixture.
 - Live and replay parity in the test harness: the same root component, driven by the same canonical log through a backend double and through the fixture, shows the same house and the same Attic, and a record the backend has not acknowledged never appears in a replay.
@@ -126,6 +160,7 @@ Checked by the offline release check, `scripts/check-release.sh` (all gates pass
 Not yet checked against a running Crew; each needs the owner's live session:
 
 - The complete room flow with real ghosts: Study, Drafting Room and Workshop runs, door approvals and risky-action approvals end to end.
+- The first visit with real ghosts: the gate, "Build this" and the Warden's choices against a running gateway. The test harness walks it against a backend double.
 - Three parallel Workshop ghosts on a real gateway.
 - Delivery of the per-session label to the room tool servers through Crew's own sandbox.
 - The clean install rehearsal of the final build, including the exact trust prompt and permission list a judge sees.
@@ -134,12 +169,16 @@ Not yet done because they need a real browser, a public repository or a person:
 
 - The public replay site. The Pages workflow is written and tested locally; it has not run, and no public link exists yet.
 - Screenshots and the demo video. None has been captured yet; see [assets-checklist.md](assets-checklist.md).
-- Rendered contrast and reflow at small widths. The tests check structure, keyboard order, motion and the live region, not pixels.
+- Rendered contrast, and reflow of the open panels and the Foyer at small widths and at high zoom. The palette pairs are checked by calculation, not from pixels, and the browser run below measured the room and the guide only.
+
+Checked in a real browser (headless Comet, 2026-11-17), numbers in `spikes/fixtures/warden-guide-layout.json`:
+
+- The Warden is drawn twice as tall as a ghost. He and his balloon touch no working object, label or sheet; the open sheet and the house map lie inside the room; the room and the guide fit one window at 1280 by 720, 1440 by 900, 900 by 1100 and 1920 by 1080; nothing scrolls sideways down to 320 pixels. The same browser was then driven with real key presses and no pointer: Tab and Enter open the gate, enter the recording and press the Warden's choices, and `?` and Escape turn the labels on and off. The first runs of this check found four layout faults that no test without a layout engine could see (labels misplaced in one layout, two labels covering each other, two labels touching on a small room, and a two-pixel overflow); each was fixed before the numbers were recorded.
 - The human originality review of the assets, and the submission itself.
 
 Known limits of the live app today:
 
-- **The feature brief has one optional source.** A ghost's task comes from the room's fixed prompt and skill. The only place to add your own description of the feature is an optional `.kiro/specs/<spec>/brief.md` file in the mansion; the house has no form for it.
+- **The feature brief is given once.** A ghost's task comes from the room's fixed prompt and skill, plus the idea given when the mansion is made: the Warden's "What do you want to build?" at a first visit, or the brief field of the Foyer's form. It is kept as `.kiro/specs/<spec>/brief.md`; the house has no control to change it afterwards.
 - **Ordinary room-tool prompts are answered in Crew's dashboard.** The house shows and answers door approvals and risky-action approvals. A non-risky room tool call that Crew still asks about is answered only in Crew's own dashboard, not in the house.
 - **A run needs the dashboard open to finish.** The end of a ghost's turn reaches the backend through the open page. With the dashboard closed no turn end is forwarded, so the run is not settled until the page is open again.
 - **Cancel and "open the Crew session" are switched off.** Both report that their contract is unavailable until each has been verified against a running gateway.

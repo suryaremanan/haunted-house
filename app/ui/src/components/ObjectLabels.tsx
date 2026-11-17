@@ -33,7 +33,8 @@ export function ObjectLabels({ objects, onPress }: ObjectLabelsProps) {
       {objects.map((object) => {
         const place = labelPlace(object.box)
         return (
-          <li key={object.key} className="hh-stage-label-place" data-anchor={place.anchor} style={place.style}>
+          // The back-wall Door stands close to the right-wall one: its label sits a line higher, so neither covers the other.
+          <li key={object.key} className="hh-stage-label-place" data-anchor={place.anchor} data-raised={object.key === 'door-2'} style={place.style}>
             <button type="button" className="hh-stage-label" data-object-label={object.key} data-kind={object.kind} aria-label={object.name} onClick={(event) => onPress(object.steps, event.currentTarget)}>
               {object.label}
             </button>

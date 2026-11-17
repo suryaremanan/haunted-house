@@ -46,7 +46,8 @@ export const GUIDE_BALLOON_STYLES = `
 .hh-guide-foot-button:hover, .hh-stage-setting:hover, .hh-stage-call:hover { background: var(--hh-sc-brass); }
 .hh-guide-foot-button:focus-visible { outline: 3px solid var(--hh-sc-ink); outline-offset: 2px; }
 .hh-stage-setting:focus-visible, .hh-stage-call:focus-visible { outline: 3px solid var(--hh-sc-lamp); outline-offset: 2px; }
-.hh-stage-setting[aria-pressed='true'] { background: var(--hh-sc-brass); border-style: double; border-width: 4px; padding: 0 10px; }
+/* Pressed: brass and a double border. The same height as unpressed, so pressing one never moves the row. */
+.hh-stage-setting[aria-pressed='true'] { background: var(--hh-sc-brass); border-style: double; border-width: 3px; padding: 0 11px; }
 .hh-guide-everything { display: grid; gap: 8px; padding-top: 8px; border-top: 2px dashed var(--hh-sc-ink); min-width: 0; }
 .hh-guide-book-title { font-family: var(--hh-font-serif); font-size: 0.9375rem; font-weight: 700; }
 .hh-guide-book { display: grid; gap: 6px; font-size: 0.8125rem; line-height: 1.35; }

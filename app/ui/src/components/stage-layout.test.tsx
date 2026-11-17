@@ -49,6 +49,15 @@ describe('the stage sheet', () => {
     expect(css).toContain(`.hh-ui > .hh-ui-behind ~ .hh-ui-behind { z-index: 6; width: calc(var(--hh-scene-w) * ${MAP_SHEET_WIDTH});`)
   })
 
+  it('lays the labels over the room in both wide layouts: the list is placed against the room\u2019s own grid area', () => {
+    // An absolutely placed grid child is placed against its grid area. Against the area it has on a narrow page
+    // the list lay under the room, over the balloon (found by the rendered run WG-S2).
+    const labels = rule('.hh-stage-labels')
+    const wide = css.slice(css.indexOf(`@media (min-width: ${WIDE_BREAKPOINT_PX}px)`))
+    expect(labels).toContain('grid-area: labels')
+    expect(wide).toMatch(/\.hh-stage-labels \{ grid-area: scene; position: absolute; z-index: 2; left: 0; top: 0; width: var\(--hh-scene-w\);/)
+  })
+
   it('stands the Warden in the corner of the room: his head at the top of the Guide Reserve, nothing of him above it', () => {
     const warden = rule(".hh-ui[data-layout='side'] .hh-stage-warden")
     expect(warden).toContain(`top: calc(var(--hh-scene-h) * ${GUIDE_RESERVE.top / 100} + 2px)`)

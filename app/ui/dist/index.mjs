@@ -375,7 +375,8 @@ var Ot = Dt(), kt = (e, t) => `color-mix(in srgb, var(${e}) ${t}%, transparent)`
 .hh-guide-foot-button:hover, .hh-stage-setting:hover, .hh-stage-call:hover { background: var(--hh-sc-brass); }
 .hh-guide-foot-button:focus-visible { outline: 3px solid var(--hh-sc-ink); outline-offset: 2px; }
 .hh-stage-setting:focus-visible, .hh-stage-call:focus-visible { outline: 3px solid var(--hh-sc-lamp); outline-offset: 2px; }
-.hh-stage-setting[aria-pressed='true'] { background: var(--hh-sc-brass); border-style: double; border-width: 4px; padding: 0 10px; }
+/* Pressed: brass and a double border. The same height as unpressed, so pressing one never moves the row. */
+.hh-stage-setting[aria-pressed='true'] { background: var(--hh-sc-brass); border-style: double; border-width: 3px; padding: 0 11px; }
 .hh-guide-everything { display: grid; gap: 8px; padding-top: 8px; border-top: 2px dashed var(--hh-sc-ink); min-width: 0; }
 .hh-guide-book-title { font-family: var(--hh-font-serif); font-size: 0.9375rem; font-weight: 700; }
 .hh-guide-book { display: grid; gap: 6px; font-size: 0.8125rem; line-height: 1.35; }
@@ -8393,12 +8394,15 @@ ${At}/* The map is always on the page of a narrow layout, so there is nothing to
   .hh-ui-toolbar { grid-row: 2; align-self: start; z-index: 5; }
   .hh-ui-notes { grid-row: 3; }
   .hh-ui-announcer { grid-row: 4; }
-  /* The labels lie over the room, each above its object. */
-  .hh-stage-labels { position: absolute; z-index: 2; left: 0; top: 0; width: var(--hh-scene-w); aspect-ratio: ${Lc} / 750; padding: 0;
+  /* The labels lie over the room, each above its object. An absolutely placed grid child is placed against its
+     grid area, so the list is given the room's area: against its own, it would lie under the room, over the apron. */
+  .hh-stage-labels { grid-area: scene; position: absolute; z-index: 2; left: 0; top: 0; width: var(--hh-scene-w); aspect-ratio: ${Lc} / 750; padding: 0;
     display: block; pointer-events: none; }
   .hh-stage-label-place { position: absolute; padding-bottom: 4px; pointer-events: auto; }
   .hh-stage-label-place[data-anchor='centre'] { translate: -50% 0; }
-  .hh-stage-label { white-space: nowrap; }
+  .hh-stage-label-place[data-raised='true'] { translate: -50% -1.9rem; }
+  /* On a small room the labels are set a little smaller, so two that stand close (the ledger and the bell) do not touch. */
+  .hh-stage-label { white-space: nowrap; font-size: clamp(0.6875rem, calc(var(--hh-scene-w) * 0.0118), 0.8125rem); padding: 1px 8px; }
   .hh-stage-setting[data-map-toggle] { display: inline-flex; }
   /* The Warden stands at the right end of the apron, twice a ghost's height: his width is WARDEN_WIDTH percent of the
      room's width, at his drawing's proportions. The apron is kept tall enough that he rises into the room only inside
@@ -8710,6 +8714,7 @@ function Sl({ objects: e, onPress: t }) {
 			return /* @__PURE__ */ R("li", {
 				className: "hh-stage-label-place",
 				"data-anchor": n.anchor,
+				"data-raised": e.key === "door-2",
 				style: n.style,
 				children: /* @__PURE__ */ R("button", {
 					type: "button",
