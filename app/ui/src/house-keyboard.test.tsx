@@ -89,6 +89,18 @@ describe.each(MOTION_MODES)('keyboard with %s', (mode) => {
     expect(stops.map(label)).toEqual([
       'Needs you: 1 thing needs you. Go to the first.',
       mode === 'Still House' ? 'Still house: on' : 'Still house: off',
+      'Sound: off',
+      'Side view: off',
+      'Go to the Foyer',
+      'Go to the Drafting Room',
+      'See the whole house',
+      'Exit to the Foyer',
+      'Close room',
+      'Requirements document text',
+      'Approve Requirements door, revision 1',
+      'Reject Requirements door, revision 1',
+      'Ask for a revision of the requirements',
+      "Open Archivist's Crew session (Done)",
       'Foyer. Phase: navigation. Door: not applicable. Ghost: not applicable.',
       'Study. Phase: requirements. Door: waiting. Ghost: done.',
       'Archivist, ghost in the Study. State: done.',
@@ -100,12 +112,6 @@ describe.each(MOTION_MODES)('keyboard with %s', (mode) => {
       'Implementation door of the Workshop. State: sealed.',
       'Attic. Phase: replay. Door: not applicable. Ghost: not applicable.',
       'Séance Room. Phase: review. Door: not applicable. Ghost: not applicable.',
-      'Close room',
-      'Requirements document text',
-      'Approve Requirements door, revision 1',
-      'Reject Requirements door, revision 1',
-      'Ask for a revision of the requirements',
-      "Open Archivist's Crew session (Done)",
     ])
     // Every one of them is a native control or a labelled scroll region, and none is hidden art.
     for (const stop of stops) expect(stop.closest('svg')).toBeNull()

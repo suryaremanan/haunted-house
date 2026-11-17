@@ -10,7 +10,7 @@ It reports
   - schema and provenance errors in docs/assets-manifest.json;
   - an image, audio or video file under app/ or docs/ with no manifest entry,
     and a manifest entry whose file is missing;
-  - any audio file (the MVP ships no sound);
+  - any audio file (the house's sounds are synthesised; no audio file ships);
   - in app/ui/src, app/ui/replay (tests excluded), app/ui/dist and every
     distributed .svg: external SVG images or uses, remote media/font/style
     URLs, raster data URIs, SVG script or animation elements, audio APIs or

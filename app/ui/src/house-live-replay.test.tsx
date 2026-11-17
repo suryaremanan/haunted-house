@@ -62,7 +62,7 @@ function read(container: HTMLElement): Shown {
     atticDiagnostic: Array.from(shell.querySelectorAll('.hh-ui-rooms > li'), (item) => item.getAttribute('data-integrity')).join(','),
     liveRegions: container.querySelectorAll('[aria-live], [role="status"], [role="alert"], [role="log"], output').length,
     // The same parts are on the page in both modes.
-    components: ['[data-toolbar]', 'nav.hh-ui-map', '.hh-ui-house-art', '.hh-ui-needs', '.hh-ui-toggle', '[data-announcer]'].filter(
+    components: ['[data-toolbar]', 'nav.hh-ui-map', '.hh-stage-roof-art', '.hh-ui-needs', '.hh-ui-toggle', '[data-announcer]'].filter(
       (selector) => shell.querySelector(selector) !== null,
     ),
   }

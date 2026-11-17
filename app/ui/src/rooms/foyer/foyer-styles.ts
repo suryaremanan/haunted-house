@@ -14,7 +14,7 @@ export const FOYER_STYLES = `
 .hh-foyer[data-view='mansion'] { max-width: none; margin: 0; }
 .hh-foyer-hall, .hh-shell { background: var(--card, var(--hh-fb-surface, transparent));
   border: 1px solid var(--border, var(--hh-fb-border, currentColor)); border-radius: 12px; padding: 18px 20px; }
-.hh-foyer h2 { font-family: ui-serif, "Iowan Old Style", "Palatino Linotype", Georgia, serif; font-size: 1.375rem; margin: 0 0 4px; }
+.hh-foyer h2 { font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, "Times New Roman", serif; font-size: 1.375rem; margin: 0 0 4px; }
 .hh-foyer h3 { font-size: 1rem; margin: 0 0 4px; }
 .hh-foyer h2:focus-visible, .hh-foyer-region:focus-visible { outline: 2px solid var(--ring, var(--hh-fb-focus, currentColor)); outline-offset: 2px; }
 .hh-foyer-lede { margin: 0 0 12px; color: var(--muted, var(--hh-fb-text-muted, inherit)); }
@@ -40,7 +40,7 @@ export const FOYER_STYLES = `
   background: transparent; }
 .hh-mansion:focus-within { outline: 2px solid var(--ring, var(--hh-fb-focus, currentColor)); outline-offset: 2px; }
 .hh-mansion input { margin: 0; width: 1rem; height: 1rem; accent-color: var(--warn, var(--hh-fb-accent, auto)); }
-.hh-mansion-name { font-family: ui-serif, "Iowan Old Style", "Palatino Linotype", Georgia, serif; font-weight: 700; font-size: 1.0625rem;
+.hh-mansion-name { font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, "Times New Roman", serif; font-weight: 700; font-size: 1.0625rem;
   overflow-wrap: anywhere; }
 .hh-mansion-path, .hh-mansion-status { grid-column: 2; font-size: 0.8125rem; overflow-wrap: anywhere; }
 .hh-mansion-path { color: var(--muted, var(--hh-fb-text-muted, inherit)); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
@@ -54,7 +54,7 @@ export const FOYER_STYLES = `
 .hh-foyer-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-top: 14px; }
 .hh-button { display: inline-flex; align-items: center; gap: 6px; font: inherit; cursor: pointer;
   color: inherit; background: transparent; border: 1px solid var(--border-strong, var(--hh-fb-border, currentColor));
-  border-radius: 8px; padding: 6px 12px; }
+  border-width: 2px; border-radius: 999px; padding: 6px 16px; font-weight: 600; }
 .hh-button-primary { color: var(--accent-fg, var(--hh-fb-accent-text, inherit)); background: var(--accent, var(--hh-fb-accent, transparent));
   font-weight: 700; padding: 10px 18px; font-size: 1.0625rem; }
 .hh-button[aria-disabled='true'] { cursor: not-allowed; opacity: 0.6; }

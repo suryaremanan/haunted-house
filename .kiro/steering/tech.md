@@ -89,3 +89,9 @@ Record each answer here when its spike finishes.
 
 ## Building with Kiro
 This repo is built in Kiro IDE: specs in `.kiro/specs/`, a property-based test for each correctness property, and hooks in `.kiro/hooks/`. Kiro's property-based testing runs in the IDE only (specs__correctness.md).
+
+## 3D stage and sound (Nov 16, owner request)
+
+- The house map is a 3D model: `components/RoomDiorama.tsx` builds each room as a box with CSS 3D transforms and `components/house-stage-styles.ts` gives the wide layout one shared vanishing point. It is decoration (hidden from assistive technology, no pointer events); every state is still said in words in the caption slab under each room. Scene colors live in `SCENE_PALETTES` (`components/house-palette.ts`) and never carry text.
+- Motion rules are unchanged: loops and the door swing run only with Still house off and no reduced-motion preference; nothing follows the pointer. The Side view toggle turns the model on request.
+- Sound is opt-in and synthesised (`adapters/house-sound.ts`): no audio file exists. It is off on every visit; the engine is created inside the press that turns it on. `core/sound-cues.ts` derives cues from two House Projections. The asset scan allows the Web Audio API only in that adapter and the built bundles.

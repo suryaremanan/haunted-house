@@ -107,7 +107,7 @@ describe('asset scanner on the repository', () => {
   })
 })
 
-describe('MVP has no sound', () => {
+describe('sound is synthesised, never a sample', () => {
   const files = [...sourceFiles(path.join(REPO_ROOT, 'app/ui/src')), ...sourceFiles(path.join(REPO_ROOT, 'app/ui/replay'))]
   const bundle = readFileSync(path.join(REPO_ROOT, 'app/ui/dist/index.mjs'), 'utf8')
 
@@ -126,13 +126,18 @@ describe('MVP has no sound', () => {
     expect(audio).toEqual([])
   })
 
-  it('uses no audio API in the UI source or the committed bundle', () => {
+  it('uses the Web Audio API only in the synthesised sound adapter, and no sample anywhere', () => {
     expect(files.length).toBeGreaterThan(10)
-    const audioApi = /\bnew\s+Audio\s*\(|AudioContext|<audio\b|speechSynthesis|\.(mp3|ogg|wav)['"`]/
+    const sample = /\bnew\s+Audio\s*\(|<audio\b|speechSynthesis|\.(mp3|ogg|wav)['"`]/
+    const synth = /AudioContext/
+    const synthFiles: string[] = []
     for (const file of files) {
-      expect(audioApi.test(readFileSync(file, 'utf8')), path.relative(REPO_ROOT, file)).toBe(false)
+      const text = readFileSync(file, 'utf8')
+      expect(sample.test(text), path.relative(REPO_ROOT, file)).toBe(false)
+      if (synth.test(text)) synthFiles.push(path.relative(REPO_ROOT, file))
     }
-    expect(audioApi.test(bundle)).toBe(false)
+    expect(synthFiles).toEqual(['app/ui/src/adapters/house-sound.ts'])
+    expect(sample.test(bundle)).toBe(false)
   })
 
   it('loads no remote image, font, style or media in the UI source or bundle', () => {

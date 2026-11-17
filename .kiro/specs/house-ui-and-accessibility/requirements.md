@@ -83,7 +83,7 @@ The MVP includes the Foyer, Study, Drafting Room, Workshop, and Attic; original 
 #### Acceptance Criteria
 
 1. WHILE no Mansion is open, THE House_UI SHALL present the approved Foyer as the primary application content.
-2. WHEN the Foyer opens a Mansion, THE Mansion_Shell SHALL present the Cutaway_House before room details, status feeds, or Session_Link controls in document order.
+2. WHEN the Foyer opens a Mansion, THE Mansion_Shell SHALL present the room the Operator stands in, then that room's details, then the Cutaway_House, before status feeds in document order. (Changed Nov 16 at the owner's request: the walk-in room comes first; the Cutaway_House is the map below it.)
 3. THE Cutaway_House SHALL contain visible Room objects for the Foyer, Study, Drafting Room, Workshop, and Attic.
 4. WHERE the Séance Room stretch interface is disabled, THE Cutaway_House SHALL present the Séance_Room as a labelled locked Room or omit the Séance_Room according to one build-time setting.
 5. WHERE the Séance Room stretch interface is enabled, THE Cutaway_House SHALL present the Séance_Room after the Attic in Room_Order.
@@ -243,7 +243,7 @@ The MVP includes the Foyer, Study, Drafting Room, Workshop, and Attic; original 
 
 #### Acceptance Criteria
 
-1. THE House_UI SHALL omit audio assets, audio playback, and sound controls from MVP scope.
+1. THE House_UI SHALL ship no audio asset; the Sound_Feature SHALL synthesise every sound in the browser from one audio adapter, behind one sound control. (Changed Nov 16 at the owner's request: sound moved from stretch into the house as an opt-in feature.)
 2. WHERE the Sound_Feature is enabled, THE Sound_Feature SHALL initialize in the off state for every new browser session.
 3. WHERE the Sound_Feature is enabled, THE Sound_Feature SHALL begin audio playback only after an explicit Operator action enables sound.
 4. WHERE the Sound_Feature is enabled, THE Sound_Feature SHALL use only original or CC0 credited audio assets.
