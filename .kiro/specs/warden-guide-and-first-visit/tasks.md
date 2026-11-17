@@ -8,13 +8,13 @@ The guide adds no reducer, command, approval path, endpoint, live region, toast,
 
 ## Tasks
 
-- [ ] 1. Set the baseline and align steering (MVP)
-  - [ ] 1.1 Commit the room-first stage this feature builds on
+- [x] 1. Set the baseline and align steering (MVP)
+  - [x] 1.1 Commit the room-first stage this feature builds on
     - Run `scripts/check-release.sh` on the working tree. When it exits 0, commit the walk-in room, the painted rooms, the synthesised sound and their tests as one commit. Change no source in this task.
     - _Writes: none (a commit of the existing working tree)_
     - _Requirements: 14.9_
 
-  - [ ] 1.2 Change the Tone and the documents that quote it
+  - [x] 1.2 Change the Tone and the documents that quote it
     - Set the Tone of `.kiro/steering/theme-and-accessibility.md` to "Menacing, never harmful" with the wording in the design, and add "Adult and exact. No baby talk." to Copy.
     - Add the Warden row to the metaphor table of `.kiro/steering/product.md`: a drawing, not an agent, with no authority.
     - Add dated change notes to `house-ui-and-accessibility/requirements.md` on 1.1 (the Gate precedes the Foyer on a first visit) and on Requirement 5 (tone), in the form already used there. Update the tone line of `docs/assets-checklist.md`.
@@ -22,7 +22,7 @@ The guide adds no reducer, command, approval path, endpoint, live region, toast,
     - _Requirements: 1.12, 1.13, 14.10_
 
 - [ ] 2. Write the Word Book (MVP)
-  - [ ] 2.1 Implement the dictionary module
+  - [x] 2.1 Implement the dictionary module
     - Add `app/ui/src/core/house-words.ts` with the eleven terms of the design: plain word, Kiro word, exactly two sentences, and the Kiro file where one exists. Export `word(id, mode)`, `term(id)` and `TERMS`.
     - Keep it free of React, DOM, Crew SDK, network, filesystem, storage, timer and clock.
     - _Writes: `app/ui/src/core/house-words.ts`_
@@ -34,7 +34,7 @@ The guide adds no reducer, command, approval path, endpoint, live region, toast,
     - **Validates: Requirements 7.1, 7.2, 7.3, 7.4, 7.5**
     - _Writes: `app/ui/src/core/house-words.property.test.ts`_
 
-  - [ ]* 2.3 Tie the Kiro words to the real controls
+  - [x]* 2.3 Tie the Kiro words to the real controls
     - Assert each Kiro word equals the upstream word that owns it (`PHASE_NAMES`, the Approve and Reject names, the revision label) and each `file` equals the phase document name.
     - _Writes: `app/ui/src/core/house-words.test.ts`_
     - _Requirements: 7.9, 7.10_
