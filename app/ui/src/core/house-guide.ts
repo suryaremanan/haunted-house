@@ -13,7 +13,7 @@
 // a Crew tool prompt and a ghost's reason are quoted unchanged.
 //
 // Pure: no React, DOM, SDK, network, storage, timer or clock.
-import type { DoorPresentation, GhostPresentation, HouseProjection, HouseSurfaceTarget, RecoveryActionView, RoomPresentation, WaitingItemView } from './house-projection'
+import { surfaceKey, type DoorPresentation, type GhostPresentation, type HouseProjection, type HouseSurfaceTarget, type RecoveryActionView, type RoomPresentation, type WaitingItemView } from './house-projection'
 import type { RoomId } from './house-registry'
 import { termsIn, write, type TermId, type WordMode } from './house-words'
 import type { Phase } from './workflow-projection'
@@ -72,6 +72,31 @@ export type PressStep =
   | { readonly kind: 'shell'; readonly action: ShellAction }
   /** Sets or clears the task in hand. Page state only. */
   | { readonly kind: 'task'; readonly task: GuideTask | null }
+
+/**
+ * The controls a press plan presses, by key and in order: a House Map control
+ * by its surface key, a panel control by its guide key (a trailing `*` for
+ * every control with that prefix), a shell control as `shell:<action>`. The
+ * page writes this on each choice, so what a choice presses can be read off it.
+ */
+export function pressedControls(steps: readonly PressStep[]): readonly string[] {
+  return steps.flatMap((step): string[] => {
+    switch (step.kind) {
+      case 'map':
+        return [surfaceKey(step.target)]
+      case 'control':
+      case 'fill':
+      case 'focus':
+        return [step.key]
+      case 'every':
+        return [`${step.keyPrefix}*`]
+      case 'shell':
+        return [`shell:${step.action}`]
+      case 'task':
+        return []
+    }
+  })
+}
 
 export interface GuideOption {
   readonly id: string

@@ -46,6 +46,8 @@ export interface GuideBalloonProps<Option extends BalloonOption> {
   onStepBack: () => void
   /** Why the last press did nothing, in the room's own words. */
   refusal?: string | null
+  /** The keys of the existing controls a choice presses, written on its button as `data-presses`. */
+  pressesOf?: (option: Option) => string
   /** The status line, so the page can put focus on it. */
   statusRef?: RefObject<HTMLParagraphElement>
   /** The screen's own controls, shown under the status line (the Gate's name and Knock). */
@@ -56,9 +58,10 @@ interface OptionProps<Option extends BalloonOption> {
   option: Option
   words: WordMode
   onPress: (option: Option, from: HTMLElement) => void
+  pressesOf?: (option: Option) => string
 }
 
-function OptionButton<Option extends BalloonOption>({ option, words, onPress }: OptionProps<Option>) {
+function OptionButton<Option extends BalloonOption>({ option, words, onPress, pressesOf }: OptionProps<Option>) {
   const labelId = useId()
   const consequenceId = useId()
   const kiro = words === 'with-kiro' && option.term != null ? term(option.term).kiro : null
@@ -69,6 +72,7 @@ function OptionButton<Option extends BalloonOption>({ option, words, onPress }: 
         className="hh-guide-option"
         data-guide-option={option.id}
         data-kind={option.kind}
+        data-presses={pressesOf?.(option)}
         aria-labelledby={labelId}
         aria-describedby={consequenceId}
         onClick={(event) => onPress(option, event.currentTarget)}
@@ -112,7 +116,7 @@ function TermHelp({ id }: { id: TermId }) {
   )
 }
 
-export function GuideBalloon<Option extends BalloonOption>({ view, words, onPress, onStepBack, refusal = null, statusRef, children }: GuideBalloonProps<Option>) {
+export function GuideBalloon<Option extends BalloonOption>({ view, words, onPress, onStepBack, refusal = null, pressesOf, statusRef, children }: GuideBalloonProps<Option>) {
   const [more, setMore] = useState(false)
   const moreId = useId()
   const stepBackHintId = useId()
@@ -170,7 +174,7 @@ export function GuideBalloon<Option extends BalloonOption>({ view, words, onPres
         {view.options.length === 0 ? null : (
           <ul className="hh-guide-options" data-guide-primary>
             {view.options.map((option) => (
-              <OptionButton key={option.id} option={option} words={words} onPress={press} />
+              <OptionButton key={option.id} option={option} words={words} onPress={press} pressesOf={pressesOf} />
             ))}
           </ul>
         )}
@@ -198,7 +202,7 @@ export function GuideBalloon<Option extends BalloonOption>({ view, words, onPres
             {rest.length === 0 ? null : (
               <ul className="hh-guide-options">
                 {rest.map((option) => (
-                  <OptionButton key={option.id} option={option} words={words} onPress={press} />
+                  <OptionButton key={option.id} option={option} words={words} onPress={press} pressesOf={pressesOf} />
                 ))}
               </ul>
             )}

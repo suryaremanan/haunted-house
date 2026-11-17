@@ -214,10 +214,11 @@ The guide adds no reducer, command, approval path, endpoint, live region, toast,
     - _Writes: `app/ui/src/rooms/foyer/Gate.test.tsx`, `app/ui/src/rooms/foyer/IdeaStep.test.tsx`, `app/ui/src/rooms/foyer/HallGuide.test.tsx`, `app/ui/src/first-visit.test.tsx`, `app/ui/src/test/first-visit-kit.ts`, `app/ui/src/App.foyer.test.tsx`, `app/ui/src/App.live.test.tsx`, `app/ui/src/replay-foyer.test.tsx`, `app/ui/src/attic-live-replay.test.tsx`, `app/ui/src/house-live-replay.test.tsx`, `app/ui/src/replay-submission.integration.test.tsx`, `app/ui/src/house-accessibility.axe.test.tsx`, `app/ui/scripts-tests/check-house-ui-contract.test.ts`_
     - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.7, 9.8, 9.11, 9.12, 10.2, 10.5, 10.6, 10.7, 10.9, 14.9_
 
-- [ ] 10. Finish the rhythm, the catch and the built page (MVP)
-  - [ ] 10.1 Wire the remaining press plans
+- [x] 10. Finish the rhythm, the catch and the built page (MVP)
+  - [x] 10.1 Wire the remaining press plans
     - The task in hand for "Ask for a change": the ready-made texts fill the existing field through its own input event, and "Send this change" presses the existing send button. The Workshop's "Build every task that is ready" ticks each allowed task, then presses the board's start. Retry, the catch's "Allow it once" and "Refuse it", and the Attic's play.
-    - _Writes: `app/ui/src/components/GuideBalloon.tsx`, `app/ui/src/components/use-guide-press.ts`, `app/ui/src/components/MansionShell.tsx`_
+    - Write the keys of the controls each choice presses on its button (`data-presses`, from `pressedControls` in `core/house-guide.ts`).
+    - _Writes: `app/ui/src/components/GuideBalloon.tsx`, `app/ui/src/components/use-guide-press.ts`, `app/ui/src/components/MansionShell.tsx`, `app/ui/src/components/RoomStage.tsx`, `app/ui/src/core/house-guide.ts`_
     - _Requirements: 4.7, 11.6, 11.7, 11.9, 11.10, 12.2, 12.3, 13.1_
 
   - [x] 10.2 Implement the Built Page
@@ -225,30 +226,30 @@ The guide adds no reducer, command, approval path, endpoint, live region, toast,
     - _Writes: `app/ui/src/rooms/foyer/BuiltPage.tsx`, `app/ui/src/rooms/foyer/ActiveMansionFoyerPanel.tsx`, `app/ui/src/rooms/house/House.tsx`, `app/ui/src/rooms/house/panel-styles.ts`_
     - _Requirements: 13.2, 13.3, 13.4, 13.5, 13.6, 13.7, 13.8, 13.9_
 
-  - [ ]* 10.3 Add the rhythm and built page tests
+  - [x]* 10.3 Add the rhythm and built page tests
     - For each row of the option table: the option clicks the one existing control; a decision option is absent until its surface is open; focus lands on the proposal heading; a missing or disabled control leaves the house unchanged and shows the reason; a second Enter decides nothing.
     - _Writes: `app/ui/src/rooms/house/guide-rhythm.test.tsx`, `app/ui/src/rooms/foyer/BuiltPage.test.tsx`_
     - _Requirements: 4.1, 4.3, 4.4, 4.5, 4.7, 11.2, 11.4, 11.5, 11.6, 11.7, 11.8, 11.9, 11.10, 11.11, 11.12, 12.1, 12.2, 12.3, 12.4, 12.5, 13.3, 13.7, 13.9_
 
 - [ ] 11. Prove the walk, the parity and the access (MVP)
-  - [ ]* 11.1 Add the first-visit walk
-    - Against the stubbed gateway: Gate, knock, an example idea, "Build this", the Study, the Archivist's start, a waiting door, "Go to the door", "Open the door". Once with pointer presses, once with the keyboard alone; every pressed element carries `data-guide-option`. In the same file, with Quiet Mode on, find and operate the control behind every option of the fixture matrix.
+  - [x]* 11.1 Add the first-visit walk
+    - Against a fake backend behind the mocked host client: Gate, knock, an idea, "Build this", the Study, the Archivist's start, a waiting door, "Go to the door", "Open the door". Once with pointer presses, once with the keyboard alone; every pressed element carries `data-guide-option`, and the two requests that go out are the panels' own. In the same file, with Quiet Mode on, find and reach by hand the control behind every option of the fixture matrix.
     - _Writes: `app/ui/src/first-visit-walk.test.tsx`_
     - _Requirements: 6.5, 14.7, 14.8_
 
-  - [ ]* 11.2 Add the replay guide tests
-    - The static replay shows the Gate, the Warden and the balloon; its status lines equal the live ones for the canonical fixture at each cursor; the existing transport traps prove no request.
-    - _Writes: `app/ui/src/replay-guide.test.tsx`_
+  - [x]* 11.2 Add the replay guide tests
+    - The static replay shows the Gate, the Warden and the balloon, Quiet Mode, the labels and the Word Book, and requests the recording only; at the start, in the middle and at the end of the recording no option starts, decides or asks. His words and pose equal the live ones for the canonical fixture in every room (`house-live-replay.test.tsx`).
+    - _Writes: `app/ui/src/replay-guide.test.tsx`, `app/ui/src/house-live-replay.test.tsx`_
     - _Requirements: 3.10, 10.10, 14.1, 14.2_
 
-  - [ ]* 11.3 Extend the accessibility matrix
+  - [x]* 11.3 Extend the accessibility matrix
     - The Gate, the Idea Step, each pose, Quiet Mode, Reveal Mode, the Word Book list and the Built Page, in light, dark and reduced-motion states, with zero violations.
     - _Writes: `app/ui/src/house-accessibility.axe.test.tsx`_
     - _Requirements: 14.6_
 
-  - [ ]* 11.4 Extend the source contract
+  - [x]* 11.4 Extend the source contract
     - Scan the guide's source for a Word Book word typed outside the book. Confirm the unchanged rules still hold: one text field inside a Mansion, no loop under two seconds, no third-party name, no browser storage, no new API path.
-    - Confirm each of the eleven properties has exactly one fast-check test that carries its feature comment and runs at least 200 cases.
+    - Confirm each of the twelve properties has exactly one fast-check test that carries its feature comment and runs at least 200 cases.
     - _Writes: `app/ui/scripts-tests/check-house-ui-contract.test.ts`_
     - _Requirements: 7.3, 14.3, 14.5, 14.11_
 
@@ -280,11 +281,12 @@ The guide adds no reducer, command, approval path, endpoint, live region, toast,
 
 - Tasks marked with `*` follow Kiro's optional test task convention. In this spec they are all required except 11.6: every correctness property has its fast-check test before the feature is called done.
 - Every property test runs at least 200 cases and includes `Feature: warden-guide-and-first-visit, Property N: <property title>`.
-- Commits are small: one for each of tasks 1.1, 1.2, 2, 3, 4, 6, 7, 8, 9, 10, 11 and 12. `scripts/check-release.sh` must exit 0 before each. The gate rejects a stale bundle, so a commit that changes UI source also carries the rebuilt `app/ui/dist/index.mjs`.
+- Commits are small: one for each of tasks 1.1, 1.2, 2, 3 and 4, one for tasks 6 to 8 (the Warden's art, his balloon and the labels compile only together), one for task 9 with the Built Page of 10.2, one for the tests of tasks 10 and 11, and one for task 12. `scripts/check-release.sh` must exit 0 before each. The gate rejects a stale bundle, so a commit that changes UI source also carries the rebuilt `app/ui/dist/index.mjs`.
 - WG-S2 is a hard gate for claiming the size and non-overlap requirements. jsdom layout values are not accepted as rendered evidence. Comet is the only browser used.
 - WG-S1 is optional. Without it the Built Page shows the folder and the steps and no link.
 - The guide presses existing controls and sends nothing. No task adds a backend route, a manifest permission, a workflow or ghost reducer, an approval path, a live region, a toast, a badge, a sound, a timer, a storage call or a dependency, and no task touches `docs/permission-freeze.json`.
 - Existing controls keep their names. Only the tests listed in the design's "Tests that change" table are edited.
+- Parts of the page-level test updates of task 9 were drafted by parallel helper agents and reviewed and finished by hand; a leftover probe and debug lines were removed before the commit.
 - A full walk with real ghosts spends credits and is the owner's step in task 13. Crew is on the Claude backend with a patched adapter for recording; switching back to `kas` is a separate owner step and is not part of this spec.
 - No task pushes, deploys, changes Crew trust, changes security settings or modifies a Mansion project.
 
