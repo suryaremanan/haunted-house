@@ -314,12 +314,15 @@ ${GUIDE_BALLOON_STYLES}/* The map is always on the page of a narrow layout, so t
   .hh-ui-toolbar { grid-row: 2; align-self: start; z-index: 5; }
   .hh-ui-notes { grid-row: 3; }
   .hh-ui-announcer { grid-row: 4; }
-  /* The labels lie over the room, each above its object. */
-  .hh-stage-labels { position: absolute; z-index: 2; left: 0; top: 0; width: var(--hh-scene-w); aspect-ratio: ${SCENE_WIDTH} / ${SCENE_HEIGHT}; padding: 0;
+  /* The labels lie over the room, each above its object. An absolutely placed grid child is placed against its
+     grid area, so the list is given the room's area: against its own, it would lie under the room, over the apron. */
+  .hh-stage-labels { grid-area: scene; position: absolute; z-index: 2; left: 0; top: 0; width: var(--hh-scene-w); aspect-ratio: ${SCENE_WIDTH} / ${SCENE_HEIGHT}; padding: 0;
     display: block; pointer-events: none; }
   .hh-stage-label-place { position: absolute; padding-bottom: 4px; pointer-events: auto; }
   .hh-stage-label-place[data-anchor='centre'] { translate: -50% 0; }
-  .hh-stage-label { white-space: nowrap; }
+  .hh-stage-label-place[data-raised='true'] { translate: -50% -1.9rem; }
+  /* On a small room the labels are set a little smaller, so two that stand close (the ledger and the bell) do not touch. */
+  .hh-stage-label { white-space: nowrap; font-size: clamp(0.6875rem, calc(var(--hh-scene-w) * 0.0118), 0.8125rem); padding: 1px 8px; }
   .hh-stage-setting[data-map-toggle] { display: inline-flex; }
   /* The Warden stands at the right end of the apron, twice a ghost's height: his width is WARDEN_WIDTH percent of the
      room's width, at his drawing's proportions. The apron is kept tall enough that he rises into the room only inside

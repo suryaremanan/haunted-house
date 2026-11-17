@@ -231,7 +231,7 @@ The guide adds no reducer, command, approval path, endpoint, live region, toast,
     - _Writes: `app/ui/src/rooms/house/guide-rhythm.test.tsx`, `app/ui/src/rooms/foyer/BuiltPage.test.tsx`_
     - _Requirements: 4.1, 4.3, 4.4, 4.5, 4.7, 11.2, 11.4, 11.5, 11.6, 11.7, 11.8, 11.9, 11.10, 11.11, 11.12, 12.1, 12.2, 12.3, 12.4, 12.5, 13.3, 13.7, 13.9_
 
-- [ ] 11. Prove the walk, the parity and the access (MVP)
+- [x] 11. Prove the walk, the parity and the access (MVP)
   - [x]* 11.1 Add the first-visit walk
     - Against a fake backend behind the mocked host client: Gate, knock, an idea, "Build this", the Study, the Archivist's start, a waiting door, "Go to the door", "Open the door". Once with pointer presses, once with the keyboard alone; every pressed element carries `data-guide-option`, and the two requests that go out are the panels' own. In the same file, with Quiet Mode on, find and reach by hand the control behind every option of the fixture matrix.
     - _Writes: `app/ui/src/first-visit-walk.test.tsx`_
@@ -253,25 +253,28 @@ The guide adds no reducer, command, approval path, endpoint, live region, toast,
     - _Writes: `app/ui/scripts-tests/check-house-ui-contract.test.ts`_
     - _Requirements: 7.3, 14.3, 14.5, 14.11_
 
-  - [ ] 11.5 Record the rendered layout (WG-S2)
-    - With headless Comet at 1280, 900 and 320 CSS pixels, measure that the Warden is at least twice a ghost's height, that the balloon and the Warden touch no working object, label, open sheet or map sheet, and that nothing scrolls sideways. Keep numbers only.
-    - _Writes: `spikes/warden-guide-layout/**`, `spikes/fixtures/warden-guide-layout.json`_
+  - [x] 11.5 Record the rendered layout (WG-S2)
+    - With headless Comet at 1280, 1440, 900, 1920 and 320 CSS pixels, measure that the Warden is at least twice a ghost's height, that the balloon and the Warden touch no working object, label, open sheet or map sheet, that the room and the guide fit one window, and that nothing scrolls sideways. Keep numbers only.
+    - The first runs found four faults: the labels of the stacked layout lying under the room, two Door labels covering each other, two labels touching on a small room, and a pressed setting two pixels taller than an unpressed one. Fix what the run finds, hold the first with a style test, and record the numbers of the repeated run.
+    - _Writes: `spikes/warden-guide-layout/**`, `spikes/fixtures/warden-guide-layout.json`, `app/ui/src/components/house-stage-styles.ts`, `app/ui/src/components/guide-balloon-styles.ts`, `app/ui/src/components/ObjectLabels.tsx`, `app/ui/src/components/stage-layout.test.tsx`_
     - _Requirements: 1.6, 5.6, 5.7, 5.8_
 
   - [ ]* 11.6 Probe a Kiro folder link (WG-S1, optional)
     - Find out whether the installed Kiro opens a folder from a link. Record the result. Add the link to the Built Page only on proof.
+    - Not run. The Built Page shows the folder and the steps, and no link.
     - _Writes: `spikes/warden-guide-kiro-link/**`, `spikes/fixtures/warden-guide-kiro-link.json`_
     - _Requirements: 13.6_
 
-- [ ] 12. Ship it (MVP)
-  - [ ] 12.1 Rebuild the bundle and run the release gate
+- [x] 12. Ship it (MVP)
+  - [x] 12.1 Rebuild the bundle and run the release gate
     - Build `app/ui/dist/index.mjs` and the replay, run `scripts/check-release.sh` to exit 0, and install the app locally with `scripts/install-local.sh`.
+    - Done on 2026-11-17: the gate passed on the committed tree, and `scripts/install-local.sh` updated the app in the local gateway (4 agents and 4 skills registered). The dashboard needs the owner's sign-in, so the installed page was not opened; that is task 13.
     - _Writes: `app/ui/dist/**`_
     - _Requirements: 14.2, 14.3, 14.9_
 
-  - [ ] 12.2 Bring the documents up to date
-    - The write-up, the demo script, the credits, the Kiro coverage page (this spec and its eleven properties) and the assets checklist (one originality line for the Warden).
-    - _Writes: `docs/writeup.md`, `docs/demo-script.md`, `docs/credits.md`, `docs/kiro-coverage.md`, `docs/assets-checklist.md`_
+  - [x] 12.2 Bring the documents up to date
+    - The write-up, the demo script, the credits, the Kiro coverage page (this spec and its twelve properties), the assets checklist (one originality line for the Warden) and the README's first-run paragraph.
+    - _Writes: `docs/writeup.md`, `docs/demo-script.md`, `docs/credits.md`, `docs/kiro-coverage.md`, `docs/assets-checklist.md`, `README.md`_
     - _Requirements: 14.10, 14.11_
 
 - [ ] 13. Final checkpoint: the owner walks the first visit

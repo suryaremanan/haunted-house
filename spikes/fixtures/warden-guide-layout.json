@@ -1,0 +1,234 @@
+{
+  "spike": "WG-S2",
+  "question": "Rendered in a real browser: is the Warden at least twice a ghost's height, do he and his balloon stay clear of every working object, label and sheet, do the labels stay clear of each other, and does anything scroll sideways?",
+  "date": "2026-11-17",
+  "browser": "Comet (Chromium 157), headless, driven over the DevTools protocol",
+  "page": "The static replay build, 40 records in: the first working room of the recording that holds a ghost, and the Workshop, whose two Doors stand side by side",
+  "method": "getBoundingClientRect of the room, the Warden, the balloon, each ghost figure, each pressable spot, each label with Reveal on, each toolbar control, the open room sheet and the house map sheet. Lengths in CSS pixels. Two boxes touch when they share more than half a pixel on both axes.",
+  "windows": [
+    {
+      "window": {
+        "width": 1280,
+        "height": 720
+      },
+      "layout": "side",
+      "room": {
+        "width": 692.8,
+        "height": 433
+      },
+      "wardenHeight": 132.5,
+      "ghostHeight": 66.2,
+      "wardenOverGhost": 2,
+      "workingObjects": 5,
+      "labels": 5,
+      "labelsInTheTwoDoorRoom": 6,
+      "checks": {
+        "wardenAtLeastTwiceAGhost": true,
+        "wardenTouchesNoWorkingObject": true,
+        "wardenTouchesNoLabel": true,
+        "balloonTouchesNoWorkingObject": true,
+        "balloonTouchesNoLabel": true,
+        "balloonLiesOutsideTheRoom": true,
+        "noLabelTouchesAnother": true,
+        "noLabelTouchesAToolbarControl": true,
+        "openSheetTouchesNeitherWardenNorBalloon": true,
+        "nothingScrollsSideways": true,
+        "openSheetLiesInsideTheRoom": true,
+        "mapSheetTouchesNeitherWardenNorBalloon": true,
+        "mapSheetLiesInsideTheRoom": true,
+        "roomAndGuideFitOneWindow": true,
+        "wardenStandsInsideTheGuideReserve": true
+      },
+      "wardenInsideRoom": 75.9
+    },
+    {
+      "window": {
+        "width": 1440,
+        "height": 900
+      },
+      "layout": "side",
+      "room": {
+        "width": 860,
+        "height": 537.5
+      },
+      "wardenHeight": 164.5,
+      "ghostHeight": 82.2,
+      "wardenOverGhost": 2,
+      "workingObjects": 5,
+      "labels": 5,
+      "labelsInTheTwoDoorRoom": 6,
+      "checks": {
+        "wardenAtLeastTwiceAGhost": true,
+        "wardenTouchesNoWorkingObject": true,
+        "wardenTouchesNoLabel": true,
+        "balloonTouchesNoWorkingObject": true,
+        "balloonTouchesNoLabel": true,
+        "balloonLiesOutsideTheRoom": true,
+        "noLabelTouchesAnother": true,
+        "noLabelTouchesAToolbarControl": true,
+        "openSheetTouchesNeitherWardenNorBalloon": true,
+        "nothingScrollsSideways": true,
+        "openSheetLiesInsideTheRoom": true,
+        "mapSheetTouchesNeitherWardenNorBalloon": true,
+        "mapSheetLiesInsideTheRoom": true,
+        "roomAndGuideFitOneWindow": true,
+        "wardenStandsInsideTheGuideReserve": true
+      },
+      "wardenInsideRoom": 94.8
+    },
+    {
+      "window": {
+        "width": 900,
+        "height": 1100
+      },
+      "layout": "stacked",
+      "room": {
+        "width": 876,
+        "height": 547.5
+      },
+      "wardenHeight": 167.5,
+      "ghostHeight": 83.8,
+      "wardenOverGhost": 2,
+      "workingObjects": 5,
+      "labels": 5,
+      "labelsInTheTwoDoorRoom": 6,
+      "checks": {
+        "wardenAtLeastTwiceAGhost": true,
+        "wardenTouchesNoWorkingObject": true,
+        "wardenTouchesNoLabel": true,
+        "balloonTouchesNoWorkingObject": true,
+        "balloonTouchesNoLabel": true,
+        "balloonLiesOutsideTheRoom": true,
+        "noLabelTouchesAnother": true,
+        "noLabelTouchesAToolbarControl": true,
+        "openSheetTouchesNeitherWardenNorBalloon": true,
+        "nothingScrollsSideways": true,
+        "openSheetLiesInsideTheRoom": true,
+        "mapSheetTouchesNeitherWardenNorBalloon": true,
+        "mapSheetLiesInsideTheRoom": true,
+        "roomAndGuideFitOneWindow": true
+      },
+      "wardenInsideRoom": 0
+    },
+    {
+      "window": {
+        "width": 1920,
+        "height": 1080
+      },
+      "layout": "stacked",
+      "room": {
+        "width": 910.4,
+        "height": 569
+      },
+      "wardenHeight": 174.1,
+      "ghostHeight": 87,
+      "wardenOverGhost": 2,
+      "workingObjects": 5,
+      "labels": 5,
+      "labelsInTheTwoDoorRoom": 6,
+      "checks": {
+        "wardenAtLeastTwiceAGhost": true,
+        "wardenTouchesNoWorkingObject": true,
+        "wardenTouchesNoLabel": true,
+        "balloonTouchesNoWorkingObject": true,
+        "balloonTouchesNoLabel": true,
+        "balloonLiesOutsideTheRoom": true,
+        "noLabelTouchesAnother": true,
+        "noLabelTouchesAToolbarControl": true,
+        "openSheetTouchesNeitherWardenNorBalloon": true,
+        "nothingScrollsSideways": true,
+        "openSheetLiesInsideTheRoom": true,
+        "mapSheetTouchesNeitherWardenNorBalloon": true,
+        "mapSheetLiesInsideTheRoom": true,
+        "roomAndGuideFitOneWindow": true
+      },
+      "wardenInsideRoom": 0
+    },
+    {
+      "window": {
+        "width": 320,
+        "height": 800
+      },
+      "layout": "narrow",
+      "room": {
+        "width": 281,
+        "height": 175.6
+      },
+      "wardenHeight": 86.4,
+      "ghostHeight": 26.9,
+      "wardenOverGhost": 3.2,
+      "workingObjects": 5,
+      "labels": 5,
+      "labelsInTheTwoDoorRoom": 6,
+      "checks": {
+        "wardenAtLeastTwiceAGhost": true,
+        "wardenTouchesNoWorkingObject": true,
+        "wardenTouchesNoLabel": true,
+        "balloonTouchesNoWorkingObject": true,
+        "balloonTouchesNoLabel": true,
+        "balloonLiesOutsideTheRoom": true,
+        "noLabelTouchesAnother": true,
+        "noLabelTouchesAToolbarControl": true,
+        "openSheetTouchesNeitherWardenNorBalloon": true,
+        "nothingScrollsSideways": true
+      }
+    }
+  ],
+  "allChecksPass": true,
+  "found": [
+    "With the balloon under the room, the labels lay under the room too, over the apron: an absolutely placed grid child is placed against its grid area. The list was given the room's area.",
+    "The labels of two Doors that stand side by side covered each other. The back-wall Door's label was raised by a line.",
+    "On a small room (1280 by 720 with a recording's bar) the labels of the ledger and the bell touched. The labels are now set a little smaller on a small room.",
+    "A pressed setting was two pixels taller than an unpressed one, which pushed the page two pixels past the window. Both are the same height now."
+  ],
+  "note": "The numbers are from the run made after those four fixes.",
+  "keyboardRun": {
+    "what": "The static replay driven with real key events (Tab, Enter, ?, Escape and typed text) over the DevTools protocol, in a 1280 by 720 window. No pointer event was sent.",
+    "steps": [
+      {
+        "keys": "Tab",
+        "presses": 1,
+        "focus": "the name field, \"Who is knocking?\""
+      },
+      {
+        "keys": "type a name, Enter",
+        "result": "the Gate opens; focus is on the Warden's greeting, which names the visitor"
+      },
+      {
+        "keys": "Tab",
+        "presses": 1,
+        "focus": "the first choice, \"Watch demo-mansion get built\""
+      },
+      {
+        "keys": "Enter",
+        "result": "the recorded mansion opens; focus is on its name"
+      },
+      {
+        "keys": "Tab",
+        "presses": 11,
+        "focus": "the Warden's first choice in the room, after the toolbar, the recording's bar and \"What is this?\""
+      },
+      {
+        "keys": "Enter",
+        "result": "the recording plays: its own bar says Pause and the Warden's line changes"
+      },
+      {
+        "keys": "Tab to \"Step back\", Enter",
+        "result": "the balloon is put away; focus is on \"Call the Warden\""
+      },
+      {
+        "keys": "Enter",
+        "result": "the balloon is back; focus is on the Warden's line"
+      },
+      {
+        "keys": "?",
+        "result": "five labels are on the room"
+      },
+      {
+        "keys": "Escape",
+        "result": "the labels are off; the mansion is still open"
+      }
+    ],
+    "allStepsDidWhatIsWritten": true
+  }
+}

@@ -10,6 +10,8 @@ Everything a judge sees or installs is listed here with its origin. The machine-
 
 The house, rooms, doors, objects and ghosts in the interface are drawn in code as original SVG (`app/ui/src/components/house-art.tsx`). They are not separate image files. No third-party image, icon set artwork, font or texture is distributed, and nothing is loaded from a remote host at run time. Interface icons come from `lucide-react`, which the Crew dashboard supplies at run time; see below.
 
+The Warden, the guide who stands in every room, at the gate and in the Foyer, is an original character drawn in code (`WardenArt` in `app/ui/src/components/room-paint.tsx`): a hooded figure with lantern eyes, a ring of keys and a trailing chain, in five still poses. The painted rooms and the front door are in the same file. He is based on no existing character, mascot or assistant.
+
 Screenshots and the video thumbnail are not captured yet. Each will be an original capture of this interface and will be added to this table and to the manifest when it exists. Their status is tracked in [assets-checklist.md](assets-checklist.md).
 
 ## Audio

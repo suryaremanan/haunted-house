@@ -73,7 +73,7 @@ The app does not ask to spawn subagents, does not ask for the global approval qu
 
 ## Demo
 
-After you trust the app, open **Haunted House**, create a mansion in the Foyer, and walk the rooms in order: Study (requirements), Drafting Room (design), Workshop (tasks and implementation), then the Attic (replay). Each door stays sealed until you approve the room's output. The full timed walkthrough is in [docs/demo-script.md](docs/demo-script.md).
+After you trust the app, open **Haunted House**. A first visit starts at the front gate: knock, tell the Warden what you want to build, and he offers the next step in every room, in plain words: Study (requirements), Drafting Room (design), Workshop (tasks and implementation), then the Attic (replay). Each door stays sealed until you approve the room's output. If you already have a mansion you land in the Foyer, where you can go back into it or create another. The full timed walkthrough is in [docs/demo-script.md](docs/demo-script.md).
 
 What has been checked against a running Crew, and what has so far been checked only by automated tests, is listed in [docs/writeup.md](docs/writeup.md) under "Verification status".
 
