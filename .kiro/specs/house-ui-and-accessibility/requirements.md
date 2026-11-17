@@ -82,7 +82,7 @@ The MVP includes the Foyer, Study, Drafting Room, Workshop, and Attic; original 
 
 #### Acceptance Criteria
 
-1. WHILE no Mansion is open, THE House_UI SHALL present the approved Foyer as the primary application content.
+1. WHILE no Mansion is open, THE House_UI SHALL present the approved Foyer as the primary application content. (Changed Nov 17 at the owner's request: on a first visit the Gate of `warden-guide-and-first-visit` comes before the Foyer.)
 2. WHEN the Foyer opens a Mansion, THE Mansion_Shell SHALL present the room the Operator stands in, then that room's details, then the Cutaway_House, before status feeds in document order. (Changed Nov 16 at the owner's request: the walk-in room comes first; the Cutaway_House is the map below it.)
 3. THE Cutaway_House SHALL contain visible Room objects for the Foyer, Study, Drafting Room, Workshop, and Attic.
 4. WHERE the Séance Room stretch interface is disabled, THE Cutaway_House SHALL present the Séance_Room as a labelled locked Room or omit the Séance_Room according to one build-time setting.
@@ -143,7 +143,7 @@ The MVP includes the Foyer, Study, Drafting Room, Workshop, and Attic; original 
 8. WHEN a Room_Panel opens, THE Room_Panel SHALL expose a labelled dialog or region with a heading that names the Room.
 9. WHEN a Room_Panel closes, THE House_UI SHALL remove the closed panel content from the accessibility tree.
 
-### Requirement 5: Cozy-spooky original visual system [MVP]
+### Requirement 5: Original visual system, menacing but never harmful [MVP]
 
 **User Story:** As an Operator, I want a distinctive but calm house, so that agent state is memorable without horror effects or borrowed characters.
 
@@ -151,7 +151,7 @@ The MVP includes the Foyer, Study, Drafting Room, Workshop, and Attic; original 
 
 1. THE Cutaway_House SHALL use original repository-authored SVG shapes and CSS for house, Room, Door, object, and Ghost artwork.
 2. THE House_UI SHALL load no remote art, embedded third-party raster art, trademarked character, gore image, jump-scare image, or copyrighted music asset.
-3. THE House_UI SHALL use candlelight, dust, creaky-door, and friendly-Ghost motifs without hiding functional labels.
+3. THE House_UI SHALL use candlelight, dust, creaky-door, and tall still-figure motifs without hiding functional labels. (Changed Nov 17 at the owner's request: the tone is menacing, never harmful, as `warden-guide-and-first-visit` sets out; the menace is aimed at Ghosts that stray, never at the Operator.)
 4. WHEN Crew_Theme changes while House_UI is mounted, THE House_UI SHALL update House_Palette tokens without remounting the Mansion_Shell.
 5. IF a Crew_Theme token is absent, THEN THE House_Palette SHALL use the tested fallback value for the active light or dark mode.
 6. THE House_Palette SHALL provide text-to-background contrast of at least 4.5:1 for normal text.
