@@ -24,7 +24,7 @@ interface SvgProps {
 }
 
 /** The one <svg> wrapper: always hidden from the accessibility tree and never focusable. */
-function Svg({ viewBox, className, width, height, preserveAspectRatio, data = {}, children }: SvgProps) {
+export function Svg({ viewBox, className, width, height, preserveAspectRatio, data = {}, children }: SvgProps) {
   return (
     <svg
       viewBox={viewBox}

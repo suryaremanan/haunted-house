@@ -49,15 +49,16 @@ function Probe({ onMount, onUnmount }: { onMount: () => void; onUnmount: () => v
 }
 
 describe('document order and scope', () => {
-  it('puts the toolbar, then the house map, then notes, the open panel and the live region', () => {
+  it('puts the toolbar, then the room the Operator stands in, notes, its open panel, the house map and the live region', () => {
     render(<Shell projection={waitingHouse()} recorded={newRecorded()} notes={<p data-test-note>note</p>} status={<p>status</p>} />)
     fireEvent.click(document.querySelector<HTMLElement>('[data-room-control="study"]')!)
-    const order = ['[data-toolbar]', 'nav', '[data-test-note]', '.hh-ui-panel', '[data-announcer]'].map((selector) => document.querySelector(selector)!)
+    const order = ['[data-toolbar]', '[data-stage-room]', '[data-test-note]', '.hh-ui-panel', 'nav', '[data-announcer]'].map((selector) => document.querySelector(selector)!)
     for (let index = 1; index < order.length; index += 1) {
       expect(order[index - 1].compareDocumentPosition(order[index]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     }
-    // Room details come after the map (Requirement 1.2).
-    expect(screen.getByRole('navigation').compareDocumentPosition(screen.getByText('Details of room')) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    // The walk-in room and its details sit together, above the map of the whole house (changed Nov 16 at the owner's request).
+    expect(document.querySelector('[data-stage-room]')).toHaveAttribute('data-stage-room', 'study')
+    expect(screen.getByText('Details of room').compareDocumentPosition(screen.getByRole('navigation')) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
   })
 
   it('has no composer of its own: nothing to type into in the shell', () => {

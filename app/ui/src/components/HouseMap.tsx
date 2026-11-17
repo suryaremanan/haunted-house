@@ -9,7 +9,7 @@ import { useCallback, useId, useMemo, useRef } from 'react'
 import type { HouseProjection, HouseSurfaceTarget } from '../core/house-projection'
 import { nextRoom, type ArrowDirection, type RoomId } from '../core/house-registry'
 import type { EffectiveMotion } from '../core/motion-policy'
-import { HouseCutawayArt } from './house-art'
+import { StageRoofArt, StageSkyArt, StageYardArt } from './house-stage-art'
 import { RoomHotspots } from './RoomHotspots'
 
 export interface HouseMapProps {
@@ -22,13 +22,15 @@ export interface HouseMapProps {
   openKey?: string | null
   /** The id of the panel a control opens. */
   panelId?: string
+  /** How the model stands in the wide layout: straight on, or turned to show its side. */
+  view?: 'front' | 'turned'
 }
 
 export const HOUSE_MAP_LABEL = 'Mansion rooms'
 export const HOUSE_MAP_HELP =
   'Arrow keys move between rooms. Enter opens a room, a ghost or a door. Escape closes it. Doors open only when you approve them.'
 
-export function HouseMap({ projection, openSurface, motion, openKey = null, panelId = '' }: HouseMapProps) {
+export function HouseMap({ projection, openSurface, motion, openKey = null, panelId = '', view = 'front' }: HouseMapProps) {
   const titleId = useId()
   const list = useRef<HTMLOListElement>(null)
   const visible = useMemo(() => new Set<RoomId>(projection.rooms.map((room) => room.roomId)), [projection.rooms])
@@ -51,8 +53,9 @@ export function HouseMap({ projection, openSurface, motion, openKey = null, pane
         The house
       </h3>
       <p className="hh-ui-reason hh-ui-map-help">{HOUSE_MAP_HELP}</p>
-      <div className="hh-ui-house">
-        <HouseCutawayArt seanceRoom={seance} />
+      <div className="hh-ui-house" data-view={view}>
+        <StageSkyArt />
+        <StageRoofArt />
         <ol className="hh-ui-rooms" data-seance={seance ? 'shown' : 'hidden'} ref={list} aria-labelledby={titleId}>
           {projection.rooms.map((room) => (
             <RoomHotspots
@@ -66,6 +69,12 @@ export function HouseMap({ projection, openSurface, motion, openKey = null, pane
             />
           ))}
         </ol>
+        <StageYardArt />
+        <p className="hh-stage-titleblock" aria-hidden="true">
+          <span>Section through every floor</span>
+          <span>Drawn after dark</span>
+          <span>Not to scale</span>
+        </p>
       </div>
     </nav>
   )

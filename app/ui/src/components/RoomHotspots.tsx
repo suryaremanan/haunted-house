@@ -19,7 +19,8 @@ import {
 } from '../core/house-projection'
 import { needsYouText } from '../core/house-view'
 import { stateWord, type ArrowDirection, type RoomId } from '../core/house-registry'
-import { CandleArt, DoorArt, DustArt, GhostArt, RoomArt, RoomWallArt, ghostVariantOf } from './house-art'
+import { DoorArt, GhostArt, ghostVariantOf } from './house-art'
+import { RoomDiorama } from './RoomDiorama'
 
 export interface RoomHotspotsProps {
   room: RoomPresentation
@@ -46,7 +47,6 @@ export function RoomHotspots({ room, needsYou, openKey, panelId, onOpen, onArrow
   // A recording says it is read-only once, in the house's replay banner. The
   // room keeps the same words for assistive technology, tied to its control.
   const quietReason = room.readOnly && !room.locked && room.integrity === 'valid'
-  const lit = room.ghosts.some((item) => item.state === 'working' || item.state === 'waiting')
   return (
     <li
       className="hh-ui-room-cell"
@@ -187,12 +187,7 @@ export function RoomHotspots({ room, needsYou, openKey, panelId, onOpen, onArrow
         )}
       </div>
       <div className="hh-ui-room-scene">
-        <RoomWallArt room={room.roomId} />
-        <span className="hh-ui-room-motifs">
-          <CandleArt lit={lit} />
-          {room.roomId === 'attic' ? <DustArt /> : null}
-        </span>
-        <RoomArt room={room.roomId} />
+        <RoomDiorama room={room} interactive />
       </div>
     </li>
   )

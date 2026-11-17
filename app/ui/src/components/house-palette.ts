@@ -2,7 +2,7 @@
 // the house uses when a Crew theme variable is absent, as data, so every
 // functional pair can be checked against WCAG 2.2 AA by calculation.
 //
-// Light is candlelit parchment; dark is dusk plum and ink. Color is only ever
+// Light is drafting vellum and blue ink; dark is a night blueprint. Color is only ever
 // an accent here: state is carried by words, icons, poses, shapes and borders.
 // Pure data and arithmetic. No React, DOM, SDK, network, or clock.
 
@@ -56,36 +56,36 @@ export const PALETTE_TOKENS = [
 
 export const HOUSE_PALETTES: Readonly<Record<ThemeMode, HousePalette>> = {
   light: {
-    canvas: '#f6ecd6',
-    surface: '#fff8e8',
-    surfaceRaised: '#fffdf6',
-    text: '#241b17',
-    textMuted: '#5b4a40',
-    border: '#7a6452',
-    focus: '#005fcc',
-    accent: '#8a4b12',
-    accentText: '#fffdf6',
-    danger: '#a3261c',
-    ok: '#2d6a3e',
+    canvas: '#e9eff9',
+    surface: '#f5f8fe',
+    surfaceRaised: '#ffffff',
+    text: '#131d3a',
+    textMuted: '#45547a',
+    border: '#5a6a94',
+    focus: '#0a54c9',
+    accent: '#9c4700',
+    accentText: '#ffffff',
+    danger: '#ad2318',
+    ok: '#1c6b43',
     candle: '#9a5a00',
-    ghost: '#5d4f86',
-    working: '#1d5b86',
+    ghost: '#5b4b9a',
+    working: '#125c8c',
   },
   dark: {
-    canvas: '#17121c',
-    surface: '#211a29',
-    surfaceRaised: '#2c2336',
-    text: '#f3eadb',
-    textMuted: '#c9bcae',
-    border: '#9a8aa6',
-    focus: '#8ec5ff',
-    accent: '#f0b35a',
-    accentText: '#1d1408',
-    danger: '#ff9a8c',
-    ok: '#8fd6a0',
+    canvas: '#0c1530',
+    surface: '#141f3f',
+    surfaceRaised: '#1d2a52',
+    text: '#eef2ff',
+    textMuted: '#bcc7e8',
+    border: '#8c9bd0',
+    focus: '#9cc8ff',
+    accent: '#ffab4a',
+    accentText: '#1c1204',
+    danger: '#ff9c8f',
+    ok: '#86e0ae',
     candle: '#ffc56b',
-    ghost: '#d9d0ee',
-    working: '#8cc8f0',
+    ghost: '#d9d4ff',
+    working: '#8fd0f5',
   },
 }
 
@@ -151,4 +151,111 @@ export function fallbackVariableName(token: keyof HousePalette): string {
 export function paletteCssVariables(mode: ThemeMode): string {
   const palette = HOUSE_PALETTES[mode]
   return PALETTE_TOKENS.map((token) => `${fallbackVariableName(token)}: ${palette[token]};`).join(' ')
+}
+
+// ---------------------------------------------------------------------------
+// The Scene Palette: the fixed colors of the 3D model and the sheet it stands
+// on. Unlike the tokens above, these never read a Crew theme variable: the
+// rooms are lamp-lit interiors and look the same in either theme; only the
+// drafting sheet around them changes. Text is set on a scene color in two
+// places only, both in `ink`: the Caretaker's `balloon` and the room's brass
+// nameplate. Both pairs are far above 4.5:1 and are checked in the stage test.
+
+export interface ScenePalette {
+  /** The drafting sheet behind the model. */
+  readonly sheet: string
+  /** Its fine grid. */
+  readonly sheetLine: string
+  /** Dimension lines, the title block and the yard drawing. */
+  readonly sheetInk: string
+  /** Cut walls and floor slabs, filled solid as on a section drawing. */
+  readonly poche: string
+  /** Outlines inside the rooms. */
+  readonly ink: string
+  /** A ghost's sheet. */
+  readonly bone: string
+  /** The Caretaker's speech balloon. The one scene color that carries text, always in `ink`. */
+  readonly balloon: string
+  readonly moon: string
+  /** Lamp and candle light. */
+  readonly lamp: string
+  /** The glow of a ghost at rest. */
+  readonly ecto: string
+  readonly wood: string
+  readonly woodDark: string
+  readonly floor: string
+  readonly brass: string
+  readonly cloth: string
+  readonly paper: string
+  readonly roof: string
+  readonly wallFoyer: string
+  readonly wallStudy: string
+  readonly wallDrafting: string
+  readonly wallWorkshop: string
+  readonly wallAttic: string
+  readonly wallSeance: string
+  /** The night outside, from the top of the sky to the glow on the horizon. */
+  readonly night1: string
+  readonly night2: string
+  readonly night3: string
+  readonly night4: string
+  readonly hill1: string
+  readonly hill2: string
+  readonly stone: string
+  readonly tile: string
+  readonly leather: string
+  readonly frontDoor: string
+  readonly iron: string
+  /** A ghost's sheet in the painted rooms. */
+  readonly spectre: string
+}
+
+const INTERIOR = {
+  ink: '#1a1326',
+  bone: '#f6eeda',
+  balloon: '#fff6cc',
+  moon: '#fff3c4',
+  lamp: '#ffa63d',
+  ecto: '#9dffcf',
+  wood: '#8a5a34',
+  woodDark: '#573620',
+  floor: '#9c6b3f',
+  brass: '#d9a441',
+  cloth: '#b23a48',
+  paper: '#e9f1ff',
+  roof: '#3a2d52',
+  wallFoyer: '#6a2f7a',
+  wallStudy: '#2f6b4f',
+  wallDrafting: '#1f6a82',
+  wallWorkshop: '#8a4630',
+  wallAttic: '#6b4a2b',
+  wallSeance: '#472a86',
+  night1: '#140f3a',
+  night2: '#3b2470',
+  night3: '#6a3a8c',
+  night4: '#b0567a',
+  hill1: '#1d1440',
+  hill2: '#0c0820',
+  stone: '#6f6a7c',
+  tile: '#3b3552',
+  leather: '#1f4a3a',
+  frontDoor: '#5b1626',
+  iron: '#17151d',
+  spectre: '#eaf6ff',
+} as const
+
+export const SCENE_PALETTES: Readonly<Record<ThemeMode, ScenePalette>> = {
+  light: { ...INTERIOR, sheet: '#d6e3f8', sheetLine: '#b4c8ec', sheetInk: '#355aa6', poche: '#1b2547' },
+  dark: { ...INTERIOR, sheet: '#0d1838', sheetLine: '#1c3166', sheetInk: '#8fb3f5', poche: '#060a18' },
+}
+
+/** `wallFoyer` becomes `--hh-sc-wall-foyer`. */
+export function sceneVariableName(token: keyof ScenePalette): string {
+  return `--hh-sc-${token.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`)}`
+}
+
+/** The scene declarations of one mode, one `--hh-sc-*: #rrggbb;` per token. */
+export function sceneCssVariables(mode: ThemeMode): string {
+  const palette = SCENE_PALETTES[mode]
+  return (Object.keys(palette) as (keyof ScenePalette)[]).map((token) => `${sceneVariableName(token)}: ${palette[token]};`).join(' ')
 }

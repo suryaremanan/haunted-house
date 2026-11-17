@@ -6,8 +6,9 @@
 import { CircleCheck, CircleDashed, LoaderCircle, RotateCw, TriangleAlert } from 'lucide-react'
 import { useCallback, useState } from 'react'
 import { REPLAY_RECORDING, useBackendStatus, type BackendStatus, type GatewayErrorKind } from './adapters/sdk'
-import { HeroArt } from './components/HeroArt'
-import { paletteCssVariables } from './components/house-palette'
+import { CaretakerArt, FrontDoorPainting } from './components/room-paint'
+import { ROOM_PAINT_STYLES } from './components/room-paint-styles'
+import { paletteCssVariables, sceneCssVariables } from './components/house-palette'
 import type { MansionDescriptor } from './core/mansion-api'
 import { REPLAY_LANDING, TAGLINE, type LandingInvitation } from './landing'
 import { Foyer } from './rooms/foyer/Foyer'
@@ -102,25 +103,33 @@ function StatusRow({ name, view }: { name: string; view: RowView }) {
 // for hosts that lack them (the static replay page among them), in light and
 // dark. Icons carry color as a hint only; every state is also spelled out in text.
 const STYLES = `
-.hh-house { ${paletteCssVariables('light')}
+.hh-house { ${paletteCssVariables('light')} ${sceneCssVariables('light')}
   font-family: var(--font-sans, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
   color: var(--card-fg, var(--text, var(--hh-fb-text))); line-height: 1.45;
   display: block; max-width: 76rem; margin: 0 auto; padding: 8px 12px 32px; box-sizing: border-box; }
-@media (prefers-color-scheme: dark) { .hh-house { ${paletteCssVariables('dark')} } }
+@media (prefers-color-scheme: dark) { .hh-house { ${paletteCssVariables('dark')} ${sceneCssVariables('dark')} } }
 .hh-status { color: var(--card-fg, var(--text, var(--hh-fb-text))); background: var(--card, var(--hh-fb-surface));
   border: 1px solid var(--border, var(--hh-fb-border)); border-radius: 12px; padding: 16px 20px;
   max-width: 48rem; margin: 16px auto 0; font: inherit; }
-.hh-status h1 { font-family: ui-serif, "Iowan Old Style", "Palatino Linotype", Georgia, serif; font-size: 2rem; line-height: 1.15;
-  margin: 0 0 12px; letter-spacing: 0.01em; }
+.hh-status h1 { font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, "Times New Roman", serif; font-size: 2.5rem; line-height: 1.1;
+  margin: 0 0 12px; letter-spacing: 0; }
 .hh-status[data-compact='true'] { border: 0; background: transparent; padding: 0; margin: 8px 0 10px; max-width: none; }
 .hh-status[data-compact='true'] h1 { margin: 0; font-size: 1.25rem; }
 .hh-status[data-quiet='true'] { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; column-gap: 20px;
   border: 0; background: transparent; padding: 8px 0 0; }
 .hh-status[data-quiet='true'] > :not(.hh-hero-art) { grid-column: 2; }
 .hh-status[data-quiet='true'] h1 { margin: 0 0 6px; }
-.hh-hero-art { grid-row: 1 / span 3; width: 9rem; max-width: 30vw; height: auto; color: var(--border-strong, var(--hh-fb-border)); }
-.hh-hero-glow, .hh-hero-moon { color: var(--warn, var(--hh-fb-candle)); }
-.hh-hero-ghost { color: var(--hh-fb-ghost); }
+.hh-hero-art { grid-row: 1 / span 3; width: 14rem; max-width: 36vw; height: auto; color: var(--hh-sc-ink); }
+.hh-hero-sheet { fill: var(--hh-sc-sheet); stroke: var(--hh-sc-sheet-ink); }
+.hh-hero-grid { stroke: var(--hh-sc-sheet-line); }
+.hh-hero-line { stroke: var(--hh-sc-sheet-ink); }
+.hh-hero-line-fill { fill: var(--hh-sc-sheet-ink); }
+.hh-hero-moon { fill: var(--hh-sc-moon); stroke: var(--hh-sc-sheet-ink); }
+.hh-hero-wall { fill: var(--hh-sc-wall-foyer); }
+.hh-hero-roof { fill: var(--hh-sc-roof); }
+.hh-hero-door { fill: var(--hh-sc-wood); }
+.hh-hero-lamp { fill: var(--hh-sc-lamp); }
+.hh-hero-bone { fill: var(--hh-sc-bone); }
 .hh-tagline { margin: 0 0 8px; font-size: 1.0625rem; max-width: 36rem; }
 .hh-status[data-quiet='true'] .hh-rows { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden;
   clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; }
@@ -140,11 +149,31 @@ const STYLES = `
   color: var(--accent-fg, var(--hh-fb-accent-text)); background: var(--accent, var(--hh-fb-accent));
   border: 1px solid var(--border-strong, var(--hh-fb-border)); border-radius: 6px; padding: 6px 12px; }
 .hh-retry:focus-visible { outline: 2px solid var(--ring, var(--hh-fb-focus)); outline-offset: 2px; }
+/* The way in: the front door fills the page, the name is its brass plate, and the Foyer is a sheet of cream paper. */
+.hh-house[data-landing='true'] { position: relative; max-width: none; min-height: 100vh; margin: 0; padding: 0 16px 48px; overflow: hidden;
+  background: var(--hh-sc-front-door); }
+.hh-landing-door { position: absolute; inset: 0; display: block; }
+.hh-landing-keeper { display: none; }
+.hh-house[data-landing='true'] .hh-status[data-quiet='true'] { position: relative; z-index: 1; display: block; max-width: 30rem; margin: 5vh auto 0;
+  padding: 14px 24px 12px; text-align: center; color: var(--hh-sc-ink); background: var(--hh-sc-brass); border: 3px solid var(--hh-sc-ink);
+  border-radius: 6px; box-shadow: 0 5px 0 var(--hh-sc-ink); }
+.hh-house[data-landing='true'] .hh-status[data-quiet='true'] .hh-tagline { margin: 0 auto 6px; }
+.hh-house[data-landing='true'] .hh-status[data-quiet='true'] .hh-summary { color: var(--hh-sc-ink); }
+.hh-house[data-landing='true'] .hh-foyer { position: relative; z-index: 1; max-width: 44rem; }
+.hh-house[data-landing='true'] .hh-foyer-hall { ${paletteCssVariables('light')}
+  --card: var(--hh-sc-balloon); --card-fg: var(--hh-fb-text); --text: var(--hh-fb-text); --muted: var(--hh-fb-text-muted);
+  --border: var(--hh-fb-border); --border-strong: var(--hh-fb-border); --input: var(--hh-fb-surface-raised); --ok: var(--hh-fb-ok);
+  --warn: var(--hh-fb-accent); --accent: var(--hh-fb-accent); --accent-fg: var(--hh-fb-accent-text); --ring: var(--hh-fb-focus);
+  color: var(--hh-fb-text); background: var(--hh-sc-balloon); border: 2px solid var(--hh-sc-ink); border-radius: 10px;
+  box-shadow: 4px 5px 0 var(--hh-sc-ink); }
+@media (min-width: 900px) {
+  .hh-landing-keeper { display: block; position: fixed; z-index: 1; right: 2.5%; bottom: 2%; width: clamp(96px, 11vw, 170px); aspect-ratio: 190 / 250; }
+}
 @media (max-width: 640px) {
   .hh-status[data-quiet='true'] { grid-template-columns: minmax(0, 1fr); }
   .hh-status[data-quiet='true'] > :not(.hh-hero-art) { grid-column: 1; }
-  .hh-hero-art { grid-row: auto; width: 7rem; }
-  .hh-status h1 { font-size: 1.625rem; }
+  .hh-hero-art { grid-row: auto; width: 10rem; }
+  .hh-status h1 { font-size: 1.875rem; }
 }
 @keyframes hh-spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: no-preference) {
@@ -194,10 +223,19 @@ export default function HauntedHouseApp({ landing }: HauntedHouseAppProps = {}) 
     [announcement, state],
   )
   return (
-    <main className="hh-house" aria-labelledby="hh-status-title">
-      <style>{STYLES}</style>
+    <main className="hh-house" aria-labelledby="hh-status-title" data-landing={reachable && !inMansion}>
+      <style>{STYLES + ROOM_PAINT_STYLES}</style>
+      {reachable && !inMansion ? (
+        <>
+          <span className="hh-landing-door" aria-hidden="true">
+            <FrontDoorPainting />
+          </span>
+          <span className="hh-landing-keeper" aria-hidden="true">
+            <CaretakerArt />
+          </span>
+        </>
+      ) : null}
       <div className="hh-status" data-compact={inMansion} data-quiet={reachable && !inMansion}>
-        {reachable && !inMansion ? <HeroArt /> : null}
         <h1 id="hh-status-title">Haunted House</h1>
         {inMansion ? null : (
           <>

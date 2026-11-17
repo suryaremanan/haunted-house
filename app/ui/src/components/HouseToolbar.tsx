@@ -3,7 +3,7 @@
 // Still House toggle, and the system status tucked into a disclosure so the
 // house map comes first. It computes nothing: the count and target come from
 // the House Projection, motion from the Motion Policy in the shell.
-import { Bell, Wind } from 'lucide-react'
+import { Bell, Rotate3d, Volume2, VolumeX, Wind } from 'lucide-react'
 import { forwardRef, useId, type ReactNode } from 'react'
 import { needsYouCountText, type NeedsYouItem } from '../core/house-projection'
 import type { MotionState } from '../core/motion-policy'
@@ -17,16 +17,22 @@ export interface HouseToolbarProps {
   onToggleStillHouse: () => void
   /** The foundation status details. Omitted on a page that has none. */
   status?: ReactNode
+  /** The Sound Feature: off on every visit until the Operator presses this. */
+  sound?: { readonly on: boolean; readonly available: boolean; readonly onToggle: () => void }
+  /** The model's view: straight on, or turned to show its side. */
+  view?: { readonly turned: boolean; readonly onToggle: () => void }
 }
 
+export const SOUND_UNAVAILABLE_TEXT = 'This browser cannot play the house sounds.'
 export const STILL_HOUSE_REDUCED_TEXT = 'Your browser asks for reduced motion, so the house is still either way.'
 
 /** The ref goes to the Mansion name, which takes focus when the Mansion opens. */
 export const HouseToolbar = forwardRef<HTMLHeadingElement, HouseToolbarProps>(function HouseToolbar(
-  { mansionName, needsYou, onNeedsYou, motion, onToggleStillHouse, status },
+  { mansionName, needsYou, onNeedsYou, motion, onToggleStillHouse, status, sound, view },
   ref,
 ) {
   const reducedId = useId()
+  const soundId = useId()
   const text = needsYouCountText(needsYou)
   const none = needsYou.length === 0
   return (
@@ -64,6 +70,31 @@ export const HouseToolbar = forwardRef<HTMLHeadingElement, HouseToolbarProps>(fu
           {STILL_HOUSE_REDUCED_TEXT}
         </span>
       ) : null}
+      {sound === undefined ? null : (
+        <button
+          type="button"
+          className="hh-ui-toggle"
+          data-sound-toggle
+          aria-pressed={sound.on}
+          aria-disabled={sound.available ? undefined : true}
+          aria-describedby={sound.available ? undefined : soundId}
+          onClick={sound.onToggle}
+        >
+          {sound.on ? <Volume2 size={16} aria-hidden /> : <VolumeX size={16} aria-hidden />}
+          Sound: {sound.on ? 'on' : 'off'}
+        </button>
+      )}
+      {sound === undefined || sound.available ? null : (
+        <span className="hh-ui-reason" id={soundId}>
+          {SOUND_UNAVAILABLE_TEXT}
+        </span>
+      )}
+      {view === undefined ? null : (
+        <button type="button" className="hh-ui-toggle hh-ui-view-toggle" data-view-toggle aria-pressed={view.turned} onClick={view.onToggle}>
+          <Rotate3d size={16} aria-hidden />
+          Side view: {view.turned ? 'on' : 'off'}
+        </button>
+      )}
       {status === undefined ? null : (
         <details className="hh-ui-status">
           <summary>System status</summary>

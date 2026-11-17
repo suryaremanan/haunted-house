@@ -262,13 +262,15 @@ Implement the final Haunted House presentation in React and TypeScript after ver
     - _Writes: `app/ui/src/rooms/seance-room/SeanceHousePanel.tsx`, `app/ui/src/components/MansionShell.tsx`_
     - _Requirements: 1.5, 11.5, 11.6, 11.7_
 
-  - [ ]* 9.2 Implement opt-in stretch sound without an MVP audio path
+  - [x]* 9.2 Implement opt-in stretch sound without an MVP audio path
+    - Done differently, at the owner's request (Nov 16): sound is synthesised with the Web Audio API, so there are no assets to allowlist. It lives in `app/ui/src/adapters/house-sound.ts`, `core/sound-cues.ts` and `components/use-house-sound.ts`, is off on every visit, and creates no audio resource before the Operator presses Sound.
     - Add an isolated `sound-feature.ts` module only in a stretch entry that initializes off for each browser session, creates no audio resource before explicit Operator activation, accepts only assets present in an approved machine-readable original/CC0 provenance allowlist, and never changes visual/live interruption eligibility.
     - Leave the module and all audio assets absent from the default MVP import graph and bundle.
     - _Writes: `app/ui/src/stretch/sound-feature.ts`, `app/ui/src/stretch/sound-assets.ts`_
     - _Requirements: 8.11, 11.1, 11.2, 11.3, 11.4, 11.7_
 
-  - [ ]* 9.3 Add stretch sound isolation and consent tests
+  - [x]* 9.3 Add stretch sound isolation and consent tests
+    - Covered by `core/sound-cues.test.ts`, `components/use-house-sound.test.tsx`, the UI contract tests and `scripts/tests/test_asset_contract.py`.
     - Assert a new session is off, no Audio/AudioContext/load/play occurs before explicit activation, only allowlisted provenance entries can load, interruptions remain silent while off, and the default MVP module graph contains no sound module or asset.
     - _Writes: `app/ui/src/stretch/sound-feature.test.ts`_
     - _Requirements: 8.11, 11.1, 11.2, 11.3, 11.4, 11.7_

@@ -9,7 +9,7 @@ The main route uses the static replay, so it works without Crew. The live route 
 1. Build the static replay and check it: `bun run --cwd app/ui build:replay`, then `bun scripts/check-replay-artifact.mjs` and `bun scripts/smoke-replay-site.mjs --local`.
 2. Open the replay page. Use the public Pages link once [publication-metadata.json](publication-metadata.json) lists it; until then serve `app/ui/dist-replay/` with any static file server.
 3. For the optional live route: Crew 0.12.1 or later is running, the app is installed with `scripts/install-local.sh`, and it is enabled and trusted.
-4. Set the browser window to 1280 by 720. Turn off notifications. No music and no sound effects: the MVP has no sound.
+4. Set the browser window to 1280 by 720. Turn off notifications. No music. Press Sound in the house toolbar before recording so the door creaks are captured; it is off by default.
 5. Rehearse once with a timer. If a beat runs long, cut words, not beats.
 
 ## Script

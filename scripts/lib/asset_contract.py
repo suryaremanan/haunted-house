@@ -392,9 +392,18 @@ _SVG_SCRIPT_RE = re.compile(r"<script\b", re.IGNORECASE)
 _SVG_ANIMATION_MARKUP = re.compile(r"<(?:animate|animateTransform|animateMotion|animateColor|set)\b(?=[\s/>])")
 _SVG_ANIMATION_COMPILED = re.compile(r"\(\s*" + _QUOTE + r"(?:animate|animateTransform|animateMotion|animateColor)" + _QUOTE + r"\s*,")
 
+# The Sound Feature is synthesised: the Web Audio API is allowed in its one
+# adapter and in the bundles built from it, and nowhere else. Audio files,
+# audio elements, the Audio constructor and speech stay findings everywhere.
+SYNTH_AUDIO_PATHS = frozenset({"app/ui/src/adapters/house-sound.ts"})
+SYNTH_AUDIO_PREFIXES = ("app/ui/dist/", "app/ui/dist-replay/")
+
+_SYNTH_PATTERNS = (
+    re.compile(r"\b(?:webkit)?AudioContext\b"),
+)
+
 _AUDIO_PATTERNS = (
     re.compile(r"\bnew\s+Audio\s*\("),
-    re.compile(r"\b(?:webkit)?AudioContext\b"),
     re.compile(r"\bOfflineAudioContext\b"),
     re.compile(r"\bHTMLAudioElement\b"),
     re.compile(r"\bspeechSynthesis\b"),
@@ -438,6 +447,8 @@ def scan_source(path: str, text: str) -> list[AssetFinding]:
     add(_all((_DATA_URI,), text), RASTER_DATA_URI)
     add(_all((_SVG_ANIMATION_MARKUP, _SVG_ANIMATION_COMPILED), text), SVG_ANIMATION)
     add(_all(_AUDIO_PATTERNS, text), AUDIO_API)
+    if path not in SYNTH_AUDIO_PATHS and not path.startswith(SYNTH_AUDIO_PREFIXES):
+        add(_all(_SYNTH_PATTERNS, text), AUDIO_API)
     add(_all((_PROHIBITED_RE,), text), PROHIBITED_NAME)
     if _extension(path) == ".svg":
         add(_all((_SVG_SCRIPT_RE,), text), SVG_SCRIPT)

@@ -63,7 +63,8 @@ The manifest asks for the smallest permission set the code uses, and that set is
 - State is never shown by color alone. Text contrast targets WCAG 2.2 AA.
 - Motion is small and slow, honors `prefers-reduced-motion`, and can be turned off with a "Still house" toggle. There is no parallax and no screen shake.
 - There is one polite live region. Ghosts stay quiet unless one is waiting for you, blocked or failed, or you asked. Progress is shown in place, never as a toast or a sound.
-- The MVP has no sound.
+- Sound is optional and off on every visit. Pressing Sound turns on short synthesised cues (a door creak when a door opens, a knock when one waits for you). Every cue repeats something already shown and said in words; nothing is told by sound alone.
+- The house is drawn as a 3D model: each room is a real box in perspective. That is a still drawing; a Side view toggle turns the model, and nothing follows the pointer.
 
 ## How Kiro was used
 

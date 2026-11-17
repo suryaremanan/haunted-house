@@ -189,11 +189,17 @@ describe('reflow contract in the sheet', () => {
 })
 
 describe('MVP scope', () => {
-  it('has no sound: no audio API, element, asset or control anywhere', () => {
-    expect(offenders(/new Audio\b|AudioContext|webkitAudioContext|<audio\b|\.play\(\)|speechSynthesis|SpeechSynthesisUtterance|\.(mp3|ogg|wav|m4a|flac)\b|navigator\.vibrate/)).toEqual([])
+  it('makes sound only by synthesis, in one adapter, behind one control', () => {
+    // No sample, element, speech or vibration anywhere; the Web Audio API only in the Sound Feature's adapter.
+    expect(offenders(/new Audio\b|<audio\b|speechSynthesis|SpeechSynthesisUtterance|\.(mp3|ogg|wav|m4a|flac)\b|navigator\.vibrate/)).toEqual([])
+    expect(offenders(/AudioContext|webkitAudioContext/)).toEqual(['src/adapters/house-sound.ts'])
     expect(walk(path.join(UI, 'src')).filter((file) => /\.(mp3|ogg|wav|m4a|flac)$/.test(file)).map(relative)).toEqual([])
     expect(existsSync(path.join(SRC, 'stretch'))).toBe(false)
-    expect(offenders(/\b[Ss]ound\b|\b[Mm]ute\b/, SHIPPED.filter((file) => /\.tsx$/.test(file)))).toEqual([])
+    // The one sound control is the toolbar's toggle.
+    expect(offenders(/\b[Ss]ound\b|\b[Mm]ute\b/, SHIPPED.filter((file) => /\.tsx$/.test(file))).sort()).toEqual([
+      'src/components/HouseToolbar.tsx',
+      'src/components/MansionShell.tsx',
+    ])
   })
 
   it('has no chat composer: the only text field in a Mansion is the bounded revision request', () => {
@@ -239,9 +245,9 @@ describe('committed bundle', () => {
     }
   })
 
-  it('carries no sound, no remote asset, no Tailwind and no stretch code', () => {
+  it('carries no audio sample, no remote asset, no Tailwind and no stretch code', () => {
     const source = read(bundle)
-    expect(source).not.toMatch(/new Audio\b|AudioContext|speechSynthesis|\.(mp3|ogg|wav)\b/)
+    expect(source).not.toMatch(/new Audio\b|<audio\b|speechSynthesis|\.(mp3|ogg|wav)\b/)
     expect(source).not.toMatch(/https?:\/\/(?!www\.w3\.org\/)/)
     expect(source).not.toMatch(/@tailwind|tailwindcss/)
     expect(source).not.toMatch(/url\(/)

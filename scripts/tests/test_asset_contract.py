@@ -296,6 +296,17 @@ FLAGGED = [
 ]
 
 
+def test_the_synthesised_sound_adapter_and_its_bundles_may_use_web_audio_only():
+    synth = "const ctx = new AudioContext()"
+    assert contract.scan_source("app/ui/src/adapters/house-sound.ts", synth) == []
+    assert contract.scan_source("app/ui/dist/index.mjs", synth) == []
+    assert contract.scan_source("app/ui/dist-replay/assets/index-abc.js", synth) == []
+    # Any other source is still a finding, and so is a sample or an element anywhere.
+    assert categories(contract.scan_source("app/ui/src/components/HouseMap.tsx", synth)) == {"audio-api"}
+    for planted in ("new Audio(src)", "<audio controls />", "import creak from './creak.mp3'", "speechSynthesis.speak(u)"):
+        assert categories(contract.scan_source("app/ui/src/adapters/house-sound.ts", planted)) == {"audio-api"}
+
+
 def test_clean_source_has_no_finding():
     assert contract.scan_source("app/ui/src/components/house-art.tsx", CLEAN_TSX) == []
 

@@ -20,7 +20,12 @@ import {
 import type { HostSummary } from '../core/interruption-policy'
 import { motionState } from '../core/motion-policy'
 import { HouseMap } from './HouseMap'
+import { HOUSE_STAGE_STYLES } from './house-stage-styles'
+import { ROOM_PAINT_STYLES } from './room-paint-styles'
 import { HOUSE_UI_STYLES } from './house-styles'
+import type { RoomId } from '../core/house-registry'
+import { RoomStage } from './RoomStage'
+import { useHouseSound } from './use-house-sound'
 import { HouseToolbar } from './HouseToolbar'
 import { LiveAnnouncer } from './LiveAnnouncer'
 import { RoomPanelHost, useSurfaceStack, type OpenFocus, type PanelMode } from './RoomPanelHost'
@@ -181,8 +186,8 @@ export function MansionShell({
 
   // Escape closes only the top surface. With none open it leaves the Mansion,
   // from anywhere on the page, unless something inside already handled the key.
-  const escape = useRef({ open: stack.top !== null, close: stack.close, onReturn })
-  escape.current = { open: stack.top !== null, close: stack.close, onReturn }
+  const escape = useRef({ open: stack.top !== null, close: stack.close, onReturn, mapOpen: false, closeMap: () => {} })
+  escape.current = { open: stack.top !== null, close: stack.close, onReturn, mapOpen: escape.current.mapOpen, closeMap: escape.current.closeMap }
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key !== 'Escape' || event.defaultPrevented) return
@@ -190,6 +195,9 @@ export function MansionShell({
       if (now.open) {
         event.preventDefault()
         now.close()
+      } else if (now.mapOpen) {
+        event.preventDefault()
+        now.closeMap()
       } else if (now.onReturn !== undefined) {
         event.preventDefault()
         now.onReturn()
@@ -200,6 +208,43 @@ export function MansionShell({
   }, [])
 
   const top = stack.top
+  const openKey = top === null ? null : surfaceKey(top.target)
+  const sound = useHouseSound(projection, openKey)
+  const [turned, setTurned] = useState(false)
+  // The room the Operator is standing in: the one on show, else the last one visited,
+  // else the first that needs them, else the Foyer.
+  const [visited, setVisited] = useState<RoomId | null>(null)
+  const shown = top === null ? null : top.target.roomId
+  useEffect(() => {
+    if (shown !== null) setVisited(shown)
+  }, [shown])
+  // The map of the whole house lies over the room only while asked for. It is
+  // put away again as soon as something is opened from it.
+  const [mapOpen, setMapOpen] = useState(false)
+  const toggleMap = useCallback(() => setMapOpen((value) => !value), [])
+  useEffect(() => {
+    if (mapOpen) root.current?.querySelector<HTMLElement>('[data-map-title]')?.focus()
+  }, [mapOpen])
+  useEffect(() => {
+    if (openKey !== null) {
+      setMapOpen(false)
+      return
+    }
+    // A surface just closed and focus went back to the control that opened it.
+    // Where the map is a sheet that is put away (the wide layout), that control
+    // is clipped out of sight, so the Caretaker's choices take focus instead.
+    const sheet = document.activeElement?.closest<HTMLElement>('[data-map-sheet]') ?? null
+    if (sheet !== null && typeof window !== 'undefined' && window.getComputedStyle(sheet).clipPath.startsWith('inset')) {
+      root.current?.querySelector<HTMLElement>('[data-guide-option]')?.focus()
+    }
+  }, [openKey])
+  escape.current.mapOpen = mapOpen
+  escape.current.closeMap = () => {
+    setMapOpen(false)
+    root.current?.querySelector<HTMLElement>('[data-guide-option="map"]')?.focus()
+  }
+  const wanted = shown ?? visited ?? needsYouTarget(projection.needsYou) ?? 'foyer'
+  const current = projection.rooms.some((room) => room.roomId === wanted) ? wanted : (projection.rooms[0]?.roomId ?? 'foyer')
   const modal = panelMode === 'dialog' && top !== null
   // The page behind a modal dialog is inert. React 18 passes the attribute through as a string.
   const behind = modal ? { inert: '' } : {}
@@ -212,6 +257,7 @@ export function MansionShell({
       data-motion={motion.effective}
       data-still={motion.effective === 'none'}
       data-mode={projection.mode}
+      data-map={mapOpen ? 'open' : 'closed'}
       ref={root}
       onKeyDown={(event) => {
         // Handled here first, so a listener further out sees the key as taken.
@@ -220,7 +266,7 @@ export function MansionShell({
         stack.close()
       }}
     >
-      <style>{HOUSE_UI_STYLES + panelStyles}</style>
+      <style>{HOUSE_UI_STYLES + HOUSE_STAGE_STYLES + ROOM_PAINT_STYLES + panelStyles}</style>
       <div className="hh-ui-behind" {...behind}>
         <HouseToolbar
           ref={mansionTitle}
@@ -230,14 +276,17 @@ export function MansionShell({
           motion={motion}
           onToggleStillHouse={() => setStillHouse((value) => !value)}
           status={status}
+          sound={{ on: sound.on, available: sound.available, onToggle: sound.toggle }}
+          view={{ turned, onToggle: () => setTurned((value) => !value) }}
         />
         {banner}
-        <HouseMap
+        <RoomStage
           projection={projection}
-          openSurface={openFromMap}
-          motion={motion.effective}
-          openKey={top === null ? null : surfaceKey(top.target)}
-          panelId={panelId}
+          roomId={current}
+          open={top !== null && top.target.roomId === current}
+          onReturn={onReturn}
+          mapOpen={mapOpen}
+          onToggleMap={toggleMap}
         />
         {notes}
       </div>
@@ -253,6 +302,16 @@ export function MansionShell({
           {renderSurface(top, api)}
         </RoomPanelHost>
       )}
+      <div className="hh-ui-behind" data-map-sheet {...behind}>
+        <HouseMap
+          projection={projection}
+          openSurface={openFromMap}
+          motion={motion.effective}
+          openKey={openKey}
+          panelId={panelId}
+          view={turned ? 'turned' : 'front'}
+        />
+      </div>
       <LiveAnnouncer message={said.text} turn={said.turn} />
     </section>
   )
