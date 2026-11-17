@@ -21,14 +21,14 @@ The guide adds no reducer, command, approval path, endpoint, live region, toast,
     - _Writes: `.kiro/steering/theme-and-accessibility.md`, `.kiro/steering/product.md`, `.kiro/specs/house-ui-and-accessibility/requirements.md`, `docs/assets-checklist.md`_
     - _Requirements: 1.12, 1.13, 14.10_
 
-- [ ] 2. Write the Word Book (MVP)
+- [x] 2. Write the Word Book (MVP)
   - [x] 2.1 Implement the dictionary module
     - Add `app/ui/src/core/house-words.ts` with the eleven terms of the design: plain word, Kiro word, exactly two sentences, and the Kiro file where one exists. Export `word(id, mode)`, `term(id)` and `TERMS`.
     - Keep it free of React, DOM, Crew SDK, network, filesystem, storage, timer and clock.
     - _Writes: `app/ui/src/core/house-words.ts`_
     - _Requirements: 7.1, 7.2, 7.3, 7.9_
 
-  - [ ]* 2.2 Write the property test for plain and Kiro words
+  - [x]* 2.2 Write the property test for plain and Kiro words
     - At least 200 fast-check runs over every term and both modes, and over generated House Projections read by `guideView` with Kiro's words off (no Kiro word as a whole word in composed text) and on (each named term carries its Kiro word).
     - **Property 5: Plain words by default, Kiro's words on request**
     - **Validates: Requirements 7.1, 7.2, 7.3, 7.4, 7.5**
@@ -40,14 +40,14 @@ The guide adds no reducer, command, approval path, endpoint, live region, toast,
     - _Requirements: 7.9, 7.10_
 
 - [ ] 3. Build the guide as a pure reading of the house (MVP)
-  - [ ] 3.1 Extend the guide module
+  - [x] 3.1 Extend the guide module
     - Extend `app/ui/src/core/house-guide.ts` with `guideView`, `wardenPose` and `landingRoom`; keep the precedence of `guideText` exactly. Write every sentence as a template with Word Book slots; compose the door sentence here and quote the upstream risky-action and tool-prompt sentences unchanged.
     - Produce options as press plans (`map`, `control`, `fill`, `every`, `shell`) following the option table of the design: at most four Primary Options, the full list, the approved verbs, a consequence for each, bounded lengths, the ready-made change requests, and no `start`, `decide` or `ask` option where the room's mutation is off or the house is a recording.
     - Offer a `decide` option only when the open surface shows that decision.
     - _Writes: `app/ui/src/core/house-guide.ts`_
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 3.10, 3.11, 4.2, 4.3, 4.6, 4.8, 4.9, 6.5, 11.1, 11.2, 11.3, 11.4, 11.5, 11.6, 11.8, 11.9, 11.10, 11.11, 11.12, 12.1, 12.2, 12.3, 12.4, 12.5, 12.6, 13.1, 13.2_
 
-  - [ ] 3.2 Implement the stage layout table
+  - [x] 3.2 Implement the stage layout table
     - Add `app/ui/src/core/guide-layout.ts` with the press areas now inline in `RoomStage.tsx`, the ghost slots, `GUIDE_RESERVE`, the ghost and Warden size constants, and `workingObjects`.
     - _Writes: `app/ui/src/core/guide-layout.ts`_
     - _Requirements: 1.6, 5.6, 5.7, 8.4, 8.8_
@@ -57,40 +57,40 @@ The guide adds no reducer, command, approval path, endpoint, live region, toast,
     - _Writes: `app/ui/scripts-tests/house-ui-upstream-contract.test.ts`_
     - _Requirements: 14.4_
 
-  - [ ]* 3.4 Write the property test for the balloon grammar
+  - [x]* 3.4 Write the property test for the balloon grammar
     - **Property 1: The balloon grammar is total and bounded**
     - **Validates: Requirements 3.1, 3.3, 3.4, 3.5, 3.6, 3.8, 3.9, 3.11**
     - _Writes: `app/ui/src/core/house-guide-grammar.property.test.ts`_
 
-  - [ ]* 3.5 Write the property test for precedence and pose
+  - [x]* 3.5 Write the property test for precedence and pose
     - Compare with a reference table written independently of the module.
     - **Property 2: The most pressing thing comes first, in words and in pose**
     - **Validates: Requirements 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.8, 3.2, 11.3, 12.1, 12.4, 12.5**
     - _Writes: `app/ui/src/core/house-guide-order.property.test.ts`_
 
-  - [ ]* 3.6 Write the property test for authority
+  - [x]* 3.6 Write the property test for authority
     - Generate every integrity value, read-only, locked and replay houses, every open surface, and pending and resolved items.
     - **Property 3: The guide never offers more than the house allows**
     - **Validates: Requirements 4.2, 4.3, 4.6, 4.8, 6.5, 11.2, 11.4, 11.5, 11.9, 11.10, 11.11, 12.2, 12.3**
     - _Writes: `app/ui/src/core/house-guide-authority.property.test.ts`_
 
-  - [ ]* 3.7 Write the property test for live and replay parity
+  - [x]* 3.7 Write the property test for live and replay parity
     - Build the House Projection twice from the upstream arbitraries of `test/workflow-arbitraries.ts`.
     - **Property 4: Live and replay say the same thing**
     - **Validates: Requirements 3.10, 14.1, 14.2**
     - _Writes: `app/ui/src/core/house-guide-parity.property.test.ts`_
 
-  - [ ]* 3.8 Write the property test for the stage layout
+  - [x]* 3.8 Write the property test for the stage layout
     - **Property 10: The guide never covers a working object**
     - **Validates: Requirements 1.6, 5.6, 5.7, 8.4**
     - _Writes: `app/ui/src/core/guide-layout.property.test.ts`_
 
-  - [ ]* 3.9 Write the property test for the landing room
+  - [x]* 3.9 Write the property test for the landing room
     - **Property 9: The landing room is where the work is**
     - **Validates: Requirements 10.8, 11.1**
     - _Writes: `app/ui/src/core/landing-room.property.test.ts`_
 
-  - [ ]* 3.10 Write the example tests of the guide
+  - [x]* 3.10 Write the example tests of the guide
     - One readable vector per row of the status and option tables. Assert the start option is offered exactly when `startView` offers an enabled start with no command in flight. Assert the verb and banned-phrase lists.
     - _Writes: `app/ui/src/core/house-guide.test.ts`_
     - _Requirements: 3.2, 3.4, 3.9, 11.2, 11.4, 11.5, 12.1_
