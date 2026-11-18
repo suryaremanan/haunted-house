@@ -177,7 +177,8 @@ Implement Room Ghosts after Spec 2 and Spec 4 public interfaces are complete. Be
     - Use spec 4's real MCP subprocess and in-memory/canonical store to test three disjoint tasks plus a queued fourth, overlapping serialization, forged/stale claims, stale file digests, risky action approval, capacity backpressure, concurrent completion, and exact-once claim release.
     - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 8.8, 9.2, 9.3, 9.4, 9.5, 9.6, 9.7, 9.8_
 
-- [ ] 7. Implement role-run, recovery, and review services (MVP, with stretch review)
+- [x] 7. Implement role-run, recovery, and review services (MVP, with stretch review)
+  - **Closed (18 Nov):** every subtask is done or cut with its reason.
   - [x] 7.1 Implement GhostRunBinding and role-run coordination
     - Create `app/backend/haunted_house/services/room_ghost_service.py` that invokes Spec 4 WorkflowService/CrewChat for explicit phase starts, appends the matching `run_started` candidate through the Spec 2 writer, renders one role prompt, consumes acknowledged Record_ID values once, and joins Ghost_Snapshot with WorkflowProjection without an independent state store.
     - Consume raw Crew activity only after Spec 2 returns canonical App_Events.
@@ -201,6 +202,7 @@ Implement Room Ghosts after Spec 2 and Spec 4 public interfaces are complete. Be
     - **Validates: Requirements 12.1, 12.2, 12.3, 12.5, 12.6, 12.8**
 
   - [ ]* 7.6 Implement the Medium and bounded Review_Cycle (stretch)
+    - **Cut (18 Nov):** stretch work, not started before the 30 Nov feature freeze; no MVP behaviour depends on it.
     - Add strict verdict/finding parsing, review only after Workshop completion, one explicit repair-task proposal per finding, normal claim scheduling for approved repairs, pass termination, disabled-state absence, and blocked state after the third non-pass.
     - _Requirements: 14.1, 14.2, 14.3, 14.4, 14.5, 14.6, 14.7_
 
@@ -224,7 +226,8 @@ Implement Room Ghosts after Spec 2 and Spec 4 public interfaces are complete. Be
     - Cover invalid input, sealed/stale Doors through spec 4, unavailable canonical contracts, accepted async work, feedback, cancel timeout, retry limit, restart reconciliation, and redacted responses; verify no duplicate approval or state endpoint.
     - _Requirements: 3.8, 5.6, 6.6, 7.9, 10.5, 10.7, 10.8, 10.9, 12.3, 12.4, 12.5, 12.6, 15.2_
 
-- [ ] 9. Build artifact-first room panels on the existing house (MVP, with stretch Séance panel)
+- [x] 9. Build artifact-first room panels on the existing house (MVP, with stretch Séance panel)
+  - **Closed (18 Nov):** every subtask is done or cut with its reason.
   - [x] 9.1 Implement strict joined RoomProjection parsing and API hooks
     - Add `app/ui/src/core/room-projection.ts` and `app/ui/src/adapters/room-ghosts-api.ts` to join spec 2 Ghost_Snapshot with spec 4 WorkflowProjection plus artifact/task state, detect version/integrity mismatches, and call only feedback, Workshop, cancel, retry, and RG-S4 existing-slot navigation operations.
     - Keep direct `@kirocrew/app-sdk` imports in the existing SDK adapter.
@@ -244,6 +247,7 @@ Implement Room Ghosts after Spec 2 and Spec 4 public interfaces are complete. Be
     - _Requirements: 7.1, 7.9, 7.10, 8.1, 8.2, 8.3, 8.6, 9.7, 11.1, 11.2, 11.3_
 
   - [ ]* 9.5 Implement the Séance Room output panel (stretch)
+    - **Cut (18 Nov):** stretch work, not started before the 30 Nov feature freeze; no MVP behaviour depends on it.
     - Render Review_Cycle, Medium verdict, traced findings, explicit repair proposals, blocked-after-three state, and Medium Session_Link using the same artifact-first patterns and spec 4 return-decision controls.
     - _Requirements: 14.1, 14.2, 14.3, 14.4, 14.5, 14.6, 14.7_
 
@@ -255,7 +259,8 @@ Implement Room Ghosts after Spec 2 and Spec 4 public interfaces are complete. Be
     - Cover every Ghost/Door state, artifact-first document order, no composer, existing approval controls, redacted tool input, Session_Link identity, cancel/retry, task-board concurrency, focus restoration, text-plus-icon status, reduced motion, and replay-disabled actions.
     - _Requirements: 4.2, 4.3, 4.4, 4.6, 4.7, 11.1, 11.2, 11.3, 11.4, 11.5, 11.6, 11.7, 11.8, 11.9, 15.2_
 
-- [ ] 10. Verify integrated role and Workshop behavior (MVP)
+- [x] 10. Verify integrated role and Workshop behavior (MVP)
+  - **Closed (18 Nov):** every subtask is done or cut with its reason.
   - [x] 10.1 Extend shared fake Gateway and canonical conformance harnesses
     - Add role prompts/results, canonical `crew_turn_ended`, slot history, RG-S3 cancellation, RG-S4 navigation stubs, RG-S5 pressure outcomes, task-claim context, and call recording that removes token queries.
     - Send raw Crew fixture frames through Spec 2 ingest exactly once and build on Spec 4 REST/MCP harnesses without adding another Crew transport or normalizer.
@@ -274,6 +279,7 @@ Implement Room Ghosts after Spec 2 and Spec 4 public interfaces are complete. Be
     - _Requirements: 11.2, 12.1, 12.2, 12.3, 12.4, 12.5, 12.6, 12.7, 12.8_
 
   - [ ]* 10.5 Write the opt-in live Crew role test
+    - **Cut (18 Nov):** replaced by `scripts/live-acceptance.sh`, which runs a real Archivist on the real gateway; the walk waits for the owner's sign-in.
     - In a disposable demo Mansion, run one harmless role session, confirm explicit resources/tools, approve one safe MCP write through the app, deny one bypass, validate the artifact, and observe one canonical terminal outcome; scrub all fixture output.
     - _Requirements: 1.2, 1.4, 2.4, 2.7, 3.1, 3.2, 3.3, 4.3, 4.4, 10.1, 10.6, 15.4, 15.5_
 
@@ -291,6 +297,7 @@ Implement Room Ghosts after Spec 2 and Spec 4 public interfaces are complete. Be
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 13. Final checkpoint: verify the complete Room Ghosts feature
+  - **Cut (18 Nov):** superseded by the passing release gate and `scripts/live-acceptance.sh` (owner's sign-in).
   - Ensure all tests pass, ask the user if questions arise.
 
 ## Notes

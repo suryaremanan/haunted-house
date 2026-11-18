@@ -260,6 +260,7 @@ The guide adds no reducer, command, approval path, endpoint, live region, toast,
     - _Requirements: 1.6, 5.6, 5.7, 5.8_
 
   - [ ]* 11.6 Probe a Kiro folder link (WG-S1, optional)
+    - **Cut (18 Nov):** optional; the built page shows the folder and the steps to open it in Kiro instead of a link.
     - Find out whether the installed Kiro opens a folder from a link. Record the result. Add the link to the Built Page only on proof.
     - Not run. The Built Page shows the folder and the steps, and no link.
     - _Writes: `spikes/warden-guide-kiro-link/**`, `spikes/fixtures/warden-guide-kiro-link.json`_
@@ -278,6 +279,7 @@ The guide adds no reducer, command, approval path, endpoint, live region, toast,
     - _Requirements: 14.10, 14.11_
 
 - [ ] 13. Final checkpoint: the owner walks the first visit
+  - **Cut (18 Nov) from the agent's work:** only the owner can walk it in Crew; listed under "Only you can do this" in `docs/judge-scorecard.md`.
   - In Crew and in the static replay. Ensure all tests pass, ask the user if questions arise.
 
 ## Notes

@@ -166,7 +166,9 @@ Build the Haunted House foundation from the approved requirements and design: re
   - Run `scripts/test-all.sh`, the `.kiro` check and the secret scan; ask the user before making the first commit; ask the user if anything is unclear
 
 - [ ]* 17. Verify the v2 replay-proof proxy signature (stretch)
+  - **Cut (18 Nov):** stretch work, not started before the 30 Nov feature freeze; no MVP behaviour depends on it.
   - [ ]* 17.1 Add a nonce cache and v2 verification alongside v1
+    - **Cut (18 Nov):** stretch work, not started before the 30 Nov feature freeze; no MVP behaviour depends on it.
     - Requires confirming Crew's exact v2 format; reject a reused nonce
     - _Requirements: 5.2, 5.3_
 

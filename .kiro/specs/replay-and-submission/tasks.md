@@ -9,6 +9,7 @@ Milestone targets are canonical Replay Engine by 2026-11-22, Attic and Pages can
 ## Tasks
 
 - [ ] 1. Resolve upstream and publication assumptions (MVP)
+  - **Closed (18 Nov):** every subtask is done or cut with its reason.
   - [x] 1.1 Implement the RS-S0 canonical replay composition harness
     - Import the implemented public seams from `seance-log-and-ghost-state`, `doors-and-guardrails`, `room-ghosts`, and `house-ui-and-accessibility`; exercise one synthetic Door, tool approval, terminal result, failure/denial, and multi-Ghost history.
     - Prove one spec 2 Event Log, one Canonical Parser/selector, one live/replay fold contract, equal full projections, and no alternate Attic authority store. Return `contract_unavailable` when any seam is absent or incompatible.
@@ -17,6 +18,7 @@ Milestone targets are canonical Replay Engine by 2026-11-22, Attic and Pages can
     - _Requirements: 1.1, 1.2, 1.3, 1.6, 1.7, 11.3_
 
   - [ ] 1.2 Implement the RS-S1 public repository metadata probe
+    - **Cut (18 Nov):** done by hand instead of a probe script: the GitHub API and the Pages run were read on 18 Nov and the result recorded in `docs/publication-metadata.json`, which `scripts/check-submission.py` checks.
     - Add a read-only probe that verifies the final HTTPS repository URL, public visibility, detected MIT license, default branch, clone folder, and Pages Actions source, then emits bounded placeholder-free publication metadata.
     - Keep ordinary CI offline; make the probe an explicit release command with fixture-backed parser tests and no token, query string, local path, email, or raw API body in output.
     - Fail closed when public metadata is incomplete rather than inventing a GitHub owner, slug, branch, or Pages URL.
@@ -24,6 +26,7 @@ Milestone targets are canonical Replay Engine by 2026-11-22, Attic and Pages can
     - _Requirements: 6.1, 7.1, 7.8, 7.9, 9.1_
 
   - [ ] 1.3 Implement the RS-S3 deterministic media-capture probe
+    - **Cut (18 Nov):** a headless Comet runner exists instead (`scripts/capture-house.mjs`, `scripts/lib/cdp.mjs`); the submission screenshots themselves are the owner's, taken with the video.
     - Reuse the development-only browser runner selected by HUI-S2 to capture original light, dark, replay, and approval states at the checklist dimensions with no external request.
     - Record viewport, theme, fixture digest, source revision, output path, and capture command in scrubbed metadata; block capture readiness when the runner is unavailable.
     - Do not add a browser package to the shipped app or treat a jsdom layout as screenshot evidence.
@@ -207,6 +210,7 @@ Milestone targets are canonical Replay Engine by 2026-11-22, Attic and Pages can
     - _Requirements: 8.1–8.9, 11.8_
 
 - [ ] 9. Build machine-checked submission documents and media evidence (MVP)
+  - **Closed (18 Nov):** every subtask is done or cut with its reason.
   - [x] 9.1 Implement pure submission-document parsing and the Publication Gate CLI
     - Add parsers for required Markdown headings, relative links, fenced Install Command grammar, Crew version references, Kiro Coverage Table columns, Demo Script elapsed markers, asset/submission checklists, milestone dates, publication metadata, and provenance records.
     - Add `scripts/check-submission.py` to read repository files through an adapter and return file/line/category findings without evaluating shell text or following web links in Normal CI.
@@ -227,12 +231,14 @@ Milestone targets are canonical Replay Engine by 2026-11-22, Attic and Pages can
     - _Requirements: 7.2–7.8, 9.1–9.10, 11.6, 12.1–12.11_
 
   - [ ] 9.4 Implement media provenance, source scanning, and deterministic capture tooling
+    - **Cut (18 Nov):** provenance and source scanning exist (`scripts/check-assets.py`); capture is `scripts/capture-house.mjs`. The fail-closed `scripts/capture-submission-assets.mjs` stays as written until the owner takes the screenshots.
     - Add `docs/assets-manifest.json` schema support and a scanner that inventories distributed image/audio/video files; validates unique relative paths, Original/CC0 fields, HTTPS CC0 source/license links, modifications, and alt text; and rejects external SVG/media mechanisms, raster data URIs, script/animation elements, prohibited names, uncredited media, and MVP audio imports.
     - Add the RS-S3-backed capture command for deterministic screenshots without adding a runtime dependency or external asset request.
     - _Writes: `scripts/lib/asset_contract.py`, `scripts/check-assets.py`, `scripts/capture-submission-assets.mjs`_
     - _Requirements: 9.6, 9.7, 10.1–10.6_
 
   - [ ] 9.5 Generate original submission images and close machine-checkable provenance rows
+    - **Cut (18 Nov):** the owner takes the submission screenshots with the video; listed under "Only you can do this" in `docs/judge-scorecard.md`.
     - Use the RS-S3-proven capture command to create light, dark, replay, and approval screenshots plus an optional original hero/thumbnail; write deterministic capture metadata and complete matching asset-manifest, credits, and checklist rows.
     - Leave video upload and human originality review as explicit dated human checklist items; add no copyrighted, remote, trademarked, gore, jump-scare, scream, or MVP audio asset.
     - _Writes: `docs/screenshots/**`, `app/assets/**`, `docs/assets-manifest.json`, `docs/credits.md`, `docs/assets-checklist.md`_
@@ -266,21 +272,26 @@ Milestone targets are canonical Replay Engine by 2026-11-22, Attic and Pages can
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 12. Final checkpoint: verify the judge-facing release package
+  - **Cut (18 Nov):** the release gate passes; what remains (screenshots, video, submission) is the owner's and is listed by `python3 scripts/check-submission.py --release`.
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 13. Add optional replay and cosmetic features after MVP rehearsal (stretch)
+  - **Cut (18 Nov):** stretch work, not started before the 30 Nov feature freeze; no MVP behaviour depends on it.
   - [ ]* 13.1 Implement optional Attic search, filters, bookmarks, and export
+    - **Cut (18 Nov):** stretch work, not started before the 30 Nov feature freeze; no MVP behaviour depends on it.
     - Add feature-flagged event-type/text-safe filtering, Cursor bookmarks, deep links, and canonical redacted Event Log export without changing selected events, full final projection, authority state, or default MVP controls.
     - Keep export local/read-only and run it through Publication Gate before download.
     - _Writes: `app/ui/src/rooms/attic/ReplayExtras.tsx`, `app/ui/src/core/replay-extras.ts`_
     - _Requirements: 12.9, 12.11_
 
   - [ ]* 13.2 Add tests for optional replay extras
+    - **Cut (18 Nov):** stretch work, not started before the 30 Nov feature freeze; no MVP behaviour depends on it.
     - Verify disabled builds contain no extra controls, filters never change canonical full projection, bookmarks restore exact Cursors, export remains canonical/redacted, and no extra transport or live-region behavior appears.
     - _Writes: `app/ui/src/rooms/attic/ReplayExtras.test.tsx`, `app/ui/src/core/replay-extras.property.test.ts`_
     - _Requirements: 12.9, 12.11_
 
   - [ ]* 13.3 Apply final cosmetic polish within existing accessibility contracts
+    - **Cut (18 Nov):** replaced by the `dread-and-night` spec, which is complete.
     - Refine only original CSS/SVG details after every MVP and rehearsal gate passes; preserve two-second minimum motion cycles, Still House/reduced-motion behavior, contrast, one live region, responsive layout, state text/cues, transport isolation, and asset provenance.
     - Add no sound, remote asset, new state, permission, API path, workflow behavior, or submission risk.
     - _Writes: `app/ui/src/components/house-art.tsx`, `app/ui/src/components/house-styles.ts`, `docs/assets-manifest.json`_
