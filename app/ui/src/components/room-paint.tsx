@@ -1153,11 +1153,11 @@ const WARDEN_ARMS: Readonly<Record<Exclude<WardenPose, 'stepped-back'>, ReactNod
     <g>
       <KeyRing />
       <RingArm />
-      <path className={p('ghost')} d="M26 208 C12 208 5 221 5 236 C5 250 8 258 6 270 C10 266 14 272 18 267 C21 273 25 266 29 270 C34 274 42 272 48 264 C41 266 39 260 41 252 C43 243 46 238 46 234 C46 220 39 208 26 208 Z" />
-      <path className={p('ghost-d')} d="M26 208 C39 208 46 220 46 234 C46 238 43 243 41 252 C39 260 41 266 48 264 C42 272 34 274 29 270 C32 262 36 250 36 234 C36 222 32 212 26 208 Z" />
-      <ellipse className={p('ink')} cx={18} cy={230} rx={3} ry={4.5} />
-      <ellipse className={p('ink')} cx={30} cy={230} rx={3} ry={4.5} />
-      <ellipse className={p('ink')} cx={24} cy={241} rx={2.5} ry={3} />
+      {/* The held ghost hangs limp in the chain: a torn shroud, dark sockets, mouth open. */}
+      <path className={p('ghost')} opacity={0.9} d="M26 204 C14 204 8 216 8 230 C8 246 10 262 6 286 L12 278 L15 294 L20 280 L25 296 L30 280 L35 292 L38 278 L44 286 C40 262 44 246 44 230 C44 216 38 204 26 204 Z" />
+      <path className={p('ghost-d')} opacity={0.7} d="M26 204 C38 204 44 216 44 230 C44 246 40 262 44 286 L38 278 L35 292 L32 276 C35 256 36 236 34 222 C32 212 30 206 26 204 Z" />
+      <path className={p('ink')} d="M16 222 C14 226 14 234 18 237 C22 234 22 226 20 222 Z M30 222 C28 226 28 234 32 237 C36 234 36 226 34 222 Z" />
+      <path className={p('ink')} d="M22 244 C21 250 22 256 25 258 C28 256 29 250 28 244 Z" />
       <path className={p('robe-l')} d="M80 102 C68 120 56 150 50 182 L64 190 C73 170 80 146 86 126 Z" />
       <path className={p('robe-rim')} d="M80 102 C68 120 56 150 50 182 L55 185 C60 154 70 126 84 108 Z" />
       <circle className={p('bone')} cx={56} cy={190} r={6} />

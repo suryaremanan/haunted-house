@@ -86,11 +86,17 @@ export const DREAD_STYLES = `
   transform: skewX(-38deg); background: radial-gradient(ellipse 100% 90% at 100% 100%, ${night(70)} 0%, ${veil('--hh-sc-night1', 40)} 52%, transparent 76%); }
 .hh-dread-shadow[data-stance='holding'] { width: 64%; height: 20%; }
 /* He grows with what he holds: small at the edge when nothing waits, forward and brighter-eyed when something does. */
-${DREAD} .hh-stage-warden .hh-paint-warden { transform-origin: 50% 100%; }
-${DREAD} .hh-stage-room[data-stance='edge'] .hh-stage-warden .hh-paint-warden { transform: scale(0.78) translateX(14%); opacity: 0.86; }
-${DREAD} .hh-stage-room[data-stance='forward'] .hh-stage-warden .hh-paint-warden,
+${DREAD} .hh-stage-warden .hh-paint-warden { transform-origin: 85% 100%; }
+${DREAD} .hh-stage-room[data-stance='edge'] .hh-stage-warden .hh-paint-warden { transform: scale(0.8) translateX(12%); opacity: 0.86; }
+${DREAD} .hh-stage-room[data-stance='forward'] .hh-stage-warden .hh-paint-warden {
+  transform: scale(1.25); filter: drop-shadow(0 0 12px var(--hh-sc-lamp)) drop-shadow(0 0 3px var(--hh-sc-night3)); }
+/* Holding a ghost he is half as tall again, looming over the corner of the room, short of the door's own light. */
 ${DREAD} .hh-stage-room[data-stance='holding'] .hh-stage-warden .hh-paint-warden {
-  transform: scale(1.08) translateX(-6%); filter: drop-shadow(0 0 12px var(--hh-sc-lamp)) drop-shadow(0 0 3px var(--hh-sc-night3)); }
+  transform: scale(1.6); filter: drop-shadow(0 0 16px var(--hh-sc-cloth)) drop-shadow(0 0 4px var(--hh-sc-lamp)); }
+/* The ghosts are drawn larger than the room's small sheets of Calm: tall shapes that reach. */
+${DREAD} .hh-stage-figure .hh-paint-hollow { transform: scale(1.55); transform-origin: 50% 92%; opacity: 0.72;
+  filter: brightness(0.82) drop-shadow(0 0 7px ${veil('--hh-sc-ecto', 45)}); }
+.hh-ui[data-fright='dread'] .hh-stage-figure .hh-paint-hollow { opacity: 0.62; }
 /* The night outside the house. */
 .hh-house:not([data-landing='true']) { background: radial-gradient(ellipse 80% 50% at 75% -5%, ${veil('--hh-sc-night2', 55)} 0%, transparent 70%), ${night(40)}; }
 /* After a held action is decided. Refused: the ghost is dragged back from the Warden's corner to its place. Released: a
@@ -111,5 +117,34 @@ ${DREAD} .hh-stage-room[data-stance='holding'] .hh-stage-warden .hh-paint-warden
   ${DREAD}[data-motion='low-frequency'] .hh-dread-candle { animation: hh-dread-flame 3.2s ease-in-out infinite; }
   ${DREAD}[data-motion='low-frequency'] .hh-dread-leak { animation: hh-dread-flame 4s ease-in-out infinite; }
   ${DREAD}[data-motion='low-frequency'] .hh-stage-warden .hh-paint-warden { transition: transform 1.6s cubic-bezier(0.3, 0.1, 0.2, 1); }
+}
+
+/* The head of the house is one slim line in a wide window, so the room is the largest thing on screen: the recording's
+   transport, its séance board and position, the run's numbers and the practice switch side by side. The read-only
+   sentence stays in the page for assistive technology; on screen it is the word after "Recording". */
+@media (min-width: 900px) {
+  .hh-ui { padding: 8px 12px 10px; gap: 6px; }
+  .hh-ui > .hh-ui-behind:first-of-type { gap: 6px; }
+  .hh-ui-replay-head { display: flex; gap: 8px; align-items: stretch; margin-top: 4px; }
+  .hh-ui-replay-head > .hh-ui-replay-bar { flex: 1 1 auto; flex-wrap: nowrap; align-items: center; gap: 10px; padding: 4px 12px; }
+  .hh-ui-replay-bar .hh-ui-replay-note { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); }
+  .hh-ui-replay-bar .hh-ui-replay-label::after { content: ', read-only'; font-weight: 400; }
+  .hh-ui-replay-bar .hh-ui-replay-progress { display: flex; align-items: center; gap: 8px; flex: 1 1 10rem; }
+  .hh-ui-replay-bar .hh-ui-replay-position { flex: none; font-size: 0.8125rem; }
+  .hh-ui-replay-bar .hh-ui-button { padding: 2px 10px; }
+  .hh-ui-replay-bar .hh-ui-replay-label, .hh-ui-replay-bar .hh-ui-replay-buttons { flex: none; flex-wrap: nowrap; }
+  .hh-ui-replay-bar .hh-ui-replay-progress { min-width: 9rem; }
+  .hh-ui-replay-bar .hh-ui-replay-speed legend { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); }
+  .hh-ui-replay-bar .hh-ui-replay-speed { flex: none; font-size: 0.8125rem; }
+  .hh-ui-replay-head > .hh-ui-practice { flex: 0 1 22rem; flex-wrap: nowrap; padding: 4px 10px; gap: 8px; }
+  .hh-ui-practice [data-practice-toggle] { flex: none; }
+  .hh-ui-practice-numbers { font-size: 0.75rem; line-height: 1.25; }
+  .hh-ui-practice .hh-ui-button { padding: 2px 8px; font-size: 0.8125rem; }
+  .hh-ui-practice-state { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); }
+  .hh-ui-toolbar { padding: 2px 4px; gap: 4px 6px; }
+  .hh-ui-toolbar .hh-ui-needs, .hh-ui-toolbar .hh-ui-toggle, .hh-ui-toolbar .hh-ui-status > summary, .hh-ui-toolbar .hh-ui-mansion-name { font-size: 0.8125rem; padding-block: 1px; }
+  /* Inside a mansion the house's name plate is the toolbar's; the page title stays for assistive technology. */
+  .hh-house:has(.hh-ui) .hh-status[data-compact='true'] { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); }
+  .hh-house:has(.hh-ui) { padding-top: 0; padding-bottom: 0; }
 }
 `
