@@ -34,7 +34,44 @@ from submission_contract import (  # noqa: E402
 
 MANIFEST = "app/app.json"
 READ = tuple(contract.HEADINGS) + (ASSETS_MANIFEST, PUBLICATION_METADATA, INSTALL_SCRIPT, MANIFEST)
-BASE: dict[str, Optional[str]] = {path: (REPO_ROOT / path).read_text(encoding="utf-8") for path in READ}
+_REAL: dict[str, Optional[str]] = {path: (REPO_ROOT / path).read_text(encoding="utf-8") for path in READ}
+
+# The repository was published and verified on 18 Nov. These tests exercise the
+# contract from before publication, so the base is the real documents turned
+# back to that state: pending metadata, no public link in the README, and the
+# rows that need the public site not started. The published state is checked
+# against the real files in test_submission_documents.py.
+_PENDING_METADATA = """{
+  "schemaVersion": 1,
+  "status": "pending",
+  "repositoryUrl": null,
+  "defaultBranch": null,
+  "cloneFolder": null,
+  "pagesUrl": null,
+  "public": null,
+  "license": "MIT"
+}
+"""
+_UNPUBLISHED_ROWS = {
+    "repository-public": "| `repository-public` | The repository is public and readable without an account | 2026-11-26 | `not_started` | Owner step: publish the repository, then record its address in `docs/publication-metadata.json` |",
+    "license-detected": "| `license-detected` | GitHub detects the MIT license | 2026-11-26 | `not_started` | `LICENSE` is in place; detection is checked on the public repository |",
+    "links": "| `links` | README links to the public repository and the public replay work | 2026-11-29 | `not_started` | Blocked on `repository-public`; relative links are checked by `scripts/check-submission.py` |",
+    "pages-smoke": "| `pages-smoke` | The Pages workflow deployed and its smoke job passed | 2026-11-26 | `not_started` | `.github/workflows/pages.yml` is written; its first run needs the public repository |",
+    "ci": "| `ci` | Normal CI is green on the default branch | 2026-11-29 | `not_started` | `.github/workflows/ci.yml`; needs the public repository |",
+}
+
+
+def _unpublished(files: dict[str, Optional[str]]) -> dict[str, Optional[str]]:
+    readme = files[README] or ""
+    readme = re.sub(r"^\*\*Open it: .*$", "The public replay link is not listed yet.", readme, flags=re.MULTILINE)
+    checklist = []
+    for line in (files[SUBMISSION_CHECKLIST] or "").split("\n"):
+        key = re.match(r"\| `([a-z-]+)` \|", line)
+        checklist.append(_UNPUBLISHED_ROWS.get(key.group(1), line) if key else line)
+    return {**files, PUBLICATION_METADATA: _PENDING_METADATA, README: readme, SUBMISSION_CHECKLIST: "\n".join(checklist)}
+
+
+BASE: dict[str, Optional[str]] = _unpublished(_REAL)
 
 VERIFIED = {
     "schemaVersion": 1,
@@ -169,9 +206,11 @@ def test_local_absolute_paths_are_refused(text: str):
     assert contract.LOCAL_PATH in categories(with_text(CREDITS, lambda body: body + f"\n{text}\n"))
 
 
-def test_prohibited_product_names_are_refused():
+def test_prohibited_product_names_are_refused_outside_the_two_documents_that_say_what_is_resurrected():
     for name in ("Micro" + "soft", "B" + "ob"):
-        assert contract.PROHIBITED_NAME in categories(with_text(WRITEUP, lambda body: body + f"\nInspired by {name}.\n"))
+        assert contract.PROHIBITED_NAME in categories(with_text(CREDITS, lambda body: body + f"\nInspired by {name}.\n"))
+        assert contract.PROHIBITED_NAME not in categories(with_text(WRITEUP, lambda body: body + f"\nInspired by {name}.\n"))
+        assert contract.PROHIBITED_NAME not in categories(with_text(README, lambda body: body + f"\nInspired by {name}.\n"))
 
 
 def test_a_documented_script_that_does_not_exist_is_named():

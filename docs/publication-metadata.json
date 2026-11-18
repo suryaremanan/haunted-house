@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "status": "pending",
-  "repositoryUrl": null,
-  "defaultBranch": null,
-  "cloneFolder": null,
-  "pagesUrl": null,
-  "public": null,
+  "status": "verified",
+  "repositoryUrl": "https://github.com/suryaremanan/haunted-house",
+  "defaultBranch": "main",
+  "cloneFolder": "haunted-house",
+  "pagesUrl": "https://suryaremanan.github.io/haunted-house/",
+  "public": true,
   "license": "MIT"
 }

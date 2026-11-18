@@ -1,6 +1,34 @@
 # Haunted House: write-up
 
-Haunted House is a Kiro Crew app for Kiroween 2026 (Resurrection category). It brings back the 1990s "house as interface" idea for a new job: showing what several AI agents are doing and what each one is allowed to do.
+Haunted House is a Kiro Crew app for Kiroween 2026 (Resurrection category). It brings back Microsoft Bob (1995), the house-as-interface desktop, for a new job: showing what several AI agents are doing and what each one is allowed to do.
+
+## What is being resurrected
+
+Microsoft Bob (1995) replaced the Windows desktop with a house. You walked into rooms, clicked objects on a desk to open programs, and a cartoon guide spoke to you in speech balloons. It was withdrawn within about a year and is remembered as one of the industry's best-known failures.
+
+It failed for reasons that are still instructive:
+
+- **The house was decoration over a few simple programs.** A letter writer and a checkbook did not need rooms; the rooms only added clicks between you and them.
+- **The guide talked down and got in the way.** It interrupted, it performed while idle, and its help could not be turned into knowledge of the real controls.
+- **It hid the computer instead of explaining it.** Nothing in the house told you more than the plain program would have.
+- **It was heavy for the machines of its day.**
+
+Agents change the arithmetic. Several AI agents working on one project are a set of actors with jobs, limits and moments when they need you, which is what a house with rooms, walls, doors and occupants is good at showing. The rooms are no longer decoration: each one is a phase with its own output, its own agent and its own allowed paths. The doors are real approval gates. The guide is not a performer: he reads the same state as the map, says what is true in one line, and every choice he offers presses a control that is already on the page. Haunted House keeps Bob's idea and treats each of its failures as a rule.
+
+Haunted House uses the idea only. The app, its art, assets and fixtures contain no Microsoft or Bob name, logo, character, artwork or sound; every drawing is original SVG written for this project.
+
+## Against what Crew already has
+
+Crew ships two built-in apps close to this idea. Both are credited by name.
+
+| | Spec Builder | Agent Worlds | Haunted House |
+|---|---|---|---|
+| What you see | Requirements, design and tasks as documents | Running agents as animated characters | One project as a house: rooms are phases, ghosts are agents |
+| Approvals | Gates between documents | None of its own | Doors that open only on your approval, plus exact approvals for risky actions (one command, one folder, one time) |
+| What an agent may touch | Not shown | Not shown | Walls: each room's allowed paths, shown in the room and enforced by the room's tool server |
+| History | The documents | Live only | An append-only séance log; the Attic replays any run from it alone |
+| For someone new to Kiro | Kiro's words | No guidance | The Warden: plain words first, Kiro's words one press away |
+| Without Crew | No | No | A public static replay of a whole run, with a practice mode where you make the decisions, and any run's séance log can be opened in it |
 
 ## Problem
 

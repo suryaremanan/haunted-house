@@ -1,0 +1,218 @@
+{
+ "tool": "axe-core in headless Comet",
+ "tags": [
+  "wcag2a",
+  "wcag2aa",
+  "wcag21a",
+  "wcag21aa",
+  "wcag22aa"
+ ],
+ "states": 14,
+ "violations": 12,
+ "results": [
+  {
+   "state": "held moment calm 1280",
+   "violations": [
+    {
+     "id": "label-content-name-mismatch",
+     "impact": "serious",
+     "help": "Elements must have their visible text as part of their accessible name",
+     "nodes": [
+      "button[data-guide-option=\"replay-toggle\"]",
+      "button[data-guide-option=\"replay-restart\"]",
+      "button[data-guide-option=\"see-asked:risky-run-tests-1\"]",
+      "button[data-guide-option=\"map\"]"
+     ]
+    }
+   ]
+  },
+  {
+   "state": "end calm 1280",
+   "violations": [
+    {
+     "id": "label-content-name-mismatch",
+     "impact": "serious",
+     "help": "Elements must have their visible text as part of their accessible name",
+     "nodes": [
+      "button[data-guide-option=\"replay-toggle\"]",
+      "button[data-guide-option=\"replay-restart\"]",
+      "button[data-guide-option=\"attic-watch\"]",
+      "button[data-guide-option=\"attic-step\"]"
+     ]
+    }
+   ]
+  },
+  {
+   "state": "gate 1280",
+   "violations": []
+  },
+  {
+   "state": "held moment eerie 1280",
+   "violations": [
+    {
+     "id": "label-content-name-mismatch",
+     "impact": "serious",
+     "help": "Elements must have their visible text as part of their accessible name",
+     "nodes": [
+      "button[data-guide-option=\"replay-toggle\"]",
+      "button[data-guide-option=\"replay-restart\"]",
+      "button[data-guide-option=\"look\"]",
+      "button[data-guide-option=\"map\"]"
+     ]
+    }
+   ]
+  },
+  {
+   "state": "end eerie 1280",
+   "violations": [
+    {
+     "id": "label-content-name-mismatch",
+     "impact": "serious",
+     "help": "Elements must have their visible text as part of their accessible name",
+     "nodes": [
+      "button[data-guide-option=\"replay-toggle\"]",
+      "button[data-guide-option=\"replay-restart\"]",
+      "button[data-guide-option=\"attic-watch\"]",
+      "button[data-guide-option=\"attic-step\"]"
+     ]
+    }
+   ]
+  },
+  {
+   "state": "attic sheet 1280",
+   "violations": [
+    {
+     "id": "label-content-name-mismatch",
+     "impact": "serious",
+     "help": "Elements must have their visible text as part of their accessible name",
+     "nodes": [
+      "button[data-guide-option=\"replay-toggle\"]",
+      "button[data-guide-option=\"replay-restart\"]",
+      "button[data-guide-option=\"attic-toggle\"]",
+      "button[data-guide-option=\"attic-next\"]"
+     ]
+    }
+   ]
+  },
+  {
+   "state": "practice question 1280",
+   "violations": [
+    {
+     "id": "label-content-name-mismatch",
+     "impact": "serious",
+     "help": "Elements must have their visible text as part of their accessible name",
+     "nodes": [
+      "button[data-guide-option=\"replay-toggle\"]",
+      "button[data-guide-option=\"replay-restart\"]",
+      "button[data-guide-option=\"attic-watch\"]",
+      "button[data-guide-option=\"attic-step\"]"
+     ]
+    }
+   ]
+  },
+  {
+   "state": "held moment dread 1280",
+   "violations": [
+    {
+     "id": "label-content-name-mismatch",
+     "impact": "serious",
+     "help": "Elements must have their visible text as part of their accessible name",
+     "nodes": [
+      "button[data-guide-option=\"replay-toggle\"]",
+      "button[data-guide-option=\"replay-restart\"]",
+      "button[data-guide-option=\"see-asked:risky-run-tests-1\"]",
+      "button[data-guide-option=\"map\"]"
+     ]
+    }
+   ]
+  },
+  {
+   "state": "end dread 1280",
+   "violations": [
+    {
+     "id": "label-content-name-mismatch",
+     "impact": "serious",
+     "help": "Elements must have their visible text as part of their accessible name",
+     "nodes": [
+      "button[data-guide-option=\"replay-toggle\"]",
+      "button[data-guide-option=\"replay-restart\"]",
+      "button[data-guide-option=\"attic-watch\"]",
+      "button[data-guide-option=\"attic-step\"]"
+     ]
+    }
+   ]
+  },
+  {
+   "state": "gate 390",
+   "violations": []
+  },
+  {
+   "state": "held moment eerie 390",
+   "violations": [
+    {
+     "id": "label-content-name-mismatch",
+     "impact": "serious",
+     "help": "Elements must have their visible text as part of their accessible name",
+     "nodes": [
+      "button[data-guide-option=\"replay-toggle\"]",
+      "button[data-guide-option=\"replay-restart\"]",
+      "button[data-guide-option=\"look\"]",
+      "button[data-guide-option=\"map\"]",
+      "button[data-room-control=\"foyer\"]"
+     ]
+    }
+   ]
+  },
+  {
+   "state": "end eerie 390",
+   "violations": [
+    {
+     "id": "label-content-name-mismatch",
+     "impact": "serious",
+     "help": "Elements must have their visible text as part of their accessible name",
+     "nodes": [
+      "button[data-guide-option=\"replay-toggle\"]",
+      "button[data-guide-option=\"replay-restart\"]",
+      "button[data-guide-option=\"attic-watch\"]",
+      "button[data-guide-option=\"attic-step\"]",
+      "button[data-room-control=\"foyer\"]"
+     ]
+    }
+   ]
+  },
+  {
+   "state": "attic sheet 390",
+   "violations": [
+    {
+     "id": "label-content-name-mismatch",
+     "impact": "serious",
+     "help": "Elements must have their visible text as part of their accessible name",
+     "nodes": [
+      "button[data-guide-option=\"replay-toggle\"]",
+      "button[data-guide-option=\"replay-restart\"]",
+      "button[data-guide-option=\"attic-toggle\"]",
+      "button[data-guide-option=\"attic-next\"]",
+      "button[data-room-control=\"foyer\"]"
+     ]
+    }
+   ]
+  },
+  {
+   "state": "practice question 390",
+   "violations": [
+    {
+     "id": "label-content-name-mismatch",
+     "impact": "serious",
+     "help": "Elements must have their visible text as part of their accessible name",
+     "nodes": [
+      "button[data-guide-option=\"replay-toggle\"]",
+      "button[data-guide-option=\"replay-restart\"]",
+      "button[data-guide-option=\"attic-watch\"]",
+      "button[data-guide-option=\"attic-step\"]",
+      "button[data-room-control=\"foyer\"]"
+     ]
+    }
+   ]
+  }
+ ]
+}

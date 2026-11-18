@@ -69,27 +69,29 @@ def test_the_repository_documents_are_accepted_from_any_directory():
 def test_the_release_check_fails_while_anything_is_pending_and_names_it():
     result = run("--release")
     assert result.returncode == 1
-    assert "docs/publication-metadata.json:1: release-item-pending" in result.stdout
+    # Publication is verified (18 Nov); screenshots and the video are still open.
+    assert "docs/publication-metadata.json:1: release-item-pending" not in result.stdout
     assert "release-item-pending: screenshots" in result.stdout
     assert "release-item-pending: video" in result.stdout
 
 
-def test_publication_metadata_is_pending_and_invents_no_address():
+def test_publication_metadata_is_verified_and_every_public_address_is_a_verified_one():
     metadata = json.loads((DOCS / "publication-metadata.json").read_text(encoding="utf-8"))
     assert metadata == {
         "schemaVersion": 1,
-        "status": "pending",
-        "repositoryUrl": None,
-        "defaultBranch": None,
-        "cloneFolder": None,
-        "pagesUrl": None,
-        "public": None,
+        "status": "verified",
+        "repositoryUrl": "https://github.com/suryaremanan/haunted-house",
+        "defaultBranch": "main",
+        "cloneFolder": "haunted-house",
+        "pagesUrl": "https://suryaremanan.github.io/haunted-house/",
+        "public": True,
         "license": "MIT",
     }
+    allowed = (metadata["repositoryUrl"], metadata["pagesUrl"])
     for path in [REPO_ROOT / "README.md", *DOCS.glob("*.md")]:
         text = path.read_text(encoding="utf-8")
-        assert not re.search(r"github\.(?:com|io)/", text), path.name
-        assert not re.search(r"youtu\.?be|vimeo|devpost", text, re.IGNORECASE), path.name
+        for url in re.findall(r"https?://[^\s)>|`]*github\.(?:com|io)/[^\s)>|`]*", text):
+            assert url.rstrip(".,").startswith(allowed), (path.name, url)
 
 
 def test_no_document_claims_a_screenshot_or_video_that_does_not_exist():
@@ -199,7 +201,7 @@ def test_the_copy_is_accepted(copy: Path):
         ("docs/submission-checklist.md", "| 2026-11-30 | `feature-freeze` |", "| 2026-12-01 | `feature-freeze` |", "milestone-date: feature-freeze"),
         ("docs/submission-checklist.md", "| 2026-12-03 | `submission` |", "| 2026-12-05 | `submission` |", "milestone-order"),
         ("docs/submission-checklist.md", "| after MVP rehearsal | `stretch-polish` |", "| 2026-11-20 | `stretch-polish` |", "stretch-before-mvp"),
-        ("docs/publication-metadata.json", '"repositoryUrl": null', '"repositoryUrl": "https://github.com/invented/haunted-house"', "publication-metadata-invalid"),
+        ("docs/publication-metadata.json", '"cloneFolder": "haunted-house"', '"cloneFolder": "another-folder"', "publication-metadata-invalid"),
     ],
 )
 def test_a_damaged_document_fails_and_names_the_source_and_the_missing_element(copy: Path, name: str, old: str, new: str, finding: str):
@@ -221,7 +223,7 @@ def test_a_missing_document_fails(copy: Path, name: str):
 
 
 def test_an_invented_public_link_fails(copy: Path):
-    edit(copy, "README.md", "The public replay link is not listed yet.", "Open https://invented-owner.github.io/haunted-house/ now.")
+    edit(copy, "README.md", "The source is at https://github.com/suryaremanan/haunted-house.", "The source is at https://invented-owner.github.io/haunted-house/.")
     result = run("--root", copy)
     assert result.returncode == 1
     assert "unverified-public-url" in result.stdout
