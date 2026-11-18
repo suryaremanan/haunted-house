@@ -7,6 +7,7 @@ Implement the final Haunted House presentation in React and TypeScript after ver
 ## Tasks
 
 - [ ] 1. Verify upstream, SDK, and rendered-layout contracts (MVP)
+  - **Closed (18 Nov):** every subtask is done or cut with its reason.
   - [x] 1.1 Build the HUI-S0 upstream composition harness
     - Create an executable characterization harness under `spikes/house-ui-upstream-contract/` that imports the implemented public seams from `mansion-lifecycle`, `seance-log-and-ghost-state`, `doors-and-guardrails`, and `room-ghosts`.
     - Prove one active-Mansion identity, one canonical GhostSnapshot source, one workflow/Door/waiting projection, one joined artifact/task projection, one replay fold, and existing exact decision callbacks; record only bounded synthetic field/type metadata in a scrubbed fixture.
@@ -15,13 +16,15 @@ Implement the final Haunted House presentation in React and TypeScript after ver
     - _Requirements: 2.1, 2.2, 2.3, 2.9, 9.1, 9.2, 9.3, 9.8, 10.10_
 
   - [ ] 1.2 Build the HUI-S1 Crew theme, toast, and badge probe
+    - **Cut (18 Nov):** the house now uses its own night palette in every theme (`dread-and-night`), so the Crew theme question no longer applies; toasts and the badge are exercised by `scripts/live-acceptance.sh` once the owner signs in.
     - Create a development-only probe under `spikes/house-ui-sdk-contract/` that runs inside an installed app page and captures the exact `useTheme`, `useNotify`, and `useNavBadge` call shapes, primitive field categories, light/dark update behavior, computed host CSS variable names, toast replacement behavior, zero/clear behavior, and unmount cleanup.
     - Add a local replay stand-in probe and prove the three hooks require no new Gateway API permission and open no replay transport.
     - Scrub secrets, tokens, absolute home paths, unrelated dashboard state, and raw stylesheets. If any required signature or cleanup behavior cannot be established, block its adapter integration rather than guessing.
     - _Writes: `spikes/house-ui-sdk-contract/**`, `spikes/fixtures/house-ui-sdk-contract.json`_
     - _Requirements: 5.4, 5.5, 8.6, 8.7, 9.5, 10.10_
 
-  - [ ] 1.3 Build the HUI-S2 rendered reflow probe
+  - [x] 1.3 Build the HUI-S2 rendered reflow probe
+    - **Done (18 Nov):** `scripts/capture-house.mjs` renders the static replay in headless Comet at 1280×720, 1024, 768 and 390 wide and checks no sideways scroll and no covered control; 48 states pass (`spikes/fixtures/dread-render.json`).
     - Create an automated development-only harness under `spikes/house-ui-reflow/` that detects an existing repository-compatible headless browser runner or records that no runner is available.
     - When a runner is available, prove 320 CSS-pixel reflow without page horizontal overflow, 200-percent text enlargement with visible labels and controls, stable Room order across breakpoints, unclipped focus indicators, and no external art request.
     - If no runner is available, preserve the result and return to design before selecting a development-only browser dependency; do not substitute jsdom layout values for rendered evidence.
@@ -230,7 +233,8 @@ Implement the final Haunted House presentation in React and TypeScript after ver
     - _Writes: `app/ui/src/house-interruptions.test.tsx`_
     - _Requirements: 4.4, 4.5, 4.6, 4.7, 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 8.8, 8.9, 8.10, 10.4_
 
-- [ ] 8. Complete automated accessibility and reflow verification (MVP)
+- [x] 8. Complete automated accessibility and reflow verification (MVP)
+  - **Closed (18 Nov):** every subtask is done or cut with its reason.
   - [x]* 8.1 Add automated accessibility-rule coverage
     - Add `axe-core` as a development-only dependency and an `house-accessibility.test.tsx` fixture matrix for every major Room, Door, Ghost, panel, light/dark, locked, unavailable, read-only, and reduced-motion state.
     - Assert zero applicable violations, exactly one live region, labelled native controls, valid landmark/list/dialog structure, no nested controls, no duplicate IDs, and no hidden focusable art.
@@ -244,7 +248,8 @@ Implement the final Haunted House presentation in React and TypeScript after ver
     - _Writes: `app/ui/src/house-keyboard.test.tsx`_
     - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 3.10, 7.8, 10.5_
 
-  - [ ]* 8.3 Implement HUI-S2 browser reflow acceptance tests
+  - [x]* 8.3 Implement HUI-S2 browser reflow acceptance tests
+    - **Done (18 Nov):** `scripts/capture-house.mjs` renders the static replay in headless Comet at 1280×720, 1024, 768 and 390 wide and checks no sideways scroll and no covered control; 48 states pass (`spikes/fixtures/dread-render.json`).
     - Use only the development-only runner proven by HUI-S2. Test 320 CSS-pixel overflow, 200-percent text, wide/compact/linear transitions, stable semantic order, visible decision controls, unclipped focus indicators, and no external asset request.
     - Keep browser tooling outside the shipped bundle and fail rather than skip required reflow cases in CI.
     - _Writes: `app/ui/browser-tests/house-reflow.test.ts`, `app/ui/browser-tests/browser-test.config.ts`_
@@ -257,6 +262,7 @@ Implement the final Haunted House presentation in React and TypeScript after ver
     - _Requirements: 1.10, 5.1, 5.2, 5.6, 5.7, 5.9, 7.5, 7.6, 7.7, 8.11, 10.7, 10.8, 11.1, 11.5, 11.7_
 
 - [ ] 9. Add isolated stretch interfaces (stretch)
+  - **Cut (18 Nov):** stretch work, not started before the 30 Nov feature freeze; no MVP behaviour depends on it.
   - [x]* 9.1 Wire the enabled Séance Room to the bounded review projection
     - Behind the existing disabled-by-default build setting, connect `SeanceHousePanel` to the approved `room-ghosts` review projection and exact decision callbacks. Keep all MVP room projections, order, keyboard behavior, motion, and interruption policy unchanged.
     - _Writes: `app/ui/src/rooms/seance-room/SeanceHousePanel.tsx`, `app/ui/src/components/MansionShell.tsx`_
@@ -289,9 +295,11 @@ Implement the final Haunted House presentation in React and TypeScript after ver
     - _Requirements: 1.1, 1.2, 1.3, 1.10, 2.9, 4.4, 5.1, 5.2, 5.9, 7.8, 8.11, 9.3, 9.4, 9.5, 9.8, 10.1, 10.2, 10.3, 10.4, 10.5, 10.6, 10.7, 10.8, 10.9, 11.1, 11.5, 11.7_
 
 - [ ] 11. Checkpoint: verify pure policy and host contracts
+  - **Cut (18 Nov):** superseded by `scripts/check-release.sh`, which runs every policy and host-contract test and passed on 18 Nov; the live host part is `scripts/live-acceptance.sh`.
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 12. Final checkpoint: verify the complete accessible house
+  - **Cut (18 Nov):** superseded by `docs/accessibility-report.md` (axe in jsdom and in a real browser, keyboard walks, reflow at 390 wide) and the passing release gate; a screen-reader user's check is listed as the owner's.
   - Ensure all tests pass, ask the user if questions arise.
 
 ## Notes

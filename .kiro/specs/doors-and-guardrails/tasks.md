@@ -303,19 +303,24 @@ Implement Spec 4 only after `seance-log-and-ghost-state` exposes its canonical A
   - Run all tests and builds; ask the user if a requirement or security decision needs revision.
 
 - [ ] 18. Add the explicit Séance Room return loop (stretch)
+  - **Cut (18 Nov):** stretch work, not started before the 30 Nov feature freeze; no MVP behaviour depends on it.
   - [ ]* 18.1 Implement optional review and return-proposal transitions
+    - **Cut (18 Nov):** stretch work, not started before the 30 Nov feature freeze; no MVP behaviour depends on it.
     - Add disabled-by-default review domain kinds; permit review only after implementation output readiness and create a pending return proposal without starting a Phase.
     - _Requirements: 12.4–12.6_
 
   - [ ]* 18.2 Write the stretch-boundary property test
+    - **Cut (18 Nov):** stretch work, not started before the 30 Nov feature freeze; no MVP behaviour depends on it.
     - **Property 17: Stretch review cannot bypass an explicit return decision**
     - **Validates: Requirements 12.4–12.6**
 
   - [ ]* 18.3 Add feature-flagged Séance Room controls
+    - **Cut (18 Nov):** stretch work, not started before the 30 Nov feature freeze; no MVP behaviour depends on it.
     - Render exact review/return decisions only when enabled; reuse authority, keyboard, waiting, and canonical event paths.
     - _Requirements: 12.4–12.6_
 
   - [ ]* 18.4 Add stretch UI and integration tests
+    - **Cut (18 Nov):** stretch work, not started before the 30 Nov feature freeze; no MVP behaviour depends on it.
     - Verify disabled absence, no automatic restart after failure, and separate start after approved return.
     - _Requirements: 12.4–12.6_
 
