@@ -13,7 +13,7 @@ Two readings. The owner's review on 18 Nov looked at the live build as a judge w
 
 ## Fixed after the review (agent, 18 Nov), to be judged again by the owner
 
-- **The room is the largest thing on screen.** The replay transport, séance board, the run's numbers and the practice switch are one slim line; the brand plate folds away inside a mansion; the toolbar is one compact row. At 1280×720 the room is about 740 px wide (was about 480) and the page is exactly 720 high: nothing below the fold, the Exit row included. At 1024×768 the page is exactly 768. Evidence: `spikes/fixtures/dread-render.json` (`afterReview`, `practiceFit`).
+- **The room is the largest thing on screen, from the first frame.** The replay transport, séance board, the run's numbers and the practice switch are one slim line; the brand plate folds away inside a mansion; the toolbar is one compact row. At 1280×720 the room is about 740 px wide (was about 480) and the page is exactly 720 high: nothing below the fold, the Exit row included. At 1024×768 the page is exactly 768. Evidence: `spikes/fixtures/dread-render.json` (`afterReview`, `practiceFit`).
 - **The ghosts are not cute.** Redrawn as tall, translucent, torn shrouds with dark sockets and long reaching hands, drawn 1.55 times larger at Eerie and Dread, dimmed with a cold glow; the held ghost on the Warden's chain hangs limp with its mouth open.
 - **The Warden grows with what he holds:** 0.8 at the edge when nothing waits, 1.25 forward when something needs you, 1.6 holding a ghost, red-lit, anchored so he never reaches the balloon or hides the door's light.
 - **Still clean:** 48 rendered states (four sizes, three levels, Still House on and off): nothing covered, no sideways scroll, no failed request; axe in a real browser: no contrast or target-size failure (`spikes/fixtures/axe-replay.json`).
@@ -31,6 +31,9 @@ Agent's estimate after these fixes, for the owner to confirm by looking: Design 
 
 ## Only you can do this
 
+Every gap between today and a 9 on all four is one of these; nothing else is open on the agent's side.
+
+- Look at https://suryaremanan.github.io/haunted-house/ again at 1280x720 (the Gate, the Workshop at the held moment at Dread, practice mode) and re-score the four criteria as a judge. The agent's own screenshots are recorded in `spikes/fixtures/dread-render.json`; a judge's score has to be yours.
 - Run the live walk: `HH_DASHBOARD_URL="$(kirocrew token --ttl 30m)" scripts/live-acceptance.sh`; when it prints "WAITING FOR YOU", open Haunted House in your own Crew window, go to the Study and press "Open the door". It writes `spikes/fixtures/live-acceptance.json`. Keep that mansion's séance log: it can become the second, real replay.
 - Run the user test in `docs/user-test.md` with five people and fill its results table.
 - Try the house with a screen reader.
