@@ -18,7 +18,7 @@ What was checked, how, and what was found, on 18 Nov 2026. Every number here com
 
 ## The one browser finding
 
-axe's `label-content-name-mismatch` rule reports the Warden's choices (12 times, the same buttons in each state). Each choice shows a bold label ("Play or pause the recording") and a second line saying what pressing it does. The button's accessible name is the bold label, and the second line is its description (`aria-describedby`). The rule wants the whole visible text inside the name. WCAG 2.5.3 Label in Name asks that the visible *label* be in the name, which it is, word for word. axe marks this rule as experimental, and `app/ui/src/test/axe-audit.ts` already treats it as advisory. It is recorded here rather than hidden.
+axe's `label-content-name-mismatch` rule reports the Warden's choices (11 or 12 times depending on the run, the same buttons in each state). Each choice shows a bold label ("Play or pause the recording") and a second line saying what pressing it does. The button's accessible name is the bold label, and the second line is its description (`aria-describedby`). The rule wants the whole visible text inside the name. WCAG 2.5.3 Label in Name asks that the visible *label* be in the name, which it is, word for word. axe marks this rule as experimental, and `app/ui/src/test/axe-audit.ts` already treats it as advisory. It is recorded here rather than hidden.
 
 ## Not yet checked
 

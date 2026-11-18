@@ -707,8 +707,8 @@ function Kt({ state: e, size: t = 30 }) {
 	});
 }
 // src/components/dread-art.tsx
-var z = (e) => `hh-p-${e}`;
-function qt({ light: e, leakAt: t, effects: n }) {
+var qt = (e) => `hh-p-${e}`;
+function Jt({ light: e, leakAt: t, effects: n }) {
 	return n.stateLight ? /* @__PURE__ */ R("span", {
 		className: "hh-dread-light",
 		"data-light": e,
@@ -723,7 +723,7 @@ function qt({ light: e, leakAt: t, effects: n }) {
 		]
 	}) : null;
 }
-function Jt({ effects: e }) {
+function Yt({ effects: e }) {
 	return !e.fog && !e.dust && !e.rain ? null : /* @__PURE__ */ R("span", {
 		className: "hh-dread-air",
 		"aria-hidden": "true",
@@ -734,8 +734,8 @@ function Jt({ effects: e }) {
 				viewBox: "0 0 1200 750",
 				className: "hh-dread-dust",
 				preserveAspectRatio: "none",
-				children: Yt.map(([e, t, n], r) => /* @__PURE__ */ L("circle", {
-					className: z("moon"),
+				children: Xt.map(([e, t, n], r) => /* @__PURE__ */ L("circle", {
+					className: qt("moon"),
 					cx: e,
 					cy: t,
 					r: n,
@@ -745,7 +745,7 @@ function Jt({ effects: e }) {
 		]
 	});
 }
-var Yt = [
+var Xt = [
 	[
 		140,
 		210,
@@ -817,14 +817,14 @@ var Yt = [
 		1.4
 	]
 ];
-function Xt({ stance: e }) {
+function Zt({ stance: e }) {
 	return e === "edge" ? null : /* @__PURE__ */ L("span", {
 		className: "hh-dread-shadow",
 		"data-stance": e,
 		"aria-hidden": "true"
 	});
 }
-function Zt({ where: e, state: t }) {
+function Qt({ where: e, state: t }) {
 	if (t !== "sealed" && t !== "open" && t !== "waiting") return null;
 	let n = e === "side" ? {
 		x: 1118,
@@ -848,16 +848,16 @@ function Zt({ where: e, state: t }) {
 		return /* @__PURE__ */ R("g", {
 			"data-binding": "broken",
 			children: [
-				/* @__PURE__ */ L(Qt, {
+				/* @__PURE__ */ L($t, {
 					from: [n.x - 70, t],
 					to: [n.x + 30, t + 8]
 				}),
 				/* @__PURE__ */ L("path", {
-					className: z("cloth-d"),
+					className: qt("cloth-d"),
 					d: `M${n.x - 34} ${t - 6} a12 12 0 0 1 12 -12 l4 14 Z`
 				}),
 				/* @__PURE__ */ L("path", {
-					className: z("cloth-d"),
+					className: qt("cloth-d"),
 					d: `M${n.x - 14} ${t - 4} l6 -12 a12 12 0 0 1 10 14 Z`
 				})
 			]
@@ -866,45 +866,45 @@ function Zt({ where: e, state: t }) {
 	return /* @__PURE__ */ R("g", {
 		"data-binding": t === "waiting" ? "straining" : "sealed",
 		children: [
-			/* @__PURE__ */ L(Qt, {
+			/* @__PURE__ */ L($t, {
 				from: [r.left, r.top],
 				to: [r.right, r.bottom]
 			}),
-			/* @__PURE__ */ L(Qt, {
+			/* @__PURE__ */ L($t, {
 				from: [r.right, r.top],
 				to: [r.left, r.bottom]
 			}),
 			/* @__PURE__ */ L("circle", {
-				className: z("cloth-d"),
+				className: qt("cloth-d"),
 				cx: n.x,
 				cy: n.y,
 				r: 19
 			}),
 			/* @__PURE__ */ L("circle", {
-				className: z("cloth"),
+				className: qt("cloth"),
 				cx: n.x,
 				cy: n.y,
 				r: 14
 			}),
 			/* @__PURE__ */ L("circle", {
-				className: z("cloth-d"),
+				className: qt("cloth-d"),
 				cx: n.x,
 				cy: n.y,
 				r: 6
 			}),
 			/* @__PURE__ */ L("path", {
-				className: z("cloth-d"),
+				className: qt("cloth-d"),
 				d: `M${n.x - 4} ${n.y + 16} l-6 18 l8 -4 Z M${n.x + 6} ${n.y + 16} l4 16 l4 -10 Z`
 			})
 		]
 	});
 }
-function Qt({ from: e, to: t }) {
+function $t({ from: e, to: t }) {
 	let n = [];
 	for (let r = 0; r <= 9; r += 1) {
 		let i = r / 9, a = e[0] + (t[0] - e[0]) * i, o = e[1] + (t[1] - e[1]) * i + Math.sin(i * Math.PI) * 10;
 		n.push(/* @__PURE__ */ L("ellipse", {
-			className: z("stone"),
+			className: qt("stone"),
 			cx: a,
 			cy: o,
 			rx: r % 2 == 0 ? 8 : 4,
@@ -913,87 +913,70 @@ function Qt({ from: e, to: t }) {
 	}
 	return /* @__PURE__ */ L("g", { children: n });
 }
-var $t = "M50 2 C30 2 20 22 20 48 C20 78 24 104 18 136 L26 128 L30 146 L38 132 L44 150 L50 134 L57 152 L62 132 L70 148 L74 128 L82 140 C76 108 80 78 80 48 C80 22 70 2 50 2 Z", en = "M50 2 C70 2 80 22 80 48 C80 78 76 108 82 140 L74 128 L70 148 L64 134 C68 104 66 70 64 46 C62 24 58 8 50 2 Z", tn = {
-	idle: /* @__PURE__ */ R(I, { children: [/* @__PURE__ */ L("ellipse", {
+var en = "M50 0 C33 0 24 16 23 36 C22 52 18 62 14 78 C10 98 12 126 8 160 L16 150 L19 172 L27 154 L32 182 L40 158 L46 186 L52 160 L58 184 L64 156 L70 178 L74 152 L82 170 L86 150 L92 160 C88 126 90 98 86 78 C82 62 78 52 77 36 C76 16 67 0 50 0 Z", tn = "M50 0 C67 0 76 16 77 36 C78 52 82 62 86 78 C90 98 88 126 92 160 L86 150 L82 170 L76 154 C78 120 72 84 66 56 C62 30 58 10 50 0 Z", nn = "M18 160 C16 176 10 186 4 196 C14 190 20 180 24 168 Z M44 182 C44 194 40 204 34 214 C44 206 50 196 50 184 Z M70 176 C72 190 78 200 86 208 C80 196 76 186 76 172 Z", rn = "M18 74 C8 84 0 96 -8 108 L-12 118 L-6 112 L-8 122 L-2 114 L0 124 L4 112 C8 100 16 90 24 84 Z M82 74 C92 84 100 96 108 108 L112 118 L106 112 L108 122 L102 114 L100 124 L96 112 C92 100 84 90 76 84 Z", z = (e) => `hh-p-${e}`, an = /* @__PURE__ */ R(I, { children: [/* @__PURE__ */ L("path", {
+	className: z("ink"),
+	d: "M34 30 C30 36 31 50 37 54 C43 50 44 36 40 30 Z"
+}), /* @__PURE__ */ L("path", {
+	className: z("ink"),
+	d: "M60 30 C56 36 57 50 63 54 C69 50 70 36 66 30 Z"
+})] }), on = {
+	idle: /* @__PURE__ */ R(I, { children: [an, /* @__PURE__ */ L("path", {
 		className: z("ink"),
-		cx: 40,
-		cy: 44,
-		rx: 6,
-		ry: 8
-	}), /* @__PURE__ */ L("ellipse", {
-		className: z("ink"),
-		cx: 60,
-		cy: 44,
-		rx: 6,
-		ry: 8
+		d: "M42 66 h16 v2 h-16 Z"
 	})] }),
 	working: /* @__PURE__ */ R(I, { children: [
-		/* @__PURE__ */ L("ellipse", {
-			className: z("ink"),
-			cx: 44,
-			cy: 42,
-			rx: 5,
-			ry: 8
-		}),
-		/* @__PURE__ */ L("ellipse", {
-			className: z("ink"),
-			cx: 62,
-			cy: 42,
-			rx: 5,
-			ry: 8
-		}),
-		/* @__PURE__ */ L("path", {
-			className: z("ghost-d"),
-			d: "M76 70 C92 76 104 90 108 104 L100 106 C96 94 88 84 74 80 Z"
-		}),
-		/* @__PURE__ */ L("path", {
-			className: z("bone-d"),
-			d: "M104 100 l10 -18 l3 2 l-9 18 Z"
-		})
-	] }),
-	waiting: /* @__PURE__ */ R(I, { children: [
-		/* @__PURE__ */ L("ellipse", {
-			className: z("ink"),
-			cx: 38,
+		an,
+		/* @__PURE__ */ L("circle", {
+			className: z("lamp"),
+			cx: 37,
 			cy: 44,
-			rx: 9,
-			ry: 12
-		}),
-		/* @__PURE__ */ L("ellipse", {
-			className: z("ink"),
-			cx: 62,
-			cy: 44,
-			rx: 9,
-			ry: 12
+			r: 1.6
 		}),
 		/* @__PURE__ */ L("circle", {
 			className: z("lamp"),
-			cx: 38,
-			cy: 46,
-			r: 2.6
-		}),
-		/* @__PURE__ */ L("circle", {
-			className: z("lamp"),
-			cx: 62,
-			cy: 46,
-			r: 2.6
+			cx: 63,
+			cy: 44,
+			r: 1.6
 		}),
 		/* @__PURE__ */ L("ellipse", {
 			className: z("ink"),
 			cx: 50,
-			cy: 74,
-			rx: 6,
-			ry: 10
+			cy: 68,
+			rx: 3,
+			ry: 4
 		})
 	] }),
-	blocked: /* @__PURE__ */ R(I, { children: [
+	waiting: /* @__PURE__ */ R(I, { children: [
 		/* @__PURE__ */ L("path", {
 			className: z("ink"),
-			d: "M32 44 h14 v5 h-14 Z M54 44 h14 v5 h-14 Z"
+			d: "M32 26 C27 34 28 52 36 58 C44 52 45 34 40 26 Z"
 		}),
 		/* @__PURE__ */ L("path", {
 			className: z("ink"),
-			d: "M42 72 h16 v4 h-16 Z"
+			d: "M60 26 C55 34 56 52 64 58 C72 52 73 34 68 26 Z"
+		}),
+		/* @__PURE__ */ L("circle", {
+			className: z("lamp"),
+			cx: 36,
+			cy: 44,
+			r: 2.6
+		}),
+		/* @__PURE__ */ L("circle", {
+			className: z("lamp"),
+			cx: 64,
+			cy: 44,
+			r: 2.6
+		}),
+		/* @__PURE__ */ L("path", {
+			className: z("ink"),
+			d: "M44 64 C42 74 44 88 50 92 C56 88 58 74 56 64 Z"
+		})
+	] }),
+	blocked: /* @__PURE__ */ R(I, { children: [
+		an,
+		/* @__PURE__ */ L("path", {
+			className: z("ink"),
+			d: "M44 64 C43 70 45 76 50 78 C55 76 57 70 56 64 Z"
 		}),
 		[
 			0,
@@ -1001,66 +984,37 @@ var $t = "M50 2 C30 2 20 22 20 48 C20 78 24 104 18 136 L26 128 L30 146 L38 132 L
 			2,
 			3,
 			4,
-			5
+			5,
+			6
 		].map((e) => /* @__PURE__ */ L("ellipse", {
 			className: z("stone"),
-			cx: 22 + e * 6,
-			cy: 96 + e * 9,
+			cx: 30 - e * 5,
+			cy: 100 + e * 11,
 			rx: e % 2 == 0 ? 5 : 3,
 			ry: e % 2 == 0 ? 3 : 5
 		}, e)),
-		/* @__PURE__ */ L("rect", {
-			className: z("stone"),
-			x: 18,
-			y: 86,
-			width: 64,
-			height: 7
-		})
-	] }),
-	failed: /* @__PURE__ */ R(I, { children: [
-		/* @__PURE__ */ L("ellipse", {
-			className: z("ink"),
-			cx: 40,
-			cy: 46,
-			rx: 7,
-			ry: 5
-		}),
-		/* @__PURE__ */ L("ellipse", {
-			className: z("ink"),
-			cx: 60,
-			cy: 46,
-			rx: 7,
-			ry: 5
-		}),
 		/* @__PURE__ */ L("path", {
-			className: z("ink"),
-			d: "M36 78 h28 v3 h-28 Z"
+			className: z("stone"),
+			d: "M16 96 H84 v6 H16 Z"
 		})
 	] }),
-	done: /* @__PURE__ */ R(I, { children: [/* @__PURE__ */ L("ellipse", {
+	failed: an,
+	done: /* @__PURE__ */ L(I, { children: /* @__PURE__ */ L("path", {
 		className: z("ink"),
-		cx: 40,
-		cy: 46,
-		rx: 4,
-		ry: 2
-	}), /* @__PURE__ */ L("ellipse", {
-		className: z("ink"),
-		cx: 60,
-		cy: 46,
-		rx: 4,
-		ry: 2
-	})] }),
+		d: "M36 40 h6 v2 h-6 Z M58 40 h6 v2 h-6 Z",
+		opacity: .6
+	}) }),
 	not_applicable: null,
 	unavailable: null
-}, nn = {
-	idle: "rotate(4 50 140)",
-	working: "rotate(10 50 140)",
-	blocked: "rotate(-12 50 140)"
+}, sn = {
+	idle: "rotate(5 50 180)",
+	working: "rotate(12 50 180)",
+	blocked: "rotate(-14 50 180)"
 };
-function rn({ state: e, role: t = "plain" }) {
-	let n = e === "not_applicable" || e === "unavailable", r = z(e === "failed" ? "scorch" : e === "done" ? "ghost-faint" : e === "blocked" ? "ghost-d" : n ? "ghost-faint" : "ghost");
+function cn({ state: e, role: t = "plain" }) {
+	let n = e === "not_applicable" || e === "unavailable", r = z(e === "failed" ? "scorch" : e === "done" || n ? "ghost-faint" : e === "blocked" ? "ghost-d" : "ghost"), i = e === "waiting" || e === "working" || e === "blocked";
 	return /* @__PURE__ */ L(Lt, {
-		viewBox: "-30 -20 160 190",
+		viewBox: "-24 -10 148 230",
 		className: "hh-paint hh-paint-spectre hh-paint-hollow",
 		data: {
 			"data-ghost": e,
@@ -1069,49 +1023,60 @@ function rn({ state: e, role: t = "plain" }) {
 		},
 		children: /* @__PURE__ */ R("g", {
 			stroke: "none",
-			transform: nn[e],
+			transform: sn[e],
 			children: [
 				e === "done" ? /* @__PURE__ */ L("ellipse", {
 					className: z("ecto-glow"),
 					cx: 50,
-					cy: 80,
-					rx: 52,
-					ry: 78
+					cy: 100,
+					rx: 60,
+					ry: 100
 				}) : null,
+				e === "failed" || e === "done" || n ? null : /* @__PURE__ */ L("path", {
+					className: z("ghost-faint"),
+					d: nn
+				}),
 				/* @__PURE__ */ L("path", {
 					className: r,
-					d: $t
+					d: en,
+					opacity: e === "failed" || e === "done" ? 1 : .88
 				}),
 				n || e === "failed" || e === "done" ? null : /* @__PURE__ */ L("path", {
 					className: z("ghost-d"),
-					d: en
+					d: tn,
+					opacity: .7
 				}),
+				i ? /* @__PURE__ */ L("path", {
+					className: z(e === "blocked" ? "ghost-d" : "ghost"),
+					d: rn,
+					opacity: .85
+				}) : null,
 				e === "failed" ? /* @__PURE__ */ L("path", {
 					className: z("ink"),
-					d: $t,
-					opacity: .55,
-					transform: "translate(50 76) scale(0.86) translate(-50 -76)"
+					d: en,
+					opacity: .5,
+					transform: "translate(50 90) scale(0.86) translate(-50 -90)"
 				}) : null,
-				tn[e]
+				on[e]
 			]
 		})
 	});
 }
-function an() {
+function ln() {
 	return /* @__PURE__ */ L("span", {
 		className: "hh-dread-flee",
 		"data-aftermath": "released",
 		"aria-hidden": "true",
-		children: /* @__PURE__ */ L(rn, { state: "working" })
+		children: /* @__PURE__ */ L(cn, { state: "working" })
 	});
 }
 // src/components/room-paint.tsx
-var B = (e) => `hh-p-${e}`, on = (e) => `hh-ps-${e}`, sn = 1200;
-function cn(e) {
+var B = (e) => `hh-p-${e}`, un = (e) => `hh-ps-${e}`, dn = 1200;
+function fn(e) {
 	let t = e % 2147483647;
 	return t <= 0 && (t += 2147483646), () => (t = t * 16807 % 2147483647, (t - 1) / 2147483646);
 }
-var ln = [
+var pn = [
 	"cloth",
 	"brass",
 	"ecto-d",
@@ -1121,10 +1086,10 @@ var ln = [
 	"wall-l",
 	"brass-d"
 ];
-function un(e, t, n, r, i) {
-	let a = cn(i), o = [], s = e + 2, c = 0;
+function mn(e, t, n, r, i) {
+	let a = fn(i), o = [], s = e + 2, c = 0;
 	for (; s < e + n - 8;) {
-		let e = 7 + Math.round(a() * 9), n = Math.round(r * (.62 + a() * .36)), i = ln[Math.floor(a() * ln.length)];
+		let e = 7 + Math.round(a() * 9), n = Math.round(r * (.62 + a() * .36)), i = pn[Math.floor(a() * pn.length)];
 		a() < .1 ? s += e + 6 : (o.push(/* @__PURE__ */ L("rect", {
 			className: B(i),
 			x: s,
@@ -1147,7 +1112,7 @@ function un(e, t, n, r, i) {
 	}
 	return o;
 }
-function dn({ x: e, y: t, w: n, h: r, seed: i, shelves: a = 4 }) {
+function hn({ x: e, y: t, w: n, h: r, seed: i, shelves: a = 4 }) {
 	let o = (r - 16) / a;
 	return /* @__PURE__ */ R("g", { children: [
 		/* @__PURE__ */ L("rect", {
@@ -1174,7 +1139,7 @@ function dn({ x: e, y: t, w: n, h: r, seed: i, shelves: a = 4 }) {
 		Array.from({ length: a }, (r, a) => {
 			let s = t + 10 + a * o;
 			return /* @__PURE__ */ R("g", { children: [
-				un(e + 12, s + 6, n - 24, o - 14, i + a * 31),
+				mn(e + 12, s + 6, n - 24, o - 14, i + a * 31),
 				/* @__PURE__ */ L("rect", {
 					className: B("wood"),
 					x: e + 8,
@@ -1193,7 +1158,7 @@ function dn({ x: e, y: t, w: n, h: r, seed: i, shelves: a = 4 }) {
 		})
 	] });
 }
-function fn({ x: e, y: t, w: n, h: r }) {
+function gn({ x: e, y: t, w: n, h: r }) {
 	let i = (t) => e + t / 100 * n, a = (e) => t + e / 100 * r;
 	return /* @__PURE__ */ R("g", { children: [
 		/* @__PURE__ */ L("rect", {
@@ -1289,7 +1254,7 @@ function fn({ x: e, y: t, w: n, h: r }) {
 		})
 	] });
 }
-function pn({ x: e, y: t, w: n, h: r, curtains: i = !0 }) {
+function _n({ x: e, y: t, w: n, h: r, curtains: i = !0 }) {
 	let a = [
 		1,
 		2,
@@ -1303,7 +1268,7 @@ function pn({ x: e, y: t, w: n, h: r, curtains: i = !0 }) {
 			width: n + 36,
 			height: r + 36
 		}),
-		/* @__PURE__ */ L(fn, {
+		/* @__PURE__ */ L(gn, {
 			x: e,
 			y: t,
 			w: n,
@@ -1376,7 +1341,7 @@ function pn({ x: e, y: t, w: n, h: r, curtains: i = !0 }) {
 		] }) : null
 	] });
 }
-function mn({ x: e, y: t, h: n }) {
+function vn({ x: e, y: t, h: n }) {
 	let r = n * .26;
 	return /* @__PURE__ */ R("g", { children: [
 		/* @__PURE__ */ L("path", {
@@ -1455,7 +1420,7 @@ function mn({ x: e, y: t, h: n }) {
 		})
 	] });
 }
-function hn({ x: e, y: t, w: n, h: r }) {
+function yn({ x: e, y: t, w: n, h: r }) {
 	return /* @__PURE__ */ R("g", { children: [
 		/* @__PURE__ */ L("rect", {
 			className: B("stone"),
@@ -1518,7 +1483,7 @@ function hn({ x: e, y: t, w: n, h: r }) {
 		}, i))
 	] });
 }
-function gn({ x: e, y: t, w: n, h: r }) {
+function bn({ x: e, y: t, w: n, h: r }) {
 	return /* @__PURE__ */ R("g", { children: [
 		/* @__PURE__ */ L("rect", {
 			className: B("brass-d"),
@@ -1568,7 +1533,7 @@ function gn({ x: e, y: t, w: n, h: r }) {
 		})
 	] });
 }
-function _n({ x: e, y: t }) {
+function xn({ x: e, y: t }) {
 	return /* @__PURE__ */ R("g", { children: [
 		/* @__PURE__ */ L("circle", {
 			className: B("lamp-glow"),
@@ -1597,7 +1562,7 @@ function _n({ x: e, y: t }) {
 		})
 	] });
 }
-function vn({ x: e }) {
+function Sn({ x: e }) {
 	return /* @__PURE__ */ R("g", { children: [
 		/* @__PURE__ */ L("rect", {
 			className: B("ink"),
@@ -1634,13 +1599,13 @@ function vn({ x: e }) {
 		})] }, t))
 	] });
 }
-function yn({ x: e, y: t, size: n, flip: r = !1 }) {
+function Cn({ x: e, y: t, size: n, flip: r = !1 }) {
 	let i = r ? -1 : 1, a = (r) => {
 		let a = r * Math.PI / 180;
 		return `M${e} ${t} l${i * Math.cos(a) * n} ${Math.sin(a) * n}`;
 	}, o = (n) => `M${e + i * n} ${t} Q${e + i * n * .62} ${t + n * .62} ${e} ${t + n}`;
 	return /* @__PURE__ */ R("g", {
-		className: on("web"),
+		className: un("web"),
 		fill: "none",
 		strokeWidth: 1.4,
 		children: [/* @__PURE__ */ L("path", { d: [
@@ -1655,32 +1620,32 @@ function yn({ x: e, y: t, size: n, flip: r = !1 }) {
 		].map((e) => o(n * e)).join(" ") })]
 	});
 }
-function bn(e) {
+function wn(e) {
 	return {
 		top: 90 * e / 160,
 		bottom: 640 - 120 * e / 160
 	};
 }
-function xn(e, t, n) {
-	let r = bn(e), i = bn(t), a = r.bottom - (r.bottom - r.top) * .66, o = i.bottom - (i.bottom - i.top) * .66, s = (e) => n ? sn - e : e;
+function Tn(e, t, n) {
+	let r = wn(e), i = wn(t), a = r.bottom - (r.bottom - r.top) * .66, o = i.bottom - (i.bottom - i.top) * .66, s = (e) => n ? dn - e : e;
 	return `M${s(e)} ${a} L${s(t)} ${o} L${s(t)} ${i.bottom} L${s(e)} ${r.bottom} Z`;
 }
-function Sn({ mirror: e, state: t }) {
-	let n = (t) => e ? sn - t : t, r = t === "open", i = t === "waiting";
+function En({ mirror: e, state: t }) {
+	let n = (t) => e ? dn - t : t, r = t === "open", i = t === "waiting";
 	return /* @__PURE__ */ R("g", {
 		"data-paint-door": t,
 		children: [
 			/* @__PURE__ */ L("path", {
 				className: B("wood-dd"),
-				d: xn(30, 132, e)
+				d: Tn(30, 132, e)
 			}),
 			r || i ? /* @__PURE__ */ L("path", {
 				className: B("lamp"),
-				d: xn(38, 124, e)
+				d: Tn(38, 124, e)
 			}) : null,
 			r || i ? /* @__PURE__ */ L("path", {
 				className: B("moon-halo"),
-				d: xn(38, 124, e)
+				d: Tn(38, 124, e)
 			}) : null,
 			r ? /* @__PURE__ */ L("path", {
 				className: B("wood"),
@@ -1688,7 +1653,7 @@ function Sn({ mirror: e, state: t }) {
 			}) : /* @__PURE__ */ R("g", { children: [
 				/* @__PURE__ */ L("path", {
 					className: B("wood"),
-					d: xn(i ? 62 : 38, 124, e)
+					d: Tn(i ? 62 : 38, 124, e)
 				}),
 				/* @__PURE__ */ L("path", {
 					className: B("wood-d"),
@@ -1746,13 +1711,13 @@ function Sn({ mirror: e, state: t }) {
 		]
 	});
 }
-function Cn({ step: e }) {
+function Dn({ step: e }) {
 	if (e === 0) return null;
-	let t = /* @__PURE__ */ R(I, { children: [/* @__PURE__ */ L(yn, {
+	let t = /* @__PURE__ */ R(I, { children: [/* @__PURE__ */ L(Cn, {
 		x: 0,
 		y: 0,
 		size: 170
-	}), /* @__PURE__ */ L(yn, {
+	}), /* @__PURE__ */ L(Cn, {
 		x: 1200,
 		y: 0,
 		size: 120,
@@ -1760,31 +1725,31 @@ function Cn({ step: e }) {
 	})] });
 	return e === null || e === 1 ? t : /* @__PURE__ */ R(I, { children: [
 		t,
-		/* @__PURE__ */ L(yn, {
+		/* @__PURE__ */ L(Cn, {
 			x: 160,
 			y: 90,
 			size: 110
 		}),
-		/* @__PURE__ */ L(yn, {
+		/* @__PURE__ */ L(Cn, {
 			x: 1040,
 			y: 90,
 			size: 130,
 			flip: !0
 		}),
 		e === 3 ? /* @__PURE__ */ R(I, { children: [
-			/* @__PURE__ */ L(yn, {
+			/* @__PURE__ */ L(Cn, {
 				x: 0,
 				y: 0,
 				size: 300
 			}),
-			/* @__PURE__ */ L(yn, {
+			/* @__PURE__ */ L(Cn, {
 				x: 1200,
 				y: 0,
 				size: 260,
 				flip: !0
 			}),
 			/* @__PURE__ */ L("g", {
-				className: on("web"),
+				className: un("web"),
 				fill: "none",
 				strokeWidth: 1.2,
 				children: /* @__PURE__ */ L("path", { d: "M300 90 q30 70 4 150 M320 90 q-12 60 10 120 M860 90 q24 80 -6 170 M880 90 q-10 50 12 110" })
@@ -1792,7 +1757,7 @@ function Cn({ step: e }) {
 		] }) : null
 	] });
 }
-function wn({ floor: e, beams: t = !1, leftDoor: n, rightDoor: r, children: i, dread: a }) {
+function On({ floor: e, beams: t = !1, leftDoor: n, rightDoor: r, children: i, dread: a }) {
 	let o = Array.from({ length: 17 }, (e, t) => -400 + t * 125);
 	return /* @__PURE__ */ R(I, { children: [
 		/* @__PURE__ */ L("path", {
@@ -1879,7 +1844,7 @@ function wn({ floor: e, beams: t = !1, leftDoor: n, rightDoor: r, children: i, d
 			d: "M160 520 H1040 L1200 640 V750 H0 V640 Z"
 		}),
 		/* @__PURE__ */ R("g", {
-			className: on(e === "tiles" ? "tile-line" : "floor-line"),
+			className: un(e === "tiles" ? "tile-line" : "floor-line"),
 			fill: "none",
 			strokeWidth: e === "tiles" ? 3 : 2,
 			children: [/* @__PURE__ */ L("path", { d: o.map((e) => `M${600 + (e - 600) * 220 / 450} 520 L${e} 750`).join(" ") }), e === "tiles" ? /* @__PURE__ */ L("path", { d: [
@@ -1927,33 +1892,33 @@ function wn({ floor: e, beams: t = !1, leftDoor: n, rightDoor: r, children: i, d
 				height: 5
 			})
 		] }) : null,
-		n ? /* @__PURE__ */ L(Sn, {
+		n ? /* @__PURE__ */ L(En, {
 			mirror: !1,
 			state: "plain"
 		}) : null,
-		r === null ? null : /* @__PURE__ */ L(Sn, {
+		r === null ? null : /* @__PURE__ */ L(En, {
 			mirror: !0,
 			state: r
 		}),
-		a !== void 0 && r !== null && r !== "plain" ? /* @__PURE__ */ L(Zt, {
+		a !== void 0 && r !== null && r !== "plain" ? /* @__PURE__ */ L(Qt, {
 			where: "side",
 			state: r
 		}) : null,
 		i,
-		/* @__PURE__ */ L(Cn, { step: a === void 0 ? null : a.webs }),
+		/* @__PURE__ */ L(Dn, { step: a === void 0 ? null : a.webs }),
 		/* @__PURE__ */ L("path", {
 			className: B("vignette"),
 			d: "M0 0 H1200 V750 H0 Z"
 		})
 	] });
 }
-function Tn() {
+function kn() {
 	return /* @__PURE__ */ L("path", {
 		className: B("moon-pool"),
 		d: "M452 520 H748 L900 750 H300 Z"
 	});
 }
-function En({ x: e }) {
+function An({ x: e }) {
 	return /* @__PURE__ */ R("g", { children: [
 		/* @__PURE__ */ L("rect", {
 			className: B("wood-dd"),
@@ -1980,7 +1945,7 @@ function En({ x: e }) {
 		})
 	] });
 }
-function Dn({ x: e, y: t }) {
+function jn({ x: e, y: t }) {
 	return /* @__PURE__ */ R("g", { children: [
 		/* @__PURE__ */ L("rect", {
 			className: B("wood-dd"),
@@ -2009,7 +1974,7 @@ function Dn({ x: e, y: t }) {
 		})
 	] });
 }
-function On({ x: e, y: t }) {
+function Mn({ x: e, y: t }) {
 	return /* @__PURE__ */ R("g", { children: [
 		/* @__PURE__ */ L("path", {
 			className: B("wood-dd"),
@@ -2028,7 +1993,7 @@ function On({ x: e, y: t }) {
 			d: `M${e + 40} ${t + 54} L${e + 244} ${t + 4} l7 22 L${e + 47} ${t + 76} Z`
 		}),
 		/* @__PURE__ */ L("path", {
-			className: on("paper"),
+			className: un("paper"),
 			fill: "none",
 			d: `M${e + 70} ${t + 56} l70 -17 M${e + 80} ${t + 66} l44 -11 M${e + 160} ${t + 30} l50 -12 l4 12 l-50 12 Z`,
 			strokeWidth: 2
@@ -2047,7 +2012,7 @@ function On({ x: e, y: t }) {
 		})
 	] });
 }
-function kn({ x: e, y: t, w: n, h: r }) {
+function Nn({ x: e, y: t, w: n, h: r }) {
 	return /* @__PURE__ */ R("g", { children: [
 		/* @__PURE__ */ L("rect", {
 			className: B("wood-d"),
@@ -2096,7 +2061,7 @@ function kn({ x: e, y: t, w: n, h: r }) {
 		})] }, r))
 	] });
 }
-function An({ x: e, y: t }) {
+function Pn({ x: e, y: t }) {
 	return /* @__PURE__ */ R("g", { children: [
 		/* @__PURE__ */ L("rect", {
 			className: B("blueprint"),
@@ -2106,7 +2071,7 @@ function An({ x: e, y: t }) {
 			height: 130
 		}),
 		/* @__PURE__ */ L("g", {
-			className: on("paper"),
+			className: un("paper"),
 			fill: "none",
 			strokeWidth: 2.5,
 			children: /* @__PURE__ */ L("path", { d: `M${e + 34} ${t + 104} V${t + 60} L${e + 82} ${t + 28} L${e + 130} ${t + 60} V${t + 104} Z M${e + 66} ${t + 104} V${t + 78} h26 v26 M${e + 104} ${t + 66} h16 v16 h-16 Z M${e + 20} ${t + 116} H${e + 170}` })
@@ -2119,7 +2084,7 @@ function An({ x: e, y: t }) {
 			height: 84
 		}),
 		/* @__PURE__ */ L("g", {
-			className: on("night-2"),
+			className: un("night-2"),
 			fill: "none",
 			strokeWidth: 2,
 			children: /* @__PURE__ */ L("path", { d: `M${e + 40} ${t + 170} h92 M${e + 40} ${t + 186} h70 M${e + 40} ${t + 202} h84 M${e + 40} ${t + 218} h50` })
@@ -2141,7 +2106,7 @@ function An({ x: e, y: t }) {
 		})
 	] });
 }
-function jn({ x: e, y: t }) {
+function Fn({ x: e, y: t }) {
 	return /* @__PURE__ */ R("g", { children: [
 		/* @__PURE__ */ L("rect", {
 			className: B("wood"),
@@ -2192,7 +2157,7 @@ function jn({ x: e, y: t }) {
 		})
 	] });
 }
-function Mn({ x: e, y: t }) {
+function In({ x: e, y: t }) {
 	return /* @__PURE__ */ R("g", { children: [
 		/* @__PURE__ */ L("path", {
 			className: B("wood-dd"),
@@ -2255,9 +2220,9 @@ function Mn({ x: e, y: t }) {
 		})
 	] });
 }
-function Nn({ x: e, y: t, w: n }) {
+function Ln({ x: e, y: t, w: n }) {
 	let r = (t, r) => {
-		let i = cn(r), a = [/* @__PURE__ */ L("rect", {
+		let i = fn(r), a = [/* @__PURE__ */ L("rect", {
 			className: B("wood"),
 			x: e,
 			y: t + 62,
@@ -2309,7 +2274,7 @@ function Nn({ x: e, y: t, w: n }) {
 		t + 172
 	].map((e, t) => r(e, 41 + t * 17)) });
 }
-function Pn({ x: e, y: t }) {
+function Rn({ x: e, y: t }) {
 	let n = (e, t, n, r, i) => /* @__PURE__ */ R("g", { children: [
 		/* @__PURE__ */ L("rect", {
 			className: B(i),
@@ -2353,7 +2318,7 @@ function Pn({ x: e, y: t }) {
 		n(e + 46, t - 30, 96, 54, "wood")
 	] });
 }
-function Fn({ x: e, y: t }) {
+function zn({ x: e, y: t }) {
 	return /* @__PURE__ */ R("g", { children: [
 		/* @__PURE__ */ L("path", {
 			className: B("lamp-glow"),
@@ -2424,7 +2389,7 @@ function Fn({ x: e, y: t }) {
 		})
 	] });
 }
-function In({ x: e, y: t, w: n, h: r }) {
+function Bn({ x: e, y: t, w: n, h: r }) {
 	return /* @__PURE__ */ R("g", { children: [
 		/* @__PURE__ */ L("path", {
 			className: B("bone-d"),
@@ -2440,7 +2405,7 @@ function In({ x: e, y: t, w: n, h: r }) {
 		})
 	] });
 }
-function Ln({ x: e, y: t }) {
+function Vn({ x: e, y: t }) {
 	return /* @__PURE__ */ R("g", { children: [
 		/* @__PURE__ */ L("path", {
 			className: B("wood-dd"),
@@ -2510,7 +2475,7 @@ function Ln({ x: e, y: t }) {
 		})
 	] });
 }
-function Rn({ x: e, y: t }) {
+function Hn({ x: e, y: t }) {
 	return /* @__PURE__ */ R("g", { children: [
 		/* @__PURE__ */ L("path", {
 			className: B("cloth-d"),
@@ -2550,7 +2515,7 @@ function Rn({ x: e, y: t }) {
 		] }, n))
 	] });
 }
-function zn({ x: e, y: t }) {
+function Un({ x: e, y: t }) {
 	return /* @__PURE__ */ R("g", { children: [
 		/* @__PURE__ */ L("path", {
 			className: B("brass-d"),
@@ -2574,7 +2539,7 @@ function zn({ x: e, y: t }) {
 		})
 	] });
 }
-function Bn({ x: e, y: t }) {
+function Wn({ x: e, y: t }) {
 	return /* @__PURE__ */ R("g", { children: [
 		/* @__PURE__ */ L("path", {
 			className: B("wood-dd"),
@@ -2591,7 +2556,7 @@ function Bn({ x: e, y: t }) {
 			r: 34
 		}),
 		/* @__PURE__ */ L("g", {
-			className: on("wood-dd"),
+			className: un("wood-dd"),
 			fill: "none",
 			strokeWidth: 8,
 			children: /* @__PURE__ */ L("path", { d: `M${e + 150} ${t - 36} V${t + 110} M${e + 44} ${t + 4} L${e + 150} ${t + 110} L${e + 256} ${t + 4}` })
@@ -2644,7 +2609,7 @@ function Bn({ x: e, y: t }) {
 		})
 	] });
 }
-function Vn({ state: e }) {
+function Gn({ state: e }) {
 	let t = e === "open";
 	return /* @__PURE__ */ R("g", {
 		"data-paint-door": e,
@@ -2717,46 +2682,46 @@ function Vn({ state: e }) {
 		]
 	});
 }
-function Hn(e, t) {
+function Kn(e, t) {
 	switch (e) {
 		case "foyer": return /* @__PURE__ */ R(I, { children: [
-			/* @__PURE__ */ L(Bn, {
+			/* @__PURE__ */ L(Wn, {
 				x: 450,
 				y: 140
 			}),
-			/* @__PURE__ */ L(mn, {
+			/* @__PURE__ */ L(vn, {
 				x: 212,
 				y: 170,
 				h: 350
 			}),
-			/* @__PURE__ */ L(gn, {
+			/* @__PURE__ */ L(bn, {
 				x: 352,
 				y: 170,
 				w: 70,
 				h: 92
 			}),
-			/* @__PURE__ */ L(gn, {
+			/* @__PURE__ */ L(bn, {
 				x: 790,
 				y: 150,
 				w: 96,
 				h: 124
 			}),
-			/* @__PURE__ */ L(gn, {
+			/* @__PURE__ */ L(bn, {
 				x: 906,
 				y: 186,
 				w: 74,
 				h: 96
 			}),
-			/* @__PURE__ */ L(_n, {
+			/* @__PURE__ */ L(xn, {
 				x: 400,
 				y: 340
 			}),
-			/* @__PURE__ */ L(_n, {
+			/* @__PURE__ */ L(xn, {
 				x: 800,
 				y: 340
 			}),
-			/* @__PURE__ */ L(En, { x: 950 }),
-			/* @__PURE__ */ L(vn, { x: 600 }),
+			/* @__PURE__ */ L(An, { x: 950 }),
+			/* @__PURE__ */ L(Sn, { x: 600 }),
 			/* @__PURE__ */ L("path", {
 				className: B("cloth-d"),
 				d: "M380 600 Q600 548 820 600 Q600 668 380 600 Z"
@@ -2767,14 +2732,14 @@ function Hn(e, t) {
 			})
 		] });
 		case "study": return /* @__PURE__ */ R(I, { children: [
-			/* @__PURE__ */ L(pn, {
+			/* @__PURE__ */ L(_n, {
 				x: 470,
 				y: 170,
 				w: 260,
 				h: 230
 			}),
-			/* @__PURE__ */ L(Tn, {}),
-			/* @__PURE__ */ L(dn, {
+			/* @__PURE__ */ L(kn, {}),
+			/* @__PURE__ */ L(hn, {
 				x: 176,
 				y: 128,
 				w: 216,
@@ -2782,23 +2747,23 @@ function Hn(e, t) {
 				seed: 7,
 				shelves: 5
 			}),
-			/* @__PURE__ */ L(hn, {
+			/* @__PURE__ */ L(yn, {
 				x: 804,
 				y: 300,
 				w: 196,
 				h: 220
 			}),
-			/* @__PURE__ */ L(gn, {
+			/* @__PURE__ */ L(bn, {
 				x: 846,
 				y: 150,
 				w: 112,
 				h: 132
 			}),
-			/* @__PURE__ */ L(Dn, {
+			/* @__PURE__ */ L(jn, {
 				x: 420,
 				y: 436
 			}),
-			/* @__PURE__ */ L(_n, {
+			/* @__PURE__ */ L(xn, {
 				x: 770,
 				y: 250
 			}),
@@ -2814,29 +2779,29 @@ function Hn(e, t) {
 			})
 		] });
 		case "drafting-room": return /* @__PURE__ */ R(I, { children: [
-			/* @__PURE__ */ L(pn, {
+			/* @__PURE__ */ L(_n, {
 				x: 470,
 				y: 170,
 				w: 260,
 				h: 230,
 				curtains: !1
 			}),
-			/* @__PURE__ */ L(Tn, {}),
-			/* @__PURE__ */ L(An, {
+			/* @__PURE__ */ L(kn, {}),
+			/* @__PURE__ */ L(Pn, {
 				x: 186,
 				y: 150
 			}),
-			/* @__PURE__ */ L(kn, {
+			/* @__PURE__ */ L(Nn, {
 				x: 806,
 				y: 352,
 				w: 206,
 				h: 168
 			}),
-			/* @__PURE__ */ L(_n, {
+			/* @__PURE__ */ L(xn, {
 				x: 420,
 				y: 270
 			}),
-			/* @__PURE__ */ L(On, {
+			/* @__PURE__ */ L(Mn, {
 				x: 300,
 				y: 400
 			}),
@@ -2848,18 +2813,18 @@ function Hn(e, t) {
 			}) : null
 		] });
 		case "workshop": return /* @__PURE__ */ R(I, { children: [
-			/* @__PURE__ */ L(pn, {
+			/* @__PURE__ */ L(_n, {
 				x: 500,
 				y: 170,
 				w: 200,
 				h: 180,
 				curtains: !1
 			}),
-			/* @__PURE__ */ L(jn, {
+			/* @__PURE__ */ L(Fn, {
 				x: 196,
 				y: 150
 			}),
-			/* @__PURE__ */ L(Nn, {
+			/* @__PURE__ */ L(Ln, {
 				x: 770,
 				y: 140,
 				w: 250
@@ -2879,7 +2844,7 @@ function Hn(e, t) {
 				className: B("lamp-glow"),
 				d: "M536 190 h128 l150 340 H386 Z"
 			}),
-			/* @__PURE__ */ L(Mn, {
+			/* @__PURE__ */ L(In, {
 				x: 300,
 				y: 430
 			}),
@@ -2941,53 +2906,53 @@ function Hn(e, t) {
 				className: B("moon-pool"),
 				d: "M500 520 H700 L860 750 H340 Z"
 			}),
-			/* @__PURE__ */ L(Pn, {
+			/* @__PURE__ */ L(Rn, {
 				x: 196,
 				y: 320
 			}),
-			/* @__PURE__ */ L(In, {
+			/* @__PURE__ */ L(Bn, {
 				x: 800,
 				y: 240,
 				w: 210,
 				h: 280
 			}),
-			/* @__PURE__ */ L(Fn, {
+			/* @__PURE__ */ L(zn, {
 				x: 470,
 				y: 420
 			})
 		] });
 		case "seance-room": return /* @__PURE__ */ R(I, { children: [
-			/* @__PURE__ */ L(Rn, {
+			/* @__PURE__ */ L(Hn, {
 				x: 600,
 				y: 216
 			}),
-			/* @__PURE__ */ L(Nn, {
+			/* @__PURE__ */ L(Ln, {
 				x: 186,
 				y: 176,
 				w: 190
 			}),
-			/* @__PURE__ */ L(zn, {
+			/* @__PURE__ */ L(Un, {
 				x: 846,
 				y: 196
 			}),
-			/* @__PURE__ */ L(_n, {
+			/* @__PURE__ */ L(xn, {
 				x: 420,
 				y: 300
 			}),
-			/* @__PURE__ */ L(_n, {
+			/* @__PURE__ */ L(xn, {
 				x: 780,
 				y: 300
 			}),
-			/* @__PURE__ */ L(Ln, {
+			/* @__PURE__ */ L(Vn, {
 				x: 600,
 				y: 470
 			})
 		] });
 	}
 }
-function Un({ room: e, door: t, secondDoor: n = null, lit: r = !1, hasPrevious: i, hasNext: a, dread: o }) {
+function qn({ room: e, door: t, secondDoor: n = null, lit: r = !1, hasPrevious: i, hasNext: a, dread: o }) {
 	return /* @__PURE__ */ L(Lt, {
-		viewBox: `0 0 ${sn} 750`,
+		viewBox: `0 0 ${dn} 750`,
 		className: "hh-paint",
 		preserveAspectRatio: "xMidYMid slice",
 		data: {
@@ -2996,16 +2961,16 @@ function Un({ room: e, door: t, secondDoor: n = null, lit: r = !1, hasPrevious: 
 		},
 		children: /* @__PURE__ */ L("g", {
 			stroke: "none",
-			children: /* @__PURE__ */ R(wn, {
+			children: /* @__PURE__ */ R(On, {
 				floor: e === "foyer" || e === "study" ? "tiles" : "planks",
 				beams: e === "attic",
 				leftDoor: i,
 				rightDoor: t ?? (a ? "plain" : null),
 				dread: o,
 				children: [
-					Hn(e, r),
-					n === null ? null : /* @__PURE__ */ L(Vn, { state: n }),
-					o !== void 0 && n !== null ? /* @__PURE__ */ L(Zt, {
+					Kn(e, r),
+					n === null ? null : /* @__PURE__ */ L(Gn, { state: n }),
+					o !== void 0 && n !== null ? /* @__PURE__ */ L(Qt, {
 						where: "back",
 						state: n
 					}) : null
@@ -3014,9 +2979,9 @@ function Un({ room: e, door: t, secondDoor: n = null, lit: r = !1, hasPrevious: 
 		})
 	});
 }
-function Wn() {
+function Jn() {
 	return /* @__PURE__ */ L(Lt, {
-		viewBox: `0 0 ${sn} 750`,
+		viewBox: `0 0 ${dn} 750`,
 		className: "hh-paint hh-paint-desk",
 		preserveAspectRatio: "xMidYMid slice",
 		children: /* @__PURE__ */ R("g", {
@@ -3044,7 +3009,7 @@ function Wn() {
 					d: "M110 640 H770 L818 706 H66 Z"
 				}),
 				/* @__PURE__ */ L("g", {
-					className: on("brass-d"),
+					className: un("brass-d"),
 					fill: "none",
 					strokeWidth: 2,
 					children: /* @__PURE__ */ L("path", { d: "M124 648 H762 L798 698 H88 Z" })
@@ -3093,7 +3058,7 @@ function Wn() {
 					opacity: .5
 				}),
 				/* @__PURE__ */ L("g", {
-					className: on("ink-soft"),
+					className: un("ink-soft"),
 					fill: "none",
 					strokeWidth: 2,
 					children: /* @__PURE__ */ L("path", { d: "M216 652 q46 -12 96 12 M216 664 q46 -12 96 12 M216 676 q46 -12 96 12 M350 664 q46 -24 96 -14 M350 676 q46 -24 96 -14" })
@@ -3176,7 +3141,7 @@ function Wn() {
 		})
 	});
 }
-var Gn = [
+var Yn = [
 	"plain",
 	"archivist",
 	"draughtsman",
@@ -3184,10 +3149,10 @@ var Gn = [
 	"tinker",
 	"medium"
 ];
-function Kn(e) {
-	return Gn.find((t) => t !== "plain" && (e === t || e.startsWith(`${t}-`))) ?? "plain";
+function Xn(e) {
+	return Yn.find((t) => t !== "plain" && (e === t || e.startsWith(`${t}-`))) ?? "plain";
 }
-var qn = "M50 6 C26 6 14 28 14 56 C14 84 20 100 15 122 C23 114 30 126 38 116 C45 128 52 114 60 122 C70 130 84 128 94 112 C81 117 76 106 80 90 C84 72 86 62 86 54 C86 28 74 6 50 6 Z", Jn = "M50 6 C74 6 86 28 86 54 C86 62 84 72 80 90 C76 106 81 117 94 112 C84 128 70 130 60 122 C66 110 70 92 70 60 C70 34 64 14 50 6 Z", Yn = {
+var Zn = "M50 6 C26 6 14 28 14 56 C14 84 20 100 15 122 C23 114 30 126 38 116 C45 128 52 114 60 122 C70 130 84 128 94 112 C81 117 76 106 80 90 C84 72 86 62 86 54 C86 28 74 6 50 6 Z", Qn = "M50 6 C74 6 86 28 86 54 C86 62 84 72 80 90 C76 106 81 117 94 112 C84 128 70 130 60 122 C66 110 70 92 70 60 C70 34 64 14 50 6 Z", $n = {
 	plain: null,
 	archivist: /* @__PURE__ */ R("g", { children: [
 		/* @__PURE__ */ L("rect", {
@@ -3237,7 +3202,7 @@ var qn = "M50 6 C26 6 14 28 14 56 C14 84 20 100 15 122 C23 114 30 126 38 116 C45
 		className: B("moon"),
 		d: "M50 -14 l4 9 l10 1 l-7 7 l2 10 l-9 -5 l-9 5 l2 -10 l-7 -7 l10 -1 Z"
 	})
-}, Xn = {
+}, er = {
 	idle: /* @__PURE__ */ R(I, { children: [/* @__PURE__ */ L("ellipse", {
 		className: B("ink"),
 		cx: 38,
@@ -3371,11 +3336,11 @@ var qn = "M50 6 C26 6 14 28 14 56 C14 84 20 100 15 122 C23 114 30 126 38 116 C45
 	] }),
 	not_applicable: null,
 	unavailable: null
-}, Zn = {
+}, tr = {
 	working: "rotate(7 50 120)",
 	failed: "rotate(-26 50 120)"
 };
-function Qn({ state: e, role: t = "plain" }) {
+function nr({ state: e, role: t = "plain" }) {
 	let n = e === "not_applicable" || e === "unavailable";
 	return /* @__PURE__ */ L(Lt, {
 		viewBox: "-30 -30 160 170",
@@ -3386,24 +3351,24 @@ function Qn({ state: e, role: t = "plain" }) {
 		},
 		children: /* @__PURE__ */ R("g", {
 			stroke: "none",
-			transform: Zn[e],
+			transform: tr[e],
 			children: [
 				/* @__PURE__ */ L("path", {
 					className: B(n ? "ghost-faint" : e === "blocked" ? "ghost-d" : "ghost"),
-					d: qn
+					d: Zn
 				}),
 				n ? null : /* @__PURE__ */ L("path", {
 					className: B("ghost-d"),
-					d: Jn,
+					d: Qn,
 					opacity: e === "blocked" ? .4 : 1
 				}),
-				n ? null : Yn[t],
-				Xn[e]
+				n ? null : $n[t],
+				er[e]
 			]
 		})
 	});
 }
-var $n = "M110 4 C94 10 82 34 80 62 C80 74 80 82 78 88 C70 92 66 100 66 110 C64 170 62 230 56 288 L66 281 L76 294 L88 282 L100 295 L112 283 L124 295 L136 282 L148 294 L158 282 L166 290 C160 230 158 170 154 110 C154 100 150 92 142 88 C140 82 140 74 140 62 C138 34 126 10 110 4 Z", er = "M110 4 C126 10 138 34 140 62 C140 74 140 82 142 88 C150 92 154 100 154 110 C158 170 160 230 166 290 L158 282 L148 294 L136 282 L124 295 L118 289 C122 230 124 170 122 116 C120 80 116 40 110 4 Z", tr = "M110 4 C94 10 82 34 80 62 C80 74 80 82 78 88 C70 92 66 100 66 110 C64 170 62 230 56 288 L62 284 C67 230 69 170 71 112 C71 104 75 97 83 93 C85 86 85 76 85 64 C87 38 97 16 110 4 Z", nr = "M110 22 C98 26 89 42 89 62 C89 78 98 88 110 88 C122 88 131 78 131 62 C131 42 122 26 110 22 Z", rr = [
+var rr = "M110 4 C94 10 82 34 80 62 C80 74 80 82 78 88 C70 92 66 100 66 110 C64 170 62 230 56 288 L66 281 L76 294 L88 282 L100 295 L112 283 L124 295 L136 282 L148 294 L158 282 L166 290 C160 230 158 170 154 110 C154 100 150 92 142 88 C140 82 140 74 140 62 C138 34 126 10 110 4 Z", ir = "M110 4 C126 10 138 34 140 62 C140 74 140 82 142 88 C150 92 154 100 154 110 C158 170 160 230 166 290 L158 282 L148 294 L136 282 L124 295 L118 289 C122 230 124 170 122 116 C120 80 116 40 110 4 Z", ar = "M110 4 C94 10 82 34 80 62 C80 74 80 82 78 88 C70 92 66 100 66 110 C64 170 62 230 56 288 L62 284 C67 230 69 170 71 112 C71 104 75 97 83 93 C85 86 85 76 85 64 C87 38 97 16 110 4 Z", or = "M110 22 C98 26 89 42 89 62 C89 78 98 88 110 88 C122 88 131 78 131 62 C131 42 122 26 110 22 Z", sr = [
 	[
 		144,
 		196,
@@ -3450,9 +3415,9 @@ var $n = "M110 4 C94 10 82 34 80 62 C80 74 80 82 78 88 C70 92 66 100 66 110 C64 
 		-90
 	]
 ];
-function ir({ at: e }) {
+function cr({ at: e }) {
 	return /* @__PURE__ */ L(I, { children: e.map(([e, t, n]) => /* @__PURE__ */ L("ellipse", {
-		className: on("chain"),
+		className: un("chain"),
 		cx: e,
 		cy: t,
 		rx: 4,
@@ -3461,12 +3426,12 @@ function ir({ at: e }) {
 		transform: `rotate(${n} ${e} ${t})`
 	}, `${e}-${t}`)) });
 }
-function ar({ turn: e }) {
+function lr({ turn: e }) {
 	return /* @__PURE__ */ R("g", {
 		transform: `rotate(${e} 110 221)`,
 		children: [
 			/* @__PURE__ */ L("circle", {
-				className: on("brass"),
+				className: un("brass"),
 				cx: 110,
 				cy: 226,
 				r: 4.5,
@@ -3503,22 +3468,22 @@ function ar({ turn: e }) {
 		]
 	});
 }
-function or({ keys: e = 3 }) {
+function ur({ keys: e = 3 }) {
 	return /* @__PURE__ */ R("g", { children: [
 		[
 			-26,
 			0,
 			24
-		].slice(0, e).map((e) => /* @__PURE__ */ L(ar, { turn: e }, e)),
+		].slice(0, e).map((e) => /* @__PURE__ */ L(lr, { turn: e }, e)),
 		/* @__PURE__ */ L("circle", {
-			className: on("brass-d"),
+			className: un("brass-d"),
 			cx: 110,
 			cy: 206,
 			r: 17.5,
 			strokeWidth: 1.5
 		}),
 		/* @__PURE__ */ L("circle", {
-			className: on("brass"),
+			className: un("brass"),
 			cx: 110,
 			cy: 206,
 			r: 15,
@@ -3526,7 +3491,7 @@ function or({ keys: e = 3 }) {
 		})
 	] });
 }
-function sr() {
+function dr() {
 	return /* @__PURE__ */ R("g", { children: [
 		/* @__PURE__ */ L("path", {
 			className: B("robe"),
@@ -3545,10 +3510,10 @@ function sr() {
 		})
 	] });
 }
-var cr = {
+var fr = {
 	watching: /* @__PURE__ */ R("g", { children: [
-		/* @__PURE__ */ L(or, {}),
-		/* @__PURE__ */ L(sr, {}),
+		/* @__PURE__ */ L(ur, {}),
+		/* @__PURE__ */ L(dr, {}),
 		/* @__PURE__ */ L("path", {
 			className: B("robe-l"),
 			d: "M68 106 C66 140 72 170 86 196 C94 190 102 184 110 180 L110 168 C96 150 86 128 82 102 Z"
@@ -3570,8 +3535,8 @@ var cr = {
 		})
 	] }),
 	pointing: /* @__PURE__ */ R("g", { children: [
-		/* @__PURE__ */ L(or, {}),
-		/* @__PURE__ */ L(sr, {}),
+		/* @__PURE__ */ L(ur, {}),
+		/* @__PURE__ */ L(dr, {}),
 		/* @__PURE__ */ L("path", {
 			className: B("robe-l"),
 			d: "M80 100 L16 118 L18 134 C34 142 50 158 58 178 C68 162 76 144 82 128 Z"
@@ -3593,8 +3558,8 @@ var cr = {
 		})
 	] }),
 	"offering-key": /* @__PURE__ */ R("g", { children: [
-		/* @__PURE__ */ L(or, { keys: 2 }),
-		/* @__PURE__ */ L(sr, {}),
+		/* @__PURE__ */ L(ur, { keys: 2 }),
+		/* @__PURE__ */ L(dr, {}),
 		/* @__PURE__ */ L("circle", {
 			className: B("lamp-glow"),
 			cx: 24,
@@ -3659,7 +3624,7 @@ var cr = {
 					height: 1.5
 				}),
 				/* @__PURE__ */ L("circle", {
-					className: on("brass"),
+					className: un("brass"),
 					cx: 45,
 					cy: 152.5,
 					r: 8,
@@ -3669,36 +3634,25 @@ var cr = {
 		})
 	] }),
 	holding: /* @__PURE__ */ R("g", { children: [
-		/* @__PURE__ */ L(or, {}),
-		/* @__PURE__ */ L(sr, {}),
+		/* @__PURE__ */ L(ur, {}),
+		/* @__PURE__ */ L(dr, {}),
 		/* @__PURE__ */ L("path", {
 			className: B("ghost"),
-			d: "M26 208 C12 208 5 221 5 236 C5 250 8 258 6 270 C10 266 14 272 18 267 C21 273 25 266 29 270 C34 274 42 272 48 264 C41 266 39 260 41 252 C43 243 46 238 46 234 C46 220 39 208 26 208 Z"
+			opacity: .9,
+			d: "M26 204 C14 204 8 216 8 230 C8 246 10 262 6 286 L12 278 L15 294 L20 280 L25 296 L30 280 L35 292 L38 278 L44 286 C40 262 44 246 44 230 C44 216 38 204 26 204 Z"
 		}),
 		/* @__PURE__ */ L("path", {
 			className: B("ghost-d"),
-			d: "M26 208 C39 208 46 220 46 234 C46 238 43 243 41 252 C39 260 41 266 48 264 C42 272 34 274 29 270 C32 262 36 250 36 234 C36 222 32 212 26 208 Z"
+			opacity: .7,
+			d: "M26 204 C38 204 44 216 44 230 C44 246 40 262 44 286 L38 278 L35 292 L32 276 C35 256 36 236 34 222 C32 212 30 206 26 204 Z"
 		}),
-		/* @__PURE__ */ L("ellipse", {
+		/* @__PURE__ */ L("path", {
 			className: B("ink"),
-			cx: 18,
-			cy: 230,
-			rx: 3,
-			ry: 4.5
+			d: "M16 222 C14 226 14 234 18 237 C22 234 22 226 20 222 Z M30 222 C28 226 28 234 32 237 C36 234 36 226 34 222 Z"
 		}),
-		/* @__PURE__ */ L("ellipse", {
+		/* @__PURE__ */ L("path", {
 			className: B("ink"),
-			cx: 30,
-			cy: 230,
-			rx: 3,
-			ry: 4.5
-		}),
-		/* @__PURE__ */ L("ellipse", {
-			className: B("ink"),
-			cx: 24,
-			cy: 241,
-			rx: 2.5,
-			ry: 3
+			d: "M22 244 C21 250 22 256 25 258 C28 256 29 250 28 244 Z"
 		}),
 		/* @__PURE__ */ L("path", {
 			className: B("robe-l"),
@@ -3714,7 +3668,7 @@ var cr = {
 			cy: 190,
 			r: 6
 		}),
-		/* @__PURE__ */ L(ir, { at: [
+		/* @__PURE__ */ L(cr, { at: [
 			[
 				52,
 				201,
@@ -3748,7 +3702,7 @@ var cr = {
 		] })
 	] })
 };
-function lr({ pose: e }) {
+function pr({ pose: e }) {
 	let t = e === "stepped-back";
 	return /* @__PURE__ */ L(Lt, {
 		viewBox: "0 0 200 300",
@@ -3770,29 +3724,29 @@ function lr({ pose: e }) {
 					children: [
 						/* @__PURE__ */ L("path", {
 							className: B("robe"),
-							d: $n
+							d: rr
 						}),
 						/* @__PURE__ */ L("path", {
 							className: B("robe-d"),
-							d: er
+							d: ir
 						}),
 						/* @__PURE__ */ L("path", {
 							className: B("robe-rim"),
-							d: tr
+							d: ar
 						}),
 						/* @__PURE__ */ L("path", {
 							className: B("robe-d"),
 							opacity: .55,
 							d: "M84 196 C82 226 80 258 76 290 L82 286 C86 258 88 226 89 198 Z M100 204 C100 234 100 262 98 291 L103 288 C105 262 105 234 104 206 Z"
 						}),
-						/* @__PURE__ */ L(ir, { at: rr }),
+						/* @__PURE__ */ L(cr, { at: sr }),
 						t ? /* @__PURE__ */ L("path", {
 							className: B("robe-d"),
 							d: "M110 8 C107 60 106 130 107 286 L113 286 C114 130 113 60 110 8 Z"
 						}) : /* @__PURE__ */ R(I, { children: [
 							/* @__PURE__ */ L("path", {
 								className: B("hood"),
-								d: nr
+								d: or
 							}),
 							/* @__PURE__ */ L("circle", {
 								className: B("lamp-glow"),
@@ -3814,7 +3768,7 @@ function lr({ pose: e }) {
 								className: B("moon"),
 								d: "M97 55 L106 58.6 L105 60.3 L98 57.4 Z M123 55 L114 58.6 L115 60.3 L122 57.4 Z"
 							}),
-							cr[e]
+							fr[e]
 						] })
 					]
 				}),
@@ -3836,9 +3790,9 @@ function lr({ pose: e }) {
 		})
 	});
 }
-function ur({ knocker: e = !0 }) {
+function mr({ knocker: e = !0 }) {
 	return /* @__PURE__ */ L(Lt, {
-		viewBox: `0 0 ${sn} 750`,
+		viewBox: `0 0 ${dn} 750`,
 		className: "hh-paint hh-paint-front",
 		preserveAspectRatio: "xMidYMid slice",
 		children: /* @__PURE__ */ R("g", {
@@ -3981,22 +3935,22 @@ function ur({ knocker: e = !0 }) {
 	});
 }
 // src/components/room-paint-styles.ts
-var V = (e, t) => `color-mix(in srgb, var(${e}) ${t}%, black)`, dr = (e, t) => `color-mix(in srgb, var(${e}) ${t}%, white)`, fr = (e, t) => `color-mix(in srgb, var(${e}) ${t}%, transparent)`, pr = {
+var V = (e, t) => `color-mix(in srgb, var(${e}) ${t}%, black)`, hr = (e, t) => `color-mix(in srgb, var(${e}) ${t}%, white)`, gr = (e, t) => `color-mix(in srgb, var(${e}) ${t}%, transparent)`, _r = {
 	wall: "var(--hh-w)",
-	"wall-l": dr("--hh-w", 78),
+	"wall-l": hr("--hh-w", 78),
 	"wall-d": V("--hh-w", 72),
 	"wall-dd": V("--hh-w", 50),
 	ceil: V("--hh-w", 34),
 	side: V("--hh-w", 64),
 	"side-d": V("--hh-w", 48),
 	wood: "var(--hh-sc-wood)",
-	"wood-l": dr("--hh-sc-wood", 74),
+	"wood-l": hr("--hh-sc-wood", 74),
 	"wood-d": "var(--hh-sc-wood-dark)",
 	"wood-dd": V("--hh-sc-wood-dark", 56),
 	floor: "var(--hh-sc-floor)",
 	tile: "var(--hh-sc-tile)",
 	brass: "var(--hh-sc-brass)",
-	"brass-l": dr("--hh-sc-brass", 60),
+	"brass-l": hr("--hh-sc-brass", 60),
 	"brass-d": V("--hh-sc-brass", 62),
 	cloth: "var(--hh-sc-cloth)",
 	"cloth-d": V("--hh-sc-cloth", 62),
@@ -4007,14 +3961,14 @@ var V = (e, t) => `color-mix(in srgb, var(${e}) ${t}%, black)`, dr = (e, t) => `
 	ink: "var(--hh-sc-ink)",
 	moon: "var(--hh-sc-moon)",
 	"moon-d": V("--hh-sc-moon", 84),
-	"moon-halo": fr("--hh-sc-moon", 16),
-	"moon-pool": fr("--hh-sc-moon", 10),
+	"moon-halo": gr("--hh-sc-moon", 16),
+	"moon-pool": gr("--hh-sc-moon", 10),
 	lamp: "var(--hh-sc-lamp)",
 	"lamp-d": V("--hh-sc-lamp", 70),
-	"lamp-glow": fr("--hh-sc-lamp", 13),
+	"lamp-glow": gr("--hh-sc-lamp", 13),
 	ecto: "var(--hh-sc-ecto)",
 	"ecto-d": V("--hh-sc-ecto", 62),
-	"ecto-glow": fr("--hh-sc-ecto", 13),
+	"ecto-glow": gr("--hh-sc-ecto", 13),
 	"night-1": "var(--hh-sc-night1)",
 	"night-2": "var(--hh-sc-night2)",
 	"night-3": "var(--hh-sc-night3)",
@@ -4022,43 +3976,43 @@ var V = (e, t) => `color-mix(in srgb, var(${e}) ${t}%, black)`, dr = (e, t) => `
 	"hill-1": "var(--hh-sc-hill1)",
 	"hill-2": "var(--hh-sc-hill2)",
 	glass: V("--hh-sc-night2", 50),
-	"glass-l": fr("--hh-sc-paper", 30),
-	shade: fr("--hh-sc-ink", 34),
+	"glass-l": gr("--hh-sc-paper", 30),
+	shade: gr("--hh-sc-ink", 34),
 	stone: "var(--hh-sc-stone)",
-	"stone-l": dr("--hh-sc-stone", 70),
+	"stone-l": hr("--hh-sc-stone", 70),
 	"stone-d": V("--hh-sc-stone", 60),
 	blueprint: "var(--hh-sc-wall-drafting)",
 	leather: "var(--hh-sc-leather)",
 	ghost: "var(--hh-sc-spectre)",
 	"ghost-d": V("--hh-sc-spectre", 80),
-	"ghost-faint": fr("--hh-sc-spectre", 22),
+	"ghost-faint": gr("--hh-sc-spectre", 22),
 	scorch: V("--hh-sc-wood-dark", 38),
 	door: "var(--hh-sc-front-door)",
-	"door-l": dr("--hh-sc-front-door", 80),
+	"door-l": hr("--hh-sc-front-door", 80),
 	"door-d": V("--hh-sc-front-door", 76),
 	"door-dd": V("--hh-sc-front-door", 52),
 	iron: "var(--hh-sc-iron)",
-	"iron-l": dr("--hh-sc-iron", 72),
+	"iron-l": hr("--hh-sc-iron", 72),
 	vignette: "transparent",
 	robe: V("--hh-sc-night2", 62),
 	"robe-l": "var(--hh-sc-night2)",
 	"robe-d": "var(--hh-sc-night1)",
 	"robe-rim": "var(--hh-sc-night3)",
 	hood: "var(--hh-sc-iron)"
-}, mr = {
-	web: fr("--hh-sc-bone", 46),
+}, vr = {
+	web: gr("--hh-sc-bone", 46),
 	"floor-line": V("--hh-sc-floor", 62),
 	"tile-line": V("--hh-sc-tile", 58),
 	paper: "var(--hh-sc-paper)",
 	"night-2": "var(--hh-sc-night2)",
 	"wood-dd": V("--hh-sc-wood-dark", 56),
 	"brass-d": V("--hh-sc-brass", 62),
-	"ink-soft": fr("--hh-sc-ink", 50),
+	"ink-soft": gr("--hh-sc-ink", 50),
 	brass: "var(--hh-sc-brass)",
-	chain: dr("--hh-sc-stone", 62)
+	chain: hr("--hh-sc-stone", 62)
 };
-Object.keys(pr), Object.keys(mr);
-var hr = `
+Object.keys(_r), Object.keys(vr);
+var yr = `
 .hh-paint { position: absolute; inset: 0; display: block; width: 100%; height: 100%; pointer-events: none; }
 .hh-paint[data-scene='foyer'], .hh-paint { --hh-w: var(--hh-sc-wall-foyer); }
 .hh-paint[data-scene='study'] { --hh-w: var(--hh-sc-wall-study); }
@@ -4066,11 +4020,11 @@ var hr = `
 .hh-paint[data-scene='workshop'] { --hh-w: var(--hh-sc-wall-workshop); }
 .hh-paint[data-scene='attic'] { --hh-w: var(--hh-sc-wall-attic); }
 .hh-paint[data-scene='seance-room'] { --hh-w: var(--hh-sc-wall-seance); }
-${Object.entries(pr).map(([e, t]) => `.hh-p-${e} { fill: ${t}; }`).join("\n")}
-${Object.entries(mr).map(([e, t]) => `.hh-ps-${e} { fill: none; stroke: ${t}; }`).join("\n")}
+${Object.entries(_r).map(([e, t]) => `.hh-p-${e} { fill: ${t}; }`).join("\n")}
+${Object.entries(vr).map(([e, t]) => `.hh-ps-${e} { fill: none; stroke: ${t}; }`).join("\n")}
 /* The Warden is told from the dark behind him by the light at his edge. */
 .hh-paint-warden { filter: drop-shadow(0 0 9px var(--hh-sc-night3)) drop-shadow(0 0 2px var(--hh-sc-night3)); }
-`, gr = [
+`, br = [
 	"canvas",
 	"surface",
 	"surfaceRaised",
@@ -4085,7 +4039,7 @@ ${Object.entries(mr).map(([e, t]) => `.hh-ps-${e} { fill: none; stroke: ${t}; }`
 	"candle",
 	"ghost",
 	"working"
-], _r = {
+], xr = {
 	light: {
 		canvas: "#e9eff9",
 		surface: "#f5f8fe",
@@ -4118,38 +4072,38 @@ ${Object.entries(mr).map(([e, t]) => `.hh-ps-${e} { fill: none; stroke: ${t}; }`
 		ghost: "#d9d4ff",
 		working: "#8fd0f5"
 	}
-}, vr = [
+}, Sr = [
 	"canvas",
 	"surface",
 	"surfaceRaised"
 ];
-function yr(e, t) {
-	return vr.map((n) => ({
+function Cr(e, t) {
+	return Sr.map((n) => ({
 		foreground: e,
 		background: n,
 		minimum: t
 	}));
 }
 [
-	...yr("text", 4.5),
-	...yr("textMuted", 4.5),
-	...yr("accent", 4.5),
-	...yr("danger", 4.5),
-	...yr("ok", 4.5),
-	...yr("working", 4.5),
-	...yr("border", 3),
-	...yr("focus", 3),
-	...yr("candle", 3),
-	...yr("ghost", 3)
+	...Cr("text", 4.5),
+	...Cr("textMuted", 4.5),
+	...Cr("accent", 4.5),
+	...Cr("danger", 4.5),
+	...Cr("ok", 4.5),
+	...Cr("working", 4.5),
+	...Cr("border", 3),
+	...Cr("focus", 3),
+	...Cr("candle", 3),
+	...Cr("ghost", 3)
 ];
-function br(e) {
+function wr(e) {
 	return `--hh-fb-${e.replace(/[A-Z]/g, (e) => `-${e.toLowerCase()}`)}`;
 }
-function xr(e) {
-	let t = _r[e];
-	return gr.map((e) => `${br(e)}: ${t[e]};`).join(" ");
+function Tr(e) {
+	let t = xr[e];
+	return br.map((e) => `${wr(e)}: ${t[e]};`).join(" ");
 }
-var Sr = {
+var Er = {
 	ink: "#1a1326",
 	bone: "#f6eeda",
 	balloon: "#fff6cc",
@@ -4188,42 +4142,42 @@ var Sr = {
 	sheetLine: "#1d1a2e",
 	sheetInk: "#a99cc9",
 	poche: "#050409"
-}, Cr = {
-	light: Sr,
-	dark: Sr
+}, Dr = {
+	light: Er,
+	dark: Er
 };
-function wr(e) {
+function Or(e) {
 	return `--hh-sc-${e.replace(/[A-Z]/g, (e) => `-${e.toLowerCase()}`)}`;
 }
-function Tr(e) {
-	let t = Cr[e];
-	return Object.keys(t).map((e) => `${wr(e)}: ${t[e]};`).join(" ");
+function kr(e) {
+	let t = Dr[e];
+	return Object.keys(t).map((e) => `${Or(e)}: ${t[e]};`).join(" ");
 }
 // src/core/dread.ts
-var Er = [
+var Ar = [
 	"calm",
 	"eerie",
 	"dread"
-], Dr = "eerie", Or = {
+], jr = "eerie", Mr = {
 	calm: "Calm",
 	eerie: "Eerie",
 	dread: "Dread"
 };
-function kr(e) {
-	return Er[(Er.indexOf(e) + 1) % Er.length];
+function Nr(e) {
+	return Ar[(Ar.indexOf(e) + 1) % Ar.length];
 }
-function Ar(e) {
+function Pr(e) {
 	return e.doors.some((e) => e.state === "waiting") ? "leak" : e.ghosts.some((e) => e.state === "working") ? "candle" : "moonlit";
 }
-function jr(e, t) {
+function Fr(e, t) {
 	return t.some((t) => t.roomId === e.roomId && t.kind === "risky-decision") ? "held" : e.ghosts.some((e) => e.state === "working" || e.state === "waiting") ? "lit" : "dark";
 }
-var Mr = {
+var Ir = {
 	dark: "Window dark: idle.",
 	lit: "Window lit: work is happening.",
 	held: "Window glowing red: something is held for you."
 };
-function Nr(e) {
+function Lr(e) {
 	let t = e.needsYou.find((e) => e.kind === "risky-decision" && e.ghostId !== null);
 	return t === void 0 ? e.needsYou.length > 0 ? {
 		stance: "forward",
@@ -4236,10 +4190,10 @@ function Nr(e) {
 		heldGhostId: t.ghostId
 	};
 }
-function Pr(e) {
+function Rr(e) {
 	return e.doors.some((e) => e.state === "waiting") || e.ghosts.some((e) => e.state === "working" || e.state === "waiting") ? 0 : e.ghosts.length === 0 ? 3 : e.ghosts.every((e) => e.state === "idle") ? 2 : 1;
 }
-function Fr(e, t) {
+function zr(e, t) {
 	let n = e !== "calm";
 	return {
 		night: !0,
@@ -4250,47 +4204,47 @@ function Fr(e, t) {
 		moves: n && t === "low-frequency"
 	};
 }
-function Ir(e) {
+function Br(e) {
 	return !Number.isFinite(e) || e < 1 ? null : Math.min(90, 48 + 12 * (Math.floor(e) - 1));
 }
-function Lr(e) {
+function Vr(e) {
 	return e.needsYou.filter((e) => e.kind === "risky-decision").map((e) => e.id.slice(e.id.indexOf(":") + 1));
 }
-function Rr(e, t, n) {
+function Hr(e, t, n) {
 	return (n.decided ?? []).find((n) => e.has(n.proposalId) && !t.has(n.proposalId)) ?? null;
 }
 // src/components/dread-styles.ts
-var zr = (e, t) => `color-mix(in srgb, var(${e}) ${t}%, transparent)`, Br = (e) => `color-mix(in srgb, var(--hh-sc-night1) ${e}%, black)`, Vr = ".hh-ui:is([data-fright='eerie'], [data-fright='dread'])", Hr = (e) => `color-mix(in srgb, var(--hh-sc-wood-dark) ${e}%, black)`, Ur = (e) => `color-mix(in srgb, var(--hh-sc-brass) ${e}%, black)`, Wr = `
+var H = (e, t) => `color-mix(in srgb, var(${e}) ${t}%, transparent)`, Ur = (e) => `color-mix(in srgb, var(--hh-sc-night1) ${e}%, black)`, Wr = ".hh-ui:is([data-fright='eerie'], [data-fright='dread'])", Gr = (e) => `color-mix(in srgb, var(--hh-sc-wood-dark) ${e}%, black)`, Kr = (e) => `color-mix(in srgb, var(--hh-sc-brass) ${e}%, black)`, qr = `
 /* The séance board: the replay bar is a board of dark wood with a brass rim; the scrubber is its track, one mark for
    each recorded event (--hh-marks), and the thumb is a planchette with a window. The native range input, its label
    and its value text stay as they are. */
 .hh-ui-replay-bar { font-family: var(--hh-font-serif); color: var(--hh-sc-slate-ink);
-  background: radial-gradient(ellipse 70% 120% at 50% 0%, ${Hr(60)} 0%, ${Hr(30)} 100%);
-  border: 2px solid ${Ur(60)}; border-radius: 12px; box-shadow: inset 0 0 0 3px ${Hr(22)}, 0 12px 30px ${zr("--hh-sc-poche", 80)}; }
+  background: radial-gradient(ellipse 70% 120% at 50% 0%, ${Gr(60)} 0%, ${Gr(30)} 100%);
+  border: 2px solid ${Kr(60)}; border-radius: 12px; box-shadow: inset 0 0 0 3px ${Gr(22)}, 0 12px 30px ${H("--hh-sc-poche", 80)}; }
 .hh-ui-replay-bar .hh-ui-note, .hh-ui-replay-bar .hh-ui-replay-speed legend { color: var(--hh-sc-slate-ink); }
-.hh-ui-replay-bar .hh-ui-button { font-family: var(--hh-font-serif); color: var(--hh-sc-slate-ink); background: ${Hr(36)}; border: 2px solid ${Ur(70)}; }
+.hh-ui-replay-bar .hh-ui-button { font-family: var(--hh-font-serif); color: var(--hh-sc-slate-ink); background: ${Gr(36)}; border: 2px solid ${Kr(70)}; }
 .hh-ui-replay-bar .hh-ui-button[data-variant='primary'] { color: var(--hh-sc-ink); background: var(--hh-sc-brass); border-color: var(--hh-sc-ink); }
 .hh-ui-replay-range { appearance: none; -webkit-appearance: none; height: 34px; background: transparent; cursor: pointer; }
-.hh-ui-replay-range::-webkit-slider-runnable-track { height: 22px; border-radius: 11px; border: 1px solid ${Ur(70)};
-  background: repeating-linear-gradient(90deg, ${Ur(80)} 0 1px, transparent 1px calc(100% / var(--hh-marks, 1))), linear-gradient(180deg, ${Hr(28)}, ${Hr(48)}); }
-.hh-ui-replay-range::-moz-range-track { height: 22px; border-radius: 11px; border: 1px solid ${Ur(70)};
-  background: repeating-linear-gradient(90deg, ${Ur(80)} 0 1px, transparent 1px calc(100% / var(--hh-marks, 1))), linear-gradient(180deg, ${Hr(28)}, ${Hr(48)}); }
+.hh-ui-replay-range::-webkit-slider-runnable-track { height: 22px; border-radius: 11px; border: 1px solid ${Kr(70)};
+  background: repeating-linear-gradient(90deg, ${Kr(80)} 0 1px, transparent 1px calc(100% / var(--hh-marks, 1))), linear-gradient(180deg, ${Gr(28)}, ${Gr(48)}); }
+.hh-ui-replay-range::-moz-range-track { height: 22px; border-radius: 11px; border: 1px solid ${Kr(70)};
+  background: repeating-linear-gradient(90deg, ${Kr(80)} 0 1px, transparent 1px calc(100% / var(--hh-marks, 1))), linear-gradient(180deg, ${Gr(28)}, ${Gr(48)}); }
 .hh-ui-replay-range::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 30px; height: 34px; margin-top: -7px; border: 0;
   clip-path: polygon(50% 0%, 96% 62%, 78% 100%, 22% 100%, 4% 62%);
-  background: radial-gradient(circle at 50% 60%, ${Hr(30)} 0 5px, var(--hh-sc-brass) 5.5px 8px, var(--hh-sc-bone) 8.5px); }
+  background: radial-gradient(circle at 50% 60%, ${Gr(30)} 0 5px, var(--hh-sc-brass) 5.5px 8px, var(--hh-sc-bone) 8.5px); }
 .hh-ui-replay-range::-moz-range-thumb { width: 30px; height: 34px; border: 0; border-radius: 0;
   clip-path: polygon(50% 0%, 96% 62%, 78% 100%, 22% 100%, 4% 62%);
-  background: radial-gradient(circle at 50% 60%, ${Hr(30)} 0 5px, var(--hh-sc-brass) 5.5px 8px, var(--hh-sc-bone) 8.5px); }
+  background: radial-gradient(circle at 50% 60%, ${Gr(30)} 0 5px, var(--hh-sc-brass) 5.5px 8px, var(--hh-sc-bone) 8.5px); }
 .hh-ui-replay-range:focus-visible { outline: 3px solid var(--hh-sc-lamp); outline-offset: 3px; border-radius: 12px; }
 /* The replay bar and the practice board stand together at the head of the house. */
 .hh-ui-replay-head { display: grid; gap: 8px; min-width: 0; }
 /* The practice board: one line under the replay bar, in the same wood: the run's numbers and the switch. The question
    itself is asked by the Warden, in his balloon, so the room keeps its size. */
 .hh-ui-practice { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; min-width: 0; padding: 6px 12px; font-family: var(--hh-font-serif);
-  color: var(--hh-sc-slate-ink); background: ${Hr(30)}; border: 2px solid ${Ur(55)}; border-radius: 12px; }
+  color: var(--hh-sc-slate-ink); background: ${Gr(30)}; border: 2px solid ${Kr(55)}; border-radius: 12px; }
 .hh-ui-practice-numbers { flex: 1 1 16rem; margin: 0; font-size: 0.875rem; }
 .hh-ui-practice-state { flex: 1 1 100%; margin: 0; font-size: 0.875rem; font-weight: 700; }
-.hh-ui-practice .hh-ui-button { padding-block: 2px; font-family: var(--hh-font-serif); color: var(--hh-sc-slate-ink); background: ${Hr(40)}; border: 2px solid ${Ur(70)}; }
+.hh-ui-practice .hh-ui-button { padding-block: 2px; font-family: var(--hh-font-serif); color: var(--hh-sc-slate-ink); background: ${Gr(40)}; border: 2px solid ${Kr(70)}; }
 .hh-ui-practice .hh-ui-button[aria-pressed='true'] { color: var(--hh-sc-ink); background: var(--hh-sc-brass); border-color: var(--hh-sc-ink); }
 .hh-practice-balloon .hh-ui-practice-question { font-size: 1.0625rem; }
 .hh-ui-practice-choices { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 6px; }
@@ -4299,48 +4253,54 @@ var zr = (e, t) => `color-mix(in srgb, var(${e}) ${t}%, transparent)`, Br = (e) 
 /* The map's windows from outside: lit where a ghost works, dark where nothing happens, red where something is held. */
 .hh-ui-room-scene { position: relative; }
 .hh-ui-window { position: absolute; z-index: 2; right: 8%; top: 10%; width: 9%; min-width: 12px; aspect-ratio: 2 / 3; border-radius: 50% 50% 2px 2px / 30% 30% 2px 2px;
-  border: 2px solid ${Hr(30)}; background: ${Br(80)}; pointer-events: none; }
-.hh-ui-window[data-glow='lit'] { background: var(--hh-sc-lamp); box-shadow: 0 0 14px ${zr("--hh-sc-lamp", 80)}; }
+  border: 2px solid ${Gr(30)}; background: ${Ur(80)}; pointer-events: none; }
+.hh-ui-window[data-glow='lit'] { background: var(--hh-sc-lamp); box-shadow: 0 0 14px ${H("--hh-sc-lamp", 80)}; }
 .hh-ui-window[data-glow='held'] { background: var(--hh-sc-cloth); box-shadow: 0 0 18px var(--hh-sc-cloth), 0 0 4px var(--hh-sc-lamp); }
 /* The heading is a brass plate engraved with the house's name. */
 .hh-status[data-compact='true'] h1 { display: inline-block; padding: 2px 16px 4px; font-size: 1.5rem; letter-spacing: 0.02em; color: var(--hh-sc-slate-ink);
-  background: linear-gradient(180deg, ${Hr(46)}, ${Hr(26)}); border: 2px solid ${Ur(70)}; border-radius: 6px;
-  text-shadow: 0 0 10px ${zr("--hh-sc-lamp", 55)}; box-shadow: 0 6px 18px ${zr("--hh-sc-poche", 80)}; }
+  background: linear-gradient(180deg, ${Gr(46)}, ${Gr(26)}); border: 2px solid ${Kr(70)}; border-radius: 6px;
+  text-shadow: 0 0 10px ${H("--hh-sc-lamp", 55)}; box-shadow: 0 6px 18px ${H("--hh-sc-poche", 80)}; }
 
 .hh-stage-spots { z-index: 2; }
 .hh-dread-light, .hh-dread-air { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
 .hh-dread-light > span, .hh-dread-air > * { position: absolute; pointer-events: none; }
 /* Moonlit: nothing happens here. The room sinks into blue dark; a cold shaft falls from above. */
-.hh-dread-light { mix-blend-mode: multiply; background: linear-gradient(180deg, ${zr("--hh-sc-night2", 70)} 0%, ${Br(88)} 100%); opacity: 0.86; }
-.hh-dread-moon { inset: 0; mix-blend-mode: screen; background: radial-gradient(ellipse 40% 70% at 50% 18%, ${zr("--hh-sc-moon", 26)} 0%, transparent 70%); }
+.hh-dread-light { mix-blend-mode: multiply; background: linear-gradient(180deg, ${H("--hh-sc-night2", 70)} 0%, ${Ur(88)} 100%); opacity: 0.86; }
+.hh-dread-moon { inset: 0; mix-blend-mode: screen; background: radial-gradient(ellipse 40% 70% at 50% 18%, ${H("--hh-sc-moon", 26)} 0%, transparent 70%); }
 /* Candle: a ghost works. A warm pool on the desk pushes the dark back. */
-.hh-dread-light[data-light='candle'] { background: radial-gradient(ellipse 46% 52% at 34% 82%, transparent 0%, transparent 30%, ${zr("--hh-sc-night2", 64)} 62%, ${Br(86)} 100%); }
-.hh-dread-candle { inset: 0; mix-blend-mode: screen; background: radial-gradient(ellipse 30% 34% at 34% 82%, ${zr("--hh-sc-lamp", 46)} 0%, transparent 72%); }
+.hh-dread-light[data-light='candle'] { background: radial-gradient(ellipse 46% 52% at 34% 82%, transparent 0%, transparent 30%, ${H("--hh-sc-night2", 64)} 62%, ${Ur(86)} 100%); }
+.hh-dread-candle { inset: 0; mix-blend-mode: screen; background: radial-gradient(ellipse 30% 34% at 34% 82%, ${H("--hh-sc-lamp", 46)} 0%, transparent 72%); }
 /* Leak: a door waits for you. The room is dark and light spills from under the door onto the floor. */
 .hh-dread-light[data-light='leak'] { opacity: 0.92; }
-.hh-dread-leak { mix-blend-mode: screen; filter: blur(3px); background: radial-gradient(ellipse 50% 50% at 50% 50%, ${zr("--hh-sc-lamp", 90)} 0%, ${zr("--hh-sc-lamp", 30)} 46%, transparent 72%); }
+.hh-dread-leak { mix-blend-mode: screen; filter: blur(3px); background: radial-gradient(ellipse 50% 50% at 50% 50%, ${H("--hh-sc-lamp", 90)} 0%, ${H("--hh-sc-lamp", 30)} 46%, transparent 72%); }
 .hh-dread-leak[data-at='side'] { left: 84%; width: 16%; top: 70%; height: 20%; }
 .hh-dread-leak[data-at='back'] { left: 66%; width: 20%; top: 62%; height: 14%; }
 .hh-ui[data-fright='dread'] .hh-dread-light { opacity: 0.95; }
 .hh-ui[data-fright='dread'] .hh-dread-light[data-light='candle'] { opacity: 0.9; }
 /* Fog on the floor, dust in the moonlight, rain on the glass. */
 .hh-dread-fog { left: -10%; right: -10%; bottom: -4%; height: 34%; filter: blur(8px);
-  background: radial-gradient(ellipse 60% 70% at 30% 100%, ${zr("--hh-sc-moon", 22)} 0%, transparent 70%), radial-gradient(ellipse 50% 60% at 78% 100%, ${zr("--hh-sc-moon", 18)} 0%, transparent 72%); }
+  background: radial-gradient(ellipse 60% 70% at 30% 100%, ${H("--hh-sc-moon", 22)} 0%, transparent 70%), radial-gradient(ellipse 50% 60% at 78% 100%, ${H("--hh-sc-moon", 18)} 0%, transparent 72%); }
 .hh-dread-dust { inset: 0; width: 100%; height: 100%; }
 .hh-dread-rain { inset: -20% 0 0; opacity: 0.32;
-  background: repeating-linear-gradient(104deg, transparent 0 26px, ${zr("--hh-sc-moon", 40)} 26px 27px, transparent 27px 61px); }
+  background: repeating-linear-gradient(104deg, transparent 0 26px, ${H("--hh-sc-moon", 40)} 26px 27px, transparent 27px 61px); }
 /* The Warden's shadow reaches across the floor toward the room. */
 .hh-dread-shadow { position: absolute; z-index: 1; right: 4%; bottom: 0; width: 46%; height: 16%; pointer-events: none; transform-origin: 100% 100%;
-  transform: skewX(-38deg); background: radial-gradient(ellipse 100% 90% at 100% 100%, ${Br(70)} 0%, ${zr("--hh-sc-night1", 40)} 52%, transparent 76%); }
+  transform: skewX(-38deg); background: radial-gradient(ellipse 100% 90% at 100% 100%, ${Ur(70)} 0%, ${H("--hh-sc-night1", 40)} 52%, transparent 76%); }
 .hh-dread-shadow[data-stance='holding'] { width: 64%; height: 20%; }
 /* He grows with what he holds: small at the edge when nothing waits, forward and brighter-eyed when something does. */
-${Vr} .hh-stage-warden .hh-paint-warden { transform-origin: 50% 100%; }
-${Vr} .hh-stage-room[data-stance='edge'] .hh-stage-warden .hh-paint-warden { transform: scale(0.78) translateX(14%); opacity: 0.86; }
-${Vr} .hh-stage-room[data-stance='forward'] .hh-stage-warden .hh-paint-warden,
-${Vr} .hh-stage-room[data-stance='holding'] .hh-stage-warden .hh-paint-warden {
-  transform: scale(1.08) translateX(-6%); filter: drop-shadow(0 0 12px var(--hh-sc-lamp)) drop-shadow(0 0 3px var(--hh-sc-night3)); }
+${Wr} .hh-stage-warden .hh-paint-warden { transform-origin: 85% 100%; }
+${Wr} .hh-stage-room[data-stance='edge'] .hh-stage-warden .hh-paint-warden { transform: scale(0.8) translateX(12%); opacity: 0.86; }
+${Wr} .hh-stage-room[data-stance='forward'] .hh-stage-warden .hh-paint-warden {
+  transform: scale(1.25); filter: drop-shadow(0 0 12px var(--hh-sc-lamp)) drop-shadow(0 0 3px var(--hh-sc-night3)); }
+/* Holding a ghost he is half as tall again, looming over the corner of the room, short of the door's own light. */
+${Wr} .hh-stage-room[data-stance='holding'] .hh-stage-warden .hh-paint-warden {
+  transform: scale(1.6); filter: drop-shadow(0 0 16px var(--hh-sc-cloth)) drop-shadow(0 0 4px var(--hh-sc-lamp)); }
+/* The ghosts are drawn larger than the room's small sheets of Calm: tall shapes that reach. */
+${Wr} .hh-stage-figure .hh-paint-hollow { transform: scale(1.55); transform-origin: 50% 92%; opacity: 0.72;
+  filter: brightness(0.82) drop-shadow(0 0 7px ${H("--hh-sc-ecto", 45)}); }
+.hh-ui[data-fright='dread'] .hh-stage-figure .hh-paint-hollow { opacity: 0.62; }
 /* The night outside the house. */
-.hh-house:not([data-landing='true']) { background: radial-gradient(ellipse 80% 50% at 75% -5%, ${zr("--hh-sc-night2", 55)} 0%, transparent 70%), ${Br(40)}; }
+.hh-house:not([data-landing='true']) { background: radial-gradient(ellipse 80% 50% at 75% -5%, ${H("--hh-sc-night2", 55)} 0%, transparent 70%), ${Ur(40)}; }
 /* After a held action is decided. Refused: the ghost is dragged back from the Warden's corner to its place. Released: a
    ghost slips off his chain and flees up and out. Each plays once, only while the house may move. */
 .hh-dread-flee { position: absolute; z-index: 2; right: 6%; bottom: 8%; width: 6%; aspect-ratio: 160 / 190; pointer-events: none; opacity: 0; }
@@ -4351,27 +4311,56 @@ ${Vr} .hh-stage-room[data-stance='holding'] .hh-stage-warden .hh-paint-warden {
 @keyframes hh-dread-motes { 0%, 100% { opacity: 0.5; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-1.5%); } }
 @keyframes hh-dread-flame { 0%, 100% { opacity: 1; } 50% { opacity: 0.82; } }
 @media (prefers-reduced-motion: no-preference) {
-  ${Vr}[data-motion='low-frequency'] .hh-stage-figure[data-dragged='true'] { animation: hh-dread-dragged 2.2s cubic-bezier(0.3, 0.1, 0.2, 1) 1; }
-  ${Vr}[data-motion='low-frequency'] .hh-dread-flee { animation: hh-dread-fled 2.4s ease-in 1; }
-  ${Vr}[data-motion='low-frequency'] .hh-dread-fog { animation: hh-dread-drift 24s ease-in-out infinite; }
-  ${Vr}[data-motion='low-frequency'] .hh-dread-rain { animation: hh-dread-fall 2.4s linear infinite; }
-  ${Vr}[data-motion='low-frequency'] .hh-dread-dust { animation: hh-dread-motes 9s ease-in-out infinite; }
-  ${Vr}[data-motion='low-frequency'] .hh-dread-candle { animation: hh-dread-flame 3.2s ease-in-out infinite; }
-  ${Vr}[data-motion='low-frequency'] .hh-dread-leak { animation: hh-dread-flame 4s ease-in-out infinite; }
-  ${Vr}[data-motion='low-frequency'] .hh-stage-warden .hh-paint-warden { transition: transform 1.6s cubic-bezier(0.3, 0.1, 0.2, 1); }
+  ${Wr}[data-motion='low-frequency'] .hh-stage-figure[data-dragged='true'] { animation: hh-dread-dragged 2.2s cubic-bezier(0.3, 0.1, 0.2, 1) 1; }
+  ${Wr}[data-motion='low-frequency'] .hh-dread-flee { animation: hh-dread-fled 2.4s ease-in 1; }
+  ${Wr}[data-motion='low-frequency'] .hh-dread-fog { animation: hh-dread-drift 24s ease-in-out infinite; }
+  ${Wr}[data-motion='low-frequency'] .hh-dread-rain { animation: hh-dread-fall 2.4s linear infinite; }
+  ${Wr}[data-motion='low-frequency'] .hh-dread-dust { animation: hh-dread-motes 9s ease-in-out infinite; }
+  ${Wr}[data-motion='low-frequency'] .hh-dread-candle { animation: hh-dread-flame 3.2s ease-in-out infinite; }
+  ${Wr}[data-motion='low-frequency'] .hh-dread-leak { animation: hh-dread-flame 4s ease-in-out infinite; }
+  ${Wr}[data-motion='low-frequency'] .hh-stage-warden .hh-paint-warden { transition: transform 1.6s cubic-bezier(0.3, 0.1, 0.2, 1); }
 }
-`, Gr = {
+
+/* The head of the house is one slim line in a wide window, so the room is the largest thing on screen: the recording's
+   transport, its séance board and position, the run's numbers and the practice switch side by side. The read-only
+   sentence stays in the page for assistive technology; on screen it is the word after "Recording". */
+@media (min-width: 900px) {
+  .hh-ui { padding: 8px 12px 10px; gap: 6px; }
+  .hh-ui > .hh-ui-behind:first-of-type { gap: 6px; }
+  .hh-ui-replay-head { display: flex; gap: 8px; align-items: stretch; margin-top: 4px; }
+  .hh-ui-replay-head > .hh-ui-replay-bar { flex: 1 1 auto; flex-wrap: nowrap; align-items: center; gap: 10px; padding: 4px 12px; }
+  .hh-ui-replay-bar .hh-ui-replay-note { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); }
+  .hh-ui-replay-bar .hh-ui-replay-label::after { content: ', read-only'; font-weight: 400; }
+  .hh-ui-replay-bar .hh-ui-replay-progress { display: flex; align-items: center; gap: 8px; flex: 1 1 10rem; }
+  .hh-ui-replay-bar .hh-ui-replay-position { flex: none; font-size: 0.8125rem; }
+  .hh-ui-replay-bar .hh-ui-button { padding: 2px 10px; }
+  .hh-ui-replay-bar .hh-ui-replay-label, .hh-ui-replay-bar .hh-ui-replay-buttons { flex: none; flex-wrap: nowrap; }
+  .hh-ui-replay-bar .hh-ui-replay-progress { min-width: 9rem; }
+  .hh-ui-replay-bar .hh-ui-replay-speed legend { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); }
+  .hh-ui-replay-bar .hh-ui-replay-speed { flex: none; font-size: 0.8125rem; }
+  .hh-ui-replay-head > .hh-ui-practice { flex: 0 1 22rem; flex-wrap: nowrap; padding: 4px 10px; gap: 8px; }
+  .hh-ui-practice [data-practice-toggle] { flex: none; }
+  .hh-ui-practice-numbers { font-size: 0.75rem; line-height: 1.25; }
+  .hh-ui-practice .hh-ui-button { padding: 2px 8px; font-size: 0.8125rem; }
+  .hh-ui-practice-state { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); }
+  .hh-ui-toolbar { padding: 2px 4px; gap: 4px 6px; }
+  .hh-ui-toolbar .hh-ui-needs, .hh-ui-toolbar .hh-ui-toggle, .hh-ui-toolbar .hh-ui-status > summary, .hh-ui-toolbar .hh-ui-mansion-name { font-size: 0.8125rem; padding-block: 1px; }
+  /* Inside a mansion the house's name plate is the toolbar's; the page title stays for assistive technology. */
+  .hh-house:has(.hh-ui) .hh-status[data-compact='true'] { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); }
+  .hh-house:has(.hh-ui) { padding-top: 0; padding-bottom: 0; }
+}
+`, Jr = {
 	idle: "Idle",
 	working: "Working",
 	waiting: "Waiting",
 	blocked: "Blocked",
 	failed: "Failed",
 	done: "Done"
-}, Kr = /* @__PURE__ */ new Set([
+}, Yr = /* @__PURE__ */ new Set([
 	"waiting",
 	"blocked",
 	"failed"
-]), qr = {
+]), Xr = {
 	locked_door: "A door upstream is still sealed.",
 	missing_input: "An input it needs is missing.",
 	stalled: "The run stalled.",
@@ -4383,55 +4372,55 @@ ${Vr} .hh-stage-room[data-stance='holding'] .hh-stage-warden .hh-paint-warden {
 	contract_unavailable: "Its room contract is unavailable.",
 	confinement_unavailable: "Its room limits could not be applied.",
 	crew_usage_limit: "Kiro’s usage limit is reached. Retry once it resets."
-}, Jr = 120;
-function Yr(e, t) {
+}, Zr = 120;
+function Qr(e, t) {
 	let n = e.replace(/[\u0000-\u001f\u007f-\u009f\s]+/g, " ").trim(), r = Array.from(n);
 	return r.length <= t ? n : `${r.slice(0, t - 1).join("").trimEnd()}…`;
 }
-function Xr(e) {
+function $r(e) {
 	if (e === null) return null;
-	let t = Object.hasOwn(qr, e) ? qr[e] : void 0;
+	let t = Object.hasOwn(Xr, e) ? Xr[e] : void 0;
 	if (t !== void 0) return t;
 	if (/^[a-z0-9]+(?:_[a-z0-9]+)+$/.test(e)) {
-		let t = Yr(e.replace(/_/g, " "), Jr);
+		let t = Qr(e.replace(/_/g, " "), Zr);
 		return t.charAt(0).toUpperCase() + t.slice(1);
 	}
-	let n = Yr(e, Jr);
+	let n = Qr(e, Zr);
 	return n === "" ? null : n;
 }
-function Zr(e) {
-	let t = Yr(e.replace(/[-_]+/g, " "), 60);
+function ei(e) {
+	let t = Qr(e.replace(/[-_]+/g, " "), 60);
 	return t === "" ? "Ghost" : t.replace(/(^|\s)(\p{L})/gu, (e, t, n) => t + n.toUpperCase());
 }
-function Qr(e) {
+function ti(e) {
 	return e <= 0 ? null : e === 1 ? "1 approval pending" : `${e} approvals pending`;
 }
-var $r = "house-operator";
-function ei(e, t = {}) {
-	return Array.from(e).filter((e) => e.ghost_id !== $r).map((e) => {
+var ni = "house-operator";
+function ri(e, t = {}) {
+	return Array.from(e).filter((e) => e.ghost_id !== ni).map((e) => {
 		let n = Object.hasOwn(t, e.ghost_id) ? t[e.ghost_id] : void 0;
 		return {
 			key: JSON.stringify([e.mansion_id, e.ghost_id]),
 			ghostId: e.ghost_id,
-			name: n === void 0 || n.trim() === "" ? Zr(e.ghost_id) : n,
+			name: n === void 0 || n.trim() === "" ? ei(e.ghost_id) : n,
 			state: e.state,
-			stateText: Gr[e.state],
+			stateText: Jr[e.state],
 			pendingCount: e.pending_approvals.length,
-			pendingText: Qr(e.pending_approvals.length),
-			reason: Xr(e.reason)
+			pendingText: ti(e.pending_approvals.length),
+			reason: $r(e.reason)
 		};
 	});
 }
-var ti = /* @__PURE__ */ new Set([
+var ii = /* @__PURE__ */ new Set([
 	"hash_mismatch",
 	"hash_link_broken",
 	"mixed_integrity_mode",
 	"duplicate_sequence",
 	"missing_sequence"
 ]);
-function ni(e) {
+function ai(e) {
 	let t = e.line === void 0 ? "" : ` at line ${e.line}`;
-	if (ti.has(e.code)) return `The séance log failed its integrity check${t}. Showing only the records before it.`;
+	if (ii.has(e.code)) return `The séance log failed its integrity check${t}. Showing only the records before it.`;
 	switch (e.code) {
 		case "invalid_record":
 		case "unsupported_schema": return `A séance log record${t} could not be read and was left out.`;
@@ -4439,19 +4428,19 @@ function ni(e) {
 		case "invalid_envelope":
 		case "unknown_session":
 		case "approval_unmatched": return "A Crew event was refused and not recorded.";
-		case "persistence_failed": return /\s/.test(e.safe_detail) ? Yr(e.safe_detail, 160) : "The séance log could not be saved or read. Showing the last confirmed state.";
+		case "persistence_failed": return /\s/.test(e.safe_detail) ? Qr(e.safe_detail, 160) : "The séance log could not be saved or read. Showing the last confirmed state.";
 		default: return "The séance log reported a problem. Showing the last confirmed state.";
 	}
 }
 // src/core/house-registry.ts
-var ri = {
+var oi = {
 	navigation: "navigation",
 	requirements: "requirements",
 	design: "design",
 	"tasks-and-implementation": "tasks and implementation",
 	replay: "replay",
 	review: "review"
-}, ii = [
+}, si = [
 	{
 		id: "foyer",
 		name: "Foyer",
@@ -4530,82 +4519,82 @@ var ri = {
 		workflowPhases: [],
 		ghostRoles: ["medium"]
 	}
-], ai = new Map(ii.map((e) => [e.id, e]));
-function oi(e) {
-	return typeof e == "string" && ai.has(e);
-}
-function si(e) {
-	return ai.get(e);
-}
-function ci(e) {
-	return si(e).order;
-}
-function li(e, t) {
-	return ci(e) - ci(t);
+], ci = new Map(si.map((e) => [e.id, e]));
+function li(e) {
+	return typeof e == "string" && ci.has(e);
 }
 function ui(e) {
-	return ii.filter((t) => t.scope === "mvp" || e !== "hidden");
+	return ci.get(e);
 }
-function di(e, t, n) {
+function di(e) {
+	return ui(e).order;
+}
+function fi(e, t) {
+	return di(e) - di(t);
+}
+function pi(e) {
+	return si.filter((t) => t.scope === "mvp" || e !== "hidden");
+}
+function mi(e, t, n) {
 	if (!n.has(e)) return e;
-	let r = /* @__PURE__ */ new Set([e]), i = ai.get(e)?.neighbors[t];
+	let r = /* @__PURE__ */ new Set([e]), i = ci.get(e)?.neighbors[t];
 	for (; i !== void 0 && !r.has(i);) {
 		if (n.has(i)) return i;
-		r.add(i), i = ai.get(i)?.neighbors[t];
+		r.add(i), i = ci.get(i)?.neighbors[t];
 	}
 	return e;
 }
-function fi(e) {
+function hi(e) {
 	return e === "not_applicable" ? "not applicable" : e;
 }
 // src/core/interruption-policy.ts
-var pi = [
+var gi = [
 	"waiting",
 	"blocked",
 	"failed"
-], mi = 1e4;
-function hi(e) {
-	return pi.includes(e);
+], _i = 1e4;
+function vi(e) {
+	return gi.includes(e);
 }
-var gi = {
+var yi = {
 	seenEventIds: /* @__PURE__ */ new Set(),
 	burst: null
-}, _i = [];
-function vi(e) {
+}, bi = [];
+function xi(e) {
 	return Array.from(e).length;
 }
-function yi(e) {
+function Si(e) {
 	let t = e.replace(/[\u0000-\u001f\u007f-\u009f\s]+/g, " ").trim();
 	if (t === "") return "A ghost";
 	let n = Array.from(t);
 	return n.length <= 60 ? t : `${n.slice(0, 59).join("").trimEnd()}…`;
 }
-var bi = {
+var Ci = {
 	waiting: (e) => `${e} is waiting for your approval.`,
 	blocked: (e) => `${e} is blocked.`,
 	failed: (e) => `${e} failed.`
 };
-function xi(e) {
+function wi(e) {
 	let t = /* @__PURE__ */ new Map();
 	for (let n of e.events) t.set(n.ghostId, n);
-	let n = Array.from(t.values()).sort((e, t) => ci(e.roomId) - ci(t.roomId)), r = n.map((e) => bi[e.state](yi(e.ghostName)));
+	let n = Array.from(t.values()).sort((e, t) => di(e.roomId) - di(t.roomId)), r = n.map((e) => Ci[e.state](Si(e.ghostName)));
 	e.events.length > 1 && r.push(`${e.events.length} events.`);
 	let i = r.join(" ");
-	return vi(i) > 240 && (i = n.length === 1 ? "1 ghost needs attention. Open Needs you for details." : `${n.length} ghosts need attention. Open Needs you for details.`), {
+	return xi(i) > 240 && (i = n.length === 1 ? "1 ghost needs attention. Open Needs you for details." : `${n.length} ghosts need attention. Open Needs you for details.`), {
 		text: i,
 		eventIds: e.events.map((e) => e.eventId)
 	};
 }
-function Si(e) {
+function Ti(e) {
 	return {
 		kind: "summary",
-		...xi(e)
+		...wi(e)
 	};
 }
-function Ci(e, t) {
-	if (t.kind !== "transition" || t.fromState === t.toState || !Kr.has(t.toState) || !hi(t.toState) || e.seenEventIds.has(t.eventId)) return {
+function Ei(e, t) {
+	if (t.kind !== "transition" || t.fromState === t.toState || !Yr.has(t.toState) || !vi(t.toState) || e.seenEventIds.has(t.eventId)) return {
 		state: e,
-		effects: _i
+		effects: bi
 	};
 	let n = e.burst, r = n === null ? t.observedAtMs : Math.max(t.observedAtMs, n.lastAcceptedAtMs), i = {
 		eventId: t.eventId,
@@ -4624,7 +4613,7 @@ function Ci(e, t) {
 				events: [...n.events, i]
 			}
 		},
-		effects: _i
+		effects: bi
 	} : {
 		state: {
 			seenEventIds: a,
@@ -4634,26 +4623,26 @@ function Ci(e, t) {
 				events: [i]
 			}
 		},
-		effects: n === null ? _i : [Si(n)]
+		effects: n === null ? bi : [Ti(n)]
 	};
 }
-function wi(e, t) {
+function Di(e, t) {
 	let n = e.burst;
 	return n === null || t - n.lastAcceptedAtMs < 1e4 ? {
 		state: e,
-		effects: _i
+		effects: bi
 	} : {
 		state: {
 			seenEventIds: e.seenEventIds,
 			burst: null
 		},
-		effects: [Si(n)]
+		effects: [Ti(n)]
 	};
 }
-function Ti(e) {
-	return e.burst === null ? null : e.burst.lastAcceptedAtMs + mi;
+function Oi(e) {
+	return e.burst === null ? null : e.burst.lastAcceptedAtMs + _i;
 }
-function Ei(e, t) {
+function ki(e, t) {
 	return e.ghost_id === "house-operator" || t.roomId === null ? null : {
 		kind: "transition",
 		eventId: e.transition_id,
@@ -4665,13 +4654,13 @@ function Ei(e, t) {
 		observedAtMs: t.observedAtMs
 	};
 }
-function Di(e) {
+function Ai(e) {
 	let t = /* @__PURE__ */ new Map();
 	for (let n of e.transitions) n.from_state !== n.to_state && t.set(n.ghost_id, n);
 	let n = [], r = [];
 	for (let i of e.transitions) {
 		if (e.offered.has(i.transition_id) || (n.push(i.transition_id), t.get(i.ghost_id) !== i) || e.currentState(i.ghost_id) !== i.to_state) continue;
-		let a = Ei(i, {
+		let a = ki(i, {
 			roomId: e.roomOf(i.ghost_id),
 			ghostName: e.nameOf(i.ghost_id),
 			observedAtMs: e.observedAtMs
@@ -4684,14 +4673,14 @@ function Di(e) {
 	};
 }
 // src/adapters/host-effects.ts
-function Oi(e) {
+function ji(e) {
 	let t = kt(), n = jt(), i = Mt(), a = c(e);
 	a.current = e;
-	let o = c(gi), s = c(/* @__PURE__ */ new Set()), l = c(null), u = e.active ? Math.max(0, Math.trunc(e.needsYouCount) || 0) : 0;
+	let o = c(yi), s = c(/* @__PURE__ */ new Set()), l = c(null), u = e.active ? Math.max(0, Math.trunc(e.needsYouCount) || 0) : 0;
 	return r(() => {
 		i(u);
-	}, [u, i]), r(() => () => void i(0), [i]), r(() => (o.current = gi, s.current = /* @__PURE__ */ new Set(), () => {
-		l.current !== null && clearTimeout(l.current), l.current = null, o.current = gi;
+	}, [u, i]), r(() => () => void i(0), [i]), r(() => (o.current = yi, s.current = /* @__PURE__ */ new Set(), () => {
+		l.current !== null && clearTimeout(l.current), l.current = null, o.current = yi;
 	}), [e.mansionId, e.active]), r(() => {
 		if (!e.active) return;
 		let t = () => (a.current.now ?? Date.now)(), r = (e) => {
@@ -4701,13 +4690,13 @@ function Oi(e) {
 			}));
 		}, i = () => {
 			l.current !== null && clearTimeout(l.current), l.current = null;
-			let e = Ti(o.current);
+			let e = Oi(o.current);
 			e !== null && (l.current = setTimeout(() => {
 				l.current = null;
-				let e = wi(o.current, t());
+				let e = Di(o.current, t());
 				o.current = e.state, r(e.effects), i();
 			}, Math.max(e - t(), 0)));
-		}, c = Di({
+		}, c = Ai({
 			transitions: e.transitions,
 			currentState: (t) => e.snapshots.get(t)?.state ?? null,
 			offered: s.current,
@@ -4718,7 +4707,7 @@ function Oi(e) {
 		for (let e of c.offered) s.current.add(e);
 		let u = !1;
 		for (let e of c.events) {
-			let t = Ci(o.current, e);
+			let t = Ei(o.current, e);
 			u ||= t.state !== o.current, o.current = t.state, r(t.effects);
 		}
 		u && i();
@@ -4731,7 +4720,7 @@ function Oi(e) {
 		n
 	]), { theme: t };
 }
-var ki = /* @__PURE__ */ new Set([
+var Mi = /* @__PURE__ */ new Set([
 	"run_started",
 	"ghost_progressed",
 	"message_recorded",
@@ -4751,7 +4740,7 @@ var ki = /* @__PURE__ */ new Set([
 	"decision_recorded",
 	"domain_event_recorded",
 	"source_event_observed"
-]), Ai = ["crew", "house"], ji = [
+]), Ni = ["crew", "house"], Pi = [
 	"invalid_envelope",
 	"unknown_session",
 	"invalid_candidate",
@@ -4767,36 +4756,36 @@ var ki = /* @__PURE__ */ new Set([
 	"approval_unmatched",
 	"history_partial",
 	"persistence_failed"
-], Mi = /^[a-z0-9]+(?:-[a-z0-9]+)*$/, Ni = 262144, Pi = new Set(Ai), Fi = new TextEncoder(), Ii = /^[0-9a-f]{64}$/, Li = class extends Error {
+], Fi = /^[a-z0-9]+(?:-[a-z0-9]+)*$/, Ii = 262144, Li = new Set(Ni), Ri = new TextEncoder(), zi = /^[0-9a-f]{64}$/, Bi = class extends Error {
 	path;
 	safeDetail;
 	constructor(e, t) {
 		super(t), this.path = e, this.safeDetail = t;
 	}
 };
-function H(e, t) {
-	throw new Li(e, t);
+function U(e, t) {
+	throw new Bi(e, t);
 }
-function Ri(e) {
+function Vi(e) {
 	if (typeof e != "object" || !e || Array.isArray(e)) return !1;
 	let t = Object.getPrototypeOf(e);
 	return t === Object.prototype || t === null;
 }
-function zi(e, t) {
-	Ri(e) || H(t, "must be a JSON object");
+function Hi(e, t) {
+	Vi(e) || U(t, "must be a JSON object");
 	let n = Object.getOwnPropertyDescriptors(e);
 	for (let e of Reflect.ownKeys(n)) {
-		typeof e != "string" && H(t, "must contain only JSON object members");
+		typeof e != "string" && U(t, "must contain only JSON object members");
 		let r = n[e];
-		r.enumerable && "value" in r || H(t, "must contain only JSON object members");
+		r.enumerable && "value" in r || U(t, "must contain only JSON object members");
 	}
 	return e;
 }
-function Bi(e, t, n = [], r = "$") {
+function Ui(e, t, n = [], r = "$") {
 	let i = /* @__PURE__ */ new Set([...t, ...n]), a = Object.keys(e);
-	(t.some((t) => !Object.hasOwn(e, t)) || a.some((e) => !i.has(e))) && H(r, "has missing or unexpected fields");
+	(t.some((t) => !Object.hasOwn(e, t)) || a.some((e) => !i.has(e))) && U(r, "has missing or unexpected fields");
 }
-function Vi(e) {
+function Wi(e) {
 	for (let t = 0; t < e.length; t += 1) {
 		let n = e.charCodeAt(t);
 		if (n >= 55296 && n <= 56319) {
@@ -4807,58 +4796,58 @@ function Vi(e) {
 	}
 	return !1;
 }
-function Hi(e) {
-	return Fi.encode(e).byteLength;
+function Gi(e) {
+	return Ri.encode(e).byteLength;
 }
-function Ui(e, t, { maxBytes: n = 160, allowEmpty: r = !1 } = {}) {
-	(typeof e != "string" || Vi(e)) && H(t, "must be a valid Unicode string");
-	let i = Hi(e);
-	return (!r && i === 0 || i > n) && H(t, `must be ${r ? "at most" : "between 1 and"} ${n} UTF-8 bytes`), e;
+function Ki(e, t, { maxBytes: n = 160, allowEmpty: r = !1 } = {}) {
+	(typeof e != "string" || Wi(e)) && U(t, "must be a valid Unicode string");
+	let i = Gi(e);
+	return (!r && i === 0 || i > n) && U(t, `must be ${r ? "at most" : "between 1 and"} ${n} UTF-8 bytes`), e;
 }
-function Wi(e, t, n) {
-	return (typeof e != "number" || !Number.isInteger(e) || e < n) && H(t, `must be an integer greater than or equal to ${n}`), e;
+function qi(e, t, n) {
+	return (typeof e != "number" || !Number.isInteger(e) || e < n) && U(t, `must be an integer greater than or equal to ${n}`), e;
 }
-function Gi(e, t, n) {
-	return n && e === null ? null : Wi(e, t, 0);
+function Ji(e, t, n) {
+	return n && e === null ? null : qi(e, t, 0);
 }
-function Ki(e, t) {
-	let n = Ui(e, t, { maxBytes: 40 });
-	return (n.length > 40 || !Mi.test(n)) && H(t, "must be a kebab-case Mansion_ID of at most 40 characters"), n;
-}
-function qi(e, t) {
-	return typeof e == "string" && ki.has(e) || H(t, "must be a supported Event_Type"), e;
-}
-function Ji(e, t) {
-	return typeof e == "string" && Pi.has(e) || H(t, "must be a supported event origin"), e;
-}
-function Yi(e, t, n) {
-	return typeof e == "string" && e.startsWith(t) && Ii.test(e.slice(t.length)) || H(n, `must be a lowercase ${t.slice(0, -1)} SHA-256 identifier`), e;
+function Yi(e, t) {
+	let n = Ki(e, t, { maxBytes: 40 });
+	return (n.length > 40 || !Fi.test(n)) && U(t, "must be a kebab-case Mansion_ID of at most 40 characters"), n;
 }
 function Xi(e, t) {
-	let n = zi(e, t);
-	return Bi(n, [
+	return typeof e == "string" && Mi.has(e) || U(t, "must be a supported Event_Type"), e;
+}
+function Zi(e, t) {
+	return typeof e == "string" && Li.has(e) || U(t, "must be a supported event origin"), e;
+}
+function Qi(e, t, n) {
+	return typeof e == "string" && e.startsWith(t) && zi.test(e.slice(t.length)) || U(n, `must be a lowercase ${t.slice(0, -1)} SHA-256 identifier`), e;
+}
+function $i(e, t) {
+	let n = Hi(e, t);
+	return Ui(n, [
 		"mansion_id",
 		"ghost_id",
 		"session_slot",
 		"run_id",
 		"run_sequence"
 	], [], t), {
-		mansion_id: Ki(n.mansion_id, `${t}.mansion_id`),
-		ghost_id: Ui(n.ghost_id, `${t}.ghost_id`),
-		session_slot: Ui(n.session_slot, `${t}.session_slot`),
-		run_id: Ui(n.run_id, `${t}.run_id`),
-		run_sequence: Wi(n.run_sequence, `${t}.run_sequence`, 0)
+		mansion_id: Yi(n.mansion_id, `${t}.mansion_id`),
+		ghost_id: Ki(n.ghost_id, `${t}.ghost_id`),
+		session_slot: Ki(n.session_slot, `${t}.session_slot`),
+		run_id: Ki(n.run_id, `${t}.run_id`),
+		run_sequence: qi(n.run_sequence, `${t}.run_sequence`, 0)
 	};
 }
-function Zi(e, t) {
-	return (!Array.isArray(e) || e.length < 1 || e.length > 8) && H(t, "must contain between 1 and 8 identity parts"), e.map((e, n) => Ui(e, `${t}[${n}]`, {
+function ea(e, t) {
+	return (!Array.isArray(e) || e.length < 1 || e.length > 8) && U(t, "must contain between 1 and 8 identity parts"), e.map((e, n) => Ki(e, `${t}[${n}]`, {
 		maxBytes: 512,
 		allowEmpty: !0
 	}));
 }
-function Qi(e, t) {
-	let n = zi(e, t);
-	return Bi(n, [
+function ta(e, t) {
+	let n = Hi(e, t);
+	return Ui(n, [
 		"origin",
 		"source_type",
 		"identity_parts",
@@ -4866,37 +4855,37 @@ function Qi(e, t) {
 		"generation",
 		"source_sequence"
 	], [], t), {
-		origin: Ji(n.origin, `${t}.origin`),
-		source_type: Ui(n.source_type, `${t}.source_type`),
-		identity_parts: Zi(n.identity_parts, `${t}.identity_parts`),
-		revision: Wi(n.revision, `${t}.revision`, 0),
-		generation: Ui(n.generation, `${t}.generation`, { allowEmpty: !0 }),
-		source_sequence: Wi(n.source_sequence, `${t}.source_sequence`, 0)
+		origin: Zi(n.origin, `${t}.origin`),
+		source_type: Ki(n.source_type, `${t}.source_type`),
+		identity_parts: ea(n.identity_parts, `${t}.identity_parts`),
+		revision: qi(n.revision, `${t}.revision`, 0),
+		generation: Ki(n.generation, `${t}.generation`, { allowEmpty: !0 }),
+		source_sequence: qi(n.source_sequence, `${t}.source_sequence`, 0)
 	};
 }
-function $i(e, t) {
-	return Yi(e, "e1:", t);
+function na(e, t) {
+	return Qi(e, "e1:", t);
 }
-function ea(e, t, n) {
-	return (!Array.isArray(e) || e.length > 32) && H(t, "must contain at most 32 causal predecessors"), e.map((e, r) => n(e, `${t}[${r}]`));
+function ra(e, t, n) {
+	return (!Array.isArray(e) || e.length > 32) && U(t, "must contain at most 32 causal predecessors"), e.map((e, r) => n(e, `${t}[${r}]`));
 }
-function ta(e, t, n) {
-	if (e === null || typeof e == "boolean" || typeof e == "string") return typeof e == "string" && Vi(e) && H(t, "must contain valid Unicode strings"), e;
-	if (typeof e == "number") return Number.isFinite(e) || H(t, "must contain only finite numbers"), Object.is(e, -0) ? 0 : e;
+function ia(e, t, n) {
+	if (e === null || typeof e == "boolean" || typeof e == "string") return typeof e == "string" && Wi(e) && U(t, "must contain valid Unicode strings"), e;
+	if (typeof e == "number") return Number.isFinite(e) || U(t, "must contain only finite numbers"), Object.is(e, -0) ? 0 : e;
 	if (Array.isArray(e)) {
-		n.has(e) && H(t, "must not contain a cycle"), n.add(e);
+		n.has(e) && U(t, "must not contain a cycle"), n.add(e);
 		try {
-			return e.map((e) => ta(e, t, n));
+			return e.map((e) => ia(e, t, n));
 		} finally {
 			n.delete(e);
 		}
 	}
-	if (Ri(e)) {
-		n.has(e) && H(t, "must not contain a cycle"), n.add(e);
+	if (Vi(e)) {
+		n.has(e) && U(t, "must not contain a cycle"), n.add(e);
 		try {
-			let r = zi(e, t), i = {};
-			for (let e of Object.keys(r)) Vi(e) && H(t, "must contain valid Unicode object keys"), Object.defineProperty(i, e, {
-				value: ta(r[e], t, n),
+			let r = Hi(e, t), i = {};
+			for (let e of Object.keys(r)) Wi(e) && U(t, "must contain valid Unicode object keys"), Object.defineProperty(i, e, {
+				value: ia(r[e], t, n),
 				enumerable: !0,
 				configurable: !0,
 				writable: !0
@@ -4906,20 +4895,20 @@ function ta(e, t, n) {
 			n.delete(e);
 		}
 	}
-	H(t, "must be JSON-compatible");
+	U(t, "must be JSON-compatible");
 }
-function na(e, t) {
+function aa(e, t) {
 	let n = Array.from(e, (e) => e.codePointAt(0)), r = Array.from(t, (e) => e.codePointAt(0)), i = Math.min(n.length, r.length);
 	for (let e = 0; e < i; e += 1) if (n[e] !== r[e]) return n[e] - r[e];
 	return n.length - r.length;
 }
-function ra(e) {
+function oa(e) {
 	if (e === null || typeof e == "boolean" || typeof e == "number" || typeof e == "string") return JSON.stringify(e);
-	if (Array.isArray(e)) return `[${e.map(ra).join(",")}]`;
+	if (Array.isArray(e)) return `[${e.map(oa).join(",")}]`;
 	let t = e;
-	return `{${Object.keys(t).sort(na).map((e) => `${JSON.stringify(e)}:${ra(t[e])}`).join(",")}}`;
+	return `{${Object.keys(t).sort(aa).map((e) => `${JSON.stringify(e)}:${oa(t[e])}`).join(",")}}`;
 }
-var ia = [
+var sa = [
 	1116352408,
 	1899447441,
 	3049323471,
@@ -4985,11 +4974,11 @@ var ia = [
 	3204031479,
 	3329325298
 ];
-function aa(e, t) {
+function ca(e, t) {
 	return e >>> t | e << 32 - t;
 }
-function oa(e) {
-	let t = Fi.encode(e), n = t.length * 8, r = Math.ceil((t.length + 9) / 64) * 64, i = new Uint8Array(r);
+function la(e) {
+	let t = Ri.encode(e), n = t.length * 8, r = Math.ceil((t.length + 9) / 64) * 64, i = new Uint8Array(r);
 	i.set(t), i[t.length] = 128;
 	let a = new DataView(i.buffer);
 	a.setUint32(r - 8, Math.floor(n / 4294967296), !1), a.setUint32(r - 4, n >>> 0, !1);
@@ -5006,19 +4995,19 @@ function oa(e) {
 	for (let e = 0; e < i.length; e += 64) {
 		for (let t = 0; t < 16; t += 1) s[t] = a.getUint32(e + t * 4, !1);
 		for (let e = 16; e < 64; e += 1) {
-			let t = s[e - 15], n = s[e - 2], r = aa(t, 7) ^ aa(t, 18) ^ t >>> 3, i = aa(n, 17) ^ aa(n, 19) ^ n >>> 10;
+			let t = s[e - 15], n = s[e - 2], r = ca(t, 7) ^ ca(t, 18) ^ t >>> 3, i = ca(n, 17) ^ ca(n, 19) ^ n >>> 10;
 			s[e] = s[e - 16] + r + s[e - 7] + i >>> 0;
 		}
 		let [t, n, r, i, c, l, u, d] = o;
 		for (let e = 0; e < 64; e += 1) {
-			let a = aa(c, 6) ^ aa(c, 11) ^ aa(c, 25), o = c & l ^ ~c & u, f = d + a + o + ia[e] + s[e] >>> 0, p = (aa(t, 2) ^ aa(t, 13) ^ aa(t, 22)) + (t & n ^ t & r ^ n & r) >>> 0;
+			let a = ca(c, 6) ^ ca(c, 11) ^ ca(c, 25), o = c & l ^ ~c & u, f = d + a + o + sa[e] + s[e] >>> 0, p = (ca(t, 2) ^ ca(t, 13) ^ ca(t, 22)) + (t & n ^ t & r ^ n & r) >>> 0;
 			d = u, u = l, l = c, c = i + f >>> 0, i = r, r = n, n = t, t = f + p >>> 0;
 		}
 		o[0] = o[0] + t >>> 0, o[1] = o[1] + n >>> 0, o[2] = o[2] + r >>> 0, o[3] = o[3] + i >>> 0, o[4] = o[4] + c >>> 0, o[5] = o[5] + l >>> 0, o[6] = o[6] + u >>> 0, o[7] = o[7] + d >>> 0;
 	}
 	return Array.from(o, (e) => e.toString(16).padStart(8, "0")).join("");
 }
-function sa(e) {
+function ua(e) {
 	return {
 		mansion_id: e.mansion_id,
 		ghost_id: e.ghost_id,
@@ -5027,7 +5016,7 @@ function sa(e) {
 		run_sequence: e.run_sequence
 	};
 }
-function ca(e) {
+function da(e) {
 	return {
 		origin: e.origin,
 		source_type: e.source_type,
@@ -5037,22 +5026,22 @@ function ca(e) {
 		source_sequence: e.source_sequence
 	};
 }
-function la(e) {
+function fa(e) {
 	return {
 		schema_version: e.schema_version,
 		event_type: e.event_type,
-		scope: sa(e.scope),
-		source: ca(e.source),
+		scope: ua(e.scope),
+		source: da(e.source),
 		caused_by: e.caused_by,
 		occurred_at_ms: e.occurred_at_ms,
 		payload: e.payload
 	};
 }
-function ua(e) {
-	return `e1:${oa(ra([
+function pa(e) {
+	return `e1:${la(oa([
 		e.schema_version,
 		e.event_type,
-		sa(e.scope),
+		ua(e.scope),
 		{
 			origin: e.source.origin,
 			source_type: e.source.source_type,
@@ -5060,12 +5049,12 @@ function ua(e) {
 		}
 	]))}`;
 }
-function da(e) {
-	return `r1:${oa(ra(la(e)))}`;
+function ma(e) {
+	return `r1:${la(oa(fa(e)))}`;
 }
-function fa(e) {
+function ha(e) {
 	let t = {
-		...la(e),
+		...fa(e),
 		event_id: e.event_id,
 		record_id: e.record_id,
 		sequence: e.sequence,
@@ -5073,49 +5062,49 @@ function fa(e) {
 	};
 	return e.prev_hash !== void 0 && e.hash !== void 0 && (t.prev_hash = e.prev_hash, t.hash = e.hash), t;
 }
-function pa(e, t, n) {
-	let r = ta(e, n, /* @__PURE__ */ new Set());
-	return Hi(ra(r)) > 262144 && H(n, `must encode to at most ${Ni} UTF-8 bytes`), t === "domain_event_recorded" ? ma(r, n) : r;
+function ga(e, t, n) {
+	let r = ia(e, n, /* @__PURE__ */ new Set());
+	return Gi(oa(r)) > 262144 && U(n, `must encode to at most ${Ii} UTF-8 bytes`), t === "domain_event_recorded" ? _a(r, n) : r;
 }
-function ma(e, t) {
-	let n = zi(e, t);
-	return Bi(n, [
+function _a(e, t) {
+	let n = Hi(e, t);
+	return Ui(n, [
 		"domain",
 		"kind",
 		"entity_id",
 		"data"
 	], [], t), {
-		domain: Ui(n.domain, `${t}.domain`),
-		kind: Ui(n.kind, `${t}.kind`),
-		entity_id: Ui(n.entity_id, `${t}.entity_id`),
-		data: ta(n.data, `${t}.data`, /* @__PURE__ */ new Set())
+		domain: Ki(n.domain, `${t}.domain`),
+		kind: Ki(n.kind, `${t}.kind`),
+		entity_id: Ki(n.entity_id, `${t}.entity_id`),
+		data: ia(n.data, `${t}.data`, /* @__PURE__ */ new Set())
 	};
 }
-function ha(e, t) {
-	if (e.schema_version !== 1) throw new ga(t);
+function va(e, t) {
+	if (e.schema_version !== 1) throw new ya(t);
 	return 1;
 }
-var ga = class extends Error {
+var ya = class extends Error {
 	path;
 	constructor(e) {
 		super("schema version is not supported"), this.path = e;
 	}
 };
-function _a(e, t) {
+function ba(e, t) {
 	try {
 		return {
 			ok: !0,
 			value: t()
 		};
 	} catch (t) {
-		return t instanceof ga ? {
+		return t instanceof ya ? {
 			ok: !1,
 			diagnostic: {
 				code: "unsupported_schema",
 				path: t.path,
 				safe_detail: "Schema version is not supported."
 			}
-		} : t instanceof Li ? {
+		} : t instanceof Bi ? {
 			ok: !1,
 			diagnostic: {
 				code: e,
@@ -5131,10 +5120,10 @@ function _a(e, t) {
 		};
 	}
 }
-function va(e) {
-	return _a("invalid_record", () => {
-		let t = zi(e, "$");
-		Bi(t, [
+function xa(e) {
+	return ba("invalid_record", () => {
+		let t = Hi(e, "$");
+		Ui(t, [
 			"schema_version",
 			"event_id",
 			"record_id",
@@ -5147,36 +5136,36 @@ function va(e) {
 			"persisted_at_ms",
 			"payload"
 		], ["prev_hash", "hash"]);
-		let n = ha(t, "$.schema_version"), r = qi(t.event_type, "$.event_type"), i = {
+		let n = va(t, "$.schema_version"), r = Xi(t.event_type, "$.event_type"), i = {
 			schema_version: n,
 			event_type: r,
-			scope: Xi(t.scope, "$.scope"),
-			source: Qi(t.source, "$.source"),
-			caused_by: ea(t.caused_by, "$.caused_by", $i),
-			occurred_at_ms: Gi(t.occurred_at_ms, "$.occurred_at_ms", !0),
-			payload: pa(t.payload, r, "$.payload")
-		}, a = Yi(t.event_id, "e1:", "$.event_id"), o = Yi(t.record_id, "r1:", "$.record_id");
-		a !== ua(i) && H("$.event_id", "does not match canonical event content"), o !== da(i) && H("$.record_id", "does not match canonical event content");
+			scope: $i(t.scope, "$.scope"),
+			source: ta(t.source, "$.source"),
+			caused_by: ra(t.caused_by, "$.caused_by", na),
+			occurred_at_ms: Ji(t.occurred_at_ms, "$.occurred_at_ms", !0),
+			payload: ga(t.payload, r, "$.payload")
+		}, a = Qi(t.event_id, "e1:", "$.event_id"), o = Qi(t.record_id, "r1:", "$.record_id");
+		a !== pa(i) && U("$.event_id", "does not match canonical event content"), o !== ma(i) && U("$.record_id", "does not match canonical event content");
 		let s = Object.hasOwn(t, "prev_hash"), c = Object.hasOwn(t, "hash");
-		s !== c && H("$", "prev_hash and hash must be present together");
+		s !== c && U("$", "prev_hash and hash must be present together");
 		let l = {
 			...i,
 			event_id: a,
 			record_id: o,
-			sequence: Wi(t.sequence, "$.sequence", 1),
-			persisted_at_ms: Gi(t.persisted_at_ms, "$.persisted_at_ms", !1)
+			sequence: qi(t.sequence, "$.sequence", 1),
+			persisted_at_ms: Ji(t.persisted_at_ms, "$.persisted_at_ms", !1)
 		};
 		return s && c ? {
 			...l,
-			prev_hash: Yi(t.prev_hash, "h1:", "$.prev_hash"),
-			hash: Yi(t.hash, "h1:", "$.hash")
+			prev_hash: Qi(t.prev_hash, "h1:", "$.prev_hash"),
+			hash: Qi(t.hash, "h1:", "$.hash")
 		} : l;
 	});
 }
-function ya(e) {
-	return `${ra(fa(e))}\n`;
+function Sa(e) {
+	return `${oa(ha(e))}\n`;
 }
-function ba(e, t) {
+function Ca(e, t) {
 	if (!Number.isSafeInteger(t) || t < 1) return {
 		ok: !1,
 		diagnostic: {
@@ -5197,7 +5186,7 @@ function ba(e, t) {
 			}
 		};
 	}
-	let r = va(n);
+	let r = xa(n);
 	return r.ok ? r : {
 		ok: !1,
 		diagnostic: {
@@ -5207,7 +5196,7 @@ function ba(e, t) {
 	};
 }
 // src/core/ghost-state.ts
-var xa = [
+var wa = [
 	"idle",
 	"working",
 	"waiting",
@@ -5215,14 +5204,14 @@ var xa = [
 	"failed",
 	"done"
 ];
-function Sa(e) {
-	return e.caused_by.length + (e.occurred_at_ms === null ? 0 : 1) + (e.source.generation.length === 0 ? 0 : 1) + +(e.source.source_sequence > 0) + Pa(e.payload);
+function Ta(e) {
+	return e.caused_by.length + (e.occurred_at_ms === null ? 0 : 1) + (e.source.generation.length === 0 ? 0 : 1) + +(e.source.source_sequence > 0) + La(e.payload);
 }
-function Ca(e) {
+function Ea(e) {
 	let t = /* @__PURE__ */ new Map();
 	for (let n of e) {
 		let e = t.get(n.record_id);
-		(e === void 0 || za(n, e) < 0) && t.set(n.record_id, n);
+		(e === void 0 || Ha(n, e) < 0) && t.set(n.record_id, n);
 	}
 	let n = /* @__PURE__ */ new Map();
 	for (let e of t.values()) {
@@ -5232,10 +5221,10 @@ function Ca(e) {
 	let r = [], i = /* @__PURE__ */ new Map();
 	for (let [e, t] of n) {
 		let n = t[0];
-		for (let e of t.slice(1)) Ra(e, n) > 0 && (n = e);
+		for (let e of t.slice(1)) Va(e, n) > 0 && (n = e);
 		r.push(n);
-		let a = t.map((e) => e.record_id).sort(U);
-		a.length > 1 && Wa(i, {
+		let a = t.map((e) => e.record_id).sort(W);
+		a.length > 1 && qa(i, {
 			code: "conflicting_variant",
 			event_id: e,
 			related_event_id: null,
@@ -5243,18 +5232,18 @@ function Ca(e) {
 			record_ids: a
 		});
 	}
-	r.sort(Ba);
+	r.sort(Ua);
 	let a = new Map(r.map((e, t) => [e.event_id, t]));
 	return r.forEach((e, t) => {
 		for (let n of new Set(e.caused_by)) {
 			let r = a.get(n);
-			r === void 0 ? Wa(i, {
+			r === void 0 ? qa(i, {
 				code: "missing_predecessor",
 				event_id: e.event_id,
 				related_event_id: n,
 				kind: "missing",
 				record_ids: []
-			}) : r >= t && Wa(i, {
+			}) : r >= t && qa(i, {
 				code: "missing_predecessor",
 				event_id: e.event_id,
 				related_event_id: n,
@@ -5264,58 +5253,58 @@ function Ca(e) {
 		}
 	}), {
 		events: r,
-		diagnostics: Array.from(i.values()).sort(Ua)
+		diagnostics: Array.from(i.values()).sort(Ka)
 	};
 }
-function wa(e, t, n, r) {
-	return `t1:${oa(ra([
+function Da(e, t, n, r) {
+	return `t1:${la(oa([
 		e,
 		t,
 		n,
 		r
 	]))}`;
 }
-function Ta(e) {
-	let t = Ca(e);
+function Oa(e) {
+	let t = Ea(e);
 	return {
 		selection: t,
-		snapshots: Ea(t.events),
-		transitions: Aa(t.events)
+		snapshots: ka(t.events),
+		transitions: Na(t.events)
 	};
 }
-function Ea(e) {
+function ka(e) {
 	let t = /* @__PURE__ */ new Map();
 	for (let n of e) {
 		let e = [n.scope.mansion_id, n.scope.ghost_id];
-		t.set(ra(e), e);
+		t.set(oa(e), e);
 	}
-	return Array.from(t.values()).sort(Ha).map(([t, n]) => ja(e, t, n));
+	return Array.from(t.values()).sort(Ga).map(([t, n]) => Pa(e, t, n));
 }
-function Da(e) {
-	return ra([
+function Aa(e) {
+	return oa([
 		e.run_sequence,
 		e.run_id,
 		e.session_slot
 	]);
 }
-function Oa(e, t) {
+function ja(e, t) {
 	switch (e.latest = t, t.event_type) {
 		case "approval_requested":
-			Ia(t, "mid") !== null && e.requests.push(t);
+			za(t, "mid") !== null && e.requests.push(t);
 			break;
 		case "approval_decided": {
-			let n = Ia(t, "mid");
+			let n = za(t, "mid");
 			n !== null && e.decided.add(n);
 			break;
 		}
 		case "tool_started": {
-			let n = Ia(t, "tool_call_id");
+			let n = za(t, "tool_call_id");
 			n !== null && e.startedTools.add(n);
 			break;
 		}
 		case "tool_finished": {
-			let n = Ia(t, "tool_call_id");
-			n !== null && La(t, "final") === !0 && e.finishedTools.add(n);
+			let n = za(t, "tool_call_id");
+			n !== null && Ba(t, "final") === !0 && e.finishedTools.add(n);
 			break;
 		}
 		case "run_failed":
@@ -5331,16 +5320,16 @@ function Oa(e, t) {
 		case "run_started": e.progress = t;
 	}
 }
-function ka(e, t, n) {
+function Ma(e, t, n) {
 	let r = e.selectedStart;
-	if (r === null) return Ma(t, n);
-	let i = e.runs.get(Da(r.scope)), a = /* @__PURE__ */ new Set();
+	if (r === null) return Fa(t, n);
+	let i = e.runs.get(Aa(r.scope)), a = /* @__PURE__ */ new Set();
 	for (let e of i.requests) {
-		let t = Ia(e, "mid");
+		let t = za(e, "mid");
 		i.decided.has(t) || a.add(t);
 	}
-	let o = Array.from(a).sort(U), s = Array.from(i.startedTools).filter((e) => !i.finishedTools.has(e)).sort(U), c, l;
-	return i.failed === void 0 ? i.blocked === void 0 ? i.completed === void 0 ? o.length > 0 ? (c = "waiting", l = Na(i.requests, (e) => a.has(Ia(e, "mid")))) : (c = "working", l = i.progress) : (c = "done", l = i.completed) : (c = "blocked", l = i.blocked) : (c = "failed", l = i.failed), {
+	let o = Array.from(a).sort(W), s = Array.from(i.startedTools).filter((e) => !i.finishedTools.has(e)).sort(W), c, l;
+	return i.failed === void 0 ? i.blocked === void 0 ? i.completed === void 0 ? o.length > 0 ? (c = "waiting", l = Ia(i.requests, (e) => a.has(za(e, "mid")))) : (c = "working", l = i.progress) : (c = "done", l = i.completed) : (c = "blocked", l = i.blocked) : (c = "failed", l = i.failed), {
 		mansion_id: t,
 		ghost_id: n,
 		run_id: r.scope.run_id,
@@ -5350,29 +5339,29 @@ function ka(e, t, n) {
 		open_tools: s,
 		latest_event_id: i.latest.event_id,
 		latest_sequence: i.latest.sequence,
-		reason: l === void 0 ? null : Ia(l, "reason")
+		reason: l === void 0 ? null : za(l, "reason")
 	};
 }
-function Aa(e) {
+function Na(e) {
 	let t = /* @__PURE__ */ new Map(), n = [];
 	for (let r of e) {
-		let e = r.scope.mansion_id, i = r.scope.ghost_id, a = ra([e, i]), o = t.get(a);
+		let e = r.scope.mansion_id, i = r.scope.ghost_id, a = oa([e, i]), o = t.get(a);
 		o === void 0 && (o = {
 			runs: /* @__PURE__ */ new Map(),
 			selectedStart: null,
-			snapshot: Ma(e, i)
+			snapshot: Fa(e, i)
 		}, t.set(a, o));
-		let s = Da(r.scope), c = o.runs.get(s);
+		let s = Aa(r.scope), c = o.runs.get(s);
 		c === void 0 && (c = {
 			requests: [],
 			decided: /* @__PURE__ */ new Set(),
 			startedTools: /* @__PURE__ */ new Set(),
 			finishedTools: /* @__PURE__ */ new Set(),
 			latest: r
-		}, o.runs.set(s, c)), Oa(c, r), r.event_type === "run_started" && (o.selectedStart === null || Va(r, o.selectedStart) > 0) && (o.selectedStart = r);
-		let l = o.snapshot, u = ka(o, e, i);
-		o.snapshot = u, Ga(l, u) || n.push({
-			transition_id: wa(r.event_id, e, i, u.state),
+		}, o.runs.set(s, c)), ja(c, r), r.event_type === "run_started" && (o.selectedStart === null || Wa(r, o.selectedStart) > 0) && (o.selectedStart = r);
+		let l = o.snapshot, u = Ma(o, e, i);
+		o.snapshot = u, Ja(l, u) || n.push({
+			transition_id: Da(r.event_id, e, i, u.state),
 			causing_event_id: r.event_id,
 			causing_sequence: r.sequence,
 			mansion_id: e,
@@ -5383,13 +5372,13 @@ function Aa(e) {
 	}
 	return n;
 }
-function ja(e, t, n) {
+function Pa(e, t, n) {
 	let r = e.filter((e) => e.scope.mansion_id === t && e.scope.ghost_id === n), i = r.filter((e) => e.event_type === "run_started");
-	if (i.length === 0) return Ma(t, n);
+	if (i.length === 0) return Fa(t, n);
 	let a = i[0];
-	for (let e of i.slice(1)) Va(e, a) > 0 && (a = e);
-	let o = r.filter((e) => e.scope.run_sequence === a.scope.run_sequence && e.scope.run_id === a.scope.run_id && e.scope.session_slot === a.scope.session_slot), s = new Set(o.filter((e) => e.event_type === "approval_requested").map((e) => Ia(e, "mid")).filter((e) => e !== null)), c = new Set(o.filter((e) => e.event_type === "approval_decided").map((e) => Ia(e, "mid")).filter((e) => e !== null)), l = Array.from(s).filter((e) => !c.has(e)).sort(U), u = new Set(o.filter((e) => e.event_type === "tool_started").map((e) => Ia(e, "tool_call_id")).filter((e) => e !== null)), d = new Set(o.filter((e) => e.event_type === "tool_finished" && La(e, "final") === !0).map((e) => Ia(e, "tool_call_id")).filter((e) => e !== null)), f = Array.from(u).filter((e) => !d.has(e)).sort(U), p = o.filter((e) => e.event_type === "run_failed"), m = o.filter((e) => e.event_type === "run_blocked"), h = o.filter((e) => e.event_type === "run_completed"), g, _;
-	p.length > 0 ? (g = "failed", _ = p.at(-1)) : m.length > 0 ? (g = "blocked", _ = m.at(-1)) : h.length > 0 ? (g = "done", _ = h.at(-1)) : l.length > 0 ? (g = "waiting", _ = Na(o, (e) => e.event_type === "approval_requested" && l.includes(Ia(e, "mid") ?? ""))) : (g = "working", _ = Na(o, (e) => e.event_type === "ghost_progressed" || e.event_type === "run_started"));
+	for (let e of i.slice(1)) Wa(e, a) > 0 && (a = e);
+	let o = r.filter((e) => e.scope.run_sequence === a.scope.run_sequence && e.scope.run_id === a.scope.run_id && e.scope.session_slot === a.scope.session_slot), s = new Set(o.filter((e) => e.event_type === "approval_requested").map((e) => za(e, "mid")).filter((e) => e !== null)), c = new Set(o.filter((e) => e.event_type === "approval_decided").map((e) => za(e, "mid")).filter((e) => e !== null)), l = Array.from(s).filter((e) => !c.has(e)).sort(W), u = new Set(o.filter((e) => e.event_type === "tool_started").map((e) => za(e, "tool_call_id")).filter((e) => e !== null)), d = new Set(o.filter((e) => e.event_type === "tool_finished" && Ba(e, "final") === !0).map((e) => za(e, "tool_call_id")).filter((e) => e !== null)), f = Array.from(u).filter((e) => !d.has(e)).sort(W), p = o.filter((e) => e.event_type === "run_failed"), m = o.filter((e) => e.event_type === "run_blocked"), h = o.filter((e) => e.event_type === "run_completed"), g, _;
+	p.length > 0 ? (g = "failed", _ = p.at(-1)) : m.length > 0 ? (g = "blocked", _ = m.at(-1)) : h.length > 0 ? (g = "done", _ = h.at(-1)) : l.length > 0 ? (g = "waiting", _ = Ia(o, (e) => e.event_type === "approval_requested" && l.includes(za(e, "mid") ?? ""))) : (g = "working", _ = Ia(o, (e) => e.event_type === "ghost_progressed" || e.event_type === "run_started"));
 	let v = o.at(-1);
 	return {
 		mansion_id: t,
@@ -5401,10 +5390,10 @@ function ja(e, t, n) {
 		open_tools: f,
 		latest_event_id: v.event_id,
 		latest_sequence: v.sequence,
-		reason: _ === void 0 ? null : Ia(_, "reason")
+		reason: _ === void 0 ? null : za(_, "reason")
 	};
 }
-function Ma(e, t) {
+function Fa(e, t) {
 	return {
 		mansion_id: e,
 		ghost_id: t,
@@ -5418,74 +5407,74 @@ function Ma(e, t) {
 		reason: null
 	};
 }
-function Na(e, t) {
+function Ia(e, t) {
 	for (let n = e.length - 1; n >= 0; --n) {
 		let r = e[n];
 		if (t(r)) return r;
 	}
 }
-function Pa(e) {
-	return e === null ? 0 : typeof e == "string" ? e.length === 0 ? 0 : 1 : typeof e == "boolean" || typeof e == "number" ? 1 : Array.isArray(e) ? e.reduce((e, t) => e + Pa(t), 0) : Object.values(e).reduce((e, t) => e + Pa(t), 0);
+function La(e) {
+	return e === null ? 0 : typeof e == "string" ? e.length === 0 ? 0 : 1 : typeof e == "boolean" || typeof e == "number" ? 1 : Array.isArray(e) ? e.reduce((e, t) => e + La(t), 0) : Object.values(e).reduce((e, t) => e + La(t), 0);
 }
-function Fa(e) {
+function Ra(e) {
 	return e.payload === null || Array.isArray(e.payload) || typeof e.payload != "object" ? null : e.payload;
 }
-function Ia(e, t) {
-	let n = Fa(e)?.[t];
+function za(e, t) {
+	let n = Ra(e)?.[t];
 	return typeof n == "string" && n.length > 0 ? n : null;
 }
-function La(e, t) {
-	let n = Fa(e)?.[t];
+function Ba(e, t) {
+	let n = Ra(e)?.[t];
 	return typeof n == "boolean" ? n : null;
 }
-function Ra(e, t) {
-	if (e.source.revision !== t.source.revision) return e.source.revision - t.source.revision;
-	let n = Sa(e) - Sa(t);
-	return n === 0 ? U(e.record_id, t.record_id) : n;
-}
-function za(e, t) {
-	if (e.sequence !== t.sequence) return e.sequence - t.sequence;
-	let n = U(e.event_id, t.event_id);
-	return n === 0 ? U(ya(e), ya(t)) : n;
-}
-function Ba(e, t) {
-	return e.sequence === t.sequence ? U(e.event_id, t.event_id) : e.sequence - t.sequence;
-}
 function Va(e, t) {
-	if (e.scope.run_sequence !== t.scope.run_sequence) return e.scope.run_sequence - t.scope.run_sequence;
-	let n = U(e.scope.run_id, t.scope.run_id);
-	return n === 0 ? e.sequence === t.sequence ? U(e.event_id, t.event_id) : e.sequence - t.sequence : n;
+	if (e.source.revision !== t.source.revision) return e.source.revision - t.source.revision;
+	let n = Ta(e) - Ta(t);
+	return n === 0 ? W(e.record_id, t.record_id) : n;
 }
 function Ha(e, t) {
-	let n = U(e[0], t[0]);
-	return n === 0 ? U(e[1], t[1]) : n;
+	if (e.sequence !== t.sequence) return e.sequence - t.sequence;
+	let n = W(e.event_id, t.event_id);
+	return n === 0 ? W(Sa(e), Sa(t)) : n;
 }
 function Ua(e, t) {
-	return [
-		U(e.code, t.code),
-		U(e.event_id, t.event_id),
-		U(e.related_event_id ?? "", t.related_event_id ?? ""),
-		U(e.kind, t.kind),
-		U(e.record_ids.join(","), t.record_ids.join(","))
-	].find((e) => e !== 0) ?? 0;
+	return e.sequence === t.sequence ? W(e.event_id, t.event_id) : e.sequence - t.sequence;
 }
 function Wa(e, t) {
-	e.set(ra(t), t);
+	if (e.scope.run_sequence !== t.scope.run_sequence) return e.scope.run_sequence - t.scope.run_sequence;
+	let n = W(e.scope.run_id, t.scope.run_id);
+	return n === 0 ? e.sequence === t.sequence ? W(e.event_id, t.event_id) : e.sequence - t.sequence : n;
 }
 function Ga(e, t) {
-	return ra(e) === ra(t);
+	let n = W(e[0], t[0]);
+	return n === 0 ? W(e[1], t[1]) : n;
 }
-function U(e, t) {
+function Ka(e, t) {
+	return [
+		W(e.code, t.code),
+		W(e.event_id, t.event_id),
+		W(e.related_event_id ?? "", t.related_event_id ?? ""),
+		W(e.kind, t.kind),
+		W(e.record_ids.join(","), t.record_ids.join(","))
+	].find((e) => e !== 0) ?? 0;
+}
+function qa(e, t) {
+	e.set(oa(t), t);
+}
+function Ja(e, t) {
+	return oa(e) === oa(t);
+}
+function W(e, t) {
 	let n = Array.from(e, (e) => e.codePointAt(0)), r = Array.from(t, (e) => e.codePointAt(0)), i = Math.min(n.length, r.length);
 	for (let e = 0; e < i; e += 1) if (n[e] !== r[e]) return n[e] - r[e];
 	return n.length - r.length;
 }
-var W = [
+var G = [
 	"requirements",
 	"design",
 	"tasks",
 	"implementation"
-], Ka = [
+], Ya = [
 	"not_started",
 	"ready",
 	"starting",
@@ -5495,17 +5484,17 @@ var W = [
 	"approved",
 	"failed",
 	"done"
-], qa = [
+], Xa = [
 	"sealed",
 	"waiting",
 	"open",
 	"rejected"
-], Ja = [
+], Za = [
 	"pending",
 	"approved",
 	"rejected",
 	"superseded"
-], Ya = [
+], Qa = [
 	"pending",
 	"approved",
 	"rejected",
@@ -5513,15 +5502,15 @@ var W = [
 	"succeeded",
 	"failed",
 	"superseded"
-], Xa = [
+], $a = [
 	"valid",
 	"corrupt",
 	"uncertain"
-], Za = [
+], eo = [
 	"delete_path",
 	"run_command",
 	"git_write"
-], Qa = [
+], to = [
 	"list",
 	"read",
 	"write",
@@ -5529,93 +5518,93 @@ var W = [
 	"command_read",
 	"command_write",
 	"git_write"
-], $a = ["approved", "rejected"], eo = ["operator", "crew"], to = 1024, no = ["[redacted]", "[home]/"], ro = class extends Error {
+], no = ["approved", "rejected"], ro = ["operator", "crew"], io = 1024, ao = ["[redacted]", "[home]/"], oo = class extends Error {
 	path;
 	constructor(e) {
 		super("refused"), this.path = e;
 	}
 };
-function G(e) {
-	throw new ro(e);
+function K(e) {
+	throw new oo(e);
 }
-function io(e) {
+function so(e) {
 	return typeof e == "object" && !!e && !Array.isArray(e);
 }
-function ao(e, t, n, r = []) {
-	io(e) || G(t);
-	for (let i of Object.keys(e)) !n.includes(i) && !r.includes(i) && G(t);
-	for (let r of n) Object.hasOwn(e, r) || G(`${t}.${r}`);
+function co(e, t, n, r = []) {
+	so(e) || K(t);
+	for (let i of Object.keys(e)) !n.includes(i) && !r.includes(i) && K(t);
+	for (let r of n) Object.hasOwn(e, r) || K(`${t}.${r}`);
 	return e;
 }
-function oo(e, t, n) {
-	return typeof e == "string" && t.includes(e) || G(n), e;
+function lo(e, t, n) {
+	return typeof e == "string" && t.includes(e) || K(n), e;
 }
-function so(e, t, n = 0) {
-	return (typeof e != "number" || !Number.isSafeInteger(e) || e < n) && G(t), e;
+function uo(e, t, n = 0) {
+	return (typeof e != "number" || !Number.isSafeInteger(e) || e < n) && K(t), e;
 }
-var co = /[\u0000-\u001f\u007f-\u009f\u2028\u2029]/;
-function lo(e, t, n = 160) {
-	return (typeof e != "string" || e.length === 0 || e.length > n || co.test(e)) && G(t), e;
-}
-function uo(e, t) {
-	return typeof e == "string" && /^[0-9a-f]{64}$/.test(e) || G(t), e;
-}
-function fo(e, t, n = !1) {
-	if (n && e === "") return "";
-	let r = lo(e, t, to);
-	(r.startsWith("/") || r.includes("\\")) && G(t);
-	for (let e of r.split("/")) (e === "" || e === "." || e === "..") && G(t);
-	return r;
-}
-function po(e, t) {
-	return (typeof e != "string" || e.length > 40 || !Mi.test(e)) && G(t), e;
+var fo = /[\u0000-\u001f\u007f-\u009f\u2028\u2029]/;
+function po(e, t, n = 160) {
+	return (typeof e != "string" || e.length === 0 || e.length > n || fo.test(e)) && K(t), e;
 }
 function mo(e, t) {
-	let n = ao(e, t, [
+	return typeof e == "string" && /^[0-9a-f]{64}$/.test(e) || K(t), e;
+}
+function ho(e, t, n = !1) {
+	if (n && e === "") return "";
+	let r = po(e, t, io);
+	(r.startsWith("/") || r.includes("\\")) && K(t);
+	for (let e of r.split("/")) (e === "" || e === "." || e === "..") && K(t);
+	return r;
+}
+function go(e, t) {
+	return (typeof e != "string" || e.length > 40 || !Fi.test(e)) && K(t), e;
+}
+function _o(e, t) {
+	let n = co(e, t, [
 		"revision",
 		"sha256",
 		"size_bytes"
 	]);
 	return {
-		revision: so(n.revision, `${t}.revision`, 1),
-		sha256: uo(n.sha256, `${t}.sha256`),
-		sizeBytes: so(n.size_bytes, `${t}.size_bytes`)
+		revision: uo(n.revision, `${t}.revision`, 1),
+		sha256: mo(n.sha256, `${t}.sha256`),
+		sizeBytes: uo(n.size_bytes, `${t}.size_bytes`)
 	};
 }
-function ho(e, t) {
+function vo(e, t) {
 	if (e === null) return null;
-	let n = ao(e, t, [
+	let n = co(e, t, [
 		"outcome",
 		"actor",
 		"event_id",
 		"sequence"
 	]), r = n.event_id;
-	return typeof r == "string" && /^e1:[0-9a-f]{64}$/.test(r) || G(`${t}.event_id`), {
-		outcome: oo(n.outcome, $a, `${t}.outcome`),
-		actor: oo(n.actor, eo, `${t}.actor`),
+	return typeof r == "string" && /^e1:[0-9a-f]{64}$/.test(r) || K(`${t}.event_id`), {
+		outcome: lo(n.outcome, no, `${t}.outcome`),
+		actor: lo(n.actor, ro, `${t}.actor`),
 		eventId: r,
-		sequence: so(n.sequence, `${t}.sequence`, 1)
+		sequence: uo(n.sequence, `${t}.sequence`, 1)
 	};
 }
-function go(e, t, n, r) {
+function yo(e, t, n, r) {
 	if (e === "pending") return t === null;
 	if (e === "superseded") return t === null || r && t.outcome === "approved";
 	let i = Object.hasOwn(n, e) ? n[e] : void 0;
 	return i !== void 0 && t !== null && t.outcome === i;
 }
-var _o = {
+var bo = {
 	approved: "approved",
 	rejected: "rejected"
-}, vo = {
+}, xo = {
 	approved: "approved",
 	rejected: "rejected",
 	consumed: "approved",
 	succeeded: "approved",
 	failed: "approved"
 };
-function yo(e, t, n) {
+function So(e, t, n) {
 	if (e === null) return null;
-	let r = ao(e, t, [
+	let r = co(e, t, [
 		"proposal_id",
 		"phase",
 		"document_path",
@@ -5624,19 +5613,19 @@ function yo(e, t, n) {
 		"created_sequence",
 		"decision"
 	]);
-	r.phase !== n && G(`${t}.phase`);
-	let i = oo(r.status, Ja, `${t}.status`), a = ho(r.decision, `${t}.decision`);
-	return go(i, a, _o, !1) || G(`${t}.decision`), {
-		proposalId: lo(r.proposal_id, `${t}.proposal_id`),
+	r.phase !== n && K(`${t}.phase`);
+	let i = lo(r.status, Za, `${t}.status`), a = vo(r.decision, `${t}.decision`);
+	return yo(i, a, bo, !1) || K(`${t}.decision`), {
+		proposalId: po(r.proposal_id, `${t}.proposal_id`),
 		phase: n,
-		documentPath: fo(r.document_path, `${t}.document_path`),
-		artifactRevision: mo(r.artifact_revision, `${t}.artifact_revision`),
+		documentPath: ho(r.document_path, `${t}.document_path`),
+		artifactRevision: _o(r.artifact_revision, `${t}.artifact_revision`),
 		status: i,
-		createdSequence: so(r.created_sequence, `${t}.created_sequence`, 1),
+		createdSequence: uo(r.created_sequence, `${t}.created_sequence`, 1),
 		decision: a
 	};
 }
-function bo(e, t) {
+function Co(e, t) {
 	switch (e) {
 		case "waiting": return t?.status === "pending";
 		case "open": return t?.status === "approved";
@@ -5644,20 +5633,20 @@ function bo(e, t) {
 		case "sealed": return t === null || t.status === "superseded" || t.status === "rejected";
 	}
 }
-function xo(e, t, n) {
-	let r = ao(e, t, [
+function wo(e, t, n) {
+	let r = co(e, t, [
 		"phase",
 		"status",
 		"ghost_ids",
 		"door"
 	]);
-	r.phase !== n && G(`${t}.phase`), (!Array.isArray(r.ghost_ids) || r.ghost_ids.length > 16) && G(`${t}.ghost_ids`);
-	let i = r.ghost_ids.map((e, n) => lo(e, `${t}.ghost_ids[${n}]`));
-	new Set(i).size !== i.length && G(`${t}.ghost_ids`);
-	let a = ao(r.door, `${t}.door`, ["status", "proposal"]), o = oo(a.status, qa, `${t}.door.status`), s = yo(a.proposal, `${t}.door.proposal`, n);
-	return bo(o, s) || G(`${t}.door`), {
+	r.phase !== n && K(`${t}.phase`), (!Array.isArray(r.ghost_ids) || r.ghost_ids.length > 16) && K(`${t}.ghost_ids`);
+	let i = r.ghost_ids.map((e, n) => po(e, `${t}.ghost_ids[${n}]`));
+	new Set(i).size !== i.length && K(`${t}.ghost_ids`);
+	let a = co(r.door, `${t}.door`, ["status", "proposal"]), o = lo(a.status, Xa, `${t}.door.status`), s = So(a.proposal, `${t}.door.proposal`, n);
+	return Co(o, s) || K(`${t}.door`), {
 		phase: n,
-		status: oo(r.status, Ka, `${t}.status`),
+		status: lo(r.status, Ya, `${t}.status`),
 		ghostIds: i,
 		door: {
 			status: o,
@@ -5665,15 +5654,15 @@ function xo(e, t, n) {
 		}
 	};
 }
-function So(e) {
-	return no.some((t) => e.includes(t));
+function To(e) {
+	return ao.some((t) => e.includes(t));
 }
-function Co(e, t = 0) {
-	return t > 8 ? !1 : e === null || typeof e == "boolean" ? !0 : typeof e == "number" ? Number.isSafeInteger(e) : typeof e == "string" ? !co.test(e) && !So(e) : Array.isArray(e) ? e.every((e) => Co(e, t + 1)) : io(e) ? Object.entries(e).every(([e, n]) => e !== "" && !co.test(e) && !So(e) && Co(n, t + 1)) : !1;
+function Eo(e, t = 0) {
+	return t > 8 ? !1 : e === null || typeof e == "boolean" ? !0 : typeof e == "number" ? Number.isSafeInteger(e) : typeof e == "string" ? !fo.test(e) && !To(e) : Array.isArray(e) ? e.every((e) => Eo(e, t + 1)) : so(e) ? Object.entries(e).every(([e, n]) => e !== "" && !fo.test(e) && !To(e) && Eo(n, t + 1)) : !1;
 }
-function wo(e) {
+function Do(e) {
 	try {
-		let t = ao(e, "$", [
+		let t = co(e, "$", [
 			"schema_version",
 			"mansion_id",
 			"session_slot",
@@ -5683,35 +5672,35 @@ function wo(e) {
 			"arguments",
 			"path_intents"
 		]);
-		if (t.schema_version !== 1 || !io(t.arguments) || !Co(t.arguments) || JSON.stringify(t.arguments).length > 16384 || !Array.isArray(t.path_intents) || t.path_intents.length > 64 || [
+		if (t.schema_version !== 1 || !so(t.arguments) || !Eo(t.arguments) || JSON.stringify(t.arguments).length > 16384 || !Array.isArray(t.path_intents) || t.path_intents.length > 64 || [
 			t.session_slot,
 			t.room,
 			t.working_directory
-		].some((e) => typeof e == "string" && So(e))) return null;
+		].some((e) => typeof e == "string" && To(e))) return null;
 		let n = t.path_intents.map((e, t) => {
-			let n = ao(e, `\$[${t}]`, ["path", "access"]);
-			return typeof n.path == "string" && So(n.path) && G("$"), {
-				path: fo(n.path, "$"),
-				access: oo(n.access, Qa, "$")
+			let n = co(e, `\$[${t}]`, ["path", "access"]);
+			return typeof n.path == "string" && To(n.path) && K("$"), {
+				path: ho(n.path, "$"),
+				access: lo(n.access, to, "$")
 			};
 		});
 		return {
 			schemaVersion: 1,
-			mansionId: po(t.mansion_id, "$"),
-			sessionSlot: lo(t.session_slot, "$"),
-			room: lo(t.room, "$"),
-			kind: oo(t.kind, Za, "$"),
-			workingDirectory: fo(t.working_directory, "$", !0),
+			mansionId: go(t.mansion_id, "$"),
+			sessionSlot: po(t.session_slot, "$"),
+			room: po(t.room, "$"),
+			kind: lo(t.kind, eo, "$"),
+			workingDirectory: ho(t.working_directory, "$", !0),
 			arguments: t.arguments,
 			pathIntents: n
 		};
 	} catch (e) {
-		if (e instanceof ro) return null;
+		if (e instanceof oo) return null;
 		throw e;
 	}
 }
-function To(e, t, n) {
-	let r = ao(e, t, [
+function Oo(e, t, n) {
+	let r = co(e, t, [
 		"proposal_id",
 		"ghost_id",
 		"session_slot",
@@ -5721,23 +5710,23 @@ function To(e, t, n) {
 		"descriptor",
 		"created_sequence",
 		"decision"
-	]), i = oo(r.status, Ya, `${t}.status`), a = ho(r.decision, `${t}.decision`);
-	go(i, a, vo, !0) || G(`${t}.decision`);
-	let o = lo(r.session_slot, `${t}.session_slot`), s = r.room === null ? null : lo(r.room, `${t}.room`), c = r.descriptor === null ? null : wo(r.descriptor);
+	]), i = lo(r.status, Qa, `${t}.status`), a = vo(r.decision, `${t}.decision`);
+	yo(i, a, xo, !0) || K(`${t}.decision`);
+	let o = po(r.session_slot, `${t}.session_slot`), s = r.room === null ? null : po(r.room, `${t}.room`), c = r.descriptor === null ? null : Do(r.descriptor);
 	return c !== null && (c.mansionId !== n || c.sessionSlot !== o || c.room !== s) && (c = null), {
-		proposalId: lo(r.proposal_id, `${t}.proposal_id`),
-		ghostId: lo(r.ghost_id, `${t}.ghost_id`),
+		proposalId: po(r.proposal_id, `${t}.proposal_id`),
+		ghostId: po(r.ghost_id, `${t}.ghost_id`),
 		sessionSlot: o,
 		room: s,
 		status: i,
-		actionDigest: uo(r.action_digest, `${t}.action_digest`),
+		actionDigest: mo(r.action_digest, `${t}.action_digest`),
 		descriptor: c,
-		createdSequence: so(r.created_sequence, `${t}.created_sequence`, 1),
+		createdSequence: uo(r.created_sequence, `${t}.created_sequence`, 1),
 		decision: a
 	};
 }
-function Eo(e, t) {
-	let n = ao(e, t, [
+function ko(e, t) {
+	let n = co(e, t, [
 		"slot",
 		"mid",
 		"requested_sequence",
@@ -5746,20 +5735,20 @@ function Eo(e, t) {
 		"proposal_id"
 	]);
 	return {
-		slot: lo(n.slot, `${t}.slot`),
-		mid: lo(n.mid, `${t}.mid`),
-		requestedSequence: so(n.requested_sequence, `${t}.requested_sequence`, 1),
-		toolName: n.tool_name === null ? null : lo(n.tool_name, `${t}.tool_name`),
-		actionDigest: n.action_digest === null ? null : uo(n.action_digest, `${t}.action_digest`),
-		proposalId: n.proposal_id === null ? null : lo(n.proposal_id, `${t}.proposal_id`)
+		slot: po(n.slot, `${t}.slot`),
+		mid: po(n.mid, `${t}.mid`),
+		requestedSequence: uo(n.requested_sequence, `${t}.requested_sequence`, 1),
+		toolName: n.tool_name === null ? null : po(n.tool_name, `${t}.tool_name`),
+		actionDigest: n.action_digest === null ? null : mo(n.action_digest, `${t}.action_digest`),
+		proposalId: n.proposal_id === null ? null : po(n.proposal_id, `${t}.proposal_id`)
 	};
 }
-function Do(e, t) {
-	new Set(e).size !== e.length && G(t);
+function Ao(e, t) {
+	new Set(e).size !== e.length && K(t);
 }
-function Oo(e, t) {
+function jo(e, t) {
 	try {
-		let n = ao(e, "$", [
+		let n = co(e, "$", [
 			"schema_version",
 			"mansion_id",
 			"version",
@@ -5769,27 +5758,27 @@ function Oo(e, t) {
 			"risky_proposals",
 			"pending_permissions"
 		], ["read_only"]);
-		n.read_only !== void 0 && typeof n.read_only != "boolean" && G("$.read_only"), n.schema_version !== 1 && G("$.schema_version");
-		let r = po(n.mansion_id, "$.mansion_id");
-		t !== void 0 && r !== t && G("$.mansion_id");
-		let i = so(n.version, "$.version");
-		Array.isArray(n.phases) && n.phases.length === W.length || G("$.phases");
-		let a = W.map((e, t) => xo(n.phases[t], `$.phases[${t}]`, e));
-		(!Array.isArray(n.risky_proposals) || n.risky_proposals.length > 200) && G("$.risky_proposals");
-		let o = n.risky_proposals.map((e, t) => To(e, `$.risky_proposals[${t}]`, r));
-		Do(o.map((e) => e.proposalId), "$.risky_proposals"), (!Array.isArray(n.pending_permissions) || n.pending_permissions.length > 200) && G("$.pending_permissions");
-		let s = n.pending_permissions.map((e, t) => Eo(e, `$.pending_permissions[${t}]`));
-		return Do(s.map((e) => JSON.stringify([e.slot, e.mid])), "$.pending_permissions"), [
+		n.read_only !== void 0 && typeof n.read_only != "boolean" && K("$.read_only"), n.schema_version !== 1 && K("$.schema_version");
+		let r = go(n.mansion_id, "$.mansion_id");
+		t !== void 0 && r !== t && K("$.mansion_id");
+		let i = uo(n.version, "$.version");
+		Array.isArray(n.phases) && n.phases.length === G.length || K("$.phases");
+		let a = G.map((e, t) => wo(n.phases[t], `$.phases[${t}]`, e));
+		(!Array.isArray(n.risky_proposals) || n.risky_proposals.length > 200) && K("$.risky_proposals");
+		let o = n.risky_proposals.map((e, t) => Oo(e, `$.risky_proposals[${t}]`, r));
+		Ao(o.map((e) => e.proposalId), "$.risky_proposals"), (!Array.isArray(n.pending_permissions) || n.pending_permissions.length > 200) && K("$.pending_permissions");
+		let s = n.pending_permissions.map((e, t) => ko(e, `$.pending_permissions[${t}]`));
+		return Ao(s.map((e) => JSON.stringify([e.slot, e.mid])), "$.pending_permissions"), [
 			...o.flatMap((e) => [e.createdSequence, e.decision?.sequence ?? 0]),
 			...a.flatMap((e) => [e.door.proposal?.createdSequence ?? 0, e.door.proposal?.decision?.sequence ?? 0]),
 			...s.map((e) => e.requestedSequence)
-		].some((e) => e > i) && G("$.version"), {
+		].some((e) => e > i) && K("$.version"), {
 			ok: !0,
 			projection: {
 				mansionId: r,
 				version: i,
-				integrity: oo(n.integrity, Xa, "$.integrity"),
-				waitingCount: so(n.waiting_count, "$.waiting_count"),
+				integrity: lo(n.integrity, $a, "$.integrity"),
+				waitingCount: uo(n.waiting_count, "$.waiting_count"),
 				phases: a,
 				riskyProposals: o,
 				pendingPermissions: s,
@@ -5797,38 +5786,38 @@ function Oo(e, t) {
 			}
 		};
 	} catch (e) {
-		if (e instanceof ro) return {
+		if (e instanceof oo) return {
 			ok: !1,
 			path: e.path
 		};
 		throw e;
 	}
 }
-function ko(e) {
+function Mo(e) {
 	return {
 		revision: e.revision,
 		sha256: e.sha256,
 		size_bytes: e.sizeBytes
 	};
 }
-var Ao = [
+var No = [
 	"study",
 	"drafting-room",
 	"workshop"
 ].map((e) => {
-	let t = si(e);
+	let t = ui(e);
 	return {
 		id: e,
 		name: t.name,
 		phases: t.workflowPhases,
 		roles: t.ghostRoles
 	};
-}), jo = {
+}), Po = {
 	requirements: "Requirements",
 	design: "Design",
 	tasks: "Tasks",
 	implementation: "Implementation"
-}, Mo = {
+}, Fo = {
 	not_started: "Not started",
 	ready: "Ready to start",
 	starting: "Starting",
@@ -5838,39 +5827,39 @@ var Ao = [
 	approved: "Approved",
 	failed: "Failed to start",
 	done: "Done"
-}, No = {
+}, Io = {
 	sealed: "Sealed door",
 	waiting: "Door waiting for your decision",
 	open: "Open door",
 	rejected: "Door kept shut"
 };
-function Po(e, t = {}) {
+function Lo(e, t = {}) {
 	let n = Object.hasOwn(t, e) ? t[e] : void 0;
-	return n === void 0 || n.trim() === "" ? Zr(e) : n;
+	return n === void 0 || n.trim() === "" ? ei(e) : n;
 }
-function Fo(e) {
-	return Ao.find((t) => t.phases.includes(e)).id;
+function Ro(e) {
+	return No.find((t) => t.phases.includes(e)).id;
 }
-function Io(e, t) {
+function zo(e, t) {
 	if (t !== null) {
-		for (let n of t.phases) if (n.ghostIds.includes(e)) return Fo(n.phase);
+		for (let n of t.phases) if (n.ghostIds.includes(e)) return Ro(n.phase);
 	}
-	for (let t of Ao) if (t.roles.some((t) => e === t || e.startsWith(`${t}-`))) return t.id;
+	for (let t of No) if (t.roles.some((t) => e === t || e.startsWith(`${t}-`))) return t.id;
 	return null;
 }
-function Lo(e) {
-	return W[W.indexOf(e) + 1] ?? null;
+function Bo(e) {
+	return G[G.indexOf(e) + 1] ?? null;
 }
-function Ro(e, t) {
-	let n = jo[e].toLowerCase(), r = Lo(e);
+function Vo(e, t) {
+	let n = Po[e].toLowerCase(), r = Bo(e);
 	switch (t) {
 		case "sealed": return `Sealed door: approve the ${n} to open it.`;
 		case "waiting": return `The ${n} are ready. Approve or reject them to decide this door.`;
-		case "open": return r === null ? `Open door: the ${n} were approved.` : `Open door: the ${n} were approved. ${jo[r]} may be started.`;
+		case "open": return r === null ? `Open door: the ${n} were approved.` : `Open door: the ${n} were approved. ${Po[r]} may be started.`;
 		case "rejected": return `Door kept shut: the ${n} were rejected and need a revision.`;
 	}
 }
-var zo = {
+var Ho = {
 	read_only: "This is a recording. Nothing can be started, approved or rejected here.",
 	loading: "Loading the state of the house. Decisions are off until it arrives.",
 	unavailable: "The house could not be reached. Decisions are off until it answers.",
@@ -5879,39 +5868,39 @@ var zo = {
 	uncertain: "The latest ghost activity is not confirmed yet. Decisions are off until the house catches up.",
 	catching_up: "Catching up with the séance log. Decisions are off until it is current.",
 	stale: "Something changed in the house. Refreshing before you decide."
-}, Bo = /* @__PURE__ */ new Set([
+}, Uo = /* @__PURE__ */ new Set([
 	"hash_mismatch",
 	"hash_link_broken",
 	"mixed_integrity_mode",
 	"duplicate_sequence",
 	"missing_sequence"
 ]);
-function Vo(e) {
+function Wo(e) {
 	let t = (e) => ({
 		canDecide: !1,
 		block: e,
-		text: zo[e]
+		text: Ho[e]
 	});
 	return e.readOnly === !0 || e.projection?.readOnly === !0 ? t("read_only") : e.projectionStatus === "malformed" ? t("malformed") : e.projection === null ? t(e.projectionStatus === "unavailable" ? "unavailable" : "loading") : e.projection.integrity === "corrupt" ? t("integrity") : e.canonical.diagnostic === null ? e.projection.integrity === "uncertain" ? t("uncertain") : e.projectionStatus === "unavailable" ? t("unavailable") : !e.canonical.loaded || e.canonical.catchingUp ? t("catching_up") : e.canonical.highestSequence > e.projection.version ? t("stale") : {
 		canDecide: !0,
 		block: null,
 		text: null
-	} : t(Bo.has(e.canonical.diagnostic.code) ? "integrity" : "uncertain");
-}
-function Ho(e) {
-	return e.kind === "start_phase" ? `phase:${e.phase}` : `proposal:${e.proposalId}`;
-}
-function Uo(e) {
-	return e.slice(0, 12);
-}
-function Wo(e) {
-	return e === 1 ? "1 byte" : `${e.toLocaleString("en-US")} bytes`;
+	} : t(Uo.has(e.canonical.diagnostic.code) ? "integrity" : "uncertain");
 }
 function Go(e) {
+	return e.kind === "start_phase" ? `phase:${e.phase}` : `proposal:${e.proposalId}`;
+}
+function Ko(e) {
+	return e.slice(0, 12);
+}
+function qo(e) {
+	return e === 1 ? "1 byte" : `${e.toLocaleString("en-US")} bytes`;
+}
+function Jo(e) {
 	let t = e.outcome === "approved" ? "Approved" : "Rejected";
 	return e.actor === "operator" ? `${t} by the operator in Haunted House.` : `${t} in Crew, outside Haunted House.`;
 }
-function Ko(e, t, n, r, i) {
+function Yo(e, t, n, r, i) {
 	if (!e) return {
 		canApprove: !1,
 		canReject: !1,
@@ -5926,10 +5915,10 @@ function Ko(e, t, n, r, i) {
 		blockedText: n.canDecide ? t ? null : "Blocked: this action cannot be shown completely, so it cannot be approved. You can reject it." : n.text
 	};
 }
-function qo(e, t, n, r) {
+function Xo(e, t, n, r) {
 	let i = t.door.proposal;
 	if (i === null) return null;
-	let a = i.status === "pending" && t.door.status === "waiting", o = a ? "pending" : i.status === "pending" ? "superseded" : i.status, s = Ko(a, !0, n, r, `proposal:${i.proposalId}`), c = (n) => ({
+	let a = i.status === "pending" && t.door.status === "waiting", o = a ? "pending" : i.status === "pending" ? "superseded" : i.status, s = Yo(a, !0, n, r, `proposal:${i.proposalId}`), c = (n) => ({
 		kind: "decide_door",
 		decision: n,
 		proposalId: i.proposalId,
@@ -5943,21 +5932,21 @@ function qo(e, t, n, r) {
 		phase: t.phase,
 		proposalId: i.proposalId,
 		state: o,
-		title: `${jo[t.phase]} door`,
+		title: `${Po[t.phase]} door`,
 		documentPath: i.documentPath,
 		revisionText: `Revision ${i.artifactRevision.revision}`,
-		digestPrefix: Uo(i.artifactRevision.sha256),
-		sizeText: Wo(i.artifactRevision.sizeBytes),
-		outcomeText: i.decision === null ? o === "superseded" ? "Superseded: the document changed after this proposal. A new revision needs its own decision." : null : Go(i.decision),
+		digestPrefix: Ko(i.artifactRevision.sha256),
+		sizeText: qo(i.artifactRevision.sizeBytes),
+		outcomeText: i.decision === null ? o === "superseded" ? "Superseded: the document changed after this proposal. A new revision needs its own decision." : null : Jo(i.decision),
 		approve: s.canApprove ? c("approve") : null,
 		reject: s.canReject ? c("reject") : null
 	};
 }
-var Jo = {
+var Zo = {
 	delete_path: "Delete a file or empty folder",
 	run_command: "Run a command",
 	git_write: "Change the git repository"
-}, Yo = {
+}, Qo = {
 	list: "List",
 	read: "Read",
 	write: "Write",
@@ -5965,7 +5954,7 @@ var Jo = {
 	command_read: "Command may read",
 	command_write: "Command may write",
 	git_write: "Git may write"
-}, Xo = {
+}, $o = {
 	pending: "Waiting for your decision",
 	approved: "Approved, not used yet",
 	rejected: "Rejected",
@@ -5973,16 +5962,16 @@ var Jo = {
 	succeeded: "Done: the approved action succeeded",
 	failed: "Failed: the approved action did not succeed. The approval is used up.",
 	superseded: "Superseded"
-}, Zo = "Approving allows exactly one attempt of exactly this action. If the attempt fails, the approval is used up and the ghost must ask again.";
-function Qo(e) {
+}, es = "Approving allows exactly one attempt of exactly this action. If the attempt fails, the approval is used up and the ghost must ask again.";
+function ts(e) {
 	return Array.isArray(e) && e.every((e) => typeof e == "string") ? e.map((e) => JSON.stringify(e)).join(" ") : typeof e == "string" ? e : JSON.stringify(e);
 }
-function $o(e) {
+function ns(e) {
 	return {
 		scope: [
 			{
 				label: "Action",
-				value: Jo[e.kind]
+				value: Zo[e.kind]
 			},
 			{
 				label: "Mansion",
@@ -6003,20 +5992,20 @@ function $o(e) {
 		],
 		arguments: Object.keys(e.arguments).sort().map((t) => ({
 			label: t,
-			value: Qo(e.arguments[t])
+			value: ts(e.arguments[t])
 		})),
 		paths: e.pathIntents.map((e) => ({
-			label: Yo[e.access],
+			label: Qo[e.access],
 			value: e.path
 		}))
 	};
 }
-function es(e, t, n, r, i = {}) {
-	let a = t.descriptor !== null, o = Ko(t.status === "pending", a, n, r, `proposal:${t.proposalId}`), s = t.descriptor === null ? {
+function rs(e, t, n, r, i = {}) {
+	let a = t.descriptor !== null, o = Yo(t.status === "pending", a, n, r, `proposal:${t.proposalId}`), s = t.descriptor === null ? {
 		scope: [],
 		arguments: [],
 		paths: []
-	} : $o(t.descriptor), c = (n) => ({
+	} : ns(t.descriptor), c = (n) => ({
 		kind: "decide_risky",
 		decision: n,
 		proposalId: t.proposalId,
@@ -6027,31 +6016,31 @@ function es(e, t, n, r, i = {}) {
 		...o,
 		proposalId: t.proposalId,
 		ghostId: t.ghostId,
-		ghostName: Po(t.ghostId, i),
+		ghostName: Lo(t.ghostId, i),
 		status: t.status,
-		statusText: Xo[t.status],
-		title: t.descriptor === null ? "Risky action (details unavailable)" : Jo[t.descriptor.kind],
+		statusText: $o[t.status],
+		title: t.descriptor === null ? "Risky action (details unavailable)" : Zo[t.descriptor.kind],
 		complete: a,
 		...s,
-		digestPrefix: Uo(t.actionDigest),
-		oneAttemptText: Zo,
-		outcomeText: t.decision === null ? null : Go(t.decision),
+		digestPrefix: Ko(t.actionDigest),
+		oneAttemptText: es,
+		outcomeText: t.decision === null ? null : Jo(t.decision),
 		approve: o.canApprove ? c("approve") : null,
 		reject: o.canReject ? c("reject") : null
 	};
 }
-var ts = {
+var is = {
 	ready: (e) => `Start ${e}`,
 	failed: (e) => `Try starting ${e} again`,
 	revision_required: (e) => `Start the ${e} revision`
 };
-function ns(e, t, n, r) {
-	let i = ts[t.status];
+function as(e, t, n, r) {
+	let i = is[t.status];
 	if (i === void 0) return null;
 	let a = n.canDecide && r === null;
 	return {
 		phase: t.phase,
-		label: i(jo[t.phase].toLowerCase()),
+		label: i(Po[t.phase].toLowerCase()),
 		enabled: a,
 		busy: r === `phase:${t.phase}`,
 		command: a ? {
@@ -6061,29 +6050,29 @@ function ns(e, t, n, r) {
 		} : null
 	};
 }
-function rs(e, t = {}) {
+function os(e, t = {}) {
 	if (e === null) return [];
-	let n = [], r = (e) => Po(e, t);
+	let n = [], r = (e) => Lo(e, t);
 	for (let t of e.phases) {
 		let e = t.door.proposal;
 		t.door.status === "waiting" && e !== null && e.status === "pending" && n.push({
 			kind: "door",
 			id: `door:${e.proposalId}`,
-			room: Fo(t.phase),
+			room: Ro(t.phase),
 			phase: t.phase,
 			ghostId: t.ghostIds.at(-1) ?? null,
-			text: `The ${jo[t.phase].toLowerCase()} door needs your decision.`
+			text: `The ${Po[t.phase].toLowerCase()} door needs your decision.`
 		});
 	}
 	let i = /* @__PURE__ */ new Set(), a = /* @__PURE__ */ new Set();
 	for (let t of e.riskyProposals) {
 		if (t.status !== "pending") continue;
 		i.add(t.proposalId), a.add(t.sessionSlot);
-		let o = t.descriptor === null ? "do something risky" : Jo[t.descriptor.kind].toLowerCase();
+		let o = t.descriptor === null ? "do something risky" : Zo[t.descriptor.kind].toLowerCase();
 		n.push({
 			kind: "risky",
 			id: `risky:${t.proposalId}`,
-			room: Io(t.ghostId, e) ?? "workshop",
+			room: zo(t.ghostId, e) ?? "workshop",
 			ghostId: t.ghostId,
 			text: `${r(t.ghostId)} asks to ${o}.`
 		});
@@ -6097,80 +6086,80 @@ function rs(e, t = {}) {
 	});
 	return n;
 }
-function is(e) {
+function ss(e) {
 	return e === 0 ? "Nothing needs you" : e === 1 ? "1 thing needs you" : `${e} things need you`;
 }
-function as(e) {
+function cs(e) {
 	return e.length === 0 ? "No ghost here yet" : e.map((e) => `${e.name}: ${e.stateText}`).join(", ");
 }
-function os(e, t, n = {}) {
-	let r = Array.from(t), i = rs(e, n);
-	return Ao.map((t) => {
+function ls(e, t, n = {}) {
+	let r = Array.from(t), i = os(e, n);
+	return No.map((t) => {
 		let a = e === null ? [] : t.phases.map((t) => {
-			let n = e.phases[W.indexOf(t)];
+			let n = e.phases[G.indexOf(t)];
 			return {
 				phase: t,
-				name: jo[t],
+				name: Po[t],
 				status: n.status,
-				statusText: Mo[n.status],
+				statusText: Fo[n.status],
 				doorStatus: n.door.status,
-				doorText: No[n.door.status],
-				doorHint: Ro(t, n.door.status)
+				doorText: Io[n.door.status],
+				doorHint: Vo(t, n.door.status)
 			};
-		}), o = ei(r.filter((n) => Io(n.ghost_id, e) === t.id), n), s = i.filter((e) => e.room === t.id).length, c = a.length === 0 ? "State not loaded" : a.map((e) => `${e.name}: ${e.statusText}, ${e.doorText}`).join(". ");
+		}), o = ri(r.filter((n) => zo(n.ghost_id, e) === t.id), n), s = i.filter((e) => e.room === t.id).length, c = a.length === 0 ? "State not loaded" : a.map((e) => `${e.name}: ${e.statusText}, ${e.doorText}`).join(". ");
 		return {
 			id: t.id,
 			name: t.name,
 			phases: a,
 			ghosts: o,
 			needsYou: s,
-			label: `${t.name}. ${c}. ${as(o)}.${s > 0 ? ` ${is(s)}.` : ""}`
+			label: `${t.name}. ${c}. ${cs(o)}.${s > 0 ? ` ${ss(s)}.` : ""}`
 		};
 	});
 }
-function ss(e, t, n, r, i = {}) {
+function us(e, t, n, r, i = {}) {
 	if (e === null) return {
 		room: t,
 		phases: [],
 		risky: []
 	};
 	let a = t.phases.map((t) => {
-		let i = e.phases[W.indexOf(t.phase)];
+		let i = e.phases[G.indexOf(t.phase)];
 		return {
 			line: t,
-			start: ns(e, i, n, r),
-			door: qo(e, i, n, r)
+			start: as(e, i, n, r),
+			door: Xo(e, i, n, r)
 		};
-	}), o = e.riskyProposals.filter((n) => (Io(n.ghostId, e) ?? "workshop") === t.id), s = o.filter((e) => e.status === "pending"), c = o.filter((e) => e.status !== "pending").sort((e, t) => t.createdSequence - e.createdSequence).slice(0, 5);
+	}), o = e.riskyProposals.filter((n) => (zo(n.ghostId, e) ?? "workshop") === t.id), s = o.filter((e) => e.status === "pending"), c = o.filter((e) => e.status !== "pending").sort((e, t) => t.createdSequence - e.createdSequence).slice(0, 5);
 	return {
 		room: t,
 		phases: a,
-		risky: [...s, ...c].map((t) => es(e, t, n, r, i))
+		risky: [...s, ...c].map((t) => rs(e, t, n, r, i))
 	};
 }
 // src/core/house-projection.ts
-var cs = [
+var ds = [
 	"valid",
 	"uncertain",
 	"incompatible",
 	"corrupt"
 ];
-function ls(e, t) {
+function fs(e, t) {
 	let n = e.replace(/[\u0000-\u001f\u007f-\u009f\s]+/g, " ").trim(), r = Array.from(n);
 	return r.length <= t ? n : `${r.slice(0, t - 1).join("").trimEnd()}…`;
 }
-var us = {
+var ps = {
 	uncertain: "This room's state is not confirmed. Its controls are off until the house catches up.",
 	incompatible: "The house sent a state for this room that this page cannot read. Its controls are off.",
 	corrupt: "This room's record failed its integrity check. Its controls are off until it is repaired."
-}, ds = "This is a recording. Nothing can be started, approved, rejected or opened in Crew here.", fs = "The Séance Room is locked. Review is a later chapter of this house, so nothing can be started or changed here.", ps = "This mansion's folder could not be confirmed. Return to the Foyer and open it again.", ms = {
+}, ms = "This is a recording. Nothing can be started, approved, rejected or opened in Crew here.", hs = "The Séance Room is locked. Review is a later chapter of this house, so nothing can be started or changed here.", gs = "This mansion's folder could not be confirmed. Return to the Foyer and open it again.", _s = {
 	diagnostic: "Part of the séance log was left out. The Attic shows the records that could be read.",
 	incompatible: "The séance log failed its integrity check. The Attic shows only the records before the failure."
-}, hs = "Door state unavailable", gs = "The state of this door could not be read. Nothing can be decided until it can.";
-function _s(e, t) {
-	return cs.indexOf(e) >= cs.indexOf(t) ? e : t;
+}, vs = "Door state unavailable", ys = "The state of this door could not be read. Nothing can be decided until it can.";
+function bs(e, t) {
+	return ds.indexOf(e) >= ds.indexOf(t) ? e : t;
 }
-var vs = {
+var xs = {
 	read_only: "valid",
 	loading: "uncertain",
 	unavailable: "uncertain",
@@ -6180,7 +6169,7 @@ var vs = {
 	malformed: "incompatible",
 	integrity: "corrupt"
 };
-function ys(e, t) {
+function Ss(e, t) {
 	switch (e.block) {
 		case null:
 		case "read_only":
@@ -6190,22 +6179,22 @@ function ys(e, t) {
 		default: return "uncertain";
 	}
 }
-function bs(e) {
-	return typeof e == "string" && qa.includes(e);
+function Cs(e) {
+	return typeof e == "string" && Xa.includes(e);
 }
-function xs(e) {
-	return typeof e == "string" && Ka.includes(e);
+function ws(e) {
+	return typeof e == "string" && Ya.includes(e);
 }
-function Ss(e) {
-	return typeof e == "string" && xa.includes(e);
+function Ts(e) {
+	return typeof e == "string" && wa.includes(e);
 }
-function Cs(e, t) {
-	let n = Io(e, t);
+function Es(e, t) {
+	let n = zo(e, t);
 	if (n !== null) return n;
-	for (let t of ii) if (t.ghostRoles.some((t) => e === t || e.startsWith(`${t}-`))) return t.id;
+	for (let t of si) if (t.ghostRoles.some((t) => e === t || e.startsWith(`${t}-`))) return t.id;
 	return null;
 }
-var ws = [
+var Ds = [
 	"failed",
 	"blocked",
 	"waiting",
@@ -6213,21 +6202,21 @@ var ws = [
 	"done",
 	"idle"
 ];
-function Ts(e) {
+function Os(e) {
 	return e.length === 0 ? "not_applicable" : e.find((e) => e.state === "unavailable") === void 0 ? (e.find((e) => e.state !== "open") ?? e[e.length - 1]).state : "unavailable";
 }
-function Es(e) {
-	return e.length === 0 ? "not_applicable" : e.some((e) => e.state === "unavailable") ? "unavailable" : ws.find((t) => e.some((e) => e.state === t)) ?? "not_applicable";
+function ks(e) {
+	return e.length === 0 ? "not_applicable" : e.some((e) => e.state === "unavailable") ? "unavailable" : Ds.find((t) => e.some((e) => e.state === t)) ?? "not_applicable";
 }
-function Ds(e, t) {
+function As(e, t) {
 	let n = !1, r = t.workflow, i = e.workflowPhases.map((e) => {
-		let t = r?.phases[W.indexOf(e)], i = t?.door?.status;
-		if (t === void 0 || !bs(i)) return r !== null && (n = !0), {
+		let t = r?.phases[G.indexOf(e)], i = t?.door?.status;
+		if (t === void 0 || !Cs(i)) return r !== null && (n = !0), {
 			phase: e,
-			phaseName: jo[e],
+			phaseName: Po[e],
 			state: "unavailable",
-			text: hs,
-			hint: gs,
+			text: vs,
+			hint: ys,
 			proposalId: null,
 			phaseStatus: null,
 			phaseText: null
@@ -6235,30 +6224,30 @@ function Ds(e, t) {
 		let a = t.door.proposal;
 		return {
 			phase: e,
-			phaseName: jo[e],
+			phaseName: Po[e],
 			state: i,
-			text: No[i],
-			hint: Ro(e, i),
+			text: Io[i],
+			hint: Vo(e, i),
 			proposalId: i === "waiting" && a !== null && a.status === "pending" ? a.proposalId : null,
-			phaseStatus: xs(t.status) ? t.status : null,
-			phaseText: xs(t.status) ? `${jo[e]}: ${Mo[t.status]}` : null
+			phaseStatus: ws(t.status) ? t.status : null,
+			phaseText: ws(t.status) ? `${Po[e]}: ${Fo[t.status]}` : null
 		};
 	}), a = [];
-	for (let n of t.ghosts.values()) n.ghost_id !== "house-operator" && n.mansion_id === t.mansion.name && Cs(n.ghost_id, r) === e.id && a.push(n);
-	let o = a.filter((e) => Ss(e.state)), s = new Map(ei(o, t.ghostNames).map((e) => [e.ghostId, e]));
+	for (let n of t.ghosts.values()) n.ghost_id !== "house-operator" && n.mansion_id === t.mansion.name && Es(n.ghost_id, r) === e.id && a.push(n);
+	let o = a.filter((e) => Ts(e.state)), s = new Map(ri(o, t.ghostNames).map((e) => [e.ghostId, e]));
 	return {
 		doors: i,
 		ghosts: a.map((e) => {
 			let t = s.get(e.ghost_id);
 			return t === void 0 ? (n = !0, {
 				ghostId: e.ghost_id,
-				name: ls(e.ghost_id, 60),
+				name: fs(e.ghost_id, 60),
 				state: "unavailable",
 				reason: null,
 				pendingText: null
 			}) : {
 				ghostId: t.ghostId,
-				name: ls(t.name, 60) || "Ghost",
+				name: fs(t.name, 60) || "Ghost",
 				state: t.state,
 				reason: t.reason,
 				pendingText: t.pendingText
@@ -6267,65 +6256,65 @@ function Ds(e, t) {
 		malformed: n
 	};
 }
-var Os = {
+var js = {
 	door: "door-decision",
 	risky: "risky-decision",
 	permission: "tool-decision"
 };
-function ks(e) {
+function Ms(e) {
 	let t = /* @__PURE__ */ new Map();
-	for (let n of rs(e.workflow, e.ghostNames)) {
+	for (let n of os(e.workflow, e.ghostNames)) {
 		let e = n.room ?? "foyer", r = t.get(e) ?? [];
 		r.push({
-			kind: Os[n.kind],
+			kind: js[n.kind],
 			id: n.id,
 			ghostId: n.ghostId,
-			label: ls(n.text, 160),
+			label: fs(n.text, 160),
 			status: "pending",
 			actionAvailable: !0
 		}), t.set(e, r);
 	}
 	return t;
 }
-function As(e) {
+function Ns(e) {
 	return e === void 0 ? [] : e.runs.filter((e) => e.state === "failed").map((e) => ({
 		runId: e.runId,
 		ghostId: e.ghostId,
-		label: ls(`${ls(e.ghostName, 60) || "A ghost"} failed. A fresh attempt can be started.`, 160),
+		label: fs(`${fs(e.ghostName, 60) || "A ghost"} failed. A fresh attempt can be started.`, 160),
 		available: e.retry !== null
 	}));
 }
-function js(e) {
+function Ps(e) {
 	return e === "valid" ? "valid" : e === "incompatible" ? "incompatible" : "uncertain";
 }
-function Ms(e, t, n, r) {
-	let i = Ds(e, t), a = t.rooms.get(e.id), o = n.mode === "replay" || t.authority.block === "read_only", s = e.id === "seance-room" && n.seanceRoom !== "enabled", c = e.workflowPhases.length > 0 || e.id === "seance-room" && !s, l = "valid", u = null;
-	e.id === "foyer" ? t.mansion.status !== "ready" && (l = "uncertain", u = ps) : e.id === "attic" ? (l = js(t.replay.integrity), t.replay.integrity !== "valid" && (u = ms[t.replay.integrity])) : c && (t.authority.block !== null && (l = vs[t.authority.block]), l = _s(l, t.workflow === null ? "uncertain" : t.workflow.integrity), a !== void 0 && (l = _s(l, ys(a.gate, a)), l = _s(l, a.integrity)), l !== "valid" && (u = t.authority.block !== null && t.authority.block !== "read_only" ? t.authority.text : a !== void 0 && a.gate.block !== null && a.gate.block !== "read_only" && a.gate.block !== "authority" ? a.gate.text : null)), i.malformed && (l = _s(l, "incompatible"), u = us.incompatible);
-	let d = e.id !== "attic" && !s, f = !c || t.authority.canDecide && (a === void 0 || a.gate.allowed), p = d && !o && l === "valid" && f, m = l === "valid" ? s ? fs : o ? ds : p || !d ? null : t.authority.text ?? a?.gate.text ?? us.uncertain : u ?? us[l];
+function Fs(e, t, n, r) {
+	let i = As(e, t), a = t.rooms.get(e.id), o = n.mode === "replay" || t.authority.block === "read_only", s = e.id === "seance-room" && n.seanceRoom !== "enabled", c = e.workflowPhases.length > 0 || e.id === "seance-room" && !s, l = "valid", u = null;
+	e.id === "foyer" ? t.mansion.status !== "ready" && (l = "uncertain", u = gs) : e.id === "attic" ? (l = Ps(t.replay.integrity), t.replay.integrity !== "valid" && (u = _s[t.replay.integrity])) : c && (t.authority.block !== null && (l = xs[t.authority.block]), l = bs(l, t.workflow === null ? "uncertain" : t.workflow.integrity), a !== void 0 && (l = bs(l, Ss(a.gate, a)), l = bs(l, a.integrity)), l !== "valid" && (u = t.authority.block !== null && t.authority.block !== "read_only" ? t.authority.text : a !== void 0 && a.gate.block !== null && a.gate.block !== "read_only" && a.gate.block !== "authority" ? a.gate.text : null)), i.malformed && (l = bs(l, "incompatible"), u = ps.incompatible);
+	let d = e.id !== "attic" && !s, f = !c || t.authority.canDecide && (a === void 0 || a.gate.allowed), p = d && !o && l === "valid" && f, m = l === "valid" ? s ? hs : o ? ms : p || !d ? null : t.authority.text ?? a?.gate.text ?? ps.uncertain : u ?? ps[l];
 	return {
 		roomId: e.id,
 		name: e.name,
 		phase: e.phase,
-		door: Ts(i.doors),
-		ghost: Es(i.ghosts),
+		door: Os(i.doors),
+		ghost: ks(i.ghosts),
 		doors: i.doors,
 		ghosts: i.ghosts,
 		integrity: l,
 		mutatingActionsEnabled: p,
 		readOnly: o,
 		locked: s,
-		diagnostic: m === null ? null : ls(m, 240) || us.uncertain,
+		diagnostic: m === null ? null : fs(m, 240) || ps.uncertain,
 		waitingItems: s ? [] : r.get(e.id) ?? [],
-		recoveryActions: s ? [] : As(a)
+		recoveryActions: s ? [] : Ns(a)
 	};
 }
-function Ns(e, t) {
-	let n = ks(e), r = ui(t.seanceRoom).map((r) => Ms(r, e, t, n)), i = e.replay.diagnostics[0];
+function Is(e, t) {
+	let n = Ms(e), r = pi(t.seanceRoom).map((r) => Fs(r, e, t, n)), i = e.replay.diagnostics[0];
 	return {
-		mansionName: ls(e.mansion.name, 60),
+		mansionName: fs(e.mansion.name, 60),
 		mode: t.mode,
 		rooms: r,
-		needsYou: Fs(r),
+		needsYou: Rs(r),
 		decided: (e.workflow?.riskyProposals ?? []).flatMap((e) => e.status === "pending" || e.status === "superseded" ? [] : [{
 			proposalId: e.proposalId,
 			ghostId: e.ghostId,
@@ -6334,19 +6323,19 @@ function Ns(e, t) {
 		replay: {
 			integrity: e.replay.integrity,
 			validRecordCount: Math.max(0, Math.trunc(e.replay.validRecordCount) || 0),
-			diagnostic: i === void 0 ? e.replay.integrity === "valid" ? null : ms[e.replay.integrity] : ls(i.safeDetail, 240)
+			diagnostic: i === void 0 ? e.replay.integrity === "valid" ? null : _s[e.replay.integrity] : fs(i.safeDetail, 240)
 		}
 	};
 }
-function Ps(e) {
+function Ls(e) {
 	return JSON.stringify([e.kind, e.id]);
 }
-function Fs(e) {
-	let t = e.filter((e) => oi(e.roomId)).map((e, t) => ({
+function Rs(e) {
+	let t = e.filter((e) => li(e.roomId)).map((e, t) => ({
 		room: e,
 		index: t
-	})).sort((e, t) => li(e.room.roomId, t.room.roomId) || e.index - t.index), n = /* @__PURE__ */ new Set(), r = [], i = (e) => {
-		let t = Ps(e);
+	})).sort((e, t) => fi(e.room.roomId, t.room.roomId) || e.index - t.index), n = /* @__PURE__ */ new Set(), r = [], i = (e) => {
+		let t = Ls(e);
 		n.has(t) || (n.add(t), r.push(e));
 	};
 	for (let { room: e } of t) {
@@ -6369,38 +6358,38 @@ function Fs(e) {
 	}
 	return r;
 }
-function Is(e) {
+function zs(e) {
 	return e[0]?.roomId ?? null;
 }
-function Ls(e) {
-	return is(e.length);
+function Bs(e) {
+	return ss(e.length);
 }
-function Rs(e) {
+function Vs(e) {
 	return [
 		{
 			label: "Phase",
-			value: ri[e.phase]
+			value: oi[e.phase]
 		},
 		{
 			label: "Door",
-			value: fi(e.door)
+			value: hi(e.door)
 		},
 		{
 			label: "Ghost",
-			value: fi(e.ghost)
+			value: hi(e.ghost)
 		}
 	];
 }
-function zs(e) {
-	return `${ls(e.name, 60).replace(/[.:]+$/u, "") || si(e.roomId).name}. ${Rs(e).map((e) => `${e.label}: ${e.value}.`).join(" ")}`;
-}
-function Bs(e, t) {
-	return `${t.name}, ghost in the ${e.name}. State: ${fi(t.state)}.`;
-}
-function Vs(e, t) {
-	return `${t.phaseName} door of the ${e.name}. State: ${fi(t.state)}.`;
-}
 function Hs(e) {
+	return `${fs(e.name, 60).replace(/[.:]+$/u, "") || ui(e.roomId).name}. ${Vs(e).map((e) => `${e.label}: ${e.value}.`).join(" ")}`;
+}
+function Us(e, t) {
+	return `${t.name}, ghost in the ${e.name}. State: ${hi(t.state)}.`;
+}
+function Ws(e, t) {
+	return `${t.phaseName} door of the ${e.name}. State: ${hi(t.state)}.`;
+}
+function Gs(e) {
 	switch (e.kind) {
 		case "room": return JSON.stringify(["room", e.roomId]);
 		case "ghost": return JSON.stringify([
@@ -6415,7 +6404,7 @@ function Hs(e) {
 		]);
 	}
 }
-function Us(e, t) {
+function Ks(e, t) {
 	if (e === null) return null;
 	let n = t.rooms.find((t) => t.roomId === e.target.roomId);
 	if (n === void 0) return null;
@@ -6423,7 +6412,7 @@ function Us(e, t) {
 	return r.kind === "ghost" && !n.ghosts.some((e) => e.ghostId === r.ghostId) || r.kind === "door" && !n.doors.some((e) => e.phase === r.phase) ? null : e;
 }
 // src/core/house-words.ts
-var Ws = [
+var qs = [
 	{
 		id: "plan",
 		plain: "plan",
@@ -6501,51 +6490,51 @@ var Ws = [
 		about: ["A path limit is the list of folders an agent may read and write.", "An attempt to go outside it is refused."],
 		file: null
 	}
-], Gs = new Map(Ws.map((e) => [e.id, e]));
-function Ks(e) {
-	return typeof e == "string" && Gs.has(e);
+], Js = new Map(qs.map((e) => [e.id, e]));
+function Ys(e) {
+	return typeof e == "string" && Js.has(e);
 }
-function qs(e) {
-	return Gs.get(e);
-}
-function Js(e, t) {
-	let n = qs(e);
-	return t === "with-kiro" ? `${n.plain} (${n.kiro})` : n.plain;
-}
-var Ys = /\{([A-Za-z]+)\}/g;
 function Xs(e) {
-	return e === "" ? e : e[0].toUpperCase() + e.slice(1);
+	return Js.get(e);
 }
 function Zs(e, t) {
-	return e.replace(Ys, (e, n) => {
+	let n = Xs(e);
+	return t === "with-kiro" ? `${n.plain} (${n.kiro})` : n.plain;
+}
+var Qs = /\{([A-Za-z]+)\}/g;
+function $s(e) {
+	return e === "" ? e : e[0].toUpperCase() + e.slice(1);
+}
+function ec(e, t) {
+	return e.replace(Qs, (e, n) => {
 		let r = n[0].toLowerCase() + n.slice(1);
-		if (!Ks(r)) return e;
-		let i = Js(r, t);
-		return n[0] === n[0].toUpperCase() ? Xs(i) : i;
+		if (!Ys(r)) return e;
+		let i = Zs(r, t);
+		return n[0] === n[0].toUpperCase() ? $s(i) : i;
 	});
 }
-function Qs(e) {
+function tc(e) {
 	let t = [];
-	for (let n of e.matchAll(Ys)) {
+	for (let n of e.matchAll(Qs)) {
 		let e = n[1][0].toLowerCase() + n[1].slice(1);
-		Ks(e) && !t.includes(e) && t.push(e);
+		Ys(e) && !t.includes(e) && t.push(e);
 	}
 	return t;
 }
-function $s(e) {
+function nc(e) {
 	return e.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
-RegExp(`(?<![A-Za-z0-9_$])(?:${Ws.map((e) => $s(e.kiro)).join("|")})(?![A-Za-z0-9_$])`, "i");
+RegExp(`(?<![A-Za-z0-9_$])(?:${qs.map((e) => nc(e.kiro)).join("|")})(?![A-Za-z0-9_$])`, "i");
 // src/core/house-guide.ts
-var ec = "What do you want to do?", tc = [
+var rc = "What do you want to do?", ic = [
 	"start",
 	"decide",
 	"ask"
 ];
-function nc(e) {
+function ac(e) {
 	return e.flatMap((e) => {
 		switch (e.kind) {
-			case "map": return [Hs(e.target)];
+			case "map": return [Gs(e.target)];
 			case "control":
 			case "fill":
 			case "focus": return [e.key];
@@ -6555,42 +6544,42 @@ function nc(e) {
 		}
 	});
 }
-function rc(e, t) {
+function oc(e, t) {
 	let n = e.replace(/[\u0000-\u001f\u007f-\u009f\s]+/g, " ").trim(), r = Array.from(n);
 	return r.length <= t ? n : `${r.slice(0, t - 1).join("").trimEnd()}…`;
 }
-function ic(e) {
-	return rc(e, 36) || "a ghost";
+function sc(e) {
+	return oc(e, 36) || "a ghost";
 }
-var ac = /* @__PURE__ */ new Set([
+var cc = /* @__PURE__ */ new Set([
 	"Archivist",
 	"Draughtsman",
 	"Foreman",
 	"Tinker",
 	"Medium"
 ]);
-function oc(e) {
-	let t = ic(e);
-	return ac.has(t) ? `the ${t}` : t;
+function lc(e) {
+	let t = sc(e);
+	return cc.has(t) ? `the ${t}` : t;
 }
-function sc(e) {
+function uc(e) {
 	let t = e.trim();
 	return t === "" || /[.!?…]$/.test(t) ? t : `${t}.`;
 }
-function cc(e) {
+function dc(e) {
 	return e === "" ? e : e[0].toUpperCase() + e.slice(1);
 }
-function lc(e) {
+function fc(e) {
 	return e.length <= 1 ? e[0] ?? "" : `${e.slice(0, -1).join(", ")} and ${e[e.length - 1]}`;
 }
-var uc = {
+var pc = {
 	foyer: "This is the Foyer, the way in and out.",
 	study: "This is the Study. The Archivist writes {requirements} here.",
 	"drafting-room": "This is the Drafting Room. The Draughtsman works out {design} here.",
 	workshop: "This is the Workshop. The Foreman writes the {tasks}, and the Tinkers do {build}.",
 	attic: "This is the Attic. Everything that happened in this house is kept here.",
 	"seance-room": "This is the Séance Room, where finished work is checked."
-}, dc = "The house is built. Every door is open.", fc = {
+}, mc = "The house is built. Every door is open.", hc = {
 	requirements: {
 		term: "requirements",
 		writer: "The Archivist",
@@ -6639,19 +6628,19 @@ var uc = {
 		readLabel: "See what was built",
 		readAgainLabel: "See what was built again"
 	}
-}, pc = /* @__PURE__ */ new Set([
+}, gc = /* @__PURE__ */ new Set([
 	"ready",
 	"failed",
 	"revision_required"
-]), mc = /* @__PURE__ */ new Set([
+]), _c = /* @__PURE__ */ new Set([
 	"ready",
 	"working",
 	"failed",
 	"revision_required"
-]), hc = {
+]), vc = {
 	study: "writing",
 	"drafting-room": "drawing"
-}, gc = {
+}, yc = {
 	requirements: [
 		{
 			label: "Ask for a shorter version",
@@ -6694,34 +6683,34 @@ var uc = {
 			text: "Remove anything the first version does not need."
 		}
 	]
-}, _c = {
+}, bc = {
 	watching: "The Warden is watching.",
 	pointing: "The Warden points to your next step.",
 	"offering-key": "The Warden holds out a key.",
 	"stepped-back": "The Warden has stepped back."
 };
-function vc(e, t = 1) {
-	return t > 1 ? `The Warden is holding ${t} ghosts.` : e === null ? "The Warden is holding a ghost." : `The Warden is holding ${oc(e)}.`;
+function xc(e, t = 1) {
+	return t > 1 ? `The Warden is holding ${t} ghosts.` : e === null ? "The Warden is holding a ghost." : `The Warden is holding ${lc(e)}.`;
 }
-function yc(e) {
+function Sc(e) {
 	return e.doors.find((e) => e.state !== "open") ?? e.doors[e.doors.length - 1] ?? null;
 }
-function bc(e) {
+function Cc(e) {
 	let t = e.rooms.flatMap((e) => e.doors);
 	return t.length > 0 && t.every((e) => e.state === "open");
 }
-function xc(e) {
-	return e.phaseStatus === null || e.state === "open" || e.state === "waiting" ? !1 : (e.phase === "implementation" ? mc : pc).has(e.phaseStatus);
+function wc(e) {
+	return e.phaseStatus === null || e.state === "open" || e.state === "waiting" ? !1 : (e.phase === "implementation" ? _c : gc).has(e.phaseStatus);
 }
-function Sc(e) {
+function Tc(e) {
 	return e.id.slice(e.id.indexOf(":") + 1);
 }
-function Cc(e, t) {
+function Ec(e, t) {
 	if (e.locked) return { kind: "locked" };
 	let n = e.waitingItems.find((e) => e.status === "pending" && e.actionAvailable);
 	if (n !== void 0) {
 		if (n.kind === "door-decision") {
-			let t = e.doors.find((e) => e.proposalId !== null && e.proposalId === Sc(n)) ?? e.doors.find((e) => e.state === "waiting");
+			let t = e.doors.find((e) => e.proposalId !== null && e.proposalId === Tc(n)) ?? e.doors.find((e) => e.state === "waiting");
 			if (t !== void 0) return {
 				kind: "door-waiting",
 				door: t
@@ -6749,63 +6738,63 @@ function Cc(e, t) {
 		kind: "working",
 		ghosts: o
 	};
-	let s = yc(e);
-	return s !== null && xc(s) ? {
+	let s = Sc(e);
+	return s !== null && wc(s) ? {
 		kind: "startable",
 		door: s
-	} : e.roomId !== "attic" && bc(t) ? { kind: "built" } : e.doors.length > 0 && e.doors.every((e) => e.state === "open") ? { kind: "door-open" } : { kind: "room" };
+	} : e.roomId !== "attic" && Cc(t) ? { kind: "built" } : e.doors.length > 0 && e.doors.every((e) => e.state === "open") ? { kind: "door-open" } : { kind: "room" };
 }
-function wc(e, t) {
+function Dc(e, t) {
 	let n = t.rooms.findIndex((t) => t.roomId === e.roomId);
 	return t.rooms.slice(n + 1).find((e) => e.doors.length > 0) ?? null;
 }
-function K(e, ...t) {
+function Oc(e, ...t) {
 	return {
 		template: e,
 		values: t
 	};
 }
-function Tc(e, t) {
-	return Zs(e.template, t).replace(/⟦(\d)⟧/g, (t, n) => e.values[Number(n)] ?? "");
+function kc(e, t) {
+	return ec(e.template, t).replace(/⟦(\d)⟧/g, (t, n) => e.values[Number(n)] ?? "");
 }
-function Ec(e, t, n, r) {
+function Ac(e, t, n, r) {
 	switch (n.kind) {
-		case "locked": return K("⟦0⟧", e.diagnostic ?? "This room is locked.");
-		case "catch": return n.item.kind === "risky-decision" ? K("I have ⟦0⟧. ⟦1⟧ Nothing runs until you say.", n.ghost === null ? "a ghost" : oc(n.ghost.name), n.item.label) : K("⟦0⟧", n.item.label);
+		case "locked": return Oc("⟦0⟧", e.diagnostic ?? "This room is locked.");
+		case "catch": return n.item.kind === "risky-decision" ? Oc("I have ⟦0⟧. ⟦1⟧ Nothing runs until you say.", n.ghost === null ? "a ghost" : lc(n.ghost.name), n.item.label) : Oc("⟦0⟧", n.item.label);
 		case "door-waiting": {
-			let e = fc[n.door.phase];
-			return r !== null && r.kind === "door" && r.phase === n.door.phase ? K(`You are at the door. Opening it accepts this version of ${e.the}.`) : K(`${e.writer} ${e.has} finished ${e.the}. The door waits for you.`);
+			let e = hc[n.door.phase];
+			return r !== null && r.kind === "door" && r.phase === n.door.phase ? Oc(`You are at the door. Opening it accepts this version of ${e.the}.`) : Oc(`${e.writer} ${e.has} finished ${e.the}. The door waits for you.`);
 		}
 		case "failed": {
-			let e = cc(lc(n.ghosts.map((e) => oc(e.name)))), t = n.ghosts.length === 1 ? n.ghosts[0] : null, r = t === null || t.reason === null ? "" : ` ${sc(t.reason)}`;
-			return K(`⟦0⟧ failed.⟦1⟧${n.retry === null ? "" : t !== null && n.retry.ghostId === t.ghostId ? " It can be tried again." : " A failed run can be tried again."}`, e, r);
+			let e = dc(fc(n.ghosts.map((e) => lc(e.name)))), t = n.ghosts.length === 1 ? n.ghosts[0] : null, r = t === null || t.reason === null ? "" : ` ${uc(t.reason)}`;
+			return Oc(`⟦0⟧ failed.⟦1⟧${n.retry === null ? "" : t !== null && n.retry.ghostId === t.ghostId ? " It can be tried again." : " A failed run can be tried again."}`, e, r);
 		}
 		case "blocked": {
-			let e = cc(lc(n.ghosts.map((e) => oc(e.name)))), t = n.ghosts.length === 1 ? n.ghosts[0] : null, r = t === null || t.reason === null ? "" : ` ${sc(t.reason)}`;
-			return K(`⟦0⟧ ${n.ghosts.length === 1 ? "is" : "are"} held.⟦1⟧`, e, r);
+			let e = dc(fc(n.ghosts.map((e) => lc(e.name)))), t = n.ghosts.length === 1 ? n.ghosts[0] : null, r = t === null || t.reason === null ? "" : ` ${uc(t.reason)}`;
+			return Oc(`⟦0⟧ ${n.ghosts.length === 1 ? "is" : "are"} held.⟦1⟧`, e, r);
 		}
 		case "working": {
-			let t = cc(lc(n.ghosts.map((e) => oc(e.name)))), r = hc[e.roomId] ?? "at work", i = e.doors.some((e) => e.state !== "open") ? e.doors.length === 1 ? " This door stays shut until you open it." : " The door stays shut until you open it." : "";
-			return K(`⟦0⟧ ${n.ghosts.length === 1 ? "is" : "are"} ${r}.${i}`, t);
+			let t = dc(fc(n.ghosts.map((e) => lc(e.name)))), r = vc[e.roomId] ?? "at work", i = e.doors.some((e) => e.state !== "open") ? e.doors.length === 1 ? " This door stays shut until you open it." : " The door stays shut until you open it." : "";
+			return Oc(`⟦0⟧ ${n.ghosts.length === 1 ? "is" : "are"} ${r}.${i}`, t);
 		}
 		case "startable": {
-			let t = fc[n.door.phase];
+			let t = hc[n.door.phase];
 			switch (n.door.phaseStatus) {
-				case "failed": return K(`${t.writer} could not start. ${t.it} can be started again.`);
-				case "revision_required": return K(`The door was kept shut. ${t.writer} can write a new version of ${t.the}.`);
-				case "working": return K("{Build} is under way. Anything that is ready can be started.");
-				default: return K(n.door.phase === "implementation" ? `The {tasks} is settled. ${t.nothingYet}` : `${uc[e.roomId]} ${t.nothingYet}`);
+				case "failed": return Oc(`${t.writer} could not start. ${t.it} can be started again.`);
+				case "revision_required": return Oc(`The door was kept shut. ${t.writer} can write a new version of ${t.the}.`);
+				case "working": return Oc("{Build} is under way. Anything that is ready can be started.");
+				default: return Oc(n.door.phase === "implementation" ? `The {tasks} is settled. ${t.nothingYet}` : `${pc[e.roomId]} ${t.nothingYet}`);
 			}
 		}
 		case "door-open": {
-			let n = wc(e, t);
-			return n === null ? K("This door is open.") : K("This door is open. The ⟦0⟧ is next.", n.name);
+			let n = Dc(e, t);
+			return n === null ? Oc("This door is open.") : Oc("This door is open. The ⟦0⟧ is next.", n.name);
 		}
-		case "built": return K(dc);
-		case "room": return K(uc[e.roomId]);
+		case "built": return Oc(mc);
+		case "room": return Oc(pc[e.roomId]);
 	}
 }
-function Dc(e, t) {
+function jc(e, t) {
 	switch (t.kind) {
 		case "locked": return e.diagnostic === null ? [] : [e.diagnostic];
 		case "catch": return [t.item.label];
@@ -6817,34 +6806,34 @@ function Dc(e, t) {
 		default: return [];
 	}
 }
-function Oc(e, t, n) {
+function Mc(e, t, n) {
 	if (t) return {
 		pose: "stepped-back",
-		label: _c["stepped-back"]
+		label: bc["stepped-back"]
 	};
 	let r = n ? {
 		pose: "pointing",
-		label: _c.pointing
+		label: bc.pointing
 	} : {
 		pose: "watching",
-		label: _c.watching
+		label: bc.watching
 	};
 	switch (e.kind) {
 		case "catch": return {
 			pose: "holding",
-			label: vc(e.ghost?.name ?? null)
+			label: xc(e.ghost?.name ?? null)
 		};
 		case "blocked": return {
 			pose: "holding",
-			label: vc(e.ghosts.length === 1 ? e.ghosts[0].name : null, e.ghosts.length)
+			label: xc(e.ghosts.length === 1 ? e.ghosts[0].name : null, e.ghosts.length)
 		};
 		case "door-waiting": return {
 			pose: "offering-key",
-			label: _c["offering-key"]
+			label: bc["offering-key"]
 		};
 		case "failed": return e.retry === null ? {
 			pose: "watching",
-			label: _c.watching
+			label: bc.watching
 		} : r;
 		case "startable":
 		case "door-open":
@@ -6853,75 +6842,75 @@ function Oc(e, t, n) {
 		case "working":
 		case "room": return {
 			pose: "watching",
-			label: _c.watching
+			label: bc.watching
 		};
 	}
 }
-function kc(e) {
+function Nc(e) {
 	let t = e.needsYou[0];
 	if (t !== void 0 && e.rooms.some((e) => e.roomId === t.roomId)) return t.roomId;
 	let n = e.rooms.find((e) => e.doors.some((e) => e.state !== "open"));
 	return n === void 0 ? e.rooms.find((e) => e.roomId === "attic")?.roomId ?? e.rooms[0]?.roomId ?? "foyer" : n.roomId;
 }
-var Ac = { kind: "heading" };
+var Pc = { kind: "heading" };
 function q(e, t, n, r, i, a = null) {
 	return {
 		id: e,
 		kind: t,
-		label: rc(n, 60),
-		consequence: rc(r, 120),
+		label: oc(n, 60),
+		consequence: oc(r, 120),
 		term: a,
 		steps: i
 	};
 }
-function jc(e) {
-	return Zs(e, "plain");
+function Fc(e) {
+	return ec(e, "plain");
 }
-function Mc(e) {
+function Ic(e) {
 	return {
 		kind: "room",
 		roomId: e
 	};
 }
-function Nc(e, t) {
+function Lc(e, t) {
 	return e === null || e.kind !== t.kind || e.roomId !== t.roomId ? !1 : e.kind === "ghost" && t.kind === "ghost" ? e.ghostId === t.ghostId : e.kind === "door" && t.kind === "door" ? e.phase === t.phase : !0;
 }
-function Pc(e, t, n = Ac) {
-	return Nc(e.surface, Mc(t)) ? [] : [{
+function Rc(e, t, n = Pc) {
+	return Lc(e.surface, Ic(t)) ? [] : [{
 		kind: "map",
-		target: Mc(t),
+		target: Ic(t),
 		focus: n
 	}];
 }
-function Fc(e) {
+function zc(e) {
 	return e !== "implementation";
 }
-function Ic(e, t) {
+function Bc(e, t) {
 	return q(`go:${e}`, "go", `Go to the ${t}`, `Opens the ${t}. Nothing there changes.`, [{
 		kind: "map",
-		target: Mc(e),
-		focus: Ac
+		target: Ic(e),
+		focus: Pc
 	}]);
 }
-function Lc(e) {
+function Vc(e) {
 	return q("look", "look", `Look around the ${e.name}`, "Opens this room's sheet. Nothing changes.", [{
 		kind: "map",
-		target: Mc(e.roomId),
-		focus: Ac
+		target: Ic(e.roomId),
+		focus: Pc
 	}]);
 }
-function Rc() {
+function Hc() {
 	return q("close", "look", "Close this sheet", "Puts the sheet away and shows the room.", [{
 		kind: "shell",
 		action: "close"
 	}]);
 }
-function zc(e) {
+function Uc(e) {
 	return e === "" ? e : e[0].toLowerCase() + e.slice(1);
 }
-function Bc(e, t) {
-	let n = fc[t.phase], r = Pc(e.context, e.room.roomId);
-	if (t.phase === "implementation") return q("build-all", "start", jc(n.startLabel), n.startConsequence, [
+function Wc(e, t) {
+	let n = hc[t.phase], r = Rc(e.context, e.room.roomId);
+	if (t.phase === "implementation") return q("build-all", "start", Fc(n.startLabel), n.startConsequence, [
 		...r,
 		{
 			kind: "every",
@@ -6932,24 +6921,24 @@ function Bc(e, t) {
 			key: "start-workshop"
 		}
 	], n.term);
-	let i = t.phaseStatus === "failed" ? `Try ${zc(n.writer)} again` : t.phaseStatus === "revision_required" ? `Have ${zc(n.writer)} write a new version` : jc(n.startLabel);
+	let i = t.phaseStatus === "failed" ? `Try ${Uc(n.writer)} again` : t.phaseStatus === "revision_required" ? `Have ${Uc(n.writer)} write a new version` : Fc(n.startLabel);
 	return q(`start:${t.phase}`, "start", i, n.startConsequence, [...r, {
 		kind: "control",
 		key: `start:${t.phase}`
 	}], n.term);
 }
-function Vc(e, t, n) {
-	let r = fc[t.phase];
-	return q(`read:${t.phase}`, "look", jc(n ? r.readAgainLabel : r.readLabel), "Opens this room's sheet with the work on it. Nothing is decided.", [{
+function Gc(e, t, n) {
+	let r = hc[t.phase];
+	return q(`read:${t.phase}`, "look", Fc(n ? r.readAgainLabel : r.readLabel), "Opens this room's sheet with the work on it. Nothing is decided.", [{
 		kind: "map",
-		target: Mc(e.room.roomId),
-		focus: Ac
+		target: Ic(e.room.roomId),
+		focus: Pc
 	}], r.term);
 }
-function Hc(e, t) {
-	let n = fc[t];
-	return q(`ask:${t}`, "ask", "Ask for a change", `Opens one note to ${zc(n.writer)}. The door stays shut.`, [
-		...Pc(e.context, e.room.roomId),
+function Kc(e, t) {
+	let n = hc[t];
+	return q(`ask:${t}`, "ask", "Ask for a change", `Opens one note to ${Uc(n.writer)}. The door stays shut.`, [
+		...Rc(e.context, e.room.roomId),
 		{
 			kind: "control",
 			key: `revise:${t}`
@@ -6964,8 +6953,8 @@ function Hc(e, t) {
 		}
 	], "revise");
 }
-function Uc(e, t) {
-	let n = t.proposalId === null ? Ac : {
+function qc(e, t) {
+	let n = t.proposalId === null ? Pc : {
 		kind: "proposal",
 		proposalId: t.proposalId
 	};
@@ -6980,23 +6969,23 @@ function Uc(e, t) {
 		focus: n
 	}]);
 }
-function Wc(e) {
+function Jc(e) {
 	return q(`approve:${e}`, "decide", "Open the door", "Accepts this version. The next step can then be started.", [{
 		kind: "control",
 		key: `approve:${e}`
 	}], "approve");
 }
-function Gc(e) {
+function Yc(e) {
 	return q(`reject:${e}`, "decide", "Keep the door shut", "Turns this version down. A new version will be needed.", [{
 		kind: "control",
 		key: `reject:${e}`
 	}], "reject");
 }
-function Kc(e, t, n) {
+function Xc(e, t, n) {
 	let r = e.surface;
 	return r === null || r.roomId !== t.roomId ? !1 : r.kind === "room" || r.kind === "door" && r.phase === n.phase;
 }
-function qc(e) {
+function Zc(e) {
 	let t = q("write-own", "ask", "Write my own", "Puts the cursor in the note so you can type it.", [{
 		kind: "focus",
 		key: `revise-text:${e.phase}`
@@ -7017,7 +7006,7 @@ function qc(e) {
 			}
 		}], "revise"),
 		t
-	] : [...gc[e.phase].map((t, n) => q(`ready:${n}`, "ask", t.label, `Writes this in the note: ${t.text}`, [{
+	] : [...yc[e.phase].map((t, n) => q(`ready:${n}`, "ask", t.label, `Writes this in the note: ${t.text}`, [{
 		kind: "fill",
 		key: `revise-text:${e.phase}`,
 		text: t.text
@@ -7029,7 +7018,7 @@ function qc(e) {
 		}
 	}], "revise")), t];
 }
-function Jc() {
+function Qc() {
 	return [q("replay-toggle", "play", "Play or pause the recording", "The house fills in as it did when this was recorded.", [{
 		kind: "control",
 		key: "replay:toggle"
@@ -7038,7 +7027,7 @@ function Jc() {
 		key: "replay:restart"
 	}])];
 }
-function Yc(e) {
+function $c(e) {
 	if (e.surface !== null && e.surface.roomId === "attic") return [q("attic-toggle", "play", "Play or pause here in the Attic", "Plays back what happened in this house, step by step.", [{
 		kind: "control",
 		key: "attic:toggle"
@@ -7048,32 +7037,32 @@ function Yc(e) {
 	}])];
 	let t = {
 		kind: "map",
-		target: Mc("attic"),
-		focus: Ac
+		target: Ic("attic"),
+		focus: Pc
 	};
 	return [q("attic-watch", "play", "Watch how this house was built", "Opens the Attic and plays back what happened.", [t, {
 		kind: "control",
 		key: "attic:toggle"
 	}]), q("attic-step", "look", "Step through it myself", "Opens the Attic with its list of everything that happened.", [t])];
 }
-function Xc() {
+function el() {
 	return q("built", "look", "See what was made", "Lists what now exists, with its real file names and where it is kept.", [{
 		kind: "map",
-		target: Mc("foyer"),
+		target: Ic("foyer"),
 		focus: {
 			kind: "section",
 			section: "built"
 		}
 	}]);
 }
-function Zc(e) {
+function tl(e) {
 	let { room: t, context: n, situation: r, projection: i } = e, a = n.surface, o = a !== null && a.roomId === t.roomId && a.kind === "room", s = i.rooms.some((e) => e.roomId === "attic"), c = n.task, l = (e) => e.state !== "open" && (e.state === "waiting" || e.phaseStatus === "waiting" || e.phaseStatus === "revision_required");
-	if (c !== null && o && t.doors.some((e) => e.phase === c.phase && l(e))) return qc(c);
+	if (c !== null && o && t.doors.some((e) => e.phase === c.phase && l(e))) return Zc(c);
 	switch (r.kind) {
 		case "locked": return [];
 		case "catch": {
 			if (r.item.kind !== "risky-decision") return [];
-			let e = Sc(r.item);
+			let e = Tc(r.item);
 			return o ? [q(`allow:${e}`, "decide", "Allow it once", "Lets this one action run, once. It cannot be reused.", [{
 				kind: "control",
 				key: `approve:${e}`
@@ -7082,7 +7071,7 @@ function Zc(e) {
 				key: `reject:${e}`
 			}], "reject")] : [q(`see-asked:${e}`, "look", "See exactly what it asked", "Shows the whole action and what it may touch. Nothing is decided yet.", [{
 				kind: "map",
-				target: Mc(t.roomId),
+				target: Ic(t.roomId),
 				focus: {
 					kind: "proposal",
 					proposalId: e
@@ -7090,15 +7079,15 @@ function Zc(e) {
 			}])];
 		}
 		case "door-waiting": {
-			let i = r.door, a = Fc(i.phase) ? [Hc(e, i.phase)] : [];
-			return i.proposalId !== null && Kc(n, t, i) ? [
-				Wc(i.proposalId),
+			let i = r.door, a = zc(i.phase) ? [Kc(e, i.phase)] : [];
+			return i.proposalId !== null && Xc(n, t, i) ? [
+				Jc(i.proposalId),
 				...a,
-				Vc(e, i, !0)
+				Gc(e, i, !0)
 			] : [
-				Vc(e, i, !1),
+				Gc(e, i, !1),
 				...a,
-				Uc(e, i)
+				qc(e, i)
 			];
 		}
 		case "failed": {
@@ -7109,52 +7098,52 @@ function Zc(e) {
 					roomId: t.roomId,
 					ghostId: e.ghostId
 				},
-				focus: Ac
+				focus: Pc
 			}]);
 			if (r.retry === null) return [i];
 			let a = t.ghosts.find((e) => e.ghostId === r.retry?.ghostId);
-			return [q(`retry:${r.retry.runId}`, "start", a === void 0 ? "Try the failed run again" : `Try ${oc(a.name)} again`, "Starts a fresh attempt. The failed one is kept in the record.", [...Pc(n, t.roomId), {
+			return [q(`retry:${r.retry.runId}`, "start", a === void 0 ? "Try the failed run again" : `Try ${lc(a.name)} again`, "Starts a fresh attempt. The failed one is kept in the record.", [...Rc(n, t.roomId), {
 				kind: "control",
 				key: `retry:${r.retry.runId}`
 			}]), i];
 		}
 		case "blocked": {
 			let e = r.ghosts[0];
-			return [q(`see-ghost:${e.ghostId}`, "look", `See why ${oc(e.name)} is held`, "Opens the ghost's details. Nothing changes.", [{
+			return [q(`see-ghost:${e.ghostId}`, "look", `See why ${lc(e.name)} is held`, "Opens the ghost's details. Nothing changes.", [{
 				kind: "map",
 				target: {
 					kind: "ghost",
 					roomId: t.roomId,
 					ghostId: e.ghostId
 				},
-				focus: Ac
+				focus: Pc
 			}])];
 		}
-		case "working": return [q("watch", "look", `Watch ${lc(r.ghosts.map((e) => oc(e.name)))} work`, "Opens this room's sheet. Nothing changes.", [{
+		case "working": return [q("watch", "look", `Watch ${fc(r.ghosts.map((e) => lc(e.name)))} work`, "Opens this room's sheet. Nothing changes.", [{
 			kind: "map",
-			target: Mc(t.roomId),
-			focus: Ac
+			target: Ic(t.roomId),
+			focus: Pc
 		}])];
 		case "startable": {
-			let n = Bc(e, r.door);
+			let n = Wc(e, r.door);
 			return r.door.phase === "implementation" ? [n, q("choose-work", "look", "Choose what to build myself", "Opens the Workshop's list so you can tick the work yourself.", [{
 				kind: "map",
-				target: Mc(t.roomId),
-				focus: Ac
+				target: Ic(t.roomId),
+				focus: Pc
 			}])] : [n];
 		}
 		case "door-open": {
-			let n = wc(t, i), r = yc(t);
-			return [...n === null ? [] : [Ic(n.roomId, n.name)], ...r === null ? [] : [Vc(e, r, !0)]];
+			let n = Dc(t, i), r = Sc(t);
+			return [...n === null ? [] : [Bc(n.roomId, n.name)], ...r === null ? [] : [Gc(e, r, !0)]];
 		}
-		case "built": return [Xc(), ...s ? Yc({
+		case "built": return [el(), ...s ? $c({
 			...n,
 			surface: null
 		}).slice(0, 1) : []];
-		case "room": return t.roomId === "attic" ? Yc(n) : [];
+		case "room": return t.roomId === "attic" ? $c(n) : [];
 	}
 }
-function Qc(e) {
+function nl(e) {
 	return [
 		e.mapOpen ? q("map", "setting", "Put the house map away", "Shows the room again.", [{
 			kind: "shell",
@@ -7179,25 +7168,25 @@ function Qc(e) {
 		}])
 	];
 }
-function $c(e) {
+function rl(e) {
 	let t = /* @__PURE__ */ new Set(), n = [];
 	for (let r of e) t.has(r.id) || (t.add(r.id), n.push(r));
 	return n;
 }
-function el(e, t) {
+function il(e, t) {
 	if (e.steps.length !== 1) return !1;
 	let n = e.steps[0];
-	return n.kind === "map" && n.focus.kind === "heading" && Nc(t, n.target);
+	return n.kind === "map" && n.focus.kind === "heading" && Lc(t, n.target);
 }
-function tl(e, t) {
+function al(e, t) {
 	if (e.steps.length !== 1) return !1;
 	let n = e.steps[0];
 	return n.kind === "map" && n.target.kind === "room" && n.target.roomId === t;
 }
-function nl(e, t) {
+function ol(e, t) {
 	let n = e.rooms.findIndex((e) => e.roomId === t.roomId);
 	if (n < 0) return null;
-	let r = e.rooms[n], i = Cc(r, e), a = e.mode === "live", o = a && r.mutatingActionsEnabled && !r.readOnly && !r.locked, s = {
+	let r = e.rooms[n], i = Ec(r, e), a = e.mode === "live", o = a && r.mutatingActionsEnabled && !r.readOnly && !r.locked, s = {
 		projection: e,
 		room: r,
 		context: t,
@@ -7205,59 +7194,59 @@ function nl(e, t) {
 	}, c = (e) => e === void 0 ? null : {
 		roomId: e.roomId,
 		name: e.name
-	}, l = t.surface, u = l !== null && l.roomId === r.roomId, d = kc(e), f = e.rooms.find((e) => e.roomId === d)?.name ?? "", p = bc(e), m = (e) => e.filter((e) => (o || !tc.includes(e.kind)) && !el(e, l)), h = m(Zc(s)), g = h.some((e) => tl(e, r.roomId)), _ = i.kind === "door-waiting" && i.door.proposalId !== null && Kc(t, r, i.door) ? [Gc(i.door.proposalId)] : [], v = $c(m([
-		...a ? [] : Jc(),
+	}, l = t.surface, u = l !== null && l.roomId === r.roomId, d = Nc(e), f = e.rooms.find((e) => e.roomId === d)?.name ?? "", p = Cc(e), m = (e) => e.filter((e) => (o || !ic.includes(e.kind)) && !il(e, l)), h = m(tl(s)), g = h.some((e) => al(e, r.roomId)), _ = i.kind === "door-waiting" && i.door.proposalId !== null && Xc(t, r, i.door) ? [Yc(i.door.proposalId)] : [], v = rl(m([
+		...a ? [] : Qc(),
 		...h,
-		...u ? [Rc()] : [],
-		...d !== r.roomId && f !== "" ? [Ic(d, f)] : [],
-		...l === null && !r.locked && r.roomId !== "attic" && !g ? [Lc(r)] : [],
-		...p ? [Xc()] : [],
-		...Qc(t).slice(0, 1)
-	])), y = $c(m([
+		...u ? [Hc()] : [],
+		...d !== r.roomId && f !== "" ? [Bc(d, f)] : [],
+		...l === null && !r.locked && r.roomId !== "attic" && !g ? [Vc(r)] : [],
+		...p ? [el()] : [],
+		...nl(t).slice(0, 1)
+	])), y = rl(m([
 		...v,
 		..._,
-		...e.rooms.filter((e) => e.roomId !== r.roomId).map((e) => Ic(e.roomId, e.name)),
+		...e.rooms.filter((e) => e.roomId !== r.roomId).map((e) => Bc(e.roomId, e.name)),
 		...e.needsYou.length === 0 ? [] : [q("needs-you", "go", "Go to what needs you", "Opens the first room where something waits for you.", [{
 			kind: "shell",
 			action: "needs-you"
 		}])],
-		...Qc(t),
+		...nl(t),
 		...t.canLeave ? [q("exit", "leave", "Leave this house", "Goes back to the Foyer hall. Nothing here stops.", [{
 			kind: "shell",
 			action: "exit"
 		}])] : []
-	])), b = Ec(r, e, i, l), x = Oc(i, t.quiet, r.integrity === "valid");
+	])), b = Ac(r, e, i, l), x = Mc(i, t.quiet, r.integrity === "valid");
 	return {
-		status: rc(Tc(b, t.words), 240),
+		status: oc(kc(b, t.words), 240),
 		statusKind: i.kind,
-		terms: Qs(b.template),
-		quotes: Dc(r, i),
+		terms: tc(b.template),
+		quotes: jc(r, i),
 		note: a && !o && !r.readOnly && r.diagnostic !== null && i.kind !== "locked" ? r.diagnostic : null,
-		question: ec,
+		question: rc,
 		options: v.slice(0, 4),
 		everything: y,
 		pose: x.pose,
-		poseLabel: rc(x.label, 60),
+		poseLabel: oc(x.label, 60),
 		previous: c(e.rooms[n - 1]),
 		next: c(e.rooms[n + 1])
 	};
 }
 // src/core/motion-policy.ts
-function rl(e) {
+function sl(e) {
 	return e.stillHouse === !1 && e.prefersReducedMotion === !1 ? "low-frequency" : "none";
 }
-function il(e) {
+function cl(e) {
 	return e !== !1;
 }
-function al(e) {
+function ll(e) {
 	return {
 		stillHouse: e.stillHouse,
 		prefersReducedMotion: e.prefersReducedMotion,
-		effective: rl(e)
+		effective: sl(e)
 	};
 }
 // src/components/house-stage-art.tsx
-var J = (e) => `hh-sf-${e}`, ol = {
+var J = (e) => `hh-sf-${e}`, ul = {
 	foyer: /* @__PURE__ */ R(I, { children: [
 		/* @__PURE__ */ L("path", {
 			className: J("wood-dark"),
@@ -7506,7 +7495,7 @@ var J = (e) => `hh-sf-${e}`, ol = {
 			strokeDasharray: "2 4"
 		})
 	] })
-}, sl = {
+}, dl = {
 	foyer: /* @__PURE__ */ R(I, { children: [
 		/* @__PURE__ */ L("path", {
 			className: J("wood-dark"),
@@ -7815,25 +7804,25 @@ var J = (e) => `hh-sf-${e}`, ol = {
 		})
 	] })
 };
-function cl({ room: e }) {
+function fl({ room: e }) {
 	return /* @__PURE__ */ L(Lt, {
 		viewBox: "0 0 200 120",
 		className: "hh-stage-art hh-stage-wall-art",
 		preserveAspectRatio: "xMidYMax meet",
 		data: { "data-scene": e },
-		children: ol[e]
+		children: ul[e]
 	});
 }
-function ll({ room: e }) {
+function pl({ room: e }) {
 	return /* @__PURE__ */ L(Lt, {
 		viewBox: "0 0 200 120",
 		className: "hh-stage-art hh-stage-prop-art",
 		preserveAspectRatio: "xMidYMax meet",
 		data: { "data-scene": e },
-		children: sl[e]
+		children: dl[e]
 	});
 }
-function ul() {
+function ml() {
 	return /* @__PURE__ */ R(Lt, {
 		viewBox: "0 0 400 70",
 		className: "hh-stage-art hh-stage-roof-art",
@@ -7870,7 +7859,7 @@ function ul() {
 		]
 	});
 }
-function dl() {
+function hl() {
 	return /* @__PURE__ */ R(Lt, {
 		viewBox: "0 0 200 90",
 		className: "hh-stage-art hh-stage-sky-art",
@@ -7905,7 +7894,7 @@ function dl() {
 		]
 	});
 }
-function fl() {
+function gl() {
 	return /* @__PURE__ */ R(Lt, {
 		viewBox: "0 0 400 60",
 		className: "hh-stage-art hh-stage-yard-art",
@@ -7949,24 +7938,24 @@ function fl() {
 }
 J("cloth"), J("paper"), J("bone"), J("brass"), J("wood-dark"), J("brass"), J("bone"), J("wood-dark"), J("ink"), J("brass"), J("brass"), J("wall-attic"), J("bone"), J("roof"), J("lamp"), J("wood"), J("lamp"), J("bone"), J("brass");
 // src/components/RoomDiorama.tsx
-function pl(e, t) {
-	let n = Hs(t), r = e.closest(".hh-ui")?.querySelectorAll("[data-opener-key]") ?? [];
+function _l(e, t) {
+	let n = Gs(t), r = e.closest(".hh-ui")?.querySelectorAll("[data-opener-key]") ?? [];
 	for (let e of r) if (e.getAttribute("data-opener-key") === n) {
 		e.click();
 		return;
 	}
 }
-function ml(e, t) {
+function vl(e, t) {
 	return {
 		"--hh-i": e,
 		"--hh-n": t
 	};
 }
-function hl({ room: e, interactive: t = !1 }) {
+function yl({ room: e, interactive: t = !1 }) {
 	let n = (e) => t ? {
 		"data-pick": e.kind,
 		onClick: (t) => {
-			t.stopPropagation(), pl(t.currentTarget, e);
+			t.stopPropagation(), _l(t.currentTarget, e);
 		}
 	} : {}, r = e.ghosts.some((e) => e.state === "working" || e.state === "waiting");
 	return /* @__PURE__ */ R("div", {
@@ -7987,7 +7976,7 @@ function hl({ room: e, interactive: t = !1 }) {
 			/* @__PURE__ */ R("span", {
 				className: "hh-stage-plane hh-stage-back",
 				"data-doors": Math.min(e.doors.length, 2),
-				children: [/* @__PURE__ */ L(cl, { room: e.roomId }), e.doors.length === 0 ? null : /* @__PURE__ */ L("span", {
+				children: [/* @__PURE__ */ L(fl, { room: e.roomId }), e.doors.length === 0 ? null : /* @__PURE__ */ L("span", {
 					className: "hh-stage-doors",
 					children: e.doors.map((t) => /* @__PURE__ */ R("span", {
 						className: "hh-stage-door",
@@ -8009,14 +7998,14 @@ function hl({ room: e, interactive: t = !1 }) {
 			/* @__PURE__ */ L("span", { className: "hh-stage-eyes" }),
 			/* @__PURE__ */ L("span", {
 				className: "hh-stage-props",
-				children: /* @__PURE__ */ L(ll, { room: e.roomId })
+				children: /* @__PURE__ */ L(pl, { room: e.roomId })
 			}),
 			e.ghosts.length === 0 ? null : /* @__PURE__ */ L("span", {
 				className: "hh-stage-ghosts",
 				children: e.ghosts.map((t, r) => /* @__PURE__ */ L("span", {
 					className: "hh-stage-ghost",
 					"data-ghost": t.state,
-					style: ml(r, e.ghosts.length),
+					style: vl(r, e.ghosts.length),
 					...n({
 						kind: "ghost",
 						roomId: e.roomId,
@@ -8035,7 +8024,7 @@ function hl({ room: e, interactive: t = !1 }) {
 	});
 }
 // src/components/RoomHotspots.tsx
-var gl = /* @__PURE__ */ new Set([
+var bl = /* @__PURE__ */ new Set([
 	"ArrowUp",
 	"ArrowDown",
 	"ArrowLeft",
@@ -8043,11 +8032,11 @@ var gl = /* @__PURE__ */ new Set([
 	"Home",
 	"End"
 ]);
-function _l({ room: e, needsYou: t, openKey: n, panelId: r, onOpen: a, onArrow: o, glow: s = "dark" }) {
+function xl({ room: e, needsYou: t, openKey: n, panelId: r, onOpen: a, onArrow: o, glow: s = "dark" }) {
 	let c = i(), l = i(), u = {
 		kind: "room",
 		roomId: e.roomId
-	}, d = Hs(u), f = [t > 0 ? c : null, e.diagnostic === null ? null : l].filter((e) => e !== null).join(" "), [m, h, g] = Rs(e), _ = e.readOnly && !e.locked && e.integrity === "valid";
+	}, d = Gs(u), f = [t > 0 ? c : null, e.diagnostic === null ? null : l].filter((e) => e !== null).join(" "), [m, h, g] = Vs(e), _ = e.readOnly && !e.locked && e.integrity === "valid";
 	return /* @__PURE__ */ R("li", {
 		className: "hh-ui-room-cell",
 		"data-room": e.roomId,
@@ -8064,14 +8053,14 @@ function _l({ room: e, needsYou: t, openKey: n, panelId: r, onOpen: a, onArrow: 
 					className: "hh-ui-room-control",
 					"data-room-control": e.roomId,
 					"data-opener-key": d,
-					"aria-label": zs(e),
+					"aria-label": Hs(e),
 					"aria-describedby": f === "" ? void 0 : f,
 					"aria-disabled": e.locked ? !0 : void 0,
 					"aria-expanded": n === d,
 					"aria-controls": n === d ? r : void 0,
 					onClick: (e) => a(u, e.currentTarget),
 					onKeyDown: (t) => {
-						!gl.has(t.key) || t.altKey || t.ctrlKey || t.metaKey || (t.preventDefault(), o(e.roomId, t.key));
+						!bl.has(t.key) || t.altKey || t.ctrlKey || t.metaKey || (t.preventDefault(), o(e.roomId, t.key));
 					},
 					children: [
 						/* @__PURE__ */ R("span", {
@@ -8141,14 +8130,14 @@ function _l({ room: e, needsYou: t, openKey: n, panelId: r, onOpen: a, onArrow: 
 							kind: "ghost",
 							roomId: e.roomId,
 							ghostId: t.ghostId
-						}, o = Hs(i);
+						}, o = Gs(i);
 						return /* @__PURE__ */ R("button", {
 							type: "button",
 							className: "hh-ui-ghost-control",
 							"data-ghost-control": t.ghostId,
 							"data-ghost": t.state,
 							"data-opener-key": o,
-							"aria-label": Bs(e, t),
+							"aria-label": Us(e, t),
 							"aria-expanded": n === o,
 							"aria-controls": n === o ? r : void 0,
 							onClick: (e) => a(i, e.currentTarget),
@@ -8166,7 +8155,7 @@ function _l({ room: e, needsYou: t, openKey: n, panelId: r, onOpen: a, onArrow: 
 									" ",
 									/* @__PURE__ */ L("span", {
 										className: "hh-ui-state-word",
-										children: fi(t.state)
+										children: hi(t.state)
 									}),
 									t.pendingText === null ? null : `, ${t.pendingText}`
 								] })
@@ -8182,7 +8171,7 @@ function _l({ room: e, needsYou: t, openKey: n, panelId: r, onOpen: a, onArrow: 
 							roomId: e.roomId,
 							phase: t.phase,
 							proposalId: t.proposalId
-						}, o = Hs(i);
+						}, o = Gs(i);
 						return /* @__PURE__ */ R("button", {
 							type: "button",
 							className: "hh-ui-door-control",
@@ -8191,7 +8180,7 @@ function _l({ room: e, needsYou: t, openKey: n, panelId: r, onOpen: a, onArrow: 
 							"data-status": t.phaseStatus ?? "unavailable",
 							"data-door": t.state,
 							"data-opener-key": o,
-							"aria-label": Vs(e, t),
+							"aria-label": Ws(e, t),
 							"aria-expanded": n === o,
 							"aria-controls": n === o ? r : void 0,
 							onClick: (e) => a(i, e.currentTarget),
@@ -8202,7 +8191,7 @@ function _l({ room: e, needsYou: t, openKey: n, panelId: r, onOpen: a, onArrow: 
 									" door: ",
 									/* @__PURE__ */ L("span", {
 										className: "hh-ui-state-word",
-										children: fi(t.state)
+										children: hi(t.state)
 									}),
 									/* @__PURE__ */ R("span", {
 										className: "hh-ui-door-words",
@@ -8225,7 +8214,7 @@ function _l({ room: e, needsYou: t, openKey: n, panelId: r, onOpen: a, onArrow: 
 						"aria-hidden": !0
 					}), /* @__PURE__ */ L("span", {
 						className: "hh-ui-state-word",
-						children: is(t)
+						children: ss(t)
 					})]
 				}) : null,
 				e.diagnostic === null ? null : /* @__PURE__ */ R("p", {
@@ -8243,28 +8232,28 @@ function _l({ room: e, needsYou: t, openKey: n, panelId: r, onOpen: a, onArrow: 
 			]
 		}), /* @__PURE__ */ R("div", {
 			className: "hh-ui-room-scene",
-			children: [/* @__PURE__ */ L(hl, {
+			children: [/* @__PURE__ */ L(yl, {
 				room: e,
 				interactive: !0
 			}), /* @__PURE__ */ L("span", {
 				className: "hh-ui-window",
 				"data-glow": s,
-				title: Mr[s],
+				title: Ir[s],
 				"aria-hidden": "true"
 			})]
 		})]
 	});
 }
 // src/components/HouseMap.tsx
-var vl = "Mansion rooms", yl = "Arrow keys move between rooms. Enter opens a room, a ghost or a door. Escape closes it. Doors open only when you approve them.";
-function bl({ projection: e, openSurface: t, motion: r, openKey: a = null, panelId: s = "", view: l = "front" }) {
+var Sl = "Mansion rooms", Cl = "Arrow keys move between rooms. Enter opens a room, a ghost or a door. Escape closes it. Doors open only when you approve them.";
+function wl({ projection: e, openSurface: t, motion: r, openKey: a = null, panelId: s = "", view: l = "front" }) {
 	let u = i(), d = c(null), f = o(() => new Set(e.rooms.map((e) => e.roomId)), [e.rooms]), p = f.has("seance-room"), m = n((t, n) => {
-		let r = e.rooms.map((e) => e.roomId), i = n === "Home" ? r[0] : n === "End" ? r[r.length - 1] : di(t, n, f);
+		let r = e.rooms.map((e) => e.roomId), i = n === "Home" ? r[0] : n === "End" ? r[r.length - 1] : mi(t, n, f);
 		i !== void 0 && i !== t && d.current?.querySelector(`[data-room-control="${i}"]`)?.focus();
 	}, [e.rooms, f]);
 	return /* @__PURE__ */ R("nav", {
 		className: "hh-ui-map",
-		"aria-label": vl,
+		"aria-label": Sl,
 		"data-motion-art": r,
 		children: [
 			/* @__PURE__ */ L("h3", {
@@ -8276,30 +8265,30 @@ function bl({ projection: e, openSurface: t, motion: r, openKey: a = null, panel
 			}),
 			/* @__PURE__ */ L("p", {
 				className: "hh-ui-reason hh-ui-map-help",
-				children: yl
+				children: Cl
 			}),
 			/* @__PURE__ */ R("div", {
 				className: "hh-ui-house",
 				"data-view": l,
 				children: [
-					/* @__PURE__ */ L(dl, {}),
-					/* @__PURE__ */ L(ul, {}),
+					/* @__PURE__ */ L(hl, {}),
+					/* @__PURE__ */ L(ml, {}),
 					/* @__PURE__ */ L("ol", {
 						className: "hh-ui-rooms",
 						"data-seance": p ? "shown" : "hidden",
 						ref: d,
 						"aria-labelledby": u,
-						children: e.rooms.map((n) => /* @__PURE__ */ L(_l, {
+						children: e.rooms.map((n) => /* @__PURE__ */ L(xl, {
 							room: n,
 							needsYou: e.needsYou.filter((e) => e.roomId === n.roomId).length,
-							glow: jr(n, e.needsYou),
+							glow: Fr(n, e.needsYou),
 							openKey: a,
 							panelId: s,
 							onOpen: t,
 							onArrow: m
 						}, n.roomId))
 					}),
-					/* @__PURE__ */ L(fl, {}),
+					/* @__PURE__ */ L(gl, {}),
 					/* @__PURE__ */ R("p", {
 						className: "hh-stage-titleblock",
 						"aria-hidden": "true",
@@ -8315,7 +8304,7 @@ function bl({ projection: e, openSurface: t, motion: r, openKey: a = null, panel
 	});
 }
 // src/core/guide-layout.ts
-var xl = 1200, Sl = 170 / 160, Cl = 300 / 200, wl = 18 * Sl / Cl, Tl = {
+var Tl = 1200, El = 170 / 160, Dl = 300 / 200, Ol = 18 * El / Dl, kl = {
 	previous: {
 		left: 2.5,
 		top: 28,
@@ -8346,14 +8335,14 @@ var xl = 1200, Sl = 170 / 160, Cl = 300 / 200, wl = 18 * Sl / Cl, Tl = {
 		width: 9.4,
 		height: 11
 	}
-}, El = {
+}, Al = {
 	left: 84,
 	top: 82,
 	width: 16,
 	height: 18
 };
-wl * Cl / 100 - El.height / 100 * (750 / xl);
-var Dl = {
+Ol * Dl / 100 - Al.height / 100 * (750 / Tl);
+var jl = {
 	guideMin: 20,
 	guideMax: 26,
 	strip: 8,
@@ -8361,76 +8350,76 @@ var Dl = {
 	sceneMinSide: 30,
 	sceneMinStacked: 38,
 	sideMin: 56
-}, Ol = .085, kl = xl / 750;
-function Al(e, t) {
-	return (e.windowHeight - e.sceneTop - t) * kl;
+}, Ml = .085, Nl = Tl / 750;
+function Pl(e, t) {
+	return (e.windowHeight - e.sceneTop - t) * Nl;
 }
-function jl(e) {
+function Fl(e) {
 	let t = e.windowHeight - e.sceneTop;
-	return Math.min(Al(e, Dl.strip * e.rem), t / .71);
+	return Math.min(Pl(e, jl.strip * e.rem), t / .71);
 }
-function Ml(e) {
+function Il(e) {
 	let { rem: t, houseWidth: n } = e;
 	if (e.windowWidth < 900) return {
 		layout: "narrow",
 		sceneWidth: Math.max(0, n),
 		guideWidth: 0
 	};
-	let r = Al(e, Dl.apron * t), i = jl(e), a = Math.min(n, r), o = Math.min(n - Dl.guideMin * t - 12, i);
-	if (n < Dl.sideMin * t || o < a) return {
+	let r = Pl(e, jl.apron * t), i = Fl(e), a = Math.min(n, r), o = Math.min(n - jl.guideMin * t - 12, i);
+	if (n < jl.sideMin * t || o < a) return {
 		layout: "stacked",
-		sceneWidth: Math.max(0, Math.min(n, Math.max(Dl.sceneMinStacked * t, r))),
+		sceneWidth: Math.max(0, Math.min(n, Math.max(jl.sceneMinStacked * t, r))),
 		guideWidth: 0
 	};
-	let s = Math.max(Dl.sceneMinSide * t, i), c = Math.min(Dl.guideMax * t, Math.max(Dl.guideMin * t, n - 12 - s));
+	let s = Math.max(jl.sceneMinSide * t, i), c = Math.min(jl.guideMax * t, Math.max(jl.guideMin * t, n - 12 - s));
 	return {
 		layout: "side",
 		sceneWidth: Math.min(n - c - 12, s),
 		guideWidth: c
 	};
 }
-var Nl = {
+var Ll = {
 	failed: 21,
 	blocked: 21,
 	working: 30
-}, Pl = {
+}, Rl = {
 	left: 26,
 	width: 46
-}, Fl = {
+}, zl = {
 	left: 24,
 	width: 44
 };
-function Il() {
-	return 9 * Sl * xl / 750;
+function Bl() {
+	return 9 * El * Tl / 750;
 }
-function Ll(e) {
-	return Nl[e] ?? 27;
+function Vl(e) {
+	return Ll[e] ?? 27;
 }
-function Rl(e, t, n, r = !1) {
-	let i = Math.max(1, Math.trunc(t) || 1), a = Math.min(i - 1, Math.max(0, Math.trunc(e) || 0)), o = Il(), s = r ? Fl : Pl;
+function Hl(e, t, n, r = !1) {
+	let i = Math.max(1, Math.trunc(t) || 1), a = Math.min(i - 1, Math.max(0, Math.trunc(e) || 0)), o = Bl(), s = r ? zl : Rl;
 	return {
 		left: s.left + (a + .5) / i * s.width - 9 / 2,
-		top: 100 - Ll(n) - o,
+		top: 100 - Vl(n) - o,
 		width: 9,
 		height: o
 	};
 }
-var zl = {
+var Ul = {
 	requirements: "requirements",
 	design: "design",
 	tasks: "tasks",
 	implementation: "build"
-}, Bl = {
+}, Wl = {
 	requirements: "Door for {word}",
 	design: "Door for {word}",
 	tasks: "Door for the {word}",
 	implementation: "Door for {word}"
 };
-function Vl(e) {
-	let t = (e) => +(e.box.top >= El.top);
+function Gl(e) {
+	let t = (e) => +(e.box.top >= Al.top);
 	return [...e].sort((e, n) => t(e) - t(n) || e.box.left - n.box.left);
 }
-function Hl(e, t, n, r) {
+function Kl(e, t, n, r) {
 	let i = [], a = {
 		kind: "room",
 		roomId: e.roomId
@@ -8438,7 +8427,7 @@ function Hl(e, t, n, r) {
 	t.previous !== null && i.push({
 		key: "previous",
 		kind: "previous",
-		box: Tl.previous,
+		box: kl.previous,
 		label: `To the ${t.previous.name}`,
 		name: `To the ${t.previous.name}. Opens that room.`,
 		steps: [{
@@ -8451,11 +8440,11 @@ function Hl(e, t, n, r) {
 		}]
 	});
 	let [o, s] = e.doors, c = (t, r) => {
-		let i = `${Bl[t.phase].replace("{word}", Js(zl[t.phase], n))}: ${fi(t.state)}`;
+		let i = `${Wl[t.phase].replace("{word}", Zs(Ul[t.phase], n))}: ${hi(t.state)}`;
 		return {
 			key: r,
 			kind: "door",
-			box: Tl[r],
+			box: kl[r],
 			label: i,
 			name: `${i}. Shows this door and what it waits for.`,
 			steps: [{
@@ -8473,7 +8462,7 @@ function Hl(e, t, n, r) {
 	o === void 0 ? t.next !== null && i.push({
 		key: "next",
 		kind: "next",
-		box: Tl.door,
+		box: kl.door,
 		label: `To the ${t.next.name}`,
 		name: `To the ${t.next.name}. Opens that room.`,
 		steps: [{
@@ -8485,11 +8474,11 @@ function Hl(e, t, n, r) {
 			focus: { kind: "heading" }
 		}]
 	}) : i.push(c(o, "door")), s !== void 0 && i.push(c(s, "door-2")), e.ghosts.forEach((t, n) => {
-		let r = `${t.name}: ${fi(t.state)}`;
+		let r = `${t.name}: ${hi(t.state)}`;
 		i.push({
 			key: `ghost:${t.ghostId}`,
 			kind: "ghost",
-			box: Rl(n, e.ghosts.length, t.state, s !== void 0),
+			box: Hl(n, e.ghosts.length, t.state, s !== void 0),
 			label: r,
 			name: `${r}. Shows what this ghost is doing.`,
 			steps: [{
@@ -8505,7 +8494,7 @@ function Hl(e, t, n, r) {
 	}), i.push({
 		key: "ledger",
 		kind: "ledger",
-		box: Tl.ledger,
+		box: kl.ledger,
 		label: "Ledger: this room's sheet",
 		name: `Ledger: this room's sheet. Opens the sheet of the ${e.name}.`,
 		steps: [{
@@ -8518,17 +8507,17 @@ function Hl(e, t, n, r) {
 	return i.push({
 		key: "bell",
 		kind: "bell",
-		box: Tl.bell,
+		box: kl.bell,
 		label: l,
 		name: r === 0 ? `${l}. A press does nothing until something waits.` : `${l}. Goes to the first of them.`,
 		steps: [{
 			kind: "shell",
 			action: "needs-you"
 		}]
-	}), Vl(i);
+	}), Gl(i);
 }
-var Ul = `
-.hh-ui { ${xr("dark")}
+var ql = `
+.hh-ui { ${Tr("dark")}
   --hh-canvas: var(--hh-fb-canvas);
   --hh-surface: var(--hh-fb-surface);
   --hh-surface-raised: var(--hh-fb-surface-raised);
@@ -8550,7 +8539,7 @@ var Ul = `
   color: var(--hh-text); background: var(--hh-canvas); font-family: var(--hh-font-sans); font-size: 1rem; line-height: 1.45;
   display: grid; gap: 14px; min-width: 0; max-width: 100%; box-sizing: border-box; padding: 16px;
   border: 1px solid var(--hh-border-soft); border-radius: 12px; overflow-wrap: anywhere; }
-.hh-ui[data-theme='dark'] { ${xr("dark")} }
+.hh-ui[data-theme='dark'] { ${Tr("dark")} }
 .hh-ui *, .hh-ui *::before, .hh-ui *::after { box-sizing: border-box; }
 .hh-ui h2, .hh-ui h3, .hh-ui h4, .hh-ui p { margin: 0; overflow-wrap: anywhere; }
 .hh-ui h2, .hh-ui h3 { font-family: var(--hh-font-serif); font-weight: 700; letter-spacing: 0.01em; }
@@ -8775,12 +8764,12 @@ var Ul = `
 @media (prefers-reduced-motion: reduce) {
   .hh-ui, .hh-ui * { animation: none !important; transition: none !important; }
 }
-`, Wl = 1.2, Gl = 750 / xl, Kl = xl / 750, ql = .03, Jl = .8, Yl = .6, Y = (e, t) => `color-mix(in srgb, var(${e}) ${t}%, black)`, X = (e, t) => `color-mix(in srgb, var(${e}) ${t}%, transparent)`, Xl = `
-.hh-ui { ${Tr("dark")}
+`, Jl = 1.2, Yl = 750 / Tl, Xl = Tl / 750, Zl = .03, Ql = .8, $l = .6, Y = (e, t) => `color-mix(in srgb, var(${e}) ${t}%, black)`, X = (e, t) => `color-mix(in srgb, var(${e}) ${t}%, transparent)`, eu = `
+.hh-ui { ${kr("dark")}
   --hh-font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, "Times New Roman", serif;
   --hh-font-label: var(--hh-font-sans);
   --hh-depth: 110px; --hh-room-h: clamp(130px, 30vw, 200px); border-radius: 16px; }
-.hh-ui[data-theme='dark'] { ${Tr("dark")} }
+.hh-ui[data-theme='dark'] { ${kr("dark")} }
 
 .hh-ui h2, .hh-ui h3 { letter-spacing: 0; }
 .hh-ui-needs, .hh-ui-toggle, .hh-ui-button, .hh-ui-panel-close, .hh-ui-status > summary {
@@ -8945,7 +8934,7 @@ var Ul = `
   min-width: 0; background: var(--hh-sc-poche); }
 .hh-stage-room-title { grid-area: title; justify-self: start; margin: 10px 12px 0; padding: 2px 12px; font-size: 0.9375rem;
   color: var(--hh-sc-ink); background: var(--hh-sc-brass); border: 2px solid var(--hh-sc-ink); border-radius: 4px; }
-.hh-stage-room-scene { grid-area: scene; position: relative; min-width: 0; width: 100%; aspect-ratio: ${xl} / 750; overflow: hidden; background: var(--hh-sc-poche); }
+.hh-stage-room-scene { grid-area: scene; position: relative; min-width: 0; width: 100%; aspect-ratio: ${Tl} / 750; overflow: hidden; background: var(--hh-sc-poche); }
 .hh-stage-room-scene::after { content: ''; position: absolute; inset: 0; pointer-events: none;
   background: radial-gradient(ellipse at 50% 46%, transparent 52%, ${X("--hh-sc-ink", 62)} 100%); }
 .hh-stage-spots { position: absolute; inset: 0; pointer-events: none; }
@@ -9036,8 +9025,8 @@ ${It}/* The map is always on the page of a narrow layout, so there is nothing to
      (--hh-scene-top) and how tall the toolbar has wrapped (--hh-toolbar-h) are measured (use-stage-metrics.ts);
      the values here stand until then. The same lengths are in core/guide-layout.ts (stageFit). */
   .hh-ui { container-type: inline-size; grid-template-columns: minmax(0, 1fr); justify-items: center; --hh-scene-top: 7rem; --hh-toolbar-h: 3.4rem;
-    --hh-scene-w: min(100cqw, max(${Dl.sceneMinStacked}rem, calc((100vh - var(--hh-scene-top) - ${Dl.apron}rem) * ${Kl})));
-    --hh-stage-w: var(--hh-scene-w); --hh-scene-h: calc(var(--hh-scene-w) * ${Gl}); }
+    --hh-scene-w: min(100cqw, max(${jl.sceneMinStacked}rem, calc((100vh - var(--hh-scene-top) - ${jl.apron}rem) * ${Xl})));
+    --hh-stage-w: var(--hh-scene-w); --hh-scene-h: calc(var(--hh-scene-w) * ${Yl}); }
   .hh-ui[data-mode='replay'] { --hh-scene-top: 14rem; }
   /* The toolbar, the room and the notes sit on the house's own grid, so the open sheet can share the room's row. */
   .hh-ui > .hh-ui-behind:first-of-type { display: contents; }
@@ -9052,7 +9041,7 @@ ${It}/* The map is always on the page of a narrow layout, so there is nothing to
   .hh-ui-announcer { grid-row: 5; }
   /* The labels lie over the room, each above its object. An absolutely placed grid child is placed against its
      grid area, so the list is given the room's area: against its own, it would lie under the room, over the apron. */
-  .hh-stage-labels { grid-area: scene; position: absolute; z-index: 2; left: 0; top: 0; width: var(--hh-scene-w); aspect-ratio: ${xl} / 750; padding: 0;
+  .hh-stage-labels { grid-area: scene; position: absolute; z-index: 2; left: 0; top: 0; width: var(--hh-scene-w); aspect-ratio: ${Tl} / 750; padding: 0;
     display: block; pointer-events: none; }
   .hh-stage-label-place { position: absolute; padding-bottom: 4px; pointer-events: auto; }
   .hh-stage-label-place[data-anchor='centre'] { translate: -50% 0; }
@@ -9063,7 +9052,7 @@ ${It}/* The map is always on the page of a narrow layout, so there is nothing to
   /* The Warden stands at the right end of the apron, twice a ghost's height: his width is WARDEN_WIDTH percent of the
      room's width, at his drawing's proportions. The apron is kept tall enough that he rises into the room only inside
      the Guide Reserve. */
-  .hh-stage-apron { padding-right: calc(var(--hh-scene-w) * ${(wl + 4) / 100}); min-height: calc(var(--hh-scene-w) * 0.085 + 4.5rem); }
+  .hh-stage-apron { padding-right: calc(var(--hh-scene-w) * ${(Ol + 4) / 100}); min-height: calc(var(--hh-scene-w) * 0.085 + 4.5rem); }
   .hh-guide-balloon { grid-column: 1; grid-row: 1; align-self: start;
     max-height: max(15rem, calc(100vh - var(--hh-scene-top) - var(--hh-scene-h) - 6.5rem)); }
   .hh-guide-body { overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--hh-sc-ink) transparent; }
@@ -9071,18 +9060,18 @@ ${It}/* The map is always on the page of a narrow layout, so there is nothing to
   .hh-stage-room[data-quiet='true'] .hh-stage-settings { grid-row: 1; }
   .hh-guide-balloon::after { content: ''; position: absolute; right: -11px; bottom: 30px; width: 18px; aspect-ratio: 1; background: var(--hh-sc-balloon);
     border-top: 2px solid var(--hh-sc-ink); border-right: 2px solid var(--hh-sc-ink); transform: rotate(45deg); }
-  .hh-stage-keeper { position: absolute; z-index: 3; right: calc(var(--hh-scene-w) * 0.016); bottom: 8px; width: calc(var(--hh-scene-w) * ${wl / 100});
+  .hh-stage-keeper { position: absolute; z-index: 3; right: calc(var(--hh-scene-w) * 0.016); bottom: 8px; width: calc(var(--hh-scene-w) * ${Ol / 100});
     display: grid; justify-items: center; gap: 3px; text-align: center; }
   .hh-stage-caption { justify-content: center; }
   .hh-stage-warden { width: 100%; }
   /* The open sheet and the map of the whole house lie over the left of the room: under the toolbar's tags, however
      many rows they take, and inside the room, so neither reaches the name plate, the balloon or the Guide Reserve. */
   .hh-ui-panel[data-mode='region'], .hh-ui > .hh-ui-behind ~ .hh-ui-behind { grid-row: 3; grid-column: 1; align-self: start; justify-self: start;
-    margin: 12px 0 0 calc((100cqw - var(--hh-stage-w)) / 2 + var(--hh-scene-w) * ${ql});
+    margin: 12px 0 0 calc((100cqw - var(--hh-stage-w)) / 2 + var(--hh-scene-w) * ${Zl});
     max-height: calc(var(--hh-scene-h) - 1.5rem); min-height: 10rem; overflow-y: auto; }
-  .hh-ui-panel[data-mode='region'] { z-index: 4; width: calc(var(--hh-scene-w) * ${Yl}); max-width: 54rem; }
+  .hh-ui-panel[data-mode='region'] { z-index: 4; width: calc(var(--hh-scene-w) * ${$l}); max-width: 54rem; }
   /* The map is laid over the room on request, and put away again. */
-  .hh-ui > .hh-ui-behind ~ .hh-ui-behind { z-index: 6; width: calc(var(--hh-scene-w) * ${Jl});
+  .hh-ui > .hh-ui-behind ~ .hh-ui-behind { z-index: 6; width: calc(var(--hh-scene-w) * ${Ql});
     border: 2px solid var(--hh-sc-ink); border-radius: 6px; box-shadow: 0 14px 40px ${X("--hh-sc-ink", 80)}; }
   .hh-ui[data-map='closed'] > .hh-ui-behind ~ .hh-ui-behind:not(:focus-within) { position: absolute; width: 1px; height: 1px; min-height: 0; margin: -1px; padding: 0; border: 0;
     overflow: hidden; clip-path: inset(50%); }
@@ -9095,8 +9084,8 @@ ${It}/* The map is always on the page of a narrow layout, so there is nothing to
    beside it. The shell asks for this layout where it gives the larger room (core/guide-layout.ts, stageFit). */
 @media (min-width: 900px) {
   .hh-ui[data-layout='side'] {
-    --hh-fit-w: max(${Dl.sceneMinSide}rem, min(calc((100vh - var(--hh-scene-top) - ${Dl.strip}rem) * ${Kl}), calc((100vh - var(--hh-scene-top)) / ${Gl + Ol})));
-    --hh-guide-w: clamp(${Dl.guideMin}rem, calc(100cqw - 12px - var(--hh-fit-w)), ${Dl.guideMax}rem);
+    --hh-fit-w: max(${jl.sceneMinSide}rem, min(calc((100vh - var(--hh-scene-top) - ${jl.strip}rem) * ${Xl}), calc((100vh - var(--hh-scene-top)) / ${Yl + Ml})));
+    --hh-guide-w: clamp(${jl.guideMin}rem, calc(100cqw - 12px - var(--hh-fit-w)), ${jl.guideMax}rem);
     --hh-scene-w: min(calc(100cqw - var(--hh-guide-w) - 12px), var(--hh-fit-w));
     --hh-stage-w: calc(var(--hh-scene-w) + var(--hh-guide-w) + 12px); }
   /* Two columns that do not push each other. Left: the room, and under it a strip with the guide's settings. Right:
@@ -9104,7 +9093,7 @@ ${It}/* The map is always on the page of a narrow layout, so there is nothing to
      the room, so a tall balloon grows down past the strip and never opens a gap under the room. The strip and the
      last row together are tall enough that the Warden, whose head rises into the Guide Reserve, has floor to stand on. */
   .hh-ui[data-layout='side'] .hh-stage-room { grid-template-columns: var(--hh-scene-w) var(--hh-guide-w); column-gap: 12px;
-    grid-template-rows: 2.75rem calc(var(--hh-scene-h) - 2.75rem) minmax(calc(var(--hh-scene-w) * ${Ol} - 2.4rem), auto) auto;
+    grid-template-rows: 2.75rem calc(var(--hh-scene-h) - 2.75rem) minmax(calc(var(--hh-scene-w) * ${Ml} - 2.4rem), auto) auto;
     grid-template-areas: 'scene title' 'scene balloon' 'settings balloon' '. caption'; }
   .hh-ui[data-layout='side'] .hh-stage-room-scene { align-self: start; }
   .hh-ui[data-layout='side'] .hh-stage-room-title { align-self: start; margin: 10px 0 0; }
@@ -9114,17 +9103,17 @@ ${It}/* The map is always on the page of a narrow layout, so there is nothing to
   .hh-ui[data-layout='side'] .hh-guide-balloon::after { right: auto; left: -11px; bottom: 3.5rem; border-top: 0; border-right: 0; border-left: 2px solid var(--hh-sc-ink);
     border-bottom: 2px solid var(--hh-sc-ink); }
   .hh-ui[data-layout='side'] .hh-guide-options { grid-template-columns: minmax(0, 1fr); }
-  .hh-ui[data-layout='side'] .hh-stage-settings { grid-area: settings; align-self: start; margin: 10px calc(var(--hh-scene-w) * ${(wl + 4) / 100}) 8px 12px; }
+  .hh-ui[data-layout='side'] .hh-stage-settings { grid-area: settings; align-self: start; margin: 10px calc(var(--hh-scene-w) * ${(Ol + 4) / 100}) 8px 12px; }
   /* He stands in the room's own corner, in front of the right end of the desk: his head at the top of the Guide Reserve. */
-  .hh-ui[data-layout='side'] .hh-stage-warden { position: absolute; z-index: 3; left: calc(var(--hh-scene-w) * ${(100 - wl - 1.2) / 100});
-    top: calc(var(--hh-scene-h) * ${El.top / 100} + 2px); width: calc(var(--hh-scene-w) * ${wl / 100}); }
+  .hh-ui[data-layout='side'] .hh-stage-warden { position: absolute; z-index: 3; left: calc(var(--hh-scene-w) * ${(100 - Ol - 1.2) / 100});
+    top: calc(var(--hh-scene-h) * ${Al.top / 100} + 2px); width: calc(var(--hh-scene-w) * ${Ol / 100}); }
   .hh-ui[data-layout='side'] .hh-stage-caption { grid-area: caption; align-self: end; justify-content: flex-start; margin: 6px 10px 8px 0; }
 }
 
 @keyframes hh-stage-hover { 0%, 100% { translate: 0 0; } 50% { translate: 0 -7px; } }
 @keyframes hh-stage-breathe { 0%, 100% { opacity: 1; } 50% { opacity: 0.72; } }
 @media (prefers-reduced-motion: no-preference) {
-  .hh-ui[data-motion='low-frequency'] .hh-stage-leaf { transition: transform ${Wl}s cubic-bezier(0.3, 0.1, 0.2, 1); }
+  .hh-ui[data-motion='low-frequency'] .hh-stage-leaf { transition: transform ${Jl}s cubic-bezier(0.3, 0.1, 0.2, 1); }
   .hh-ui[data-motion='low-frequency'] .hh-ui-rooms, .hh-ui[data-motion='low-frequency'] .hh-stage-roof-art { transition: transform 1.4s cubic-bezier(0.3, 0.1, 0.2, 1); }
   .hh-ui[data-motion='low-frequency'] .hh-stage-ghost .hh-ui-art-ghost[data-ghost='idle'] { animation: hh-stage-hover 4s ease-in-out infinite; }
   .hh-ui[data-motion='low-frequency'] .hh-stage-ghost .hh-ui-art-ghost[data-ghost='working'] { animation: hh-stage-hover 2.4s ease-in-out infinite; }
@@ -9135,9 +9124,9 @@ ${It}/* The map is always on the page of a narrow layout, so there is nothing to
   .hh-ui[data-motion='low-frequency'] .hh-stage-mist { animation: hh-stage-breathe 7s ease-in-out infinite; }
   .hh-ui[data-motion='low-frequency'] .hh-stage-figure .hh-paint-spectre { animation: hh-stage-hover 4s ease-in-out infinite; }
 }
-`, Zl = "Something else…", Ql = "Step back", $l = "The Warden stops talking. Every control and the house map still work.", eu = "What the words mean";
-function tu({ option: e, words: t, onPress: n, pressesOf: r }) {
-	let a = i(), o = i(), s = t === "with-kiro" && e.term != null ? qs(e.term).kiro : null;
+`, tu = "Something else…", nu = "Step back", ru = "The Warden stops talking. Every control and the house map still work.", iu = "What the words mean";
+function au({ option: e, words: t, onPress: n, pressesOf: r }) {
+	let a = i(), o = i(), s = t === "with-kiro" && e.term != null ? Xs(e.term).kiro : null;
 	return /* @__PURE__ */ L("li", { children: /* @__PURE__ */ R("button", {
 		type: "button",
 		className: "hh-guide-option",
@@ -9171,8 +9160,8 @@ function tu({ option: e, words: t, onPress: n, pressesOf: r }) {
 		})]
 	}) });
 }
-function nu({ id: e }) {
-	let [t, n] = l(!1), r = i(), a = qs(e);
+function ou({ id: e }) {
+	let [t, n] = l(!1), r = i(), a = Xs(e);
 	return /* @__PURE__ */ R("span", {
 		className: "hh-guide-term",
 		"data-term": e,
@@ -9198,7 +9187,7 @@ function nu({ id: e }) {
 		}) : null]
 	});
 }
-function ru({ view: e, words: t, onPress: n, onStepBack: a, refusal: o = null, pressesOf: s, statusRef: u, children: d }) {
+function su({ view: e, words: t, onPress: n, onStepBack: a, refusal: o = null, pressesOf: s, statusRef: u, children: d }) {
 	let [f, p] = l(!1), m = i(), _ = i(), v = c(null), y = u ?? v, b = e.terms ?? [], x = e.note ?? null, S = new Set(e.options.map((e) => e.id)), C = e.everything.filter((e) => !S.has(e.id)), w = c(null);
 	r(() => {
 		let e = w.current;
@@ -9226,7 +9215,7 @@ function ru({ view: e, words: t, onPress: n, onStepBack: a, refusal: o = null, p
 				}),
 				b.length === 0 ? null : /* @__PURE__ */ L("p", {
 					className: "hh-guide-terms",
-					children: b.map((e) => /* @__PURE__ */ L(nu, { id: e }, e))
+					children: b.map((e) => /* @__PURE__ */ L(ou, { id: e }, e))
 				}),
 				x === null ? null : /* @__PURE__ */ L("p", {
 					className: "hh-guide-note",
@@ -9250,7 +9239,7 @@ function ru({ view: e, words: t, onPress: n, onStepBack: a, refusal: o = null, p
 				e.options.length === 0 ? null : /* @__PURE__ */ L("ul", {
 					className: "hh-guide-options",
 					"data-guide-primary": !0,
-					children: e.options.map((e) => /* @__PURE__ */ L(tu, {
+					children: e.options.map((e) => /* @__PURE__ */ L(au, {
 						option: e,
 						words: t,
 						onPress: T,
@@ -9270,7 +9259,7 @@ function ru({ view: e, words: t, onPress: n, onStepBack: a, refusal: o = null, p
 							children: [L(f ? h : g, {
 								size: 14,
 								"aria-hidden": !0
-							}), Zl]
+							}), tu]
 						}),
 						/* @__PURE__ */ L("button", {
 							type: "button",
@@ -9278,12 +9267,12 @@ function ru({ view: e, words: t, onPress: n, onStepBack: a, refusal: o = null, p
 							"data-guide-step-back": !0,
 							"aria-describedby": _,
 							onClick: a,
-							children: Ql
+							children: nu
 						}),
 						/* @__PURE__ */ L("span", {
 							className: "hh-guide-hidden",
 							id: _,
-							children: $l
+							children: ru
 						})
 					]
 				}),
@@ -9294,7 +9283,7 @@ function ru({ view: e, words: t, onPress: n, onStepBack: a, refusal: o = null, p
 					children: [
 						C.length === 0 ? null : /* @__PURE__ */ L("ul", {
 							className: "hh-guide-options",
-							children: C.map((e) => /* @__PURE__ */ L(tu, {
+							children: C.map((e) => /* @__PURE__ */ L(au, {
 								option: e,
 								words: t,
 								onPress: T,
@@ -9303,12 +9292,12 @@ function ru({ view: e, words: t, onPress: n, onStepBack: a, refusal: o = null, p
 						}),
 						/* @__PURE__ */ L("p", {
 							className: "hh-guide-book-title",
-							children: eu
+							children: iu
 						}),
 						/* @__PURE__ */ L("dl", {
 							className: "hh-guide-book",
 							"data-word-book": !0,
-							children: Ws.map((e) => /* @__PURE__ */ R("div", {
+							children: qs.map((e) => /* @__PURE__ */ R("div", {
 								"data-term": e.id,
 								children: [/* @__PURE__ */ R("dt", { children: [
 									e.plain,
@@ -9335,8 +9324,8 @@ function ru({ view: e, words: t, onPress: n, onStepBack: a, refusal: o = null, p
 	});
 }
 // src/components/ObjectLabels.tsx
-var iu = "Things you can press in this room";
-function au(e) {
+var cu = "Things you can press in this room";
+function lu(e) {
 	let t = e.left + e.width / 2, n = `${100 - e.top}%`;
 	return t < 20 ? {
 		anchor: "left",
@@ -9358,13 +9347,13 @@ function au(e) {
 		}
 	};
 }
-function ou({ objects: e, onPress: t }) {
+function uu({ objects: e, onPress: t }) {
 	return /* @__PURE__ */ L("ul", {
 		className: "hh-stage-labels",
 		"data-object-labels": !0,
-		"aria-label": iu,
+		"aria-label": cu,
 		children: e.map((e) => {
-			let n = au(e.box);
+			let n = lu(e.box);
 			return /* @__PURE__ */ L("li", {
 				className: "hh-stage-label-place",
 				"data-anchor": n.anchor,
@@ -9384,22 +9373,22 @@ function ou({ objects: e, onPress: t }) {
 	});
 }
 // src/components/use-hold-aftermath.ts
-var su = 2400;
-function cu(e, t) {
+var du = 2400;
+function fu(e, t) {
 	let n = c(/* @__PURE__ */ new Set()), i = c(/* @__PURE__ */ new Set()), [a, o] = l(null);
 	return r(() => {
-		let r = Rr(n.current, i.current, e);
-		for (let t of Lr(e)) n.current.add(t);
+		let r = Hr(n.current, i.current, e);
+		for (let t of Vr(e)) n.current.add(t);
 		r !== null && (i.current.add(r.proposalId), t && o(r));
 	}, [e, t]), r(() => {
 		if (a === null) return;
-		let e = setTimeout(() => o(null), su);
+		let e = setTimeout(() => o(null), du);
 		return () => clearTimeout(e);
 	}, [a]), a;
 }
 // src/components/RoomStage.tsx
-var lu = "Fright", uu = "Calm, Eerie or Dread: how dark and frightening the house is drawn. It changes nothing else.", du = "Call the Warden", fu = "He says what is going on in this room and lists what you can do.", pu = "Guide settings", mu = "House map", hu = "Show Kiro's words", gu = "Show me what I can press";
-function _u(e) {
+var pu = "Fright", mu = "Calm, Eerie or Dread: how dark and frightening the house is drawn. It changes nothing else.", hu = "Call the Warden", gu = "He says what is going on in this room and lists what you can do.", _u = "Guide settings", vu = "House map", yu = "Show Kiro's words", bu = "Show me what I can press";
+function xu(e) {
 	return {
 		left: `${e.left}%`,
 		top: `${e.top}%`,
@@ -9407,28 +9396,28 @@ function _u(e) {
 		height: `${e.height}%`
 	};
 }
-var vu = ["ledger", "bell"];
-function yu({ projection: e, roomId: t, view: n, words: r, quiet: a = !1, settings: o, open: s = !1, onPress: c, onStepBack: l, onCallWarden: u, onReturn: d, refusal: f = null, statusRef: p, motion: m = "none", balloon: h = null }) {
-	let g = i(), _ = i(), v = cu(e, o.fright !== "calm" && m === "low-frequency"), y = e.rooms.find((e) => e.roomId === t);
+var Su = ["ledger", "bell"];
+function Cu({ projection: e, roomId: t, view: n, words: r, quiet: a = !1, settings: o, open: s = !1, onPress: c, onStepBack: l, onCallWarden: u, onReturn: d, refusal: f = null, statusRef: p, motion: m = "none", balloon: h = null }) {
+	let g = i(), _ = i(), v = fu(e, o.fright !== "calm" && m === "low-frequency"), y = e.rooms.find((e) => e.roomId === t);
 	if (y === void 0) return null;
-	let b = y.ghosts.some((e) => e.state === "working" || e.state === "waiting"), [x, S] = y.doors, C = Hl(y, n, r, e.needsYou.length), w = Fr(o.fright, m), T = o.fright !== "calm", D = Ar(y), O = Nr(e).stance, k = x?.state === "waiting" ? "side" : S?.state === "waiting" ? "back" : null, A = (e) => {
+	let b = y.ghosts.some((e) => e.state === "working" || e.state === "waiting"), [x, S] = y.doors, C = Kl(y, n, r, e.needsYou.length), w = zr(o.fright, m), T = o.fright !== "calm", D = Pr(y), O = Lr(e).stance, k = x?.state === "waiting" ? "side" : S?.state === "waiting" ? "back" : null, A = (e) => {
 		let t = e.kind === "ghost" ? y.ghosts.find((t) => `ghost:${t.ghostId}` === e.key) : void 0;
 		return t === void 0 ? /* @__PURE__ */ L("span", {
 			className: "hh-stage-spot",
 			"data-spot": e.key,
 			"data-label": e.label,
-			style: _u(e.box),
+			style: xu(e.box),
 			onClick: () => c(e.steps)
 		}, e.key) : /* @__PURE__ */ L("span", {
 			className: "hh-stage-figure",
 			"data-ghost": t.state,
 			"data-label": e.label,
 			"data-dragged": v !== null && v.outcome === "refused" && v.ghostId === t.ghostId ? "true" : void 0,
-			style: _u(e.box),
+			style: xu(e.box),
 			onClick: () => c(e.steps),
-			children: L(T ? rn : Qn, {
+			children: L(T ? cn : nr, {
 				state: t.state,
-				role: Kn(t.ghostId)
+				role: Xn(t.ghostId)
 			})
 		}, e.key);
 	};
@@ -9449,37 +9438,37 @@ function yu({ projection: e, roomId: t, view: n, words: r, quiet: a = !1, settin
 			/* @__PURE__ */ R("div", {
 				className: "hh-stage-room-scene",
 				children: [
-					/* @__PURE__ */ L(Un, {
+					/* @__PURE__ */ L(qn, {
 						room: t,
 						door: x === void 0 ? null : x.state,
 						secondDoor: S === void 0 ? null : S.state,
 						lit: b,
 						hasPrevious: n.previous !== null,
 						hasNext: n.next !== null,
-						dread: T ? { webs: Pr(y) } : void 0
+						dread: T ? { webs: Rr(y) } : void 0
 					}),
 					/* @__PURE__ */ L("div", {
 						className: "hh-stage-spots",
 						"aria-hidden": "true",
-						children: C.filter((e) => !vu.includes(e.kind)).map(A)
+						children: C.filter((e) => !Su.includes(e.kind)).map(A)
 					}),
-					/* @__PURE__ */ L(Wn, {}),
-					/* @__PURE__ */ L(qt, {
+					/* @__PURE__ */ L(Jn, {}),
+					/* @__PURE__ */ L(Jt, {
 						light: D,
 						leakAt: k,
 						effects: w
 					}),
-					/* @__PURE__ */ L(Jt, { effects: w }),
-					T ? /* @__PURE__ */ L(Xt, { stance: O }) : null,
-					v !== null && v.outcome === "released" ? /* @__PURE__ */ L(an, {}, v.proposalId) : null,
+					/* @__PURE__ */ L(Yt, { effects: w }),
+					T ? /* @__PURE__ */ L(Zt, { stance: O }) : null,
+					v !== null && v.outcome === "released" ? /* @__PURE__ */ L(ln, {}, v.proposalId) : null,
 					/* @__PURE__ */ L("div", {
 						className: "hh-stage-spots",
 						"aria-hidden": "true",
-						children: C.filter((e) => vu.includes(e.kind)).map(A)
+						children: C.filter((e) => Su.includes(e.kind)).map(A)
 					})
 				]
 			}),
-			o.reveal ? /* @__PURE__ */ L(ou, {
+			o.reveal ? /* @__PURE__ */ L(uu, {
 				objects: C,
 				onPress: c
 			}) : null,
@@ -9487,19 +9476,19 @@ function yu({ projection: e, roomId: t, view: n, words: r, quiet: a = !1, settin
 				className: "hh-stage-apron",
 				"data-stage-apron": !0,
 				children: [
-					h === null ? a ? null : /* @__PURE__ */ L(ru, {
+					h === null ? a ? null : /* @__PURE__ */ L(su, {
 						view: n,
 						words: r,
 						onPress: (e, t) => c(e.steps, t),
 						onStepBack: l,
 						refusal: f,
-						pressesOf: (e) => nc(e.steps).join(" "),
+						pressesOf: (e) => ac(e.steps).join(" "),
 						statusRef: p
 					}) : h,
 					/* @__PURE__ */ R("div", {
 						className: "hh-stage-settings",
 						role: "group",
-						"aria-label": pu,
+						"aria-label": _u,
 						"data-guide-settings": !0,
 						children: [
 							/* @__PURE__ */ R("button", {
@@ -9513,7 +9502,7 @@ function yu({ projection: e, roomId: t, view: n, words: r, quiet: a = !1, settin
 										size: 13,
 										"aria-hidden": !0
 									}),
-									mu,
+									vu,
 									": ",
 									o.mapOpen ? "open" : "closed"
 								]
@@ -9529,7 +9518,7 @@ function yu({ projection: e, roomId: t, view: n, words: r, quiet: a = !1, settin
 										size: 13,
 										"aria-hidden": !0
 									}),
-									hu,
+									yu,
 									": ",
 									o.kiroWords ? "on" : "off"
 								]
@@ -9545,7 +9534,7 @@ function yu({ projection: e, roomId: t, view: n, words: r, quiet: a = !1, settin
 										size: 13,
 										"aria-hidden": !0
 									}),
-									gu,
+									bu,
 									": ",
 									o.reveal ? "on" : "off"
 								]
@@ -9561,15 +9550,15 @@ function yu({ projection: e, roomId: t, view: n, words: r, quiet: a = !1, settin
 										size: 13,
 										"aria-hidden": !0
 									}),
-									lu,
+									pu,
 									": ",
-									Or[o.fright]
+									Mr[o.fright]
 								]
 							}),
 							/* @__PURE__ */ L("span", {
 								className: "hh-guide-hidden",
 								id: _,
-								children: uu
+								children: mu
 							})
 						]
 					}),
@@ -9579,7 +9568,7 @@ function yu({ projection: e, roomId: t, view: n, words: r, quiet: a = !1, settin
 						children: [/* @__PURE__ */ L("span", {
 							className: "hh-stage-warden",
 							"aria-hidden": "true",
-							children: /* @__PURE__ */ L(lr, { pose: n.pose })
+							children: /* @__PURE__ */ L(pr, { pose: n.pose })
 						}), /* @__PURE__ */ R("div", {
 							className: "hh-stage-caption",
 							children: [
@@ -9597,11 +9586,11 @@ function yu({ projection: e, roomId: t, view: n, words: r, quiet: a = !1, settin
 									children: [/* @__PURE__ */ L(re, {
 										size: 13,
 										"aria-hidden": !0
-									}), du]
+									}), hu]
 								}), /* @__PURE__ */ L("span", {
 									className: "hh-guide-hidden",
 									id: g,
-									children: fu
+									children: gu
 								})] }) : null,
 								d === void 0 ? null : /* @__PURE__ */ R("button", {
 									type: "button",
@@ -9623,30 +9612,30 @@ function yu({ projection: e, roomId: t, view: n, words: r, quiet: a = !1, settin
 	});
 }
 // src/adapters/house-sound.ts
-var bu = .12, xu = .5, Su = 1.5, Cu = .22, wu = .16;
-function Tu(e, t, n, r, i, a = 0) {
+var wu = .12, Tu = .5, Eu = 1.5, Du = .22, Ou = .16;
+function ku(e, t, n, r, i, a = 0) {
 	let o = e.ctx.createGain(), s = e.at + a;
 	return o.gain.setValueAtTime(1e-4, s), o.gain.exponentialRampToValueAtTime(t, s + n), o.gain.setValueAtTime(t, s + n + r), o.gain.exponentialRampToValueAtTime(1e-4, s + n + r + i), o.connect(e.out), o;
 }
-function Eu(e, t, n) {
+function Au(e, t, n) {
 	let r = e.ctx.createBufferSource();
 	return r.buffer = e.noise, r.loop = !0, r.start(e.at + t), r.stop(e.at + t + n), r;
 }
-function Du(e, t, n, r) {
+function ju(e, t, n, r) {
 	let i = e.ctx.createOscillator();
 	return i.type = t, i.start(e.at + n), i.stop(e.at + n + r), i;
 }
-function Ou(e, t, n, r, i = .5, a = 0) {
-	let o = e.at + a, s = Du(e, "sawtooth", a, t), c = Math.max(6, Math.round(t * 14));
+function Mu(e, t, n, r, i = .5, a = 0) {
+	let o = e.at + a, s = ju(e, "sawtooth", a, t), c = Math.max(6, Math.round(t * 14));
 	for (let e = 0; e <= c; e += 1) {
 		let i = e / c, a = e % 2 == 0 ? 1 : .9;
 		s.frequency.setValueAtTime((n + (r - n) * i ** 1.6) * a, o + i * t);
 	}
-	let l = Du(e, "square", a, t);
+	let l = ju(e, "square", a, t);
 	l.frequency.setValueAtTime(34, o), l.frequency.exponentialRampToValueAtTime(11, o + t);
 	let u = e.ctx.createGain();
 	u.gain.value = .45;
-	let d = Tu(e, i, .05, t * .55, t * .4, a), f = e.ctx.createGain();
+	let d = ku(e, i, .05, t * .55, t * .4, a), f = e.ctx.createGain();
 	f.gain.value = .55, l.connect(u).connect(f.gain);
 	for (let [n, r] of [[760, 9], [1900, 12]]) {
 		let i = e.ctx.createBiquadFilter();
@@ -9654,67 +9643,67 @@ function Ou(e, t, n, r, i = .5, a = 0) {
 	}
 	f.connect(d);
 }
-function ku(e, t, n = .9, r = 92) {
-	let i = e.at + t, a = Du(e, "sine", t, .3);
-	a.frequency.setValueAtTime(r, i), a.frequency.exponentialRampToValueAtTime(r * .45, i + .22), a.connect(Tu(e, n, .004, .02, .2, t));
+function Nu(e, t, n = .9, r = 92) {
+	let i = e.at + t, a = ju(e, "sine", t, .3);
+	a.frequency.setValueAtTime(r, i), a.frequency.exponentialRampToValueAtTime(r * .45, i + .22), a.connect(ku(e, n, .004, .02, .2, t));
 	let o = e.ctx.createBiquadFilter();
-	o.type = "lowpass", o.frequency.value = 420, Eu(e, t, .12).connect(o).connect(Tu(e, n * .5, .003, .01, .08, t));
+	o.type = "lowpass", o.frequency.value = 420, Au(e, t, .12).connect(o).connect(ku(e, n * .5, .003, .01, .08, t));
 }
-function Au(e, t) {
+function Pu(e, t) {
 	let n = e.at, r = e.ctx.createBiquadFilter();
-	r.type = "bandpass", r.Q.value = 2.2, r.frequency.setValueAtTime(260, n), r.frequency.exponentialRampToValueAtTime(1300, n + t * .45), r.frequency.exponentialRampToValueAtTime(380, n + t), Eu(e, 0, t).connect(r).connect(Tu(e, .5, t * .35, .05, t * .55));
-	let i = Du(e, "sine", 0, t);
-	i.frequency.setValueAtTime(330, n), i.frequency.linearRampToValueAtTime(495, n + t * .5), i.frequency.linearRampToValueAtTime(392, n + t), i.connect(Tu(e, .12, t * .3, .1, t * .5));
+	r.type = "bandpass", r.Q.value = 2.2, r.frequency.setValueAtTime(260, n), r.frequency.exponentialRampToValueAtTime(1300, n + t * .45), r.frequency.exponentialRampToValueAtTime(380, n + t), Au(e, 0, t).connect(r).connect(ku(e, .5, t * .35, .05, t * .55));
+	let i = ju(e, "sine", 0, t);
+	i.frequency.setValueAtTime(330, n), i.frequency.linearRampToValueAtTime(495, n + t * .5), i.frequency.linearRampToValueAtTime(392, n + t), i.connect(ku(e, .12, t * .3, .1, t * .5));
 }
-function ju(e, t, n, r = .4, i = 1.1) {
+function Fu(e, t, n, r = .4, i = 1.1) {
 	for (let [a, o] of [
 		[1, 1],
 		[2.76, .35],
 		[5.4, .12]
 	]) {
-		let s = Du(e, "sine", n, i + .1);
-		s.frequency.value = t * a, s.connect(Tu(e, r * o, .004, .01, i * (a === 1 ? 1 : .5), n));
+		let s = ju(e, "sine", n, i + .1);
+		s.frequency.value = t * a, s.connect(ku(e, r * o, .004, .01, i * (a === 1 ? 1 : .5), n));
 	}
 }
-function Mu(e) {
-	let t = e.at, n = Du(e, "triangle", 0, .95);
+function Iu(e) {
+	let t = e.at, n = ju(e, "triangle", 0, .95);
 	n.frequency.setValueAtTime(410, t), n.frequency.exponentialRampToValueAtTime(150, t + .9);
-	let r = Du(e, "sine", 0, .95);
+	let r = ju(e, "sine", 0, .95);
 	r.frequency.value = 6;
 	let i = e.ctx.createGain();
-	i.gain.value = 14, r.connect(i).connect(n.frequency), n.connect(Tu(e, .3, .06, .4, .45));
+	i.gain.value = 14, r.connect(i).connect(n.frequency), n.connect(ku(e, .3, .06, .4, .45));
 }
-var Nu = {
+var Lu = {
 	"door-open": (e) => {
-		Ou(e, 1.25, 96, 178), ku(e, 1.22, .3, 70);
+		Mu(e, 1.25, 96, 178), Nu(e, 1.22, .3, 70);
 	},
 	"door-knock": (e) => {
-		ku(e, 0, .8, 140), ku(e, .19, .7, 132), ku(e, .44, .9, 120);
+		Nu(e, 0, .8, 140), Nu(e, .19, .7, 132), Nu(e, .44, .9, 120);
 	},
 	"door-seal": (e) => {
-		Ou(e, .5, 170, 110, .35), ku(e, .48, .9, 84);
+		Mu(e, .5, 170, 110, .35), Nu(e, .48, .9, 84);
 	},
 	"door-slam": (e) => {
-		ku(e, 0, 1, 76), ku(e, .07, .5, 58), Ou(e, .3, 240, 200, .18, .12);
+		Nu(e, 0, 1, 76), Nu(e, .07, .5, 58), Mu(e, .3, 240, 200, .18, .12);
 	},
-	"ghost-wake": (e) => Au(e, .95),
+	"ghost-wake": (e) => Pu(e, .95),
 	"ghost-done": (e) => {
-		ju(e, 659.25, 0, .32), ju(e, 987.77, .16, .26);
+		Fu(e, 659.25, 0, .32), Fu(e, 987.77, .16, .26);
 	},
-	"ghost-fail": (e) => Mu(e),
+	"ghost-fail": (e) => Iu(e),
 	"needs-you": (e) => {
-		ju(e, 783.99, 0, .3, .8), ju(e, 622.25, .22, .3, 1.2);
+		Fu(e, 783.99, 0, .3, .8), Fu(e, 622.25, .22, .3, 1.2);
 	},
-	"panel-open": (e) => Ou(e, .42, 130, 205, .3),
-	"panel-close": (e) => ku(e, 0, .45, 110)
+	"panel-open": (e) => Mu(e, .42, 130, 205, .3),
+	"panel-close": (e) => Nu(e, 0, .45, 110)
 };
-function Pu() {
+function Ru() {
 	if (typeof window > "u") return null;
 	let e = window;
 	return e.AudioContext ?? e.webkitAudioContext ?? null;
 }
-function Fu() {
-	let e = Pu();
+function zu() {
+	let e = Ru();
 	if (e === null) return null;
 	let t;
 	try {
@@ -9723,7 +9712,7 @@ function Fu() {
 		return null;
 	}
 	let n = t.createGain();
-	n.gain.value = Cu, n.connect(t.destination);
+	n.gain.value = Du, n.connect(t.destination);
 	let r = t.createBuffer(1, t.sampleRate * 2, t.sampleRate), i = r.getChannelData(0);
 	for (let e = 0; e < i.length; e += 1) i[e] = Math.random() * 2 - 1;
 	let a = t.createBufferSource();
@@ -9731,13 +9720,13 @@ function Fu() {
 	let o = t.createBiquadFilter();
 	o.type = "bandpass", o.Q.value = .9, o.frequency.value = 380;
 	let s = t.createGain();
-	s.gain.value = wu;
+	s.gain.value = Ou;
 	let c = t.createOscillator();
 	c.frequency.value = .07;
 	let l = t.createGain();
 	l.gain.value = 190;
 	let u = t.createGain();
-	u.gain.value = wu * .6, c.connect(l).connect(o.frequency), c.connect(u).connect(s.gain), a.connect(o).connect(s).connect(n), a.start(), c.start();
+	u.gain.value = Ou * .6, c.connect(l).connect(o.frequency), c.connect(u).connect(s.gain), a.connect(o).connect(s).connect(n), a.start(), c.start();
 	let d = !1, f = t.createGain();
 	f.gain.value = 1e-4;
 	let p = t.createBiquadFilter();
@@ -9758,16 +9747,16 @@ function Fu() {
 		return a(0, 52, 1), a(.24, 44, .7), r;
 	}, g = (e, n) => {
 		let r = t.currentTime;
-		e.gain.cancelScheduledValues(r), e.gain.setValueAtTime(Math.max(1e-4, e.gain.value), r), e.gain.exponentialRampToValueAtTime(Math.max(1e-4, n), r + Su);
+		e.gain.cancelScheduledValues(r), e.gain.setValueAtTime(Math.max(1e-4, e.gain.value), r), e.gain.exponentialRampToValueAtTime(Math.max(1e-4, n), r + Eu);
 	}, _ = () => {
 		if (m === null) return;
 		let e = m;
-		m = null, g(e.level, 1e-4), e.source.stop(t.currentTime + Su + .1);
+		m = null, g(e.level, 1e-4), e.source.stop(t.currentTime + Eu + .1);
 	};
 	return {
 		setDread: ({ drone: e, heartbeatBpm: r }) => {
 			if (!d) try {
-				if (g(f, e ? bu : 1e-4), r === null) {
+				if (g(f, e ? wu : 1e-4), r === null) {
 					_();
 					return;
 				}
@@ -9776,7 +9765,7 @@ function Fu() {
 				let i = t.createBufferSource();
 				i.buffer = h(r), i.loop = !0;
 				let a = t.createGain();
-				a.gain.value = 1e-4, i.connect(a).connect(n), i.start(), g(a, xu), m = {
+				a.gain.value = 1e-4, i.connect(a).connect(n), i.start(), g(a, Tu), m = {
 					source: i,
 					level: a,
 					bpm: r
@@ -9785,7 +9774,7 @@ function Fu() {
 		},
 		play: (e) => {
 			if (!d) try {
-				t.state === "suspended" && t.resume(), Nu[e]({
+				t.state === "suspended" && t.resume(), Lu[e]({
 					ctx: t,
 					out: n,
 					noise: r,
@@ -9798,17 +9787,17 @@ function Fu() {
 		}
 	};
 }
-var Iu = {
+var Bu = {
 	open: "door-open",
 	waiting: "door-knock",
 	rejected: "door-slam",
 	sealed: "door-seal"
-}, Lu = {
+}, Vu = {
 	working: "ghost-wake",
 	done: "ghost-done",
 	failed: "ghost-fail"
 };
-function Ru(e, t) {
+function Hu(e, t) {
 	if (e === null || e.mansionName !== t.mansionName) return [];
 	let n = [], r = (e) => {
 		e !== void 0 && !n.includes(e) && n.push(e);
@@ -9817,19 +9806,19 @@ function Ru(e, t) {
 		let t = i.get(e.roomId);
 		if (t !== void 0) for (let n of e.doors) {
 			let e = t.doors.find((e) => e.phase === n.phase);
-			e !== void 0 && e.state !== n.state && r(Iu[n.state]);
+			e !== void 0 && e.state !== n.state && r(Bu[n.state]);
 		}
 	}
 	for (let e of t.rooms) {
 		let t = i.get(e.roomId);
 		if (t !== void 0) for (let n of e.ghosts) {
 			let e = t.ghosts.find((e) => e.ghostId === n.ghostId);
-			(e === void 0 ? n.state === "working" : e.state !== n.state) && r(Lu[n.state]);
+			(e === void 0 ? n.state === "working" : e.state !== n.state) && r(Vu[n.state]);
 		}
 	}
 	return t.needsYou.length > e.needsYou.length && r("needs-you"), n.slice(0, 3);
 }
-function zu(e, t, i = Fu, a = "calm") {
+function Uu(e, t, i = zu, a = "calm") {
 	let [o, s] = l(!1), [u, d] = l(!0), f = c(null), p = c([]), m = n(() => {
 		for (let e of p.current) clearTimeout(e);
 		p.current = [], f.current?.close(), f.current = null;
@@ -9849,7 +9838,7 @@ function zu(e, t, i = Fu, a = "calm") {
 	}, [i, m]), _ = c(null);
 	r(() => {
 		let t = _.current;
-		_.current = e, f.current !== null && h(Ru(t, e));
+		_.current = e, f.current !== null && h(Hu(t, e));
 	}, [e, h]);
 	let v = c(t);
 	r(() => {
@@ -9860,7 +9849,7 @@ function zu(e, t, i = Fu, a = "calm") {
 	return r(() => {
 		f.current?.setDread?.({
 			drone: a !== "calm",
-			heartbeatBpm: a === "calm" ? null : Ir(y)
+			heartbeatBpm: a === "calm" ? null : Br(y)
 		});
 	}, [
 		o,
@@ -9873,8 +9862,8 @@ function zu(e, t, i = Fu, a = "calm") {
 	};
 }
 // src/components/HouseToolbar.tsx
-var Bu = "This browser cannot play the house sounds.", Vu = "Your browser asks for reduced motion, so the house is still either way.", Hu = t(function({ mansionName: e, needsYou: t, onNeedsYou: n, motion: r, onToggleStillHouse: a, status: o, sound: s, view: c }, l) {
-	let u = i(), d = i(), f = Ls(t), m = t.length === 0;
+var Wu = "This browser cannot play the house sounds.", Gu = "Your browser asks for reduced motion, so the house is still either way.", Ku = t(function({ mansionName: e, needsYou: t, onNeedsYou: n, motion: r, onToggleStillHouse: a, status: o, sound: s, view: c }, l) {
+	let u = i(), d = i(), f = Bs(t), m = t.length === 0;
 	return /* @__PURE__ */ R("div", {
 		className: "hh-ui-toolbar",
 		"data-toolbar": !0,
@@ -9921,7 +9910,7 @@ var Bu = "This browser cannot play the house sounds.", Vu = "Your browser asks f
 			r.prefersReducedMotion ? /* @__PURE__ */ L("span", {
 				className: "hh-ui-reason",
 				id: u,
-				children: Vu
+				children: Gu
 			}) : null,
 			s === void 0 ? null : /* @__PURE__ */ R("button", {
 				type: "button",
@@ -9946,7 +9935,7 @@ var Bu = "This browser cannot play the house sounds.", Vu = "Your browser asks f
 			s === void 0 || s.available ? null : /* @__PURE__ */ L("span", {
 				className: "hh-ui-reason",
 				id: d,
-				children: Bu
+				children: Wu
 			}),
 			c === void 0 ? null : /* @__PURE__ */ R("button", {
 				type: "button",
@@ -9979,7 +9968,7 @@ var Bu = "This browser cannot play the house sounds.", Vu = "Your browser asks f
 	});
 });
 // src/components/LiveAnnouncer.tsx
-function Uu({ message: e, turn: t = 0 }) {
+function qu({ message: e, turn: t = 0 }) {
 	return /* @__PURE__ */ L("p", {
 		className: "hh-ui-announcer",
 		"aria-live": "polite",
@@ -9989,17 +9978,17 @@ function Uu({ message: e, turn: t = 0 }) {
 	});
 }
 // src/components/RoomPanelHost.tsx
-function Wu(e) {
+function Ju(e) {
 	return e.replace(/["\\]/g, "\\$&");
 }
-function Gu(e, t, i = null) {
+function Yu(e, t, i = null) {
 	let [a, o] = l([]), s = c(a);
 	s.current = a;
 	let u = c(null), d = c(null), f = c(null), p = n((e, t, n = {}) => {
 		let r = {
 			surface: {
 				target: e,
-				openerKey: t?.getAttribute("data-opener-key") ?? Hs(e)
+				openerKey: t?.getAttribute("data-opener-key") ?? Gs(e)
 			},
 			opener: t
 		};
@@ -10015,7 +10004,7 @@ function Gu(e, t, i = null) {
 			openerKey: t.surface.openerKey,
 			target: t.surface.target
 		}, o(e.slice(0, -1)));
-	}, []), h = a.findIndex((t) => Us(t.surface, e) === null);
+	}, []), h = a.findIndex((t) => Ks(t.surface, e) === null);
 	r(() => {
 		if (h === -1) return;
 		let e = s.current[h];
@@ -10034,7 +10023,7 @@ function Gu(e, t, i = null) {
 			let t = e.focus.kind === "selector" ? f.current?.querySelector(e.focus.selector) : null;
 			if (t != null && (t.hasAttribute("tabindex") || t.setAttribute("tabindex", "-1"), t.focus(), document.activeElement === t)) return;
 			d.current?.focus();
-		} else ((e.opener !== null && e.opener.isConnected ? e.opener : null) ?? n?.querySelector(`[data-opener-key="${Wu(e.openerKey)}"]`) ?? null ?? n?.querySelector(`[data-room-control="${Wu(e.target.roomId)}"]`) ?? null ?? n?.querySelector("[data-map-title]") ?? null)?.focus();
+		} else ((e.opener !== null && e.opener.isConnected ? e.opener : null) ?? n?.querySelector(`[data-opener-key="${Ju(e.openerKey)}"]`) ?? null ?? n?.querySelector(`[data-room-control="${Ju(e.target.roomId)}"]`) ?? null ?? n?.querySelector("[data-map-title]") ?? null)?.focus();
 	}, [a, t]);
 	let g = c(null);
 	return r(() => {
@@ -10051,8 +10040,8 @@ function Gu(e, t, i = null) {
 		panelRef: f
 	};
 }
-var Ku = "button, [href], input, select, textarea, summary, [tabindex]:not([tabindex=\"-1\"])";
-function qu({ id: e, title: t, mode: n, stack: r, closeLabel: i, children: a }) {
+var Xu = "button, [href], input, select, textarea, summary, [tabindex]:not([tabindex=\"-1\"])";
+function Zu({ id: e, title: t, mode: n, stack: r, closeLabel: i, children: a }) {
 	let o = r.top;
 	if (o === null) return null;
 	let s = `${e}-title`, c = o.target, l = /* @__PURE__ */ R("section", {
@@ -10069,7 +10058,7 @@ function qu({ id: e, title: t, mode: n, stack: r, closeLabel: i, children: a }) 
 		ref: r.panelRef,
 		onKeyDown: (e) => {
 			if (n !== "dialog" || e.key !== "Tab") return;
-			let t = e.currentTarget, i = Array.from(t.querySelectorAll(Ku)).filter((e) => !e.hasAttribute("disabled"));
+			let t = e.currentTarget, i = Array.from(t.querySelectorAll(Xu)).filter((e) => !e.hasAttribute("disabled"));
 			if (i.length === 0) return;
 			let a = i[0], o = i[i.length - 1], s = document.activeElement;
 			e.shiftKey && (s === a || s === r.headingRef.current) ? (e.preventDefault(), o.focus()) : !e.shiftKey && s === o && (e.preventDefault(), a.focus());
@@ -10101,7 +10090,7 @@ function qu({ id: e, title: t, mode: n, stack: r, closeLabel: i, children: a }) 
 		onClick: r.close
 	}), l] }) : l;
 }
-var Ju = {
+var Qu = {
 	map: "[data-map-toggle]",
 	reveal: "[data-reveal-toggle]",
 	"kiro-words": "[data-words-toggle]",
@@ -10109,34 +10098,34 @@ var Ju = {
 	close: ".hh-ui-panel-close",
 	exit: "[data-guide-exit]"
 };
-function Yu(e) {
+function $u(e) {
 	return e.replace(/["\\]/g, "\\$&");
 }
-function Xu(e) {
+function ed(e) {
 	switch (e.kind) {
 		case "heading": return { kind: "heading" };
 		case "proposal": return {
 			kind: "selector",
-			selector: `[data-proposal="${Yu(e.proposalId)}"]`
+			selector: `[data-proposal="${$u(e.proposalId)}"]`
 		};
 		case "section": return {
 			kind: "selector",
-			selector: `[data-section="${Yu(e.section)}"]`
+			selector: `[data-section="${$u(e.section)}"]`
 		};
 	}
 }
-function Zu(e) {
+function td(e) {
 	return e.getAttribute("aria-disabled") === "true" || e.hasAttribute("disabled");
 }
-function Qu(e, t) {
-	let n = (e.getAttribute("aria-describedby") ?? "").split(/\s+/).filter((e) => e !== "").map((e) => t.querySelector(`[id="${Yu(e)}"]`)?.textContent?.trim() ?? "").filter((e) => e !== "").join(" ");
+function nd(e, t) {
+	let n = (e.getAttribute("aria-describedby") ?? "").split(/\s+/).filter((e) => e !== "").map((e) => t.querySelector(`[id="${$u(e)}"]`)?.textContent?.trim() ?? "").filter((e) => e !== "").join(" ");
 	return n === "" ? null : n;
 }
-function $u(e, t) {
+function rd(e, t) {
 	let n = e instanceof HTMLTextAreaElement ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype;
 	(Object.getOwnPropertyDescriptor(n, "value")?.set)?.call(e, t), e.dispatchEvent(new Event("input", { bubbles: !0 }));
 }
-function ed({ root: e, setOpening: t, onTask: i, fallbackReason: a }) {
+function id({ root: e, setOpening: t, onTask: i, fallbackReason: a }) {
 	let [o, s] = l(null), [u, d] = l(null), f = c({
 		setOpening: t,
 		onTask: i,
@@ -10164,40 +10153,40 @@ function ed({ root: e, setOpening: t, onTask: i, fallbackReason: a }) {
 			return;
 		}
 		let r = (e) => {
-			d((e === null ? null : Qu(e, t)) ?? f.current.fallbackReason() ?? "That is not available right now."), s(null);
+			d((e === null ? null : nd(e, t)) ?? f.current.fallbackReason() ?? "That is not available right now."), s(null);
 		}, i = () => s(o.index + 1 >= o.steps.length ? null : {
 			...o,
 			index: o.index + 1,
 			commits: o.commits + 1
-		}), a = (e) => t.querySelector(`[data-guide-control="${Yu(e)}"]`);
+		}), a = (e) => t.querySelector(`[data-guide-control="${$u(e)}"]`);
 		switch (n.kind) {
 			case "map": {
-				let e = t.querySelector(`[data-opener-key="${Yu(Hs(n.target))}"]`);
+				let e = t.querySelector(`[data-opener-key="${$u(Gs(n.target))}"]`);
 				return e === null ? r(null) : (f.current.setOpening({
-					focus: Xu(n.focus),
+					focus: ed(n.focus),
 					from: o.from
 				}), e.click(), f.current.setOpening(null), i());
 			}
 			case "control": {
 				let e = a(n.key);
-				return e === null || Zu(e) ? r(e) : (e.getAttribute("aria-expanded") !== "true" && e.click(), i());
+				return e === null || td(e) ? r(e) : (e.getAttribute("aria-expanded") !== "true" && e.click(), i());
 			}
 			case "fill": {
 				let e = a(n.key);
-				return !(e instanceof HTMLTextAreaElement || e instanceof HTMLInputElement) || e.readOnly || Zu(e) ? r(e) : ($u(e, n.text), e.focus(), i());
+				return !(e instanceof HTMLTextAreaElement || e instanceof HTMLInputElement) || e.readOnly || td(e) ? r(e) : (rd(e, n.text), e.focus(), i());
 			}
 			case "focus": {
 				let e = a(n.key);
 				return e === null ? r(null) : (e.focus(), i());
 			}
 			case "every": {
-				let e = Array.from(t.querySelectorAll(`[data-guide-control^="${Yu(n.keyPrefix)}"]`));
-				for (let t of e) !Zu(t) && !t.checked && t.click();
+				let e = Array.from(t.querySelectorAll(`[data-guide-control^="${$u(n.keyPrefix)}"]`));
+				for (let t of e) !td(t) && !t.checked && t.click();
 				return i();
 			}
 			case "shell": {
-				let e = t.querySelector(Ju[n.action]);
-				return e === null || Zu(e) ? r(e) : (e.click(), i());
+				let e = t.querySelector(Qu[n.action]);
+				return e === null || td(e) ? r(e) : (e.click(), i());
 			}
 			case "task": return f.current.onTask(n.task), i();
 		}
@@ -10208,39 +10197,39 @@ function ed({ root: e, setOpening: t, onTask: i, fallbackReason: a }) {
 	};
 }
 // src/components/use-reduced-motion.ts
-var td = "(prefers-reduced-motion: reduce)";
-function nd() {
+var ad = "(prefers-reduced-motion: reduce)";
+function od() {
 	try {
-		return typeof window < "u" && typeof window.matchMedia == "function" ? window.matchMedia(td) : null;
+		return typeof window < "u" && typeof window.matchMedia == "function" ? window.matchMedia(ad) : null;
 	} catch {
 		return null;
 	}
 }
-function rd() {
-	let [e, t] = l(() => il(nd()?.matches));
+function sd() {
+	let [e, t] = l(() => cl(od()?.matches));
 	return r(() => {
-		let e = nd();
+		let e = od();
 		if (e === null) {
 			t(!0);
 			return;
 		}
-		let n = (e) => t(il(e.matches));
-		if (t(il(e.matches)), typeof e.addEventListener == "function") return e.addEventListener("change", n), () => e.removeEventListener("change", n);
+		let n = (e) => t(cl(e.matches));
+		if (t(cl(e.matches)), typeof e.addEventListener == "function") return e.addEventListener("change", n), () => e.removeEventListener("change", n);
 		if (typeof e.addListener == "function") return e.addListener(n), () => e.removeListener(n);
 		t(!0);
 	}, []), e;
 }
 // src/components/use-stage-metrics.ts
-function id(e) {
+function cd(e) {
 	let t = 0;
 	for (let n = e; n !== null; n = n.offsetParent instanceof HTMLElement ? n.offsetParent : null) t += n.offsetTop;
 	return t;
 }
-function ad(e) {
+function ld(e) {
 	let t = Number.parseFloat(e);
 	return Number.isFinite(t) ? t : 0;
 }
-function od(e) {
+function ud(e) {
 	let [t, n] = l("stacked");
 	return a(() => {
 		let t = e.current;
@@ -10248,14 +10237,14 @@ function od(e) {
 		let r = () => {
 			let e = t.querySelector("[data-stage-room]");
 			if (e === null) return;
-			let r = t.querySelector(".hh-ui-toolbar"), i = window.getComputedStyle(t), a = id(e);
+			let r = t.querySelector(".hh-ui-toolbar"), i = window.getComputedStyle(t), a = cd(e);
 			t.style.setProperty("--hh-scene-top", `${a}px`), r !== null && r.offsetHeight > 0 && t.style.setProperty("--hh-toolbar-h", `${r.offsetHeight}px`);
-			let o = Ml({
+			let o = Il({
 				windowWidth: window.innerWidth,
 				windowHeight: window.innerHeight,
-				houseWidth: t.clientWidth - ad(i.paddingLeft) - ad(i.paddingRight),
+				houseWidth: t.clientWidth - ld(i.paddingLeft) - ld(i.paddingRight),
 				sceneTop: a,
-				rem: ad(window.getComputedStyle(document.documentElement).fontSize) || 16
+				rem: ld(window.getComputedStyle(document.documentElement).fontSize) || 16
 			});
 			n(o.layout);
 		}, i = new ResizeObserver(r);
@@ -10267,20 +10256,20 @@ function od(e) {
 	}, [e]), t;
 }
 // src/components/MansionShell.tsx
-var sd = {
+var dd = {
 	quiet: !1,
 	kiroWords: !1,
 	reveal: !1
-}, cd = {
+}, fd = {
 	quiet: (e) => e ? "The Warden has stepped back. The house map and every control still work." : "The Warden is back.",
 	kiroWords: (e) => e ? "Kiro's words are shown beside the plain ones." : "Kiro's words are hidden.",
 	reveal: (e) => e ? "Everything you can press in this room now has a label." : "The labels are off."
-}, ld = {
+}, pd = {
 	room: "Close room",
 	ghost: "Close ghost details",
 	door: "Close door details"
 };
-function ud(e, t) {
+function md(e, t) {
 	let n = e.rooms.find((e) => e.roomId === t.roomId);
 	if (n === void 0) return "";
 	switch (t.kind) {
@@ -10289,26 +10278,26 @@ function ud(e, t) {
 		case "door": return `${n.doors.find((e) => e.phase === t.phase)?.phaseName ?? n.name} door`;
 	}
 }
-var dd = "(min-width: 900px)";
-function fd() {
+var hd = "(min-width: 900px)";
+function gd() {
 	if (typeof window > "u" || typeof window.matchMedia != "function") return !1;
-	let e = window.matchMedia(dd);
-	return e.media === dd && e.matches;
+	let e = window.matchMedia(hd);
+	return e.media === hd && e.matches;
 }
-function pd(e) {
+function _d(e) {
 	return e.replace(/["\\]/g, "\\$&");
 }
-function md(e) {
+function vd(e) {
 	let t = e.id.indexOf(":"), n = e.kind === "door-decision" || e.kind === "risky-decision" ? e.id.slice(t + 1) : null;
 	return n === null || n === "" ? { kind: "heading" } : {
 		kind: "selector",
-		selector: `[data-proposal="${pd(n)}"]`
+		selector: `[data-proposal="${_d(n)}"]`
 	};
 }
-function hd({ projection: e, renderSurface: t, host: a, message: s = "", status: u, notes: d, banner: f, busy: p = !1, onReturn: m, panelMode: h = "region", inFlight: g = null, panelStyles: _ = "", guide: v, guideOverride: y = null }) {
-	let b = c(null), x = c(null), S = c(null), C = i(), w = Gu(e, b, g), T = od(b), [E, D] = l(!1), O = al({
+function yd({ projection: e, renderSurface: t, host: a, message: s = "", status: u, notes: d, banner: f, busy: p = !1, onReturn: m, panelMode: h = "region", inFlight: g = null, panelStyles: _ = "", guide: v, guideOverride: y = null }) {
+	let b = c(null), x = c(null), S = c(null), C = i(), w = Yu(e, b, g), T = ud(b), [E, D] = l(!1), O = ll({
 		stillHouse: E,
-		prefersReducedMotion: rd()
+		prefersReducedMotion: sd()
 	}), [k, A] = l({
 		text: s,
 		turn: 0
@@ -10321,7 +10310,7 @@ function hd({ projection: e, renderSurface: t, host: a, message: s = "", status:
 	r(() => {
 		M.current ? M.current = !1 : j(s);
 	}, [s, j]);
-	let N = n((e) => j(e.text), [j]), { theme: ee } = Oi({
+	let N = n((e) => j(e.text), [j]), { theme: ee } = ji({
 		...a,
 		needsYouCount: e.needsYou.length,
 		onSummary: N
@@ -10341,13 +10330,13 @@ function hd({ projection: e, renderSurface: t, host: a, message: s = "", status:
 		w.close,
 		O.effective
 	]), ie = e.needsYou, ae = n((e) => {
-		let t = Is(ie), n = ie[0];
+		let t = zs(ie), n = ie[0];
 		t !== null && n !== void 0 && w.open({
 			kind: "room",
 			roomId: t
 		}, e, {
 			placement: "replace",
-			focus: md(n)
+			focus: vd(n)
 		});
 	}, [ie, w.open]), oe = c({
 		open: w.top !== null,
@@ -10375,7 +10364,7 @@ function hd({ projection: e, renderSurface: t, host: a, message: s = "", status:
 		};
 		return document.addEventListener("keydown", e), () => document.removeEventListener("keydown", e);
 	}, []);
-	let P = w.top, se = P === null ? null : Hs(P.target), [ce, le] = l(Dr), ue = zu(e, se, void 0, ce), [de, fe] = l(!1), [pe, me] = l(null), he = P === null ? null : P.target.roomId;
+	let P = w.top, se = P === null ? null : Gs(P.target), [ce, le] = l(jr), ue = Uu(e, se, void 0, ce), [de, fe] = l(!1), [pe, me] = l(null), he = P === null ? null : P.target.roomId;
 	r(() => {
 		he !== null && me(he);
 	}, [he]);
@@ -10383,27 +10372,27 @@ function hd({ projection: e, renderSurface: t, host: a, message: s = "", status:
 	r(() => {
 		F && b.current?.querySelector("[data-map-title]")?.focus();
 	}, [F]), r(() => {
-		se === null ? (document.activeElement?.closest("[data-map-sheet]") ?? null) !== null && fd() && (S.current ?? b.current?.querySelector("[data-guide-call]"))?.focus() : ge(!1);
+		se === null ? (document.activeElement?.closest("[data-map-sheet]") ?? null) !== null && gd() && (S.current ?? b.current?.querySelector("[data-guide-call]"))?.focus() : ge(!1);
 	}, [se]), oe.current.mapOpen = F, oe.current.closeMap = () => {
 		ge(!1), b.current?.querySelector("[data-map-toggle]")?.focus();
 	};
-	let ve = he ?? pe ?? kc(e), ye = e.rooms.some((e) => e.roomId === ve) ? ve : e.rooms[0]?.roomId ?? "foyer", [be, xe] = l(sd), Se = v?.settings ?? be, I = v?.onChange ?? xe, Ce = c(Se);
+	let ve = he ?? pe ?? Nc(e), ye = e.rooms.some((e) => e.roomId === ve) ? ve : e.rooms[0]?.roomId ?? "foyer", [be, xe] = l(dd), Se = v?.settings ?? be, I = v?.onChange ?? xe, Ce = c(Se);
 	Ce.current = Se;
 	let we = n((e, t) => {
 		Ce.current[e] !== t && (I({
 			...Ce.current,
 			[e]: t
-		}), j(cd[e](t)));
+		}), j(fd[e](t)));
 	}, [I, j]), Te = c(ce);
 	Te.current = ce;
 	let Ee = n(() => {
-		let e = kr(Te.current);
-		le(e), j(`Fright: ${Or[e]}.`);
+		let e = Nr(Te.current);
+		le(e), j(`Fright: ${Mr[e]}.`);
 	}, [j]);
 	oe.current.reveal = Se.reveal, oe.current.setReveal = (e) => we("reveal", e);
 	let [De, Oe] = l(null);
 	r(() => Oe(null), [se]);
-	let ke = Se.kiroWords ? "with-kiro" : "plain", Ae = nl(e, {
+	let ke = Se.kiroWords ? "with-kiro" : "plain", Ae = ol(e, {
 		roomId: ye,
 		surface: P === null ? null : P.target,
 		task: De,
@@ -10414,7 +10403,7 @@ function hd({ projection: e, renderSurface: t, host: a, message: s = "", status:
 		canLeave: m !== void 0
 	}), je = c(null);
 	je.current = Ae?.note ?? null;
-	let Me = ed({
+	let Me = id({
 		root: b,
 		setOpening: (e) => {
 			te.current = e;
@@ -10451,12 +10440,12 @@ function hd({ projection: e, renderSurface: t, host: a, message: s = "", status:
 			e.key !== "Escape" || e.defaultPrevented || w.top === null || (e.preventDefault(), w.close());
 		},
 		children: [
-			/* @__PURE__ */ L("style", { children: Ul + Xl + hr + Wr + _ }),
+			/* @__PURE__ */ L("style", { children: ql + eu + yr + qr + _ }),
 			/* @__PURE__ */ R("div", {
 				className: "hh-ui-behind",
 				...Ie,
 				children: [
-					/* @__PURE__ */ L(Hu, {
+					/* @__PURE__ */ L(Ku, {
 						ref: x,
 						mansionName: e.mansionName,
 						needsYou: ie,
@@ -10475,7 +10464,7 @@ function hd({ projection: e, renderSurface: t, host: a, message: s = "", status:
 						}
 					}),
 					f,
-					Ae === null ? null : /* @__PURE__ */ L(yu, {
+					Ae === null ? null : /* @__PURE__ */ L(Cu, {
 						projection: e,
 						roomId: ye,
 						view: Ae,
@@ -10504,19 +10493,19 @@ function hd({ projection: e, renderSurface: t, host: a, message: s = "", status:
 					d
 				]
 			}),
-			P === null ? null : /* @__PURE__ */ L(qu, {
+			P === null ? null : /* @__PURE__ */ L(Zu, {
 				id: C,
-				title: ud(e, P.target),
+				title: md(e, P.target),
 				mode: h,
 				stack: w,
-				closeLabel: ld[P.target.kind],
+				closeLabel: pd[P.target.kind],
 				children: t(P, re)
-			}, `${w.depth}:${Hs(P.target)}`),
+			}, `${w.depth}:${Gs(P.target)}`),
 			/* @__PURE__ */ L("div", {
 				className: "hh-ui-behind",
 				"data-map-sheet": !0,
 				...Ie,
-				children: /* @__PURE__ */ L(bl, {
+				children: /* @__PURE__ */ L(wl, {
 					projection: e,
 					openSurface: ne,
 					motion: O.effective,
@@ -10525,23 +10514,23 @@ function hd({ projection: e, renderSurface: t, host: a, message: s = "", status:
 					view: de ? "turned" : "front"
 				})
 			}),
-			/* @__PURE__ */ L(Uu, {
+			/* @__PURE__ */ L(qu, {
 				message: k.text,
 				turn: k.turn
 			})
 		]
 	});
 }
-var gd = String.fromCodePoint(8204, 8205), _d = String.fromCodePoint(4447, 4448, 12644, 65440, 10240), vd = RegExp(`[^${gd}\\P{C}]+`, "gu"), yd = RegExp(`[${_d}\\s]+`, "u"), bd = RegExp(`^[${gd}]+|[${gd}]+$`, "gu"), xd = RegExp(`[${gd} ]+$`, "u");
-function Sd(e) {
-	let t = e.replace(vd, " ").split(yd).map((e) => e.replace(bd, "")).filter((e) => e !== "");
-	return Array.from(t.join(" ")).slice(0, 40).join("").replace(xd, "");
+var bd = String.fromCodePoint(8204, 8205), xd = String.fromCodePoint(4447, 4448, 12644, 65440, 10240), Sd = RegExp(`[^${bd}\\P{C}]+`, "gu"), Cd = RegExp(`[${xd}\\s]+`, "u"), wd = RegExp(`^[${bd}]+|[${bd}]+$`, "gu"), Td = RegExp(`[${bd} ]+$`, "u");
+function Ed(e) {
+	let t = e.replace(Sd, " ").split(Cd).map((e) => e.replace(wd, "")).filter((e) => e !== "");
+	return Array.from(t.join(" ")).slice(0, 40).join("").replace(Td, "");
 }
-var Cd = "Come in.";
-function wd(e) {
-	return e === "" ? Cd : `Come in, ${e}.`;
+var Dd = "Come in.";
+function Od(e) {
+	return e === "" ? Dd : `Come in, ${e}.`;
 }
-var Td = [
+var kd = [
 	{
 		name: "word-counter",
 		title: "A word counter",
@@ -10557,7 +10546,7 @@ var Td = [
 		title: "A unit converter",
 		brief: "A command-line tool that converts kilometres to miles, kilograms to pounds, and Celsius to Fahrenheit, and back. Keep it small: one file of Python and its tests."
 	}
-], Ed = "my-house", Dd = /* @__PURE__ */ new Set([
+], Ad = "my-house", jd = /* @__PURE__ */ new Set([
 	"i",
 	"we",
 	"id",
@@ -10578,14 +10567,14 @@ var Td = [
 	"just",
 	"can",
 	"you"
-]), Od = /* @__PURE__ */ new Set([
+]), Md = /* @__PURE__ */ new Set([
 	"a",
 	"an",
 	"the",
 	"some",
 	"my",
 	"our"
-]), kd = new Set("that which who to for with and or in on of from by as so when where it is".split(" ")), Ad = {
+]), Nd = new Set("that which who to for with and or in on of from by as so when where it is".split(" ")), Pd = {
 	ø: "o",
 	ß: "ss",
 	ł: "l",
@@ -10596,15 +10585,15 @@ var Td = [
 	ð: "d",
 	ı: "i"
 };
-function jd(e) {
-	return e.toLowerCase().normalize("NFKD").replace(/\p{M}+/gu, "").replace(/[øßłđæœþðı]/g, (e) => Ad[e] ?? e).split(/\s+/).map((e) => e.replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")).filter((e) => e !== "");
+function Fd(e) {
+	return e.toLowerCase().normalize("NFKD").replace(/\p{M}+/gu, "").replace(/[øßłđæœþðı]/g, (e) => Pd[e] ?? e).split(/\s+/).map((e) => e.replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")).filter((e) => e !== "");
 }
-function Md(e) {
-	let t = jd(e), n = 0;
-	for (; n < t.length && (Dd.has(t[n]) || Od.has(t[n]));) n += 1;
-	let r = n < t.length ? t.slice(n).filter((e) => !Od.has(e)) : t, i = [], a = (e) => [...i, e].join("-").length <= 24;
+function Id(e) {
+	let t = Fd(e), n = 0;
+	for (; n < t.length && (jd.has(t[n]) || Md.has(t[n]));) n += 1;
+	let r = n < t.length ? t.slice(n).filter((e) => !Md.has(e)) : t, i = [], a = (e) => [...i, e].join("-").length <= 24;
 	for (let e of r) {
-		if (i.length >= 2 && kd.has(e)) break;
+		if (i.length >= 2 && Nd.has(e)) break;
 		if (a(e)) i.push(e);
 		else {
 			for (let t of e.split("-")) {
@@ -10615,17 +10604,17 @@ function Md(e) {
 		}
 	}
 	let o = i.length > 0 ? i.join("-") : (r[0] ?? "").split("-")[0].slice(0, 24);
-	return Je(o) ? o : Ed;
+	return Je(o) ? o : Ad;
 }
-function Nd(e, t, n = null) {
-	let r = Td.find((t) => t.brief === e.trim())?.name ?? null, i = (n !== null && Je(n) ? n : r) ?? Md(e);
+function Ld(e, t, n = null) {
+	let r = kd.find((t) => t.brief === e.trim())?.name ?? null, i = (n !== null && Je(n) ? n : r) ?? Id(e);
 	if (!t.has(i)) return i;
 	for (let e = 2;; e += 1) {
 		let n = `-${e}`, r = `${i.slice(0, 40 - n.length).replace(/-+$/, "")}${n}`;
 		if (!t.has(r)) return r;
 	}
 }
-function Pd(e) {
+function Rd(e) {
 	return {
 		place: "loading",
 		visitorName: "",
@@ -10635,7 +10624,7 @@ function Pd(e) {
 		cameFrom: "hall"
 	};
 }
-function Fd(e, t) {
+function zd(e, t) {
 	switch (t.type) {
 		case "list_loaded": return e.place === "loading" ? {
 			...e,
@@ -10644,7 +10633,7 @@ function Fd(e, t) {
 		case "knocked": return e.place === "gate" ? {
 			...e,
 			place: "hall",
-			visitorName: Sd(t.name),
+			visitorName: Ed(t.name),
 			firstTime: !0,
 			idea: !e.replay
 		} : e;
@@ -10675,17 +10664,17 @@ function Fd(e, t) {
 		} : e;
 	}
 }
-var Id = "The house is shut.", Ld = "Who is knocking?", Rd = "A name is optional. It stays on this page and is forgotten when you leave.", zd = "Knock", Bd = "Opens the front door.", Vd = "What do you want to build?", Hd = "Your idea, in your own words", Ud = "A sentence or two is enough. Pick an example to start from, or write your own.", Wd = "Build this", Gd = "Puts this idea in the box. You can change it before anything is made.";
-function Kd(e) {
+var Bd = "The house is shut.", Vd = "Who is knocking?", Hd = "A name is optional. It stays on this page and is forgotten when you leave.", Ud = "Knock", Wd = "Opens the front door.", Gd = "What do you want to build?", Kd = "Your idea, in your own words", qd = "A sentence or two is enough. Pick an example to start from, or write your own.", Jd = "Build this", Yd = "Puts this idea in the box. You can change it before anything is made.";
+function Xd(e) {
 	return `Makes the project folder ${e} and takes you inside. Nothing is written until you ask.`;
 }
-var qd = "What do you want to do?", Jd = {
+var Zd = "What do you want to do?", Qd = {
 	id: "step-outside",
 	label: "Step outside",
 	consequence: "Shows the front gate again and forgets your name. Nothing else changes."
 };
-function Yd(e, t, n, r) {
-	let i = t.filter((e) => e.status === "ready"), a = e.firstTime ? `${wd(e.visitorName)} ` : "", o = {
+function $d(e, t, n, r) {
+	let i = t.filter((e) => e.status === "ready"), a = e.firstTime ? `${Od(e.visitorName)} ` : "", o = {
 		pose: "pointing",
 		poseLabel: "The Warden points to your next step."
 	}, s = {
@@ -10696,17 +10685,17 @@ function Yd(e, t, n, r) {
 		let e = i.find((e) => e.name === r) ?? i[0];
 		return e === void 0 ? {
 			status: `${a}This house holds a recording, but it could not be read.`,
-			question: qd,
-			options: [Jd],
+			question: Zd,
+			options: [Qd],
 			...s
 		} : {
 			status: `${a}This house holds a recording of ${e.name} being built.`,
-			question: qd,
+			question: Zd,
 			options: [{
 				id: `watch:${e.name}`,
 				label: `Watch ${e.name} get built`,
 				consequence: "Opens the recorded house. Nothing in a recording can be changed."
-			}, Jd],
+			}, Qd],
 			...o
 		};
 	}
@@ -10717,7 +10706,7 @@ function Yd(e, t, n, r) {
 	}];
 	if (e.idea) return {
 		status: `${a}Nothing here opens unless you open it.`,
-		question: Vd,
+		question: Gd,
 		options: [
 			...l,
 			{
@@ -10725,14 +10714,14 @@ function Yd(e, t, n, r) {
 				label: "Choose the name myself",
 				consequence: "Goes to the form below, where you name the mansion and describe it."
 			},
-			Jd
+			Qd
 		],
 		...o
 	};
 	let u = t.length;
 	return {
 		status: `${a}${u === 0 ? "No mansion stands here yet." : i.length === 0 ? u === 1 ? `One mansion stands here, ${t[0].name}, but it cannot be opened. The list below says why.` : `${u} mansions stand here, but none can be opened. The list below says why.` : u === 1 ? `One mansion stands here: ${t[0].name}.` : `${u} mansions stand here.`}`,
-		question: qd,
+		question: Zd,
 		options: [
 			...l,
 			{
@@ -10740,40 +10729,40 @@ function Yd(e, t, n, r) {
 				label: "Build something new",
 				consequence: "Asks what you want to build. Nothing is made yet."
 			},
-			Jd
+			Qd
 		],
 		...c === void 0 && u > 0 ? s : o
 	};
 }
 // src/landing.ts
-var Xd = "A house for your AI agents: each room is a phase of spec-driven work, each ghost an agent you can watch, and each door opens only when you approve.", Zd = {
+var ef = "A house for your AI agents: each room is a phase of spec-driven work, each ghost an agent you can watch, and each door opens only when you approve.", tf = {
 	mansion: "demo-mansion",
 	text: "Watch a mansion get built, then step through what happened."
-}, Qd = "\n/* The Warden and his balloon. On a narrow page he stands under it, small; on a wide one beside it, at full height. */\n.hh-hall-guide { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; align-items: end; min-width: 0; }\n.hh-hall-guide .hh-guide-balloon { min-width: 0; }\n.hh-hall-own { color: var(--hh-sc-ink); background: var(--hh-sc-balloon); border: 2px solid var(--hh-sc-ink); border-radius: 10px; padding: 12px 16px; min-width: 0; }\n.hh-hall-keeper { display: flex; align-items: flex-end; gap: 10px; min-width: 0; }\n/* His drawing fills this box, so the box is what places it. */\n.hh-hall-warden { position: relative; display: block; flex: none; width: clamp(56px, 16vw, 88px); aspect-ratio: 200 / 300; }\n.hh-hall-caption { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; min-width: 0; }\n.hh-hall-pose { margin: 0; padding: 2px 10px; font-family: var(--hh-font-serif); font-size: 0.8125rem; line-height: 1.3;\n  color: var(--hh-sc-ink); background: var(--hh-sc-balloon); border: 1px solid var(--hh-sc-ink); border-radius: 4px; }\n.hh-foyer-guide { margin: 0 0 14px; }\n\n/* The Gate's one field and its Knock; the Idea Step's field and its \"Build this\". They sit in the balloon. */\n.hh-gate-form, .hh-idea { display: grid; gap: 6px; min-width: 0; margin: 0; }\n.hh-gate-question, .hh-idea-field label { font-family: var(--hh-font-serif); font-weight: 700; font-size: 1.0625rem; line-height: 1.25; }\n.hh-idea-field { display: grid; gap: 4px; min-width: 0; }\n.hh-gate-name, .hh-idea-field textarea { box-sizing: border-box; width: 100%; max-width: 24rem; font: inherit; color: var(--hh-sc-ink); background: color-mix(in srgb, var(--hh-sc-balloon) 70%, black);\n  border: 2px solid var(--hh-sc-ink); border-radius: 6px; padding: 6px 10px; }\n.hh-idea-field textarea { max-width: none; min-height: 4.5rem; resize: vertical; }\n.hh-gate-name:focus-visible, .hh-idea-field textarea:focus-visible { outline: 3px solid var(--hh-sc-ink); outline-offset: 2px; }\n.hh-idea-field textarea[aria-invalid='true'] { border-width: 3px; }\n.hh-gate-hint, .hh-idea-hint { font-size: 0.8125rem; line-height: 1.3; overflow-wrap: anywhere; }\n.hh-gate-actions, .hh-idea-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin-top: 4px; }\n.hh-gate-knock { display: inline-flex; align-items: center; gap: 6px; font: inherit; font-family: var(--hh-font-serif); font-weight: 700; font-size: 1.0625rem;\n  color: var(--hh-sc-ink); background: var(--hh-sc-brass); border: 2px solid var(--hh-sc-ink); border-radius: 6px; padding: 5px 18px;\n  box-shadow: 0 3px 0 var(--hh-sc-ink); cursor: pointer; }\n.hh-gate-knock:hover { background: var(--hh-sc-moon); }\n.hh-gate-knock:focus-visible { outline: 3px solid var(--hh-sc-ink); outline-offset: 3px; }\n.hh-gate-knock[aria-disabled='true'] { cursor: not-allowed; opacity: 0.6; }\n.hh-idea-examples { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 8px; }\n.hh-idea-error { display: flex; align-items: flex-start; gap: 6px; margin: 0; padding: 4px 8px; font-size: 0.875rem; font-weight: 600; line-height: 1.35;\n  border-left: 4px solid var(--hh-sc-ink); overflow-wrap: anywhere; }\n.hh-idea-error svg { flex: none; margin-top: 2px; }\n.hh-idea-name { margin: 0; font-size: 0.9375rem; overflow-wrap: anywhere; }\n.hh-idea-name code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-weight: 700; }\n\n@media (min-width: 900px) {\n  .hh-hall-guide { grid-template-columns: minmax(0, 1fr) auto; column-gap: 22px; }\n  .hh-hall-keeper { display: grid; justify-items: center; gap: 6px; width: 9.5rem; text-align: center; }\n  .hh-hall-warden { width: 9.5rem; }\n  .hh-hall-caption { justify-content: center; }\n  .hh-hall-guide .hh-guide-balloon::after { content: ''; position: absolute; right: -11px; bottom: 5.5rem; width: 18px; aspect-ratio: 1; background: var(--hh-sc-balloon);\n    border-top: 2px solid var(--hh-sc-ink); border-right: 2px solid var(--hh-sc-ink); transform: rotate(45deg); }\n}\n", $d = "What should this mansion become?", ef = "Optional. A few plain sentences about the feature; the Archivist reads them before writing requirements.", tf = `Keep the brief to ${tt} characters or fewer.`, nf = "Remove control characters from the brief. Line breaks and tabs are fine.", rf = (e) => `${e.length} / ${tt} characters${e.ok ? "" : e.reason === "too_long" ? ", too long" : ""}`, af = (e) => e.ok ? null : e.reason === "too_long" ? tf : nf, of = () => {
+}, nf = "\n/* The Warden and his balloon. On a narrow page he stands under it, small; on a wide one beside it, at full height. */\n.hh-hall-guide { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; align-items: end; min-width: 0; }\n.hh-hall-guide .hh-guide-balloon { min-width: 0; }\n.hh-hall-own { color: var(--hh-sc-ink); background: var(--hh-sc-balloon); border: 2px solid var(--hh-sc-ink); border-radius: 10px; padding: 12px 16px; min-width: 0; }\n.hh-hall-keeper { display: flex; align-items: flex-end; gap: 10px; min-width: 0; }\n/* His drawing fills this box, so the box is what places it. */\n.hh-hall-warden { position: relative; display: block; flex: none; width: clamp(56px, 16vw, 88px); aspect-ratio: 200 / 300; }\n.hh-hall-caption { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; min-width: 0; }\n.hh-hall-pose { margin: 0; padding: 2px 10px; font-family: var(--hh-font-serif); font-size: 0.8125rem; line-height: 1.3;\n  color: var(--hh-sc-ink); background: var(--hh-sc-balloon); border: 1px solid var(--hh-sc-ink); border-radius: 4px; }\n.hh-foyer-guide { margin: 0 0 14px; }\n\n/* The Gate's one field and its Knock; the Idea Step's field and its \"Build this\". They sit in the balloon. */\n.hh-gate-form, .hh-idea { display: grid; gap: 6px; min-width: 0; margin: 0; }\n.hh-gate-question, .hh-idea-field label { font-family: var(--hh-font-serif); font-weight: 700; font-size: 1.0625rem; line-height: 1.25; }\n.hh-idea-field { display: grid; gap: 4px; min-width: 0; }\n.hh-gate-name, .hh-idea-field textarea { box-sizing: border-box; width: 100%; max-width: 24rem; font: inherit; color: var(--hh-sc-ink); background: color-mix(in srgb, var(--hh-sc-balloon) 70%, black);\n  border: 2px solid var(--hh-sc-ink); border-radius: 6px; padding: 6px 10px; }\n.hh-idea-field textarea { max-width: none; min-height: 4.5rem; resize: vertical; }\n.hh-gate-name:focus-visible, .hh-idea-field textarea:focus-visible { outline: 3px solid var(--hh-sc-ink); outline-offset: 2px; }\n.hh-idea-field textarea[aria-invalid='true'] { border-width: 3px; }\n.hh-gate-hint, .hh-idea-hint { font-size: 0.8125rem; line-height: 1.3; overflow-wrap: anywhere; }\n.hh-gate-actions, .hh-idea-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin-top: 4px; }\n.hh-gate-knock { display: inline-flex; align-items: center; gap: 6px; font: inherit; font-family: var(--hh-font-serif); font-weight: 700; font-size: 1.0625rem;\n  color: var(--hh-sc-ink); background: var(--hh-sc-brass); border: 2px solid var(--hh-sc-ink); border-radius: 6px; padding: 5px 18px;\n  box-shadow: 0 3px 0 var(--hh-sc-ink); cursor: pointer; }\n.hh-gate-knock:hover { background: var(--hh-sc-moon); }\n.hh-gate-knock:focus-visible { outline: 3px solid var(--hh-sc-ink); outline-offset: 3px; }\n.hh-gate-knock[aria-disabled='true'] { cursor: not-allowed; opacity: 0.6; }\n.hh-idea-examples { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 8px; }\n.hh-idea-error { display: flex; align-items: flex-start; gap: 6px; margin: 0; padding: 4px 8px; font-size: 0.875rem; font-weight: 600; line-height: 1.35;\n  border-left: 4px solid var(--hh-sc-ink); overflow-wrap: anywhere; }\n.hh-idea-error svg { flex: none; margin-top: 2px; }\n.hh-idea-name { margin: 0; font-size: 0.9375rem; overflow-wrap: anywhere; }\n.hh-idea-name code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-weight: 700; }\n\n@media (min-width: 900px) {\n  .hh-hall-guide { grid-template-columns: minmax(0, 1fr) auto; column-gap: 22px; }\n  .hh-hall-keeper { display: grid; justify-items: center; gap: 6px; width: 9.5rem; text-align: center; }\n  .hh-hall-warden { width: 9.5rem; }\n  .hh-hall-caption { justify-content: center; }\n  .hh-hall-guide .hh-guide-balloon::after { content: ''; position: absolute; right: -11px; bottom: 5.5rem; width: 18px; aspect-ratio: 1; background: var(--hh-sc-balloon);\n    border-top: 2px solid var(--hh-sc-ink); border-right: 2px solid var(--hh-sc-ink); transform: rotate(45deg); }\n}\n", rf = "What should this mansion become?", af = "Optional. A few plain sentences about the feature; the Archivist reads them before writing requirements.", of = `Keep the brief to ${tt} characters or fewer.`, sf = "Remove control characters from the brief. Line breaks and tabs are fine.", cf = (e) => `${e.length} / ${tt} characters${e.ok ? "" : e.reason === "too_long" ? ", too long" : ""}`, lf = (e) => e.ok ? null : e.reason === "too_long" ? of : sf, uf = () => {
 	let [e, t] = l(""), [r, i] = l(null), a = o(() => at(e), [e]), s = n((e) => {
 		t(e), i(null);
 	}, []), c = n(() => {
-		let e = af(a);
+		let e = lf(a);
 		return i(e), e === null;
 	}, [a]), u = n(() => {
 		t(""), i(null);
 	}, []);
 	return {
 		text: e,
-		counter: rf(a),
+		counter: cf(a),
 		error: r,
 		change: s,
 		check: c,
 		clear: u
 	};
-}, sf = "Lowercase letters, numbers, and single hyphens, up to 40 characters. For example: weather-station.", cf = "Enter a name for the mansion.", lf = "Use 1–40 lowercase letters, numbers, and single hyphens.";
-function uf({ ready: e, mutation: t, onCreate: n }) {
-	let r = i(), a = i(), o = i(), s = i(), u = i(), d = i(), f = i(), p = i(), m = c(null), h = c(null), g = of(), [_, v] = l(""), [y, b] = l(null), x = t.kind === "creating" || t.kind === "opening", S = t.kind === "creating" ? t.name : null, C = t.kind === "error" && t.operation === "create" ? `Could not create ${t.name}. ${t.message}` : null, w = y ?? C, T = !e || x;
+}, df = "Lowercase letters, numbers, and single hyphens, up to 40 characters. For example: weather-station.", ff = "Enter a name for the mansion.", pf = "Use 1–40 lowercase letters, numbers, and single hyphens.";
+function mf({ ready: e, mutation: t, onCreate: n }) {
+	let r = i(), a = i(), o = i(), s = i(), u = i(), d = i(), f = i(), p = i(), m = c(null), h = c(null), g = uf(), [_, v] = l(""), [y, b] = l(null), x = t.kind === "creating" || t.kind === "opening", S = t.kind === "creating" ? t.name : null, C = t.kind === "error" && t.operation === "create" ? `Could not create ${t.name}. ${t.message}` : null, w = y ?? C, T = !e || x;
 	return /* @__PURE__ */ R("form", {
 		className: "hh-create",
 		noValidate: !0,
 		onSubmit: async (e) => {
-			e.preventDefault(), T || (Je(_) ? (b(null), g.check() ? await n(_, g.text) ? (v(""), g.clear()) : m.current?.focus() : h.current?.focus()) : (b(_ === "" ? cf : lf), m.current?.focus()));
+			e.preventDefault(), T || (Je(_) ? (b(null), g.check() ? await n(_, g.text) ? (v(""), g.clear()) : m.current?.focus() : h.current?.focus()) : (b(_ === "" ? ff : pf), m.current?.focus()));
 		},
 		children: [
 			/* @__PURE__ */ R("div", {
@@ -10805,7 +10794,7 @@ function uf({ ready: e, mutation: t, onCreate: n }) {
 					/* @__PURE__ */ L("span", {
 						id: a,
 						className: "hh-foyer-hint",
-						children: sf
+						children: df
 					})
 				]
 			}),
@@ -10814,7 +10803,7 @@ function uf({ ready: e, mutation: t, onCreate: n }) {
 				children: [
 					/* @__PURE__ */ L("label", {
 						htmlFor: u,
-						children: $d
+						children: rf
 					}),
 					/* @__PURE__ */ L("textarea", {
 						id: u,
@@ -10830,7 +10819,7 @@ function uf({ ready: e, mutation: t, onCreate: n }) {
 					/* @__PURE__ */ L("span", {
 						id: d,
 						className: "hh-foyer-hint",
-						children: ef
+						children: af
 					}),
 					/* @__PURE__ */ L("span", {
 						id: f,
@@ -10885,12 +10874,12 @@ function uf({ ready: e, mutation: t, onCreate: n }) {
 	});
 }
 // src/rooms/foyer/foyer-styles.ts
-var df = "\n.hh-foyer { color: var(--card-fg, var(--text, var(--hh-fb-text, inherit))); font: inherit; max-width: 48rem; margin: 20px auto 0; }\n.hh-foyer[data-view='mansion'] { max-width: none; margin: 0; }\n.hh-foyer-hall, .hh-shell { background: var(--card, var(--hh-fb-surface, transparent));\n  border: 1px solid var(--border, var(--hh-fb-border, currentColor)); border-radius: 12px; padding: 18px 20px; }\n.hh-foyer h2 { font-family: \"Iowan Old Style\", \"Palatino Linotype\", Palatino, \"Book Antiqua\", Georgia, \"Times New Roman\", serif; font-size: 1.375rem; margin: 0 0 4px; }\n.hh-foyer h3 { font-size: 1rem; margin: 0 0 4px; }\n.hh-foyer h2:focus-visible, .hh-foyer-region:focus-visible { outline: 2px solid var(--ring, var(--hh-fb-focus, currentColor)); outline-offset: 2px; }\n.hh-foyer-lede { margin: 0 0 12px; color: var(--muted, var(--hh-fb-text-muted, inherit)); }\n.hh-foyer-invite { margin: 0 0 16px; padding: 10px 14px; font-size: 1.0625rem; font-weight: 600;\n  border-left: 4px solid var(--warn, var(--hh-fb-accent, currentColor)); background: var(--input, var(--hh-fb-surface-raised, transparent));\n  border-radius: 0 8px 8px 0; }\n.hh-foyer-region { margin: 0 0 24px; }\n.hh-foyer-inline { display: inline-flex; align-items: center; gap: 6px; margin: 0; color: var(--muted, var(--hh-fb-text-muted, inherit)); }\n.hh-foyer-hint { display: block; margin: 4px 0 0; color: var(--muted, var(--hh-fb-text-muted, inherit)); font-size: 0.875rem; }\n.hh-foyer-error { display: flex; align-items: flex-start; gap: 6px; margin: 8px 0 0; overflow-wrap: anywhere; }\n.hh-foyer-error svg { color: var(--warn, var(--hh-fb-danger, currentColor)); flex: none; margin-top: 2px; }\n.hh-foyer-empty { border: 1px dashed var(--border, var(--hh-fb-border, currentColor)); border-radius: 8px; padding: 12px 16px; }\n.hh-foyer-empty p { margin: 0; color: var(--muted, var(--hh-fb-text-muted, inherit)); }\n\n.hh-mansions { border: 0; margin: 0; padding: 0; min-width: 0; display: grid; gap: 10px;\n  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); }\n.hh-mansions legend { padding: 0; margin: 0 0 8px; font-weight: 700; }\n.hh-mansion { display: grid; grid-template-columns: auto 1fr; column-gap: 10px; row-gap: 2px; align-items: center; min-width: 0;\n  background: var(--input, var(--hh-fb-surface-raised, transparent));\n  border: 1px solid var(--border, var(--hh-fb-border, currentColor)); border-radius: 10px; padding: 12px 14px; cursor: pointer; }\n.hh-mansion[data-selected='true'] { border-color: var(--warn, var(--hh-fb-accent, currentColor)); border-width: 3px; padding: 10px 12px; }\n.hh-mansion[data-status='missing'], .hh-mansion[data-status='conflict'] { cursor: not-allowed; border-style: dashed;\n  background: transparent; }\n.hh-mansion:focus-within { outline: 2px solid var(--ring, var(--hh-fb-focus, currentColor)); outline-offset: 2px; }\n.hh-mansion input { margin: 0; width: 1rem; height: 1rem; accent-color: var(--warn, var(--hh-fb-accent, auto)); }\n.hh-mansion-name { font-family: \"Iowan Old Style\", \"Palatino Linotype\", Palatino, \"Book Antiqua\", Georgia, \"Times New Roman\", serif; font-weight: 700; font-size: 1.0625rem;\n  overflow-wrap: anywhere; }\n.hh-mansion-path, .hh-mansion-status { grid-column: 2; font-size: 0.8125rem; overflow-wrap: anywhere; }\n.hh-mansion-path { color: var(--muted, var(--hh-fb-text-muted, inherit)); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }\n.hh-mansion-status { display: inline-flex; align-items: center; gap: 6px; }\n.hh-mansion { container-type: inline-size; }\n@container (min-width: 16em) { .hh-path-part { white-space: nowrap; } }\n.hh-status-ready svg { color: var(--ok, var(--hh-fb-ok, currentColor)); }\n.hh-status-missing svg { color: var(--muted, var(--hh-fb-text-muted, currentColor)); }\n.hh-status-conflict svg { color: var(--warn, var(--hh-fb-danger, currentColor)); }\n\n.hh-foyer-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-top: 14px; }\n.hh-button { display: inline-flex; align-items: center; gap: 6px; font: inherit; cursor: pointer;\n  color: inherit; background: transparent; border: 1px solid var(--border-strong, var(--hh-fb-border, currentColor));\n  border-width: 2px; border-radius: 999px; padding: 6px 16px; font-weight: 600; }\n.hh-button-primary { color: var(--accent-fg, var(--hh-fb-accent-text, inherit)); background: var(--accent, var(--hh-fb-accent, transparent));\n  font-weight: 700; padding: 10px 18px; font-size: 1.0625rem; }\n.hh-button[aria-disabled='true'] { cursor: not-allowed; opacity: 0.6; }\n.hh-button:focus-visible, .hh-field input:focus-visible, .hh-field textarea:focus-visible {\n  outline: 2px solid var(--ring, var(--hh-fb-focus, currentColor)); outline-offset: 2px; }\n\n.hh-create { margin: 0; padding-top: 16px; border-top: 1px solid var(--border, var(--hh-fb-border, currentColor)); }\n.hh-field { display: grid; gap: 4px; min-width: 0; }\n.hh-field label { font-weight: 600; }\n.hh-field input, .hh-field textarea { font: inherit; color: inherit; background: var(--input, var(--hh-fb-surface-raised, transparent));\n  border: 1px solid var(--border-strong, var(--hh-fb-border, currentColor)); border-radius: 6px; padding: 6px 10px;\n  width: 100%; min-width: 0; max-width: 24rem; box-sizing: border-box; }\n.hh-field input[aria-invalid='true'], .hh-field textarea[aria-invalid='true'] { border-width: 2px; }\n.hh-field textarea { resize: vertical; max-width: 36rem; min-height: 5rem; }\n.hh-create .hh-field + .hh-field { margin-top: 12px; }\n\n.hh-shell-eyebrow { margin: 0; color: var(--muted, var(--hh-fb-text-muted, inherit)); font-size: 0.875rem; }\n.hh-shell-facts { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 12px 0; }\n.hh-shell-facts dt { font-weight: 600; }\n.hh-shell-facts dd { margin: 0; overflow-wrap: anywhere; }\n.hh-shell-rooms { margin: 12px 0; color: var(--muted, var(--hh-fb-text-muted, inherit)); }\n\n.hh-foyer-announcer { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden;\n  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; }\n\n@media (max-width: 640px) {\n  .hh-foyer-hall, .hh-shell { padding: 14px 12px; }\n}\n\n@keyframes hh-foyer-spin { to { transform: rotate(360deg); } }\n@media (prefers-reduced-motion: no-preference) {\n  .hh-foyer[data-motion='low-frequency'] .hh-foyer-spin { animation: hh-foyer-spin 2s linear infinite; }\n}\n", ff = {
+var hf = "\n.hh-foyer { color: var(--card-fg, var(--text, var(--hh-fb-text, inherit))); font: inherit; max-width: 48rem; margin: 20px auto 0; }\n.hh-foyer[data-view='mansion'] { max-width: none; margin: 0; }\n.hh-foyer-hall, .hh-shell { background: var(--card, var(--hh-fb-surface, transparent));\n  border: 1px solid var(--border, var(--hh-fb-border, currentColor)); border-radius: 12px; padding: 18px 20px; }\n.hh-foyer h2 { font-family: \"Iowan Old Style\", \"Palatino Linotype\", Palatino, \"Book Antiqua\", Georgia, \"Times New Roman\", serif; font-size: 1.375rem; margin: 0 0 4px; }\n.hh-foyer h3 { font-size: 1rem; margin: 0 0 4px; }\n.hh-foyer h2:focus-visible, .hh-foyer-region:focus-visible { outline: 2px solid var(--ring, var(--hh-fb-focus, currentColor)); outline-offset: 2px; }\n.hh-foyer-lede { margin: 0 0 12px; color: var(--muted, var(--hh-fb-text-muted, inherit)); }\n.hh-foyer-invite { margin: 0 0 16px; padding: 10px 14px; font-size: 1.0625rem; font-weight: 600;\n  border-left: 4px solid var(--warn, var(--hh-fb-accent, currentColor)); background: var(--input, var(--hh-fb-surface-raised, transparent));\n  border-radius: 0 8px 8px 0; }\n.hh-foyer-region { margin: 0 0 24px; }\n.hh-foyer-inline { display: inline-flex; align-items: center; gap: 6px; margin: 0; color: var(--muted, var(--hh-fb-text-muted, inherit)); }\n.hh-foyer-hint { display: block; margin: 4px 0 0; color: var(--muted, var(--hh-fb-text-muted, inherit)); font-size: 0.875rem; }\n.hh-foyer-error { display: flex; align-items: flex-start; gap: 6px; margin: 8px 0 0; overflow-wrap: anywhere; }\n.hh-foyer-error svg { color: var(--warn, var(--hh-fb-danger, currentColor)); flex: none; margin-top: 2px; }\n.hh-foyer-empty { border: 1px dashed var(--border, var(--hh-fb-border, currentColor)); border-radius: 8px; padding: 12px 16px; }\n.hh-foyer-empty p { margin: 0; color: var(--muted, var(--hh-fb-text-muted, inherit)); }\n\n.hh-mansions { border: 0; margin: 0; padding: 0; min-width: 0; display: grid; gap: 10px;\n  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); }\n.hh-mansions legend { padding: 0; margin: 0 0 8px; font-weight: 700; }\n.hh-mansion { display: grid; grid-template-columns: auto 1fr; column-gap: 10px; row-gap: 2px; align-items: center; min-width: 0;\n  background: var(--input, var(--hh-fb-surface-raised, transparent));\n  border: 1px solid var(--border, var(--hh-fb-border, currentColor)); border-radius: 10px; padding: 12px 14px; cursor: pointer; }\n.hh-mansion[data-selected='true'] { border-color: var(--warn, var(--hh-fb-accent, currentColor)); border-width: 3px; padding: 10px 12px; }\n.hh-mansion[data-status='missing'], .hh-mansion[data-status='conflict'] { cursor: not-allowed; border-style: dashed;\n  background: transparent; }\n.hh-mansion:focus-within { outline: 2px solid var(--ring, var(--hh-fb-focus, currentColor)); outline-offset: 2px; }\n.hh-mansion input { margin: 0; width: 1rem; height: 1rem; accent-color: var(--warn, var(--hh-fb-accent, auto)); }\n.hh-mansion-name { font-family: \"Iowan Old Style\", \"Palatino Linotype\", Palatino, \"Book Antiqua\", Georgia, \"Times New Roman\", serif; font-weight: 700; font-size: 1.0625rem;\n  overflow-wrap: anywhere; }\n.hh-mansion-path, .hh-mansion-status { grid-column: 2; font-size: 0.8125rem; overflow-wrap: anywhere; }\n.hh-mansion-path { color: var(--muted, var(--hh-fb-text-muted, inherit)); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }\n.hh-mansion-status { display: inline-flex; align-items: center; gap: 6px; }\n.hh-mansion { container-type: inline-size; }\n@container (min-width: 16em) { .hh-path-part { white-space: nowrap; } }\n.hh-status-ready svg { color: var(--ok, var(--hh-fb-ok, currentColor)); }\n.hh-status-missing svg { color: var(--muted, var(--hh-fb-text-muted, currentColor)); }\n.hh-status-conflict svg { color: var(--warn, var(--hh-fb-danger, currentColor)); }\n\n.hh-foyer-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-top: 14px; }\n.hh-button { display: inline-flex; align-items: center; gap: 6px; font: inherit; cursor: pointer;\n  color: inherit; background: transparent; border: 1px solid var(--border-strong, var(--hh-fb-border, currentColor));\n  border-width: 2px; border-radius: 999px; padding: 6px 16px; font-weight: 600; }\n.hh-button-primary { color: var(--accent-fg, var(--hh-fb-accent-text, inherit)); background: var(--accent, var(--hh-fb-accent, transparent));\n  font-weight: 700; padding: 10px 18px; font-size: 1.0625rem; }\n.hh-button[aria-disabled='true'] { cursor: not-allowed; opacity: 0.6; }\n.hh-button:focus-visible, .hh-field input:focus-visible, .hh-field textarea:focus-visible {\n  outline: 2px solid var(--ring, var(--hh-fb-focus, currentColor)); outline-offset: 2px; }\n\n.hh-create { margin: 0; padding-top: 16px; border-top: 1px solid var(--border, var(--hh-fb-border, currentColor)); }\n.hh-field { display: grid; gap: 4px; min-width: 0; }\n.hh-field label { font-weight: 600; }\n.hh-field input, .hh-field textarea { font: inherit; color: inherit; background: var(--input, var(--hh-fb-surface-raised, transparent));\n  border: 1px solid var(--border-strong, var(--hh-fb-border, currentColor)); border-radius: 6px; padding: 6px 10px;\n  width: 100%; min-width: 0; max-width: 24rem; box-sizing: border-box; }\n.hh-field input[aria-invalid='true'], .hh-field textarea[aria-invalid='true'] { border-width: 2px; }\n.hh-field textarea { resize: vertical; max-width: 36rem; min-height: 5rem; }\n.hh-create .hh-field + .hh-field { margin-top: 12px; }\n\n.hh-shell-eyebrow { margin: 0; color: var(--muted, var(--hh-fb-text-muted, inherit)); font-size: 0.875rem; }\n.hh-shell-facts { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 12px 0; }\n.hh-shell-facts dt { font-weight: 600; }\n.hh-shell-facts dd { margin: 0; overflow-wrap: anywhere; }\n.hh-shell-rooms { margin: 12px 0; color: var(--muted, var(--hh-fb-text-muted, inherit)); }\n\n.hh-foyer-announcer { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden;\n  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; }\n\n@media (max-width: 640px) {\n  .hh-foyer-hall, .hh-shell { padding: 14px 12px; }\n}\n\n@keyframes hh-foyer-spin { to { transform: rotate(360deg); } }\n@media (prefers-reduced-motion: no-preference) {\n  .hh-foyer[data-motion='low-frequency'] .hh-foyer-spin { animation: hh-foyer-spin 2s linear infinite; }\n}\n", gf = {
 	ready: "Ready to open",
 	missing: "Missing: its folder is no longer in storage, so it cannot be opened.",
 	conflict: "Conflict: its folder no longer looks like a mansion, so it cannot be opened."
 };
-function pf({ status: e }) {
+function _f({ status: e }) {
 	let t = {
 		size: 16,
 		"aria-hidden": !0
@@ -10901,14 +10890,14 @@ function pf({ status: e }) {
 		case "conflict": return /* @__PURE__ */ L(F, { ...t });
 	}
 }
-function mf({ path: t }) {
+function vf({ path: t }) {
 	let n = t.split("/");
 	return /* @__PURE__ */ L(I, { children: n.map((t, r) => /* @__PURE__ */ R(e, { children: [/* @__PURE__ */ L("span", {
 		className: "hh-path-part",
 		children: r < n.length - 1 ? `${t}/` : t
 	}), r < n.length - 1 ? /* @__PURE__ */ L("wbr", {}) : null] }, r)) });
 }
-function hf({ mansion: e, group: t, selected: n, onSelect: r }) {
+function yf({ mansion: e, group: t, selected: n, onSelect: r }) {
 	return /* @__PURE__ */ R("label", {
 		className: "hh-mansion",
 		"data-status": e.status,
@@ -10928,16 +10917,16 @@ function hf({ mansion: e, group: t, selected: n, onSelect: r }) {
 			}),
 			/* @__PURE__ */ L("span", {
 				className: "hh-mansion-path",
-				children: /* @__PURE__ */ L(mf, { path: e.displayPath })
+				children: /* @__PURE__ */ L(vf, { path: e.displayPath })
 			}),
 			/* @__PURE__ */ R("span", {
 				className: `hh-mansion-status hh-status-${e.status}`,
-				children: [/* @__PURE__ */ L(pf, { status: e.status }), ff[e.status]]
+				children: [/* @__PURE__ */ L(_f, { status: e.status }), gf[e.status]]
 			})
 		]
 	});
 }
-function gf({ load: e, selectedName: t, mutation: n, onSelect: r, onOpen: a, onRetry: o }) {
+function bf({ load: e, selectedName: t, mutation: n, onSelect: r, onOpen: a, onRetry: o }) {
 	let s = i(), l = i(), u = i(), d = i(), f = c(null), p = n.kind === "creating" || n.kind === "opening", m = n.kind === "error" && n.operation === "open" ? n : null, h = e.kind === "ready" && t !== null && !p, g = e.kind === "loading" || e.kind === "ready" && e.mansions.length > 0;
 	return /* @__PURE__ */ R("div", {
 		className: "hh-foyer-region",
@@ -10987,7 +10976,7 @@ function gf({ load: e, selectedName: t, mutation: n, onSelect: r, onOpen: a, onR
 				children: [/* @__PURE__ */ L("legend", {
 					id: l,
 					children: "Mansions"
-				}), e.mansions.map((e) => /* @__PURE__ */ L(hf, {
+				}), e.mansions.map((e) => /* @__PURE__ */ L(yf, {
 					mansion: e,
 					group: s,
 					selected: e.name === t,
@@ -11040,7 +11029,7 @@ function gf({ load: e, selectedName: t, mutation: n, onSelect: r, onOpen: a, onR
 	});
 }
 // src/rooms/foyer/MansionShell.tsx
-function _f({ mansion: e, onReturn: t, children: n }) {
+function xf({ mansion: e, onReturn: t, children: n }) {
 	let a = i(), o = c(null), s = c(t);
 	return s.current = t, r(() => {
 		o.current?.focus();
@@ -11095,7 +11084,7 @@ function _f({ mansion: e, onReturn: t, children: n }) {
 	});
 }
 // src/core/foyer-reducer.ts
-function vf() {
+function Sf() {
 	return {
 		load: { kind: "loading" },
 		mutation: { kind: "idle" },
@@ -11103,41 +11092,41 @@ function vf() {
 		view: { kind: "foyer" }
 	};
 }
-function yf(e, t) {
+function Cf(e, t) {
 	return e.name < t.name ? -1 : +(e.name > t.name);
 }
-function bf(e, t) {
-	return [...e.filter(({ name: e }) => e !== t.name), t].sort(yf);
+function wf(e, t) {
+	return [...e.filter(({ name: e }) => e !== t.name), t].sort(Cf);
 }
-function xf(e) {
+function Tf(e) {
 	let t = /* @__PURE__ */ new Map();
 	for (let n of e) t.set(n.name, n);
-	return [...t.values()].sort(yf);
-}
-function Sf(e, t) {
-	return e === null ? null : t.some(({ name: t, status: n }) => t === e && n === "ready") ? e : null;
-}
-function Cf(e) {
-	return e.load.kind === "ready" ? e.load.mansions : null;
-}
-function wf(e) {
-	return e.kind === "creating" || e.kind === "opening";
-}
-function Tf(e, t, n) {
-	return e.kind === t && e.name === n;
+	return [...t.values()].sort(Cf);
 }
 function Ef(e, t) {
+	return e === null ? null : t.some(({ name: t, status: n }) => t === e && n === "ready") ? e : null;
+}
+function Df(e) {
+	return e.load.kind === "ready" ? e.load.mansions : null;
+}
+function Of(e) {
+	return e.kind === "creating" || e.kind === "opening";
+}
+function kf(e, t, n) {
+	return e.kind === t && e.name === n;
+}
+function Af(e, t) {
 	switch (t.type) {
-		case "load_started": return vf();
+		case "load_started": return Sf();
 		case "load_succeeded": {
-			let n = xf(t.mansions);
+			let n = Tf(t.mansions);
 			return {
 				load: {
 					kind: "ready",
 					mansions: n
 				},
 				mutation: { kind: "idle" },
-				selectedName: Sf(e.selectedName, n),
+				selectedName: Ef(e.selectedName, n),
 				view: { kind: "foyer" }
 			};
 		}
@@ -11156,13 +11145,13 @@ function Ef(e, t) {
 				...e,
 				selectedName: null
 			};
-			let n = Sf(t.name, e.load.mansions);
+			let n = Ef(t.name, e.load.mansions);
 			return n === null || n === e.selectedName ? e : {
 				...e,
 				selectedName: n
 			};
 		}
-		case "create_started": return e.view.kind !== "foyer" || e.load.kind !== "ready" || wf(e.mutation) ? e : {
+		case "create_started": return e.view.kind !== "foyer" || e.load.kind !== "ready" || Of(e.mutation) ? e : {
 			...e,
 			mutation: {
 				kind: "creating",
@@ -11170,10 +11159,10 @@ function Ef(e, t) {
 			}
 		};
 		case "create_succeeded": {
-			if (!Tf(e.mutation, "creating", t.mansion.name)) return e;
-			let n = Cf(e);
+			if (!kf(e.mutation, "creating", t.mansion.name)) return e;
+			let n = Df(e);
 			if (n === null || t.mansion.status !== "ready") return e;
-			let r = bf(n, t.mansion);
+			let r = wf(n, t.mansion);
 			return {
 				...e,
 				load: {
@@ -11181,10 +11170,10 @@ function Ef(e, t) {
 					mansions: r
 				},
 				mutation: { kind: "idle" },
-				selectedName: Sf(e.selectedName, r)
+				selectedName: Ef(e.selectedName, r)
 			};
 		}
-		case "create_failed": return Tf(e.mutation, "creating", t.name) ? {
+		case "create_failed": return kf(e.mutation, "creating", t.name) ? {
 			...e,
 			mutation: {
 				kind: "error",
@@ -11193,7 +11182,7 @@ function Ef(e, t) {
 				message: et(t.message)
 			}
 		} : e;
-		case "open_started": return e.view.kind !== "foyer" || e.load.kind !== "ready" || wf(e.mutation) || e.selectedName !== t.name || !e.load.mansions.some(({ name: e, status: n }) => e === t.name && n === "ready") ? e : {
+		case "open_started": return e.view.kind !== "foyer" || e.load.kind !== "ready" || Of(e.mutation) || e.selectedName !== t.name || !e.load.mansions.some(({ name: e, status: n }) => e === t.name && n === "ready") ? e : {
 			...e,
 			mutation: {
 				kind: "opening",
@@ -11201,12 +11190,12 @@ function Ef(e, t) {
 			}
 		};
 		case "open_succeeded": {
-			if (!Tf(e.mutation, "opening", t.mansion.name) || t.mansion.status !== "ready") return e;
-			let n = Cf(e);
+			if (!kf(e.mutation, "opening", t.mansion.name) || t.mansion.status !== "ready") return e;
+			let n = Df(e);
 			return n === null ? e : {
 				load: {
 					kind: "ready",
-					mansions: bf(n, t.mansion)
+					mansions: wf(n, t.mansion)
 				},
 				mutation: { kind: "idle" },
 				selectedName: t.mansion.name,
@@ -11216,7 +11205,7 @@ function Ef(e, t) {
 				}
 			};
 		}
-		case "open_failed": return Tf(e.mutation, "opening", t.name) ? {
+		case "open_failed": return kf(e.mutation, "opening", t.name) ? {
 			...e,
 			mutation: {
 				kind: "error",
@@ -11233,20 +11222,20 @@ function Ef(e, t) {
 	}
 }
 // src/rooms/foyer/use-foyer.ts
-var Df = {
+var jf = {
 	created: (e) => `Mansion ${e} created.`,
 	existing_compatible: (e) => `Mansion ${e} already exists. Nothing was changed.`
 };
-function Of(e) {
+function Mf(e) {
 	return e instanceof ut || e instanceof Ue ? e.message : ze;
 }
-function kf({ onAnnounce: e } = {}) {
+function Nf({ onAnnounce: e } = {}) {
 	let t = ht(), i = c(t);
 	i.current = t;
 	let a = c(e);
 	a.current = e;
-	let [s, u] = l(vf), d = c(s), f = c(!1), [p, m] = l(0), h = n((e) => {
-		let t = Ef(d.current, e);
+	let [s, u] = l(Sf), d = c(s), f = c(!1), [p, m] = l(0), h = n((e) => {
+		let t = Af(d.current, e);
 		return t !== d.current && (d.current = t, f.current && u(t)), t;
 	}, []);
 	r(() => (f.current = !0, () => {
@@ -11261,7 +11250,7 @@ function kf({ onAnnounce: e } = {}) {
 		}, (t) => {
 			e || h({
 				type: "load_failed",
-				message: Of(t)
+				message: Mf(t)
 			});
 		}), () => {
 			e = !0;
@@ -11284,12 +11273,12 @@ function kf({ onAnnounce: e } = {}) {
 			return h({
 				type: "create_succeeded",
 				mansion: r
-			}), a.current?.(Df[n](e)), !0;
+			}), a.current?.(jf[n](e)), !0;
 		} catch (t) {
 			return h({
 				type: "create_failed",
 				name: e,
-				message: Of(t)
+				message: Mf(t)
 			}), !1;
 		}
 	}, [h]), y = n((e) => {
@@ -11314,7 +11303,7 @@ function kf({ onAnnounce: e } = {}) {
 			h({
 				type: "open_failed",
 				name: e,
-				message: Of(t)
+				message: Mf(t)
 			});
 		});
 	}, [h]), b = n(() => {
@@ -11337,9 +11326,9 @@ function kf({ onAnnounce: e } = {}) {
 	]);
 }
 // src/rooms/foyer/Foyer.tsx
-var Af = { kind: "idle" };
-function jf({ onAnnounce: e, stillHouse: t = !1, renderMansion: o, renderShell: s, onMansionChange: u, preselect: d, invitation: f, visit: p, onLoad: m }) {
-	let h = kt(), g = i(), [_, v] = l(""), { state: y, retryLoad: b, select: x, create: S, open: C, returnToFoyer: w } = kf({ onAnnounce: e ?? v }), T = c(!1);
+var Pf = { kind: "idle" };
+function Ff({ onAnnounce: e, stillHouse: t = !1, renderMansion: o, renderShell: s, onMansionChange: u, preselect: d, invitation: f, visit: p, onLoad: m }) {
+	let h = kt(), g = i(), [_, v] = l(""), { state: y, retryLoad: b, select: x, create: S, open: C, returnToFoyer: w } = Nf({ onAnnounce: e ?? v }), T = c(!1);
 	r(() => {
 		T.current || d === void 0 || y.load.kind !== "ready" || (T.current = !0, y.load.mansions.some((e) => e.name === d && e.status === "ready") && y.selectedName === null && x(d));
 	}, [
@@ -11387,11 +11376,11 @@ function jf({ onAnnounce: e, stillHouse: t = !1, renderMansion: o, renderShell: 
 		mansions: y.load.kind === "ready" ? y.load.mansions : [],
 		selectedName: y.selectedName,
 		ready: y.load.kind === "ready",
-		mutation: y.mutation.kind === "error" && M !== "guide" ? Af : y.mutation,
+		mutation: y.mutation.kind === "error" && M !== "guide" ? Pf : y.mutation,
 		made: ee,
 		open: ae,
 		build: oe
-	}, de = y.mutation.kind === "error" && M === "guide" ? Af : y.mutation, fe = p === void 0 || le ? null : p.renderGuide(ue);
+	}, de = y.mutation.kind === "error" && M === "guide" ? Pf : y.mutation, fe = p === void 0 || le ? null : p.renderGuide(ue);
 	return /* @__PURE__ */ R("div", {
 		className: "hh-foyer",
 		ref: k,
@@ -11400,7 +11389,7 @@ function jf({ onAnnounce: e, stillHouse: t = !1, renderMansion: o, renderShell: 
 		"data-motion": t ? "none" : "low-frequency",
 		style: { colorScheme: h.mode },
 		children: [
-			/* @__PURE__ */ L("style", { children: df }),
+			/* @__PURE__ */ L("style", { children: hf }),
 			fe == null ? null : /* @__PURE__ */ L("div", {
 				className: "hh-foyer-guide",
 				"data-foyer-guide": !0,
@@ -11425,7 +11414,7 @@ function jf({ onAnnounce: e, stillHouse: t = !1, renderMansion: o, renderShell: 
 						className: "hh-foyer-invite",
 						children: f
 					}),
-					/* @__PURE__ */ L(gf, {
+					/* @__PURE__ */ L(bf, {
 						load: y.load,
 						selectedName: y.selectedName,
 						mutation: de,
@@ -11433,14 +11422,14 @@ function jf({ onAnnounce: e, stillHouse: t = !1, renderMansion: o, renderShell: 
 						onOpen: re,
 						onRetry: b
 					}),
-					/* @__PURE__ */ L(uf, {
+					/* @__PURE__ */ L(mf, {
 						ready: y.load.kind === "ready",
 						mutation: de,
 						onCreate: ie
 					})
 				]
 			}),
-			y.view.kind === "mansion" ? s === void 0 ? /* @__PURE__ */ L(_f, {
+			y.view.kind === "mansion" ? s === void 0 ? /* @__PURE__ */ L(xf, {
 				mansion: y.view.mansion,
 				onReturn: w,
 				children: o?.(y.view.mansion)
@@ -11454,7 +11443,7 @@ function jf({ onAnnounce: e, stillHouse: t = !1, renderMansion: o, renderShell: 
 	});
 }
 // src/rooms/foyer/Gate.tsx
-function Mf({ onKnock: e, formId: t }) {
+function If({ onKnock: e, formId: t }) {
 	let [n, r] = l(""), a = i(), o = i(), s = i();
 	return /* @__PURE__ */ R("form", {
 		className: "hh-gate-form",
@@ -11468,7 +11457,7 @@ function Mf({ onKnock: e, formId: t }) {
 			/* @__PURE__ */ L("label", {
 				className: "hh-gate-question",
 				htmlFor: a,
-				children: Ld
+				children: Vd
 			}),
 			/* @__PURE__ */ L("input", {
 				id: a,
@@ -11485,7 +11474,7 @@ function Mf({ onKnock: e, formId: t }) {
 			/* @__PURE__ */ L("span", {
 				id: o,
 				className: "hh-gate-hint",
-				children: Rd
+				children: Hd
 			}),
 			/* @__PURE__ */ R("div", {
 				className: "hh-gate-actions",
@@ -11497,19 +11486,19 @@ function Mf({ onKnock: e, formId: t }) {
 					children: [/* @__PURE__ */ L(x, {
 						size: 18,
 						"aria-hidden": !0
-					}), zd]
+					}), Ud]
 				}), /* @__PURE__ */ L("span", {
 					id: s,
 					className: "hh-gate-hint",
-					children: Bd
+					children: Wd
 				})]
 			})
 		]
 	});
 }
 // src/rooms/foyer/HallGuide.tsx
-var Nf = "Call the Warden", Pf = "The Warden says what is true here and what you can do about it.", Ff = "The Warden has stepped back.";
-function If({ status: e, question: t, options: n, pose: r, poseLabel: a, words: o, quiet: s, onPress: c, onStepBack: l, onCallWarden: u, statusRef: d, children: f }) {
+var Lf = "Call the Warden", Rf = "The Warden says what is true here and what you can do about it.", zf = "The Warden has stepped back.";
+function Bf({ status: e, question: t, options: n, pose: r, poseLabel: a, words: o, quiet: s, onPress: c, onStepBack: l, onCallWarden: u, statusRef: d, children: f }) {
 	let p = i(), m = s ? "stepped-back" : r;
 	return /* @__PURE__ */ R("div", {
 		className: "hh-hall-guide",
@@ -11518,7 +11507,7 @@ function If({ status: e, question: t, options: n, pose: r, poseLabel: a, words: 
 		children: [s ? f == null ? null : /* @__PURE__ */ L("div", {
 			className: "hh-hall-own",
 			children: f
-		}) : /* @__PURE__ */ L(ru, {
+		}) : /* @__PURE__ */ L(su, {
 			view: {
 				status: e,
 				question: t,
@@ -11536,13 +11525,13 @@ function If({ status: e, question: t, options: n, pose: r, poseLabel: a, words: 
 			children: [/* @__PURE__ */ L("span", {
 				className: "hh-hall-warden",
 				"aria-hidden": "true",
-				children: /* @__PURE__ */ L(lr, { pose: m })
+				children: /* @__PURE__ */ L(pr, { pose: m })
 			}), /* @__PURE__ */ R("div", {
 				className: "hh-hall-caption",
 				children: [/* @__PURE__ */ L("p", {
 					className: "hh-hall-pose",
 					"data-guide-pose": m,
-					children: s ? Ff : a
+					children: s ? zf : a
 				}), s ? /* @__PURE__ */ R(I, { children: [/* @__PURE__ */ R("button", {
 					type: "button",
 					className: "hh-stage-call",
@@ -11552,20 +11541,20 @@ function If({ status: e, question: t, options: n, pose: r, poseLabel: a, words: 
 					children: [/* @__PURE__ */ L(re, {
 						size: 13,
 						"aria-hidden": !0
-					}), Nf]
+					}), Lf]
 				}), /* @__PURE__ */ L("span", {
 					className: "hh-guide-hidden",
 					id: p,
-					children: Pf
+					children: Rf
 				})] }) : null]
 			})]
 		})]
 	});
 }
 // src/rooms/foyer/use-idea-step.ts
-var Lf = "Say what you want to build, or pick an example.";
-function Rf(e, t) {
-	let r = of(), [i, a] = l(null), [s, c] = l(!1), u = o(() => new Set(e.map((e) => e.name)), [e]), d = o(() => at(r.text).length === 0, [r.text]), f = t !== null && t.brief === r.text, p = o(() => f ? t.name : Nd(r.text, u, i), [
+var Vf = "Say what you want to build, or pick an example.";
+function Hf(e, t) {
+	let r = uf(), [i, a] = l(null), [s, c] = l(!1), u = o(() => new Set(e.map((e) => e.name)), [e]), d = o(() => at(r.text).length === 0, [r.text]), f = t !== null && t.brief === r.text, p = o(() => f ? t.name : Ld(r.text, u, i), [
 		f,
 		t,
 		r.text,
@@ -11579,7 +11568,7 @@ function Rf(e, t) {
 	return {
 		text: r.text,
 		counter: r.counter,
-		error: s ? Lf : r.error,
+		error: s ? Vf : r.error,
 		name: p,
 		alreadyMade: f,
 		pick: m,
@@ -11588,9 +11577,9 @@ function Rf(e, t) {
 	};
 }
 // src/rooms/foyer/IdeaStep.tsx
-var zf = "Examples to start with", Bf = (e) => `The project folder ${e} is already made. This takes you inside.`;
-function Vf({ mansions: e, ready: t, mutation: n, made: r, onBuild: a }) {
-	let o = i(), s = i(), l = i(), u = i(), d = i(), f = i(), p = i(), m = c(null), h = c(null), g = Rf(e, r), _ = n.kind === "creating" || n.kind === "opening", v = !t || _, y = n.kind === "error" ? `Could not ${n.operation} ${n.name}. ${n.message}` : null, b = g.error ?? y;
+var Uf = "Examples to start with", Wf = (e) => `The project folder ${e} is already made. This takes you inside.`;
+function Gf({ mansions: e, ready: t, mutation: n, made: r, onBuild: a }) {
+	let o = i(), s = i(), l = i(), u = i(), d = i(), f = i(), p = i(), m = c(null), h = c(null), g = Hf(e, r), _ = n.kind === "creating" || n.kind === "opening", v = !t || _, y = n.kind === "error" ? `Could not ${n.operation} ${n.name}. ${n.message}` : null, b = g.error ?? y;
 	return /* @__PURE__ */ R("form", {
 		className: "hh-idea",
 		"data-idea-step": !0,
@@ -11601,8 +11590,8 @@ function Vf({ mansions: e, ready: t, mutation: n, made: r, onBuild: a }) {
 		children: [
 			/* @__PURE__ */ L("ul", {
 				className: "hh-idea-examples",
-				"aria-label": zf,
-				children: Td.map((e) => /* @__PURE__ */ L("li", { children: /* @__PURE__ */ L("button", {
+				"aria-label": Uf,
+				children: kd.map((e) => /* @__PURE__ */ L("li", { children: /* @__PURE__ */ L("button", {
 					type: "button",
 					className: "hh-guide-foot-button hh-idea-example",
 					"data-example": e.name,
@@ -11616,14 +11605,14 @@ function Vf({ mansions: e, ready: t, mutation: n, made: r, onBuild: a }) {
 			/* @__PURE__ */ L("span", {
 				className: "hh-guide-hidden",
 				id: p,
-				children: Gd
+				children: Yd
 			}),
 			/* @__PURE__ */ R("div", {
 				className: "hh-idea-field",
 				children: [
 					/* @__PURE__ */ L("label", {
 						htmlFor: o,
-						children: Hd
+						children: Kd
 					}),
 					/* @__PURE__ */ L("textarea", {
 						id: o,
@@ -11638,7 +11627,7 @@ function Vf({ mansions: e, ready: t, mutation: n, made: r, onBuild: a }) {
 					/* @__PURE__ */ L("span", {
 						id: s,
 						className: "hh-idea-hint",
-						children: Ud
+						children: qd
 					}),
 					/* @__PURE__ */ L("span", {
 						id: l,
@@ -11674,7 +11663,7 @@ function Vf({ mansions: e, ready: t, mutation: n, made: r, onBuild: a }) {
 					children: [/* @__PURE__ */ L(O, {
 						size: 18,
 						"aria-hidden": !0
-					}), Wd]
+					}), Jd]
 				}), /* @__PURE__ */ L("span", {
 					id: f,
 					className: "hh-idea-hint",
@@ -11686,31 +11675,31 @@ function Vf({ mansions: e, ready: t, mutation: n, made: r, onBuild: a }) {
 						}),
 						" ",
 						n.kind === "creating" ? `Making ${n.name}…` : `Opening ${n.name}…`
-					] }) : g.alreadyMade ? Bf(g.name) : Kd(g.name)
+					] }) : g.alreadyMade ? Wf(g.name) : Xd(g.name)
 				})]
 			})
 		]
 	});
 }
 // src/core/seance-log.ts
-var Hf = `h1:${"0".repeat(64)}`;
-function Uf(e) {
-	let t = { ...fa(e) };
-	return delete t.hash, `h1:${oa(ra(t))}`;
+var Kf = `h1:${"0".repeat(64)}`;
+function qf(e) {
+	let t = { ...ha(e) };
+	return delete t.hash, `h1:${la(oa(t))}`;
 }
-function Wf(e) {
+function Jf(e) {
 	let t = e.split("\n");
 	t.at(-1) === "" && t.pop();
-	let n = [], r = [], i = /* @__PURE__ */ new Set(), a = null, o = Hf;
+	let n = [], r = [], i = /* @__PURE__ */ new Set(), a = null, o = Kf;
 	for (let e = 0; e < t.length; e += 1) {
 		let s = e + 1, c = t[e].endsWith("\r") ? t[e].slice(0, -1) : t[e];
 		if (c.trim() === "") continue;
-		let l = ba(c, s);
+		let l = Ca(c, s);
 		if (!l.ok) {
 			r.push(l.diagnostic);
 			continue;
 		}
-		let u = l.value, d = Gf(u, n.length + 1, a, o, i);
+		let u = l.value, d = Yf(u, n.length + 1, a, o, i);
 		if (d !== null) return r.push({
 			...d,
 			line: s
@@ -11731,7 +11720,7 @@ function Wf(e) {
 		diagnostics: r
 	};
 }
-function Gf(e, t, n, r, i) {
+function Yf(e, t, n, r, i) {
 	if (e.sequence !== t) return e.sequence < t ? {
 		code: "duplicate_sequence",
 		path: "$.sequence",
@@ -11752,7 +11741,7 @@ function Gf(e, t, n, r, i) {
 			path: "$.prev_hash",
 			safe_detail: "Record does not link to its predecessor."
 		};
-		if (e.hash !== Uf(e)) return {
+		if (e.hash !== qf(e)) return {
 			code: "hash_mismatch",
 			path: "$.hash",
 			safe_detail: "Record hash does not match its content."
@@ -11764,12 +11753,12 @@ function Gf(e, t, n, r, i) {
 		safe_detail: "Record_ID repeats an earlier record."
 	} : null;
 }
-var Kf = {
+var Xf = {
 	records: /* @__PURE__ */ new Map(),
 	highestSequence: 0,
 	contiguousSequence: 0
 };
-function qf(e, t) {
+function Zf(e, t) {
 	let n = [], r = null;
 	for (let i of t) (r ?? e.records).has(i.record_id) || (r ??= new Map(e.records), r.set(i.record_id, i), n.push(i));
 	if (r === null) return {
@@ -11791,8 +11780,8 @@ function qf(e, t) {
 		applied: n
 	};
 }
-function Jf(e) {
-	let t = Ta(Array.from(e));
+function Qf(e) {
+	let t = Oa(Array.from(e));
 	return {
 		events: t.selection.events,
 		selectionDiagnostics: t.selection.diagnostics,
@@ -11800,168 +11789,168 @@ function Jf(e) {
 		transitions: t.transitions
 	};
 }
-function Yf(e) {
-	return Jf(e.records.values());
+function $f(e) {
+	return Qf(e.records.values());
 }
-var Xf = "guardrail", Zf = $r, Qf = /^[A-Za-z0-9][A-Za-z0-9._:-]{0,63}$/, $f = /^[A-Za-z0-9][A-Za-z0-9._:@-]{0,127}$/, ep = /^[a-z][a-z0-9_]{0,63}$/, tp = /^[0-9a-f]{64}$/, np = /^[a-z0-9]+(?:-[a-z0-9]+)*$/, rp = 2 ** 31 - 1, ip = 2 ** 53 - 1, ap = 1024, op = 32, sp = 255, cp = /[\p{Cc}\p{Cf}\p{Cs}\p{Co}\p{Cn}\p{Zl}\p{Zp}]/u, lp = (e) => new TextEncoder().encode(e).length;
-function up(e) {
-	if (typeof e != "string" || e === "" || lp(e) > ap || e.includes("\\") || cp.test(e) || e.startsWith("/") || e.normalize("NFC") !== e) return !1;
+var ep = "guardrail", tp = ni, np = /^[A-Za-z0-9][A-Za-z0-9._:-]{0,63}$/, rp = /^[A-Za-z0-9][A-Za-z0-9._:@-]{0,127}$/, ip = /^[a-z][a-z0-9_]{0,63}$/, ap = /^[0-9a-f]{64}$/, op = /^[a-z0-9]+(?:-[a-z0-9]+)*$/, sp = 2 ** 31 - 1, cp = 2 ** 53 - 1, lp = 1024, up = 32, dp = 255, fp = /[\p{Cc}\p{Cf}\p{Cs}\p{Co}\p{Cn}\p{Zl}\p{Zp}]/u, pp = (e) => new TextEncoder().encode(e).length;
+function mp(e) {
+	if (typeof e != "string" || e === "" || pp(e) > lp || e.includes("\\") || fp.test(e) || e.startsWith("/") || e.normalize("NFC") !== e) return !1;
 	let t = e.split("/");
-	return t.length > op ? !1 : t.every((e) => e !== "" && e !== "." && e !== ".." && lp(e) <= sp && !/%[0-9A-Fa-f]{2}/.test(e));
+	return t.length > up ? !1 : t.every((e) => e !== "" && e !== "." && e !== ".." && pp(e) <= dp && !/%[0-9A-Fa-f]{2}/.test(e));
 }
-var Z = (e) => typeof e == "string" && Qf.test(e), dp = (e) => typeof e == "string" && $f.test(e), fp = (e) => typeof e == "string" && ep.test(e), pp = (e) => typeof e == "string" && W.includes(e), mp = (e) => typeof e == "string" && tp.test(e), hp = (e) => up(e), gp = (e, t) => (n) => typeof n == "number" && Number.isSafeInteger(n) && n >= e && n <= t, _p = (...e) => (t) => typeof t == "string" && e.includes(t), vp = (e) => (t) => t === null || e(t), yp = (e) => typeof e == "object" && !!e && !Array.isArray(e), bp = gp(1, rp), xp = gp(0, ip), Sp = _p("operator", "crew"), Cp = {
-	document_path: hp,
-	revision: bp,
-	sha256: mp,
-	size_bytes: xp
-}, wp = {
-	phase: pp,
+var Z = (e) => typeof e == "string" && np.test(e), hp = (e) => typeof e == "string" && rp.test(e), gp = (e) => typeof e == "string" && ip.test(e), _p = (e) => typeof e == "string" && G.includes(e), vp = (e) => typeof e == "string" && ap.test(e), yp = (e) => mp(e), bp = (e, t) => (n) => typeof n == "number" && Number.isSafeInteger(n) && n >= e && n <= t, xp = (...e) => (t) => typeof t == "string" && e.includes(t), Sp = (e) => (t) => t === null || e(t), Cp = (e) => typeof e == "object" && !!e && !Array.isArray(e), wp = bp(1, sp), Tp = bp(0, cp), Ep = xp("operator", "crew"), Dp = {
+	document_path: yp,
+	revision: wp,
+	sha256: vp,
+	size_bytes: Tp
+}, Op = {
+	phase: _p,
 	proposal_id: Z,
-	...Cp,
-	actor: Sp,
+	...Dp,
+	actor: Ep,
 	command_id: Z
-}, Tp = {
+}, kp = {
 	proposal_id: Z,
-	action_digest: mp,
-	actor: Sp,
+	action_digest: vp,
+	actor: Ep,
 	command_id: Z,
-	crew_slot: vp(dp),
-	crew_mid: vp(dp)
-}, Ep = {
+	crew_slot: Sp(hp),
+	crew_mid: Sp(hp)
+}, Ap = {
 	proposal_id: Z,
-	action_digest: mp,
+	action_digest: vp,
 	claim_id: Z,
-	code: fp,
-	exit_code: vp(gp(-255, 255)),
-	output_bytes: xp
-}, Dp = {
+	code: gp,
+	exit_code: Sp(bp(-255, 255)),
+	output_bytes: Tp
+}, jp = {
 	phase_start_reserved: [{
-		phase: pp,
+		phase: _p,
 		reservation_id: Z,
 		command_id: Z
 	}, "phase"],
 	phase_started: [{
-		phase: pp,
+		phase: _p,
 		reservation_id: Z,
-		session_slot: dp
+		session_slot: hp
 	}, "phase"],
 	phase_start_failed: [{
-		phase: pp,
+		phase: _p,
 		reservation_id: Z,
-		code: fp
+		code: gp
 	}, "phase"],
 	phase_start_denied: [{
-		phase: pp,
+		phase: _p,
 		command_id: Z,
-		code: fp
+		code: gp
 	}, "phase"],
 	phase_output_ready: [{
-		phase: pp,
+		phase: _p,
 		proposal_id: Z,
-		...Cp
+		...Dp
 	}, "proposal_id"],
 	revision_started: [{
-		phase: pp,
+		phase: _p,
 		command_id: Z,
-		session_slot: dp
+		session_slot: hp
 	}, "phase"],
 	door_superseded: [{
-		phase: pp,
+		phase: _p,
 		proposal_id: Z,
-		revision: bp,
-		sha256: mp,
-		code: fp
+		revision: wp,
+		sha256: vp,
+		code: gp
 	}, "proposal_id"],
-	door_approved: [wp, "proposal_id"],
-	door_rejected: [wp, "proposal_id"],
+	door_approved: [Op, "proposal_id"],
+	door_rejected: [Op, "proposal_id"],
 	risky_action_proposed: [{
 		proposal_id: Z,
-		action_digest: mp,
-		descriptor: yp
+		action_digest: vp,
+		descriptor: Cp
 	}, "proposal_id"],
-	risky_action_approved: [Tp, "proposal_id"],
-	risky_action_rejected: [Tp, "proposal_id"],
+	risky_action_approved: [kp, "proposal_id"],
+	risky_action_rejected: [kp, "proposal_id"],
 	risky_action_superseded: [{
 		proposal_id: Z,
-		action_digest: mp,
-		code: fp
+		action_digest: vp,
+		code: gp
 	}, "proposal_id"],
 	risky_action_consumed: [{
 		proposal_id: Z,
-		action_digest: mp,
+		action_digest: vp,
 		claim_id: Z,
-		session_slot: dp
+		session_slot: hp
 	}, "proposal_id"],
 	risky_action_denied: [{
 		proposal_id: Z,
-		action_digest: vp(mp),
+		action_digest: Sp(vp),
 		denial_id: Z,
-		session_slot: dp,
-		code: fp
+		session_slot: hp,
+		code: gp
 	}, "proposal_id"],
-	risky_action_succeeded: [Ep, "proposal_id"],
-	risky_action_failed: [Ep, "proposal_id"],
+	risky_action_succeeded: [Ap, "proposal_id"],
+	risky_action_failed: [Ap, "proposal_id"],
 	approval_resolution_ignored: [{
 		resolution_id: Z,
-		session_slot: dp,
-		mid: dp,
-		outcome: _p("approved", "rejected"),
-		code: fp
+		session_slot: hp,
+		mid: hp,
+		outcome: xp("approved", "rejected"),
+		code: gp
 	}, "resolution_id"],
 	path_denied: [{
 		denial_id: Z,
-		session_slot: dp,
-		room: fp,
-		access: _p(...Qa),
-		code: fp,
-		path: vp(hp)
+		session_slot: hp,
+		room: gp,
+		access: xp(...to),
+		code: gp,
+		path: Sp(yp)
 	}, "denial_id"],
 	spec_write_prepared: [{
 		write_id: Z,
-		phase: pp,
-		document_path: hp,
-		base_revision: gp(0, rp),
-		base_sha256: vp(mp),
-		revision: bp,
-		sha256: mp,
-		size_bytes: xp
+		phase: _p,
+		document_path: yp,
+		base_revision: bp(0, sp),
+		base_sha256: Sp(vp),
+		revision: wp,
+		sha256: vp,
+		size_bytes: Tp
 	}, "write_id"],
 	spec_document_written: [{
 		write_id: Z,
-		phase: pp,
-		...Cp
+		phase: _p,
+		...Dp
 	}, "write_id"],
 	spec_write_recovered: [{
 		write_id: Z,
-		phase: pp,
-		document_path: hp,
-		outcome: _p("completed", "not_applied")
+		phase: _p,
+		document_path: yp,
+		outcome: xp("completed", "not_applied")
 	}, "write_id"],
 	spec_write_uncertain: [{
 		write_id: Z,
-		phase: pp,
-		document_path: hp,
-		code: fp
+		phase: _p,
+		document_path: yp,
+		code: gp
 	}, "write_id"],
 	room_tool_answered: [{
 		answer_id: Z,
-		session_slot: dp,
-		mid: dp,
-		tool: _p("list_room_files", "read_room_file", "write_spec_document", "write_room_file", "submit_phase_output"),
-		outcome: _p("approved"),
-		actor: _p("house"),
-		reason: _p("non_risky_room_tool")
+		session_slot: hp,
+		mid: hp,
+		tool: xp("list_room_files", "read_room_file", "write_spec_document", "write_room_file", "submit_phase_output"),
+		outcome: xp("approved"),
+		actor: xp("house"),
+		reason: xp("non_risky_room_tool")
 	}, "answer_id"]
 };
-Object.keys(Dp);
-function Op(e) {
+Object.keys(jp);
+function Mp(e) {
 	return typeof e == "object" && !!e && !Array.isArray(e);
 }
-function kp(e) {
+function Np(e) {
 	if (e.event_type !== "domain_event_recorded") return null;
 	let t = e.payload;
-	if (!Op(t) || t.domain !== "doors_and_guardrails") return null;
-	if (e.source.origin !== "house" || e.source.source_type !== Xf) return "untrusted_source";
+	if (!Mp(t) || t.domain !== "doors_and_guardrails") return null;
+	if (e.source.origin !== "house" || e.source.source_type !== ep) return "untrusted_source";
 	let n = Object.keys(t);
 	if (n.length !== 4 || ![
 		"domain",
@@ -11970,9 +11959,9 @@ function kp(e) {
 		"data"
 	].every((e) => n.includes(e))) return "invalid_shape";
 	let r = t.kind;
-	if (typeof r != "string" || !Object.hasOwn(Dp, r)) return "unsupported_value";
-	let [i, a] = Dp[r], o = t.data;
-	if (!Op(o)) return "invalid_type";
+	if (typeof r != "string" || !Object.hasOwn(jp, r)) return "unsupported_value";
+	let [i, a] = jp[r], o = t.data;
+	if (!Mp(o)) return "invalid_type";
 	let s = Object.keys(o);
 	if (!s.every((e) => Object.hasOwn(i, e))) return "unknown_field";
 	if (s.length !== Object.keys(i).length) return "missing_field";
@@ -11987,7 +11976,7 @@ function kp(e) {
 		mansionId: e.scope.mansion_id
 	} : "mismatch";
 }
-var Ap = /* @__PURE__ */ new Set([
+var Pp = /* @__PURE__ */ new Set([
 	"phase_start_reserved",
 	"phase_started",
 	"phase_start_failed",
@@ -12002,26 +11991,26 @@ var Ap = /* @__PURE__ */ new Set([
 	"spec_write_recovered",
 	"spec_write_uncertain"
 ]);
-function jp(e) {
-	if (!up(e)) return null;
+function Fp(e) {
+	if (!mp(e)) return null;
 	let t = e.split("/");
-	return t.length !== 4 || t[0] !== ".kiro" || t[1] !== "specs" || t[2].length > 64 || !np.test(t[2]) ? null : W.slice(0, 3).find((e) => t[3] === `${e}.md`) ?? null;
+	return t.length !== 4 || t[0] !== ".kiro" || t[1] !== "specs" || t[2].length > 64 || !op.test(t[2]) ? null : G.slice(0, 3).find((e) => t[3] === `${e}.md`) ?? null;
 }
-function Mp(e) {
+function Ip(e) {
 	return {
 		revision: e.revision,
 		sha256: e.sha256,
 		sizeBytes: e.size_bytes
 	};
 }
-function Np(e, t) {
+function Lp(e, t) {
 	return e.revision === t.revision && e.sha256 === t.sha256 && e.sizeBytes === t.sizeBytes;
 }
-function Pp(e, t) {
+function Rp(e, t) {
 	for (let n of e.pendingWrites.values()) if (n.documentPath === t) return !0;
 	return !1;
 }
-function Fp(e, t) {
+function zp(e, t) {
 	return {
 		outcome: t,
 		actor: e.data.actor,
@@ -12029,14 +12018,14 @@ function Fp(e, t) {
 		sequence: e.sequence
 	};
 }
-function Ip(e, t) {
+function Bp(e, t) {
 	let { kind: n, data: r } = t;
-	if (!Ap.has(n)) return null;
+	if (!Pp.has(n)) return null;
 	let i = r.phase, a = e.phases[i];
 	if (n === "phase_start_denied") return null;
 	if (n === "phase_start_reserved") {
 		let t = r.command_id;
-		return e.commandIds.has(t) ? "duplicate_command" : W.slice(0, W.indexOf(i)).every((t) => e.phases[t].door === "open") ? a.status !== "ready" && a.status !== "failed" && a.status !== "revision_required" ? "invalid_state" : (e.commandIds.add(t), a.status = "starting", a.reservationId = r.reservation_id, null) : "predecessor_door_sealed";
+		return e.commandIds.has(t) ? "duplicate_command" : G.slice(0, G.indexOf(i)).every((t) => e.phases[t].door === "open") ? a.status !== "ready" && a.status !== "failed" && a.status !== "revision_required" ? "invalid_state" : (e.commandIds.add(t), a.status = "starting", a.reservationId = r.reservation_id, null) : "predecessor_door_sealed";
 	}
 	if (n === "phase_started" || n === "phase_start_failed") return a.status === "starting" ? r.reservation_id === a.reservationId ? (n === "phase_started" ? (a.status = "working", a.sessionSlot = r.session_slot) : a.status = "failed", null) : "reservation_mismatch" : "invalid_state";
 	if (n === "revision_started") {
@@ -12044,15 +12033,15 @@ function Ip(e, t) {
 		return e.commandIds.has(t) ? "duplicate_command" : a.status === "revision_required" ? (e.commandIds.add(t), a.status = "working", a.sessionSlot = r.session_slot, null) : "invalid_state";
 	}
 	if (n === "phase_output_ready") {
-		let n = r.proposal_id, o = r.document_path, s = Mp(r);
+		let n = r.proposal_id, o = r.document_path, s = Ip(r);
 		if (a.status !== "working") return "invalid_state";
 		if (e.proposalIds.has(n)) return "duplicate_proposal";
-		let c = jp(o);
+		let c = Fp(o);
 		if (i === "implementation" ? c !== null : c !== i) return "document_mismatch";
 		if (s.revision <= a.lastRevision) return "stale_revision";
-		if (Pp(e, o)) return "write_pending";
+		if (Rp(e, o)) return "write_pending";
 		let l = e.documents.get(o);
-		return l !== void 0 && !Np(l, s) ? "artifact_mismatch" : (e.proposalIds.add(n), a.status = "waiting", a.door = "waiting", a.lastRevision = s.revision, a.proposal = {
+		return l !== void 0 && !Lp(l, s) ? "artifact_mismatch" : (e.proposalIds.add(n), a.status = "waiting", a.door = "waiting", a.lastRevision = s.revision, a.proposal = {
 			proposalId: n,
 			phase: i,
 			documentPath: o,
@@ -12076,38 +12065,38 @@ function Ip(e, t) {
 		if (e.commandIds.has(c)) return "duplicate_command";
 		if (r.document_path !== o.documentPath || r.size_bytes !== s.sizeBytes) return "stale_revision";
 		let l = e.documents.get(o.documentPath);
-		if (l !== void 0 && !Np(l, s) || Pp(e, o.documentPath)) return "artifact_changed";
+		if (l !== void 0 && !Lp(l, s) || Rp(e, o.documentPath)) return "artifact_changed";
 		if (e.commandIds.add(c), n === "door_approved") {
 			a.status = "approved", a.door = "open", a.proposal = {
 				...o,
 				status: "approved",
-				decision: Fp(t, "approved")
+				decision: zp(t, "approved")
 			};
-			let n = W[W.indexOf(i) + 1];
+			let n = G[G.indexOf(i) + 1];
 			n !== void 0 && e.phases[n].status === "not_started" && (e.phases[n].status = "ready");
 		} else a.status = "revision_required", a.door = "rejected", a.proposal = {
 			...o,
 			status: "rejected",
-			decision: Fp(t, "rejected")
+			decision: zp(t, "rejected")
 		};
 		return null;
 	}
 	let o = r.write_id, s = r.document_path;
 	if (n === "spec_write_prepared") {
-		if (jp(s) !== i) return "document_mismatch";
+		if (Fp(s) !== i) return "document_mismatch";
 		if (a.status !== "working" && a.status !== "waiting") return "invalid_state";
-		if (e.pendingWrites.has(o) || Pp(e, s)) return "write_pending";
+		if (e.pendingWrites.has(o) || Rp(e, s)) return "write_pending";
 		let t = e.documents.get(s), n = t?.revision ?? 0, c = t?.sha256 ?? null;
 		return r.base_revision !== n || r.base_sha256 !== c || r.revision !== n + 1 ? "stale_revision" : (e.pendingWrites.set(o, {
 			phase: i,
 			documentPath: s,
-			artifact: Mp(r)
+			artifact: Ip(r)
 		}), null);
 	}
 	let c = e.pendingWrites.get(o);
-	return c === void 0 ? "write_missing" : c.phase !== i || c.documentPath !== s ? "write_mismatch" : n === "spec_document_written" ? Np(Mp(r), c.artifact) ? (e.pendingWrites.delete(o), e.documents.set(s, c.artifact), null) : "write_mismatch" : (n === "spec_write_recovered" && (e.pendingWrites.delete(o), r.outcome === "completed" && e.documents.set(s, c.artifact)), null);
+	return c === void 0 ? "write_missing" : c.phase !== i || c.documentPath !== s ? "write_mismatch" : n === "spec_document_written" ? Lp(Ip(r), c.artifact) ? (e.pendingWrites.delete(o), e.documents.set(s, c.artifact), null) : "write_mismatch" : (n === "spec_write_recovered" && (e.pendingWrites.delete(o), r.outcome === "completed" && e.documents.set(s, c.artifact)), null);
 }
-var Lp = /* @__PURE__ */ new Set([
+var Vp = /* @__PURE__ */ new Set([
 	"risky_action_approved",
 	"risky_action_rejected",
 	"risky_action_superseded",
@@ -12116,23 +12105,23 @@ var Lp = /* @__PURE__ */ new Set([
 	"risky_action_succeeded",
 	"risky_action_failed"
 ]);
-function Rp(e) {
+function Hp(e) {
 	try {
-		return oa(ra(e));
+		return la(oa(e));
 	} catch {
 		return null;
 	}
 }
-function zp(e) {
-	let t = wo(e.data.descriptor);
-	return t === null || Rp(e.data.descriptor) !== e.data.action_digest || t.mansionId !== e.mansionId || t.sessionSlot !== e.sessionSlot ? null : t;
+function Up(e) {
+	let t = Do(e.data.descriptor);
+	return t === null || Hp(e.data.descriptor) !== e.data.action_digest || t.mansionId !== e.mansionId || t.sessionSlot !== e.sessionSlot ? null : t;
 }
-function Bp(e, t) {
+function Wp(e, t) {
 	let { kind: n, data: r } = t;
 	if (n === "risky_action_proposed") {
 		let n = r.proposal_id;
 		if (e.proposals.has(n)) return "duplicate_proposal";
-		let i = zp(t);
+		let i = Up(t);
 		return e.proposals.set(n, {
 			proposalId: n,
 			ghostId: t.ghostId,
@@ -12146,18 +12135,18 @@ function Bp(e, t) {
 			claimId: null
 		}), null;
 	}
-	if (!Lp.has(n) || n === "risky_action_denied") return null;
+	if (!Vp.has(n) || n === "risky_action_denied") return null;
 	let i = e.proposals.get(r.proposal_id);
 	if (i === void 0) return "proposal_missing";
 	if (r.action_digest !== i.actionDigest) return "digest_mismatch";
 	if (n === "risky_action_approved" || n === "risky_action_rejected") {
 		let a = n === "risky_action_approved", o = r.command_id;
-		return i.status === "pending" ? e.commandIds.has(o) ? "duplicate_command" : a && i.descriptor === null ? "proposal_blocked" : (e.commandIds.add(o), i.status = a ? "approved" : "rejected", i.decision = Fp(t, a ? "approved" : "rejected"), null) : "already_decided";
+		return i.status === "pending" ? e.commandIds.has(o) ? "duplicate_command" : a && i.descriptor === null ? "proposal_blocked" : (e.commandIds.add(o), i.status = a ? "approved" : "rejected", i.decision = zp(t, a ? "approved" : "rejected"), null) : "already_decided";
 	}
 	return n === "risky_action_superseded" ? i.status !== "pending" && i.status !== "approved" ? "not_supersedable" : (i.status = "superseded", null) : n === "risky_action_consumed" ? i.status === "approved" ? i.descriptor === null || r.session_slot !== i.sessionSlot || t.sessionSlot !== i.sessionSlot ? "identity_mismatch" : (i.status = "consumed", i.claimId = r.claim_id, null) : "not_approved" : i.status === "consumed" ? r.claim_id === i.claimId ? (i.status = n === "risky_action_succeeded" ? "succeeded" : "failed", null) : "claim_mismatch" : "not_consumed";
 }
-function Vp(e, t) {
-	let n = Array.from(e).filter((e) => e.scope.mansion_id === t.mansionId).sort((e, t) => e.sequence - t.sequence || (e.event_id < t.event_id ? -1 : +(e.event_id > t.event_id))), r = Object.fromEntries(W.map((e, t) => [e, {
+function Gp(e, t) {
+	let n = Array.from(e).filter((e) => e.scope.mansion_id === t.mansionId).sort((e, t) => e.sequence - t.sequence || (e.event_id < t.event_id ? -1 : +(e.event_id > t.event_id))), r = Object.fromEntries(G.map((e, t) => [e, {
 		status: t === 0 ? "ready" : "not_started",
 		door: "sealed",
 		proposal: null,
@@ -12175,8 +12164,8 @@ function Vp(e, t) {
 		commandIds: /* @__PURE__ */ new Set()
 	}, o = /* @__PURE__ */ new Map(), s = /* @__PURE__ */ new Map(), c = [], l = 0;
 	for (let e of n) {
-		l = Math.max(l, e.sequence), e.scope.ghost_id !== Zf && !s.has(e.scope.session_slot) && s.set(e.scope.session_slot, e.scope.ghost_id);
-		let t = e.payload, n = Op(t) ? t.mid : void 0;
+		l = Math.max(l, e.sequence), e.scope.ghost_id !== tp && !s.has(e.scope.session_slot) && s.set(e.scope.session_slot, e.scope.ghost_id);
+		let t = e.payload, n = Mp(t) ? t.mid : void 0;
 		if (typeof n == "string" && e.source.origin === "crew") {
 			let t = JSON.stringify([e.scope.session_slot, n]);
 			e.event_type === "approval_requested" && !o.has(t) ? o.set(t, {
@@ -12188,7 +12177,7 @@ function Vp(e, t) {
 				proposalId: null
 			}) : e.event_type === "approval_decided" && o.delete(t);
 		}
-		let r = kp(e);
+		let r = Np(e);
 		if (r !== null) {
 			if (typeof r == "string") c.push({
 				sequence: e.sequence,
@@ -12196,7 +12185,7 @@ function Vp(e, t) {
 				kind: "invalid_payload",
 				code: r
 			});
-			else for (let e of [Ip(i, r), Bp(a, r)]) e !== null && c.push({
+			else for (let e of [Bp(i, r), Wp(a, r)]) e !== null && c.push({
 				sequence: r.sequence,
 				eventId: r.eventId,
 				kind: r.kind,
@@ -12214,7 +12203,7 @@ function Vp(e, t) {
 		descriptor: e.descriptor,
 		createdSequence: e.createdSequence,
 		decision: e.decision
-	})), d = W.map((e) => {
+	})), d = G.map((e) => {
 		let t = r[e], n = t.sessionSlot === null ? void 0 : s.get(t.sessionSlot);
 		return {
 			phase: e,
@@ -12241,7 +12230,7 @@ function Vp(e, t) {
 	};
 }
 // src/core/replay-timeline.ts
-var Hp = {
+var Kp = {
 	fixture_unavailable: "The replay recording could not be loaded.",
 	invalid_record: "A record could not be read and was left out.",
 	unsupported_schema: "A record uses an unsupported schema and was left out.",
@@ -12252,49 +12241,49 @@ var Hp = {
 	conflicting_variant: "Several records describe one event. One was chosen by the canonical rule.",
 	contract_unavailable: "The replay contract is unavailable. The last valid state is kept."
 };
-function Up(e, t = {}) {
+function qp(e, t = {}) {
 	return {
 		code: e,
 		...t.line === void 0 ? {} : { line: t.line },
 		...t.recordId === void 0 ? {} : { recordId: t.recordId },
-		safeDetail: Hp[e]
+		safeDetail: Kp[e]
 	};
 }
-function Wp(e) {
+function Jp(e) {
 	let t = { line: e.line };
 	switch (e.code) {
-		case "unsupported_schema": return Up("unsupported_schema", t);
+		case "unsupported_schema": return qp("unsupported_schema", t);
 		case "duplicate_sequence":
 		case "missing_sequence":
 		case "hash_mismatch":
 		case "hash_link_broken":
-		case "mixed_integrity_mode": return Up("integrity_failed", t);
-		default: return Up("invalid_record", t);
+		case "mixed_integrity_mode": return qp("integrity_failed", t);
+		default: return qp("invalid_record", t);
 	}
 }
-function Gp(e, t) {
+function Yp(e, t) {
 	let n = { recordId: t.get(e.event_id) };
-	return e.code === "conflicting_variant" ? Up("conflicting_variant", n) : Up(e.kind === "forward" ? "causal_cycle" : "missing_predecessor", n);
+	return e.code === "conflicting_variant" ? qp("conflicting_variant", n) : qp(e.kind === "forward" ? "causal_cycle" : "missing_predecessor", n);
 }
-function Kp(e) {
+function Xp(e) {
 	return new Map(e.map((e) => [e.event_id, e.record_id]));
 }
-function qp(e, t = {}) {
-	let n = Ca(Array.from(e)), r = Kp(n.events);
+function Zp(e, t = {}) {
+	let n = Ea(Array.from(e)), r = Xp(n.events);
 	return {
 		records: n.events,
-		diagnostics: [...t.diagnostics ?? [], ...n.diagnostics.map((e) => Gp(e, r))],
+		diagnostics: [...t.diagnostics ?? [], ...n.diagnostics.map((e) => Yp(e, r))],
 		integrityOk: t.integrityOk !== !1
 	};
 }
-function Jp(e) {
-	let t = Wf(e);
-	return qp(t.events, {
-		diagnostics: t.diagnostics.map(Wp),
+function Qp(e) {
+	let t = Jf(e);
+	return Zp(t.events, {
+		diagnostics: t.diagnostics.map(Jp),
 		integrityOk: t.integrityOk
 	});
 }
-function Yp(e, t) {
+function $p(e, t) {
 	let n = Array.from(e), r = Array.from(t);
 	for (let e = 0; e < Math.min(n.length, r.length); e += 1) {
 		let t = n[e].codePointAt(0) - r[e].codePointAt(0);
@@ -12302,14 +12291,14 @@ function Yp(e, t) {
 	}
 	return n.length - r.length;
 }
-function Xp(e, t) {
-	let n = t.integrityOk !== !1, r = e.events, i = Kp(r), a = [], o = Array.from(new Set(r.map((e) => e.scope.mansion_id))).sort(Yp).map((e) => {
-		let t = Vp(r, {
+function em(e, t) {
+	let n = t.integrityOk !== !1, r = e.events, i = Xp(r), a = [], o = Array.from(new Set(r.map((e) => e.scope.mansion_id))).sort($p).map((e) => {
+		let t = Gp(r, {
 			mansionId: e,
 			integrity: n ? "valid" : "corrupt",
 			readOnly: !0
 		});
-		for (let e of t.diagnostics) a.push(Up("invalid_transition", { recordId: i.get(e.eventId) }));
+		for (let e of t.diagnostics) a.push(qp("invalid_transition", { recordId: i.get(e.eventId) }));
 		return t.projection;
 	});
 	return {
@@ -12321,40 +12310,40 @@ function Xp(e, t) {
 		diagnostics: a
 	};
 }
-function Zp(e, t = {}) {
-	return Xp(Jf(e), t);
+function tm(e, t = {}) {
+	return em(Qf(e), t);
 }
-function Qp(e, t = {}) {
-	return Xp(Yf(qf(Kf, e).log), t);
+function nm(e, t = {}) {
+	return em($f(Zf(Xf, e).log), t);
 }
-function $p(e) {
-	return (t) => Zp(t, { integrityOk: e.integrityOk });
+function rm(e) {
+	return (t) => tm(t, { integrityOk: e.integrityOk });
 }
-function em(e, t) {
+function im(e, t) {
 	return e.workflows.find((e) => e.mansionId === t) ?? null;
 }
-var tm = {
-	parse: Jp,
-	select: (e) => qp(e),
-	fold: Zp,
-	foldLive: Qp
-}, nm = "Recorded event", rm = "Operator";
-function im(e) {
+var am = {
+	parse: Qp,
+	select: (e) => Zp(e),
+	fold: tm,
+	foldLive: nm
+}, om = "Recorded event", sm = "Operator";
+function cm(e) {
 	let t = e.replace(/[\u0000-\u001f\u007f-\u009f\s]+/g, " ").trim(), n = Array.from(t);
 	return n.length <= 160 ? t : `${n.slice(0, 159).join("")}…`;
 }
-function am(e) {
+function lm(e) {
 	return typeof e == "object" && e && !Array.isArray(e) ? e : {};
 }
-function om(e, t, n) {
+function um(e, t, n) {
 	let r = t[n];
 	return typeof r == "string" && Object.hasOwn(e, r) ? e[r] : null;
 }
-var sm = Object.fromEntries(Ao.map((e) => [e.id, e.name])), cm = {
+var dm = Object.fromEntries(No.map((e) => [e.id, e.name])), fm = {
 	approved: "approved",
 	rejected: "rejected",
 	denied: "rejected"
-}, lm = {
+}, pm = {
 	run_started: "Run started",
 	ghost_progressed: "Progress reported",
 	message_recorded: "Message recorded",
@@ -12374,7 +12363,7 @@ var sm = Object.fromEntries(Ao.map((e) => [e.id, e.name])), cm = {
 	decision_recorded: "Decision recorded",
 	domain_event_recorded: "House event recorded",
 	source_event_observed: "Source event observed"
-}, um = {
+}, mm = {
 	phase_start_reserved: "Phase start reserved",
 	phase_started: "Phase started",
 	phase_start_failed: "Phase start failed",
@@ -12400,95 +12389,95 @@ var sm = Object.fromEntries(Ao.map((e) => [e.id, e.name])), cm = {
 	spec_write_uncertain: "Spec document write uncertain",
 	room_tool_answered: "Room tool approved by the house"
 };
-function dm(e) {
-	let t = kp(e);
-	if (t === null) return lm.domain_event_recorded;
+function hm(e) {
+	let t = Np(e);
+	if (t === null) return pm.domain_event_recorded;
 	if (typeof t == "string") return "Workflow record refused";
-	let n = um[t.kind], r = t.data.phase;
-	return typeof r == "string" && W.includes(r) ? `${n}: ${jo[r]}` : n;
+	let n = mm[t.kind], r = t.data.phase;
+	return typeof r == "string" && G.includes(r) ? `${n}: ${Po[r]}` : n;
 }
-function fm(e) {
-	let t = Object.hasOwn(lm, e.event_type) ? lm[e.event_type] : void 0;
-	if (t === void 0) return nm;
-	let n = am(e.payload);
+function gm(e) {
+	let t = Object.hasOwn(pm, e.event_type) ? pm[e.event_type] : void 0;
+	if (t === void 0) return om;
+	let n = lm(e.payload);
 	switch (e.event_type) {
 		case "run_started": {
-			let e = om(sm, n, "room");
+			let e = um(dm, n, "room");
 			return e === null ? t : `${t} in the ${e}`;
 		}
 		case "run_blocked":
 		case "run_failed": {
-			let e = om(qr, n, "reason");
+			let e = um(Xr, n, "reason");
 			return e === null ? t : `${t}: ${e}`;
 		}
 		case "tool_started": return n.is_shell === !0 ? "Shell tool call started" : t;
 		case "approval_decided": {
-			let e = om(cm, n, "outcome");
+			let e = um(fm, n, "outcome");
 			return e === null ? t : `${t}: ${e}`;
 		}
 		case "crew_turn_ended": return n.needs_input === !0 ? `${t}: needs input` : t;
-		case "domain_event_recorded": return dm(e);
+		case "domain_event_recorded": return hm(e);
 		default: return t;
 	}
 }
-function pm(e) {
+function _m(e) {
 	let t = e.scope.ghost_id;
-	return t === "house-operator" ? rm : im(Zr(t));
+	return t === "house-operator" ? sm : cm(ei(t));
 }
-function mm(e, t) {
+function vm(e, t) {
 	return {
 		recordId: e.record_id,
 		eventId: e.event_id,
-		eventType: Object.hasOwn(lm, e.event_type) ? e.event_type : "unknown",
-		actorLabel: pm(e),
-		summary: im(fm(e)),
+		eventType: Object.hasOwn(pm, e.event_type) ? e.event_type : "unknown",
+		actorLabel: _m(e),
+		summary: cm(gm(e)),
 		presentationOffsetMs: t
 	};
 }
-var hm = 4e3, gm = 1e3;
-function _m(e, t) {
+var ym = 4e3, bm = 1e3;
+function xm(e, t) {
 	let n = e.occurred_at_ms, r = t.occurred_at_ms, i = Number.isSafeInteger(n) && Number.isSafeInteger(r) ? r - n : 0;
-	return Math.min(Math.max(i > 0 ? i : gm, 250), hm);
+	return Math.min(Math.max(i > 0 ? i : bm, 250), ym);
 }
-function vm(e) {
+function Sm(e) {
 	let t = [], n = 0;
 	return e.forEach((r, i) => {
-		i > 0 && (n += _m(e[i - 1], r)), t.push(n);
+		i > 0 && (n += xm(e[i - 1], r)), t.push(n);
 	}), t;
 }
-function ym(e) {
-	let t = vm(e.records);
+function Cm(e) {
+	let t = Sm(e.records);
 	return {
 		records: e.records,
-		timeline: e.records.map((e, n) => mm(e, t[n])),
+		timeline: e.records.map((e, n) => vm(e, t[n])),
 		diagnostics: e.diagnostics,
 		integrityOk: e.integrityOk
 	};
 }
-function bm(e) {
+function wm(e) {
 	return {
 		records: [],
 		timeline: [],
-		diagnostics: [Up(e)],
+		diagnostics: [qp(e)],
 		integrityOk: !0
 	};
 }
 // src/core/seance-api.ts
-var xm = "/apps/haunted-house/api/mansions";
-function Sm(e) {
-	return `${xm}/${encodeURIComponent(e)}/seance/ingest`;
+var Tm = "/apps/haunted-house/api/mansions";
+function Em(e) {
+	return `${Tm}/${encodeURIComponent(e)}/seance/ingest`;
 }
-function Cm(e, t, n = 500) {
-	return `${xm}/${encodeURIComponent(e)}/seance/events?after_sequence=${t}&limit=${n}`;
+function Dm(e, t, n = 500) {
+	return `${Tm}/${encodeURIComponent(e)}/seance/events?after_sequence=${t}&limit=${n}`;
 }
-function wm(e) {
-	return `${xm}/${encodeURIComponent(e)}/seance/reconcile`;
-}
-var Tm = new Set(ji), Em = 160, Dm = 20;
 function Om(e) {
+	return `${Tm}/${encodeURIComponent(e)}/seance/reconcile`;
+}
+var km = new Set(Pi), Am = 160, jm = 20;
+function Mm(e) {
 	return typeof e == "object" && !!e && !Array.isArray(e);
 }
-function km(e) {
+function Nm(e) {
 	return {
 		ok: !1,
 		diagnostic: {
@@ -12497,9 +12486,9 @@ function km(e) {
 		}
 	};
 }
-function Am(e) {
-	if (!Om(e)) return null;
-	let t = typeof e.code == "string" && Tm.has(e.code) ? e.code : "persistence_failed", n = typeof e.safe_detail == "string" ? e.safe_detail : e.reason, r = typeof n == "string" ? n.replace(/[\u0000-\u001f\u007f]+/g, " ").slice(0, Em) : "", i = typeof e.line == "number" && Number.isSafeInteger(e.line) && e.line > 0 ? e.line : null;
+function Pm(e) {
+	if (!Mm(e)) return null;
+	let t = typeof e.code == "string" && km.has(e.code) ? e.code : "persistence_failed", n = typeof e.safe_detail == "string" ? e.safe_detail : e.reason, r = typeof n == "string" ? n.replace(/[\u0000-\u001f\u007f]+/g, " ").slice(0, Am) : "", i = typeof e.line == "number" && Number.isSafeInteger(e.line) && e.line > 0 ? e.line : null;
 	return i === null ? {
 		code: t,
 		safe_detail: r
@@ -12509,20 +12498,20 @@ function Am(e) {
 		line: i
 	};
 }
-function jm(e) {
-	if (!Om(e)) return km("The backend sent an unexpected response.");
-	if (!Array.isArray(e.events)) return km("The backend response has no event list.");
+function Fm(e) {
+	if (!Mm(e)) return Nm("The backend sent an unexpected response.");
+	if (!Array.isArray(e.events)) return Nm("The backend response has no event list.");
 	let t = e.highest_sequence;
-	if (typeof t != "number" || !Number.isSafeInteger(t) || t < 0) return km("The backend response has no valid highest Sequence.");
+	if (typeof t != "number" || !Number.isSafeInteger(t) || t < 0) return Nm("The backend response has no valid highest Sequence.");
 	let n = [];
-	if (Array.isArray(e.diagnostics)) for (let t of e.diagnostics.slice(0, Dm)) {
-		let e = Am(t);
+	if (Array.isArray(e.diagnostics)) for (let t of e.diagnostics.slice(0, jm)) {
+		let e = Pm(t);
 		e !== null && n.push(e);
 	}
 	let r = [];
 	for (let t of e.events) {
-		let e = va(t);
-		e.ok ? r.push(e.value) : n.length < Dm && n.push(e.diagnostic);
+		let e = xa(t);
+		e.ok ? r.push(e.value) : n.length < jm && n.push(e.diagnostic);
 	}
 	let i = Array.isArray(e.reconcile_slots) ? e.reconcile_slots.filter((e) => typeof e == "string" && e.length > 0 && e.length <= 160).slice(0, 8) : [], a = e.next_event_in_ms;
 	return {
@@ -12536,26 +12525,26 @@ function jm(e) {
 		}
 	};
 }
-function Mm(e) {
+function Im(e) {
 	if (typeof e != "object" || !e) return null;
 	let t = e.status;
 	return typeof t == "number" && Number.isInteger(t) && t >= 100 && t <= 599 ? t : null;
 }
-var Nm = 4096;
-function Pm(e) {
+var Lm = 4096;
+function Rm(e) {
 	if (typeof e != "object" || !e) return null;
 	let t = e.body;
-	if (typeof t != "string" || t.length > Nm) return null;
+	if (typeof t != "string" || t.length > Lm) return null;
 	try {
 		let e = JSON.parse(t);
-		if (!Om(e) || !Om(e.error)) return null;
+		if (!Mm(e) || !Mm(e.error)) return null;
 		let n = e.error.code;
 		return typeof n == "string" && /^[a-z_]{1,64}$/.test(n) ? n : null;
 	} catch {
 		return null;
 	}
 }
-function Fm(e, t) {
+function zm(e, t) {
 	if (typeof e != "object" || !e) return null;
 	let n = e.body;
 	if (typeof n != "string" || n.length > 65536) return null;
@@ -12565,10 +12554,10 @@ function Fm(e, t) {
 	} catch {
 		return null;
 	}
-	if (!Om(r) || !Array.isArray(r.diagnostics)) return null;
+	if (!Mm(r) || !Array.isArray(r.diagnostics)) return null;
 	let i = /* @__PURE__ */ new Map();
 	for (let e of r.diagnostics) {
-		if (!Om(e)) return null;
+		if (!Mm(e)) return null;
 		let { index: n, code: r } = e;
 		if (typeof n != "number" || !Number.isInteger(n) || n < 0 || n >= t || typeof r != "string" || !/^[a-z_]{1,64}$/.test(r)) return null;
 		i.has(n) || i.set(n, r);
@@ -12578,53 +12567,53 @@ function Fm(e, t) {
 		code: t
 	})).sort((e, t) => e.index - t.index);
 }
-function Im(e) {
+function Bm(e) {
 	return e !== null && e >= 400 && e < 500 && e !== 408 && e !== 429;
 }
 // src/adapters/attic-log-source.ts
-var Lm = {
+var Vm = {
 	status: "loading",
 	selection: null,
 	safeMessage: null
-}, Rm = {
+}, Hm = {
 	status: "error",
 	selection: null,
-	safeMessage: Hp.fixture_unavailable
-}, zm = {
+	safeMessage: Kp.fixture_unavailable
+}, Um = {
 	records: [],
 	diagnostics: [],
 	integrityOk: !0
 };
-function Bm(e) {
+function Wm(e) {
 	return {
 		status: "ready",
 		selection: e,
 		safeMessage: null
 	};
 }
-function Vm(e, t) {
+function Gm(e, t) {
 	return {
 		...e,
 		records: e.records.filter((e) => e.scope.mansion_id === t)
 	};
 }
-async function Hm(e, t) {
+async function Km(e, t) {
 	let n;
 	try {
 		n = await e.load();
 	} catch {
-		return Rm;
+		return Hm;
 	}
-	return typeof n == "string" ? Bm(Vm(tm.parse(n), t)) : Rm;
+	return typeof n == "string" ? Wm(Gm(am.parse(n), t)) : Hm;
 }
-async function Um(e, t) {
+async function qm(e, t) {
 	let n = [], r = [], i = /* @__PURE__ */ new Set(), a = 0;
 	try {
 		for (let o = 0; o < 200; o += 1) {
-			let o = jm(await e.get(Cm(t, a, 500)));
-			if (!o.ok) return Rm;
+			let o = Fm(await e.get(Dm(t, a, 500)));
+			if (!o.ok) return Hm;
 			for (let e of o.page.diagnostics) {
-				let t = Wp(e), n = `${t.code}:${t.line ?? ""}`;
+				let t = Jp(e), n = `${t.code}:${t.line ?? ""}`;
 				i.has(n) || r.length >= 50 || (i.add(n), r.push(t));
 			}
 			let s = a;
@@ -12633,20 +12622,20 @@ async function Um(e, t) {
 			a = s;
 		}
 	} catch (e) {
-		return Mm(e) === 404 && Pm(e) === "log_not_found" ? Bm(zm) : Rm;
+		return Im(e) === 404 && Rm(e) === "log_not_found" ? Wm(Um) : Hm;
 	}
-	return Bm(qp(n, {
+	return Wm(Zp(n, {
 		diagnostics: r,
 		integrityOk: !r.some((e) => e.code === "integrity_failed")
 	}));
 }
-function Wm(e) {
+function Jm(e) {
 	let t = xe(), i = c(t);
 	i.current = t;
-	let [a, o] = l(0), [s, u] = l(Lm);
+	let [a, o] = l(0), [s, u] = l(Vm);
 	r(() => {
 		let t = !1;
-		return u(Lm), (Pt === null ? Um({ get: (e) => i.current.get(e) }, e) : Hm(Pt, e)).then((e) => {
+		return u(Vm), (Pt === null ? qm({ get: (e) => i.current.get(e) }, e) : Km(Pt, e)).then((e) => {
 			t || u(e);
 		}), () => {
 			t = !0;
@@ -12660,29 +12649,29 @@ function Wm(e) {
 	};
 }
 // src/core/replay-reducer.ts
-var Gm = [
+var Ym = [
 	.5,
 	1,
 	2
-], Km = {
+], Xm = {
 	invalid_cursor: "That position is not an event of this replay.",
 	invalid_speed: "Playback speed must be 0.5×, 1× or 2×.",
 	invalid_command: "That replay command is not supported.",
 	contract_unavailable: "The replay could not show that position. The last valid state is kept."
 };
-function qm(e) {
-	return Gm.includes(e);
+function Zm(e) {
+	return Ym.includes(e);
 }
-function Jm(e, t) {
+function Qm(e, t) {
 	return typeof t == "number" && Number.isInteger(t) && t >= 0 && t <= e.records.length;
 }
-function Ym(e) {
+function $m(e) {
 	return {
 		code: e,
-		safeDetail: Km[e]
+		safeDetail: Xm[e]
 	};
 }
-function Xm(e, t) {
+function eh(e, t) {
 	return {
 		status: "paused",
 		cursor: 0,
@@ -12692,19 +12681,19 @@ function Xm(e, t) {
 		commandError: null
 	};
 }
-function Zm(e, t) {
+function th(e, t) {
 	return e.commandError?.code === t ? e : {
 		...e,
-		commandError: Ym(t)
+		commandError: $m(t)
 	};
 }
-function Qm(e) {
+function nh(e) {
 	return e.commandError === null ? e : {
 		...e,
 		commandError: null
 	};
 }
-function $m(e, t, n, r, i) {
+function rh(e, t, n, r, i) {
 	let a;
 	try {
 		a = i(e.records.slice(0, n));
@@ -12713,7 +12702,7 @@ function $m(e, t, n, r, i) {
 			...t,
 			status: t.status === "playing" ? "paused" : t.status,
 			generation: t.generation + 1,
-			commandError: Ym("contract_unavailable")
+			commandError: $m("contract_unavailable")
 		};
 	}
 	return {
@@ -12725,15 +12714,15 @@ function $m(e, t, n, r, i) {
 		commandError: null
 	};
 }
-function eh(e, t, n, r) {
+function ih(e, t, n, r) {
 	let i = e.records.length;
 	switch (n.kind) {
 		case "play":
-		case "resume": return t.status === "playing" ? Qm(t) : i === 0 ? t.status === "complete" ? Qm(t) : {
+		case "resume": return t.status === "playing" ? nh(t) : i === 0 ? t.status === "complete" ? nh(t) : {
 			...t,
 			status: "complete",
 			commandError: null
-		} : t.cursor >= i ? $m(e, t, 0, "playing", r) : {
+		} : t.cursor >= i ? rh(e, t, 0, "playing", r) : {
 			...t,
 			status: "playing",
 			generation: t.generation + 1,
@@ -12744,46 +12733,46 @@ function eh(e, t, n, r) {
 			status: "paused",
 			generation: t.generation + 1,
 			commandError: null
-		} : Qm(t);
-		case "restart": return t.status === "paused" && t.cursor === 0 ? Qm(t) : $m(e, t, 0, "paused", r);
-		case "set_speed": return qm(n.speed) ? n.speed === t.speed ? Qm(t) : {
+		} : nh(t);
+		case "restart": return t.status === "paused" && t.cursor === 0 ? nh(t) : rh(e, t, 0, "paused", r);
+		case "set_speed": return Zm(n.speed) ? n.speed === t.speed ? nh(t) : {
 			...t,
 			speed: n.speed,
 			generation: t.status === "playing" ? t.generation + 1 : t.generation,
 			commandError: null
-		} : Zm(t, "invalid_speed");
+		} : th(t, "invalid_speed");
 		case "seek": {
-			if (!Jm(e, n.cursor)) return Zm(t, "invalid_cursor");
+			if (!Qm(e, n.cursor)) return th(t, "invalid_cursor");
 			let a = n.cursor === i ? "complete" : t.status === "playing" ? "playing" : "paused";
-			return $m(e, t, n.cursor, a, r);
+			return rh(e, t, n.cursor, a, r);
 		}
 		case "step": {
 			if (t.status !== "playing" || n.generation !== t.generation || t.cursor >= i) return t;
 			let a = t.cursor + 1;
-			return $m(e, t, a, a === i ? "complete" : "playing", r);
+			return rh(e, t, a, a === i ? "complete" : "playing", r);
 		}
-		default: return Zm(t, "invalid_command");
+		default: return th(t, "invalid_command");
 	}
 }
-function th(e, t) {
+function ah(e, t) {
 	if (t.status !== "playing" || t.cursor >= e.timeline.length) return null;
 	let n = e.timeline[t.cursor].presentationOffsetMs, r = t.cursor === 0 ? 0 : e.timeline[t.cursor - 1].presentationOffsetMs;
 	return Math.max(n - r, 0) / t.speed;
 }
-function nh(e, t) {
+function oh(e, t) {
 	return t <= 0 ? "Start of replay" : `Event ${t} of ${e.records.length}`;
 }
 // src/adapters/replay-controller.ts
-var rh = { schedule(e, t, n) {
+var sh = { schedule(e, t, n) {
 	let r = setTimeout(n, e);
 	return () => clearTimeout(r);
 } };
-function ih(e, t) {
+function ch(e, t) {
 	return e.records.length <= t.records.length && e.records.every((e, n) => e.record_id === t.records[n].record_id);
 }
-function ah(e, t, n) {
-	let r = e.state.generation + 1, i = Xm(t, n);
-	if (e.state.cursor === 0 || !ih(e.model, t)) return {
+function lh(e, t, n) {
+	let r = e.state.generation + 1, i = eh(t, n);
+	if (e.state.cursor === 0 || !ch(e.model, t)) return {
 		...i,
 		generation: r
 	};
@@ -12804,20 +12793,20 @@ function ah(e, t, n) {
 		};
 	}
 }
-function oh(e, t, i = rh) {
+function uh(e, t, i = sh) {
 	let [a, o] = l(() => ({
 		model: e,
 		fold: t,
-		state: Xm(e, t)
+		state: eh(e, t)
 	})), s = a;
 	(a.model !== e || a.fold !== t) && (s = {
 		model: e,
 		fold: t,
-		state: ah(a, e, t)
+		state: lh(a, e, t)
 	}, o(s));
 	let u = n((e) => {
 		o((t) => {
-			let n = eh(t.model, t.state, e, t.fold);
+			let n = ih(t.model, t.state, e, t.fold);
 			return n === t.state ? t : {
 				...t,
 				state: n
@@ -12827,7 +12816,7 @@ function oh(e, t, i = rh) {
 	d.current = i;
 	let { state: f } = s, p = s.model;
 	return r(() => {
-		let e = th(p, f);
+		let e = ah(p, f);
 		if (e === null) return;
 		let t = f.generation;
 		return d.current.schedule(e, t, () => u({
@@ -12846,21 +12835,21 @@ function oh(e, t, i = rh) {
 	};
 }
 // src/adapters/attic-replay.ts
-var sh = {
+var dh = {
 	records: [],
 	timeline: [],
 	diagnostics: [],
 	integrityOk: !0
-}, ch = bm("fixture_unavailable");
-function lh(e, t) {
+}, fh = wm("fixture_unavailable");
+function ph(e, t) {
 	return e.integrityOk === t.integrityOk && e.records.length === t.records.length && e.records.every((e, n) => e.record_id === t.records[n].record_id) && e.diagnostics.length === t.diagnostics.length && e.diagnostics.every((e, n) => {
 		let r = t.diagnostics[n];
 		return e.code === r.code && e.line === r.line && e.recordId === r.recordId;
 	});
 }
-function uh(e, t, n) {
+function mh(e, t, n) {
 	return {
-		workflow: em(t, n) ?? Vp([], {
+		workflow: im(t, n) ?? Gp([], {
 			mansionId: n,
 			integrity: t.integrity === "incompatible" ? "corrupt" : "valid",
 			readOnly: !0
@@ -12870,7 +12859,7 @@ function uh(e, t, n) {
 		highestSequence: t.validRecordCount === 0 ? 0 : e.records[t.validRecordCount - 1]?.sequence ?? 0
 	};
 }
-function dh(e, t) {
+function hh(e, t) {
 	let n = [...e.diagnostics, ...t.diagnostics];
 	return {
 		integrity: t.integrity === "incompatible" || !e.integrityOk ? "incompatible" : n.length > 0 ? "diagnostic" : "valid",
@@ -12878,21 +12867,21 @@ function dh(e, t) {
 		diagnostics: n
 	};
 }
-function fh(e, t) {
-	let n = Wm(e), { result: i } = n, a = c(null), s = o(() => {
+function gh(e, t) {
+	let n = Jm(e), { result: i } = n, a = c(null), s = o(() => {
 		if (i.status === "ready" && i.selection !== null) {
-			let t = ym(i.selection), n = a.current;
-			return n !== null && n.mansionId === e && lh(n.model, t) ? n.model : (a.current = {
+			let t = Cm(i.selection), n = a.current;
+			return n !== null && n.mansionId === e && ph(n.model, t) ? n.model : (a.current = {
 				mansionId: e,
 				model: t
 			}, t);
 		}
-		return i.status === "error" ? (a.current = null, ch) : a.current?.mansionId === e ? a.current.model : sh;
-	}, [i, e]), l = oh(s, o(() => $p(s), [s]), t), { state: u } = l;
+		return i.status === "error" ? (a.current = null, fh) : a.current?.mansionId === e ? a.current.model : dh;
+	}, [i, e]), l = uh(s, o(() => rm(s), [s]), t), { state: u } = l;
 	r(() => {
 		Pt?.present(e, u.cursor);
 	}, [e, u.cursor]);
-	let d = n.mode, f = o(() => dh(l.model, u.projection), [l.model, u.projection]), p = o(() => d === "replay" ? uh(l.model, u.projection, e) : null, [
+	let d = n.mode, f = o(() => hh(l.model, u.projection), [l.model, u.projection]), p = o(() => d === "replay" ? mh(l.model, u.projection, e) : null, [
 		d,
 		l.model,
 		u.projection,
@@ -12921,11 +12910,11 @@ function fh(e, t) {
 		p
 	]);
 }
-var ph = [
+var _h = [
 	"requirements",
 	"design",
 	"tasks"
-], mh = [
+], vh = [
 	"queued",
 	"active",
 	"complete",
@@ -12933,169 +12922,169 @@ var ph = [
 	"cancelled",
 	"blocked",
 	"skipped"
-], hh = [
+], yh = [
 	"crew_capacity",
 	"local_capacity",
 	"claim_busy"
-], gh = [
+], bh = [
 	"reviewing",
 	"pass",
 	"changes_requested",
 	"blocked"
-], _h = [
+], xh = [
 	"proposed",
 	"approved",
 	"rejected"
-], vh = 1e3, yh = 1024, bh = class extends Error {
+], Sh = 1e3, Ch = 1024, wh = class extends Error {
 	path;
 	constructor(e) {
 		super("refused"), this.path = e;
 	}
 };
 function Q(e) {
-	throw new bh(e);
+	throw new wh(e);
 }
-function xh(e) {
+function Th(e) {
 	return typeof e == "object" && !!e && !Array.isArray(e);
 }
-function Sh(e, t, n, r = []) {
-	xh(e) || Q(t);
+function Eh(e, t, n, r = []) {
+	Th(e) || Q(t);
 	for (let i of Object.keys(e)) !n.includes(i) && !r.includes(i) && Q(t);
 	for (let r of n) Object.hasOwn(e, r) || Q(`${t}.${r}`);
 	return e;
 }
-function Ch(e, t, n) {
+function Dh(e, t, n) {
 	return typeof e == "string" && t.includes(e) || Q(n), e;
 }
-function wh(e, t, n = 0, r = 2 ** 53 - 1) {
+function Oh(e, t, n = 0, r = 2 ** 53 - 1) {
 	return (typeof e != "number" || !Number.isSafeInteger(e) || e < n || e > r) && Q(t), e;
 }
-function Th(e, t) {
+function kh(e, t) {
 	return typeof e != "boolean" && Q(t), e;
 }
-function Eh(e, t, n) {
+function Ah(e, t, n) {
 	return (!Array.isArray(e) || e.length > n) && Q(t), e;
 }
-var Dh = /[\u0000-\u001f\u007f-\u009f\u2028\u2029]/, Oh = /[\u0000-\u0008\u000b-\u001f\u007f-\u009f\u2028\u2029]/;
-function kh(e, t, n = 160) {
-	return (typeof e != "string" || e.length === 0 || e.length > n || Dh.test(e)) && Q(t), e;
+var jh = /[\u0000-\u001f\u007f-\u009f\u2028\u2029]/, Mh = /[\u0000-\u0008\u000b-\u001f\u007f-\u009f\u2028\u2029]/;
+function Nh(e, t, n = 160) {
+	return (typeof e != "string" || e.length === 0 || e.length > n || jh.test(e)) && Q(t), e;
 }
-function Ah(e, t) {
+function Ph(e, t) {
 	return e === null ? null : t(e);
 }
-var jh = /^[A-Za-z0-9][A-Za-z0-9._:-]{0,159}$/;
-function Mh(e, t) {
-	return typeof e == "string" && jh.test(e) || Q(t), e;
-}
-var Nh = /^[a-z][a-z0-9_]{0,63}$/;
-function Ph(e, t) {
-	return typeof e == "string" && Nh.test(e) || Q(t), e;
-}
-var Fh = /^[1-9][0-9]{0,3}\.[1-9][0-9]{0,3}$/;
+var Fh = /^[A-Za-z0-9][A-Za-z0-9._:-]{0,159}$/;
 function Ih(e, t) {
 	return typeof e == "string" && Fh.test(e) || Q(t), e;
 }
-var Lh = /^[A-Za-z0-9-]{1,160}$/;
+var Lh = /^[a-z][a-z0-9_]{0,63}$/;
 function Rh(e, t) {
-	let n = kh(e, t, yh);
+	return typeof e == "string" && Lh.test(e) || Q(t), e;
+}
+var zh = /^[1-9][0-9]{0,3}\.[1-9][0-9]{0,3}$/;
+function Bh(e, t) {
+	return typeof e == "string" && zh.test(e) || Q(t), e;
+}
+var Vh = /^[A-Za-z0-9-]{1,160}$/;
+function Hh(e, t) {
+	let n = Nh(e, t, Ch);
 	(n.startsWith("/") || n.includes("\\") || n.startsWith("~")) && Q(t);
 	for (let e of n.split("/")) (e === "" || e === "." || e === "..") && Q(t);
 	return n;
 }
-function zh(e, t) {
+function Uh(e, t) {
 	new Set(e).size !== e.length && Q(t);
 }
-function Bh(e, t) {
-	let n = Eh(e, t, 32).map((e, n) => Rh(e, `${t}[${n}]`));
-	return zh(n, t), n;
+function Wh(e, t) {
+	let n = Ah(e, t, 32).map((e, n) => Hh(e, `${t}[${n}]`));
+	return Uh(n, t), n;
 }
-function Vh(e, t, n) {
-	return (typeof e != "string" || e.trim() === "" || e.length > n || Oh.test(e)) && Q(t), e;
+function Gh(e, t, n) {
+	return (typeof e != "string" || e.trim() === "" || e.length > n || Mh.test(e)) && Q(t), e;
 }
-function Hh(e, t) {
-	let n = Sh(e, t, [
+function Kh(e, t) {
+	let n = Eh(e, t, [
 		"revision",
 		"sha256",
 		"size_bytes"
 	]);
 	return typeof n.sha256 == "string" && /^[0-9a-f]{64}$/.test(n.sha256) || Q(`${t}.sha256`), {
-		revision: wh(n.revision, `${t}.revision`, 1),
+		revision: Oh(n.revision, `${t}.revision`, 1),
 		sha256: n.sha256,
-		sizeBytes: wh(n.size_bytes, `${t}.size_bytes`)
+		sizeBytes: Oh(n.size_bytes, `${t}.size_bytes`)
 	};
 }
-function Uh(e, t) {
-	return Eh(e, t, 50).map((e, n) => {
-		let r = `${t}[${n}]`, i = Sh(e, r, [
+function qh(e, t) {
+	return Ah(e, t, 50).map((e, n) => {
+		let r = `${t}[${n}]`, i = Eh(e, r, [
 			"code",
 			"location",
 			"message"
 		]);
 		return {
-			code: Ph(i.code, `${r}.code`),
-			location: kh(i.location, `${r}.location`, 96),
-			message: kh(i.message, `${r}.message`, 200)
+			code: Rh(i.code, `${r}.code`),
+			location: Nh(i.location, `${r}.location`, 96),
+			message: Nh(i.message, `${r}.message`, 200)
 		};
 	});
 }
-function Wh(e, t) {
-	let n = Sh(e, t, [
+function Jh(e, t) {
+	let n = Eh(e, t, [
 		"artifact_revision",
 		"validated",
 		"content",
 		"findings"
 	]), r = n.content;
 	return r !== null && (typeof r != "string" || r.length > 524288) && Q(`${t}.content`), {
-		artifactRevision: Hh(n.artifact_revision, `${t}.artifact_revision`),
-		validated: Th(n.validated, `${t}.validated`),
+		artifactRevision: Kh(n.artifact_revision, `${t}.artifact_revision`),
+		validated: kh(n.validated, `${t}.validated`),
 		content: r,
-		findings: Uh(n.findings, `${t}.findings`)
+		findings: qh(n.findings, `${t}.findings`)
 	};
 }
-function Gh(e, t, n, r) {
-	let i = Sh(e, t, [
+function Yh(e, t, n, r) {
+	let i = Eh(e, t, [
 		"phase",
 		"document_path",
 		"write_scope",
 		"artifact"
 	]);
 	i.phase !== n && Q(`${t}.phase`);
-	let a = Rh(i.document_path, `${t}.document_path`);
+	let a = Hh(i.document_path, `${t}.document_path`);
 	return a !== `.kiro/specs/${r}/${n}.md` && Q(`${t}.document_path`), {
 		phase: n,
 		documentPath: a,
-		writeScope: Bh(i.write_scope, `${t}.write_scope`),
-		artifact: Ah(i.artifact, (e) => Wh(e, `${t}.artifact`))
+		writeScope: Wh(i.write_scope, `${t}.write_scope`),
+		artifact: Ph(i.artifact, (e) => Jh(e, `${t}.artifact`))
 	};
 }
-function Kh(e, t) {
-	let n = Sh(e, t, [
+function Xh(e, t) {
+	let n = Eh(e, t, [
 		"status",
 		"attempt",
 		"run_id",
 		"reason_code"
 	]);
 	return {
-		status: Ch(n.status, mh, `${t}.status`),
-		attempt: wh(n.attempt, `${t}.attempt`, 0, 3),
-		runId: Ah(n.run_id, (e) => Mh(e, `${t}.run_id`)),
-		reasonCode: Ah(n.reason_code, (e) => Ph(e, `${t}.reason_code`))
+		status: Dh(n.status, vh, `${t}.status`),
+		attempt: Oh(n.attempt, `${t}.attempt`, 0, 3),
+		runId: Ph(n.run_id, (e) => Ih(e, `${t}.run_id`)),
+		reasonCode: Ph(n.reason_code, (e) => Rh(e, `${t}.reason_code`))
 	};
 }
-function qh(e, t) {
-	let n = Sh(e, t, [
+function Zh(e, t) {
+	let n = Eh(e, t, [
 		"dispatch_failures",
 		"next_delay_seconds",
 		"last_reason"
 	]);
 	return {
-		dispatchFailures: wh(n.dispatch_failures, `${t}.dispatch_failures`, 0, 1e6),
-		nextDelaySeconds: wh(n.next_delay_seconds, `${t}.next_delay_seconds`, 0, 15),
-		lastReason: Ch(n.last_reason, hh, `${t}.last_reason`)
+		dispatchFailures: Oh(n.dispatch_failures, `${t}.dispatch_failures`, 0, 1e6),
+		nextDelaySeconds: Oh(n.next_delay_seconds, `${t}.next_delay_seconds`, 0, 15),
+		lastReason: Dh(n.last_reason, yh, `${t}.last_reason`)
 	};
 }
-function Jh(e, t) {
-	let n = Sh(e, t, [
+function Qh(e, t) {
+	let n = Eh(e, t, [
 		"task_id",
 		"title",
 		"optional",
@@ -13106,44 +13095,44 @@ function Jh(e, t) {
 		"selected",
 		"outcome",
 		"backpressure"
-	]), r = Eh(n.requirements, `${t}.requirements`, 64).map((e, n) => Ih(e, `${t}.requirements[${n}]`));
-	zh(r, `${t}.requirements`);
-	let i = Th(n.complete, `${t}.complete`), a = Ah(n.outcome, (e) => Kh(e, `${t}.outcome`));
+	]), r = Ah(n.requirements, `${t}.requirements`, 64).map((e, n) => Bh(e, `${t}.requirements[${n}]`));
+	Uh(r, `${t}.requirements`);
+	let i = kh(n.complete, `${t}.complete`), a = Ph(n.outcome, (e) => Xh(e, `${t}.outcome`));
 	return a?.status === "complete" && !i && Q(`${t}.outcome`), i && a !== null && a.status !== "complete" && Q(`${t}.outcome`), {
-		taskId: Ih(n.task_id, `${t}.task_id`),
-		title: kh(n.title, `${t}.title`, 200),
-		optional: Th(n.optional, `${t}.optional`),
+		taskId: Bh(n.task_id, `${t}.task_id`),
+		title: Nh(n.title, `${t}.title`, 200),
+		optional: kh(n.optional, `${t}.optional`),
 		complete: i,
 		requirements: r,
-		writes: Bh(n.writes, `${t}.writes`),
-		wave: Ah(n.wave, (e) => wh(e, `${t}.wave`, 0, 200)),
-		selected: Th(n.selected, `${t}.selected`),
+		writes: Wh(n.writes, `${t}.writes`),
+		wave: Ph(n.wave, (e) => Oh(e, `${t}.wave`, 0, 200)),
+		selected: kh(n.selected, `${t}.selected`),
 		outcome: a,
-		backpressure: Ah(n.backpressure, (e) => qh(e, `${t}.backpressure`))
+		backpressure: Ph(n.backpressure, (e) => Zh(e, `${t}.backpressure`))
 	};
 }
-function Yh(e, t) {
-	let n = Sh(e, t, [
+function $h(e, t) {
+	let n = Eh(e, t, [
 		"tasks",
 		"waves",
 		"findings"
-	]), r = Eh(n.tasks, `${t}.tasks`, 200).map((e, n) => Jh(e, `${t}.tasks[${n}]`));
-	zh(r.map((e) => e.taskId), `${t}.tasks`);
-	let i = new Map(r.map((e) => [e.taskId, e])), a = Eh(n.waves, `${t}.waves`, 200).map((e, n) => Eh(e, `${t}.waves[${n}]`, 200).map((e, r) => {
-		let a = `${t}.waves[${n}][${r}]`, o = Ih(e, a);
+	]), r = Ah(n.tasks, `${t}.tasks`, 200).map((e, n) => Qh(e, `${t}.tasks[${n}]`));
+	Uh(r.map((e) => e.taskId), `${t}.tasks`);
+	let i = new Map(r.map((e) => [e.taskId, e])), a = Ah(n.waves, `${t}.waves`, 200).map((e, n) => Ah(e, `${t}.waves[${n}]`, 200).map((e, r) => {
+		let a = `${t}.waves[${n}][${r}]`, o = Bh(e, a);
 		return i.get(o)?.wave !== n && Q(a), o;
 	}));
-	zh(a.flat(), `${t}.waves`);
+	Uh(a.flat(), `${t}.waves`);
 	let o = new Set(a.flat());
 	for (let [e, n] of r.entries()) n.wave !== null && !o.has(n.taskId) && Q(`${t}.tasks[${e}].wave`);
 	return r.filter((e) => e.outcome?.status === "active").length > 3 && Q(`${t}.tasks`), {
 		tasks: r,
 		waves: a,
-		findings: Uh(n.findings, `${t}.findings`)
+		findings: qh(n.findings, `${t}.findings`)
 	};
 }
-function Xh(e, t) {
-	let n = Sh(e, t, [
+function eg(e, t) {
+	let n = Eh(e, t, [
 		"run_id",
 		"run_sequence",
 		"ghost_id",
@@ -13158,32 +13147,32 @@ function Xh(e, t) {
 		"summary",
 		"reason_code",
 		"claim_paths"
-	]), r = Ch(n.phase, W, `${t}.phase`), i = Ah(n.task_id, (e) => Ih(e, `${t}.task_id`));
+	]), r = Dh(n.phase, G, `${t}.phase`), i = Ph(n.task_id, (e) => Bh(e, `${t}.task_id`));
 	i !== null != (r === "implementation") && Q(`${t}.task_id`);
-	let a = wh(n.attempt, `${t}.attempt`, 1, 3), o = Th(n.can_cancel, `${t}.can_cancel`), s = Th(n.can_retry, `${t}.can_retry`);
+	let a = Oh(n.attempt, `${t}.attempt`, 1, 3), o = kh(n.can_cancel, `${t}.can_cancel`), s = kh(n.can_retry, `${t}.can_retry`);
 	o && s && Q(`${t}.can_retry`), s && a >= 3 && Q(`${t}.can_retry`);
-	let c = kh(n.session_slot, `${t}.session_slot`), l = n.session_link;
-	l === null || typeof l == "string" && Lh.test(l) || Q(`${t}.session_link`);
-	let u = Bh(n.claim_paths, `${t}.claim_paths`);
+	let c = Nh(n.session_slot, `${t}.session_slot`), l = n.session_link;
+	l === null || typeof l == "string" && Vh.test(l) || Q(`${t}.session_link`);
+	let u = Wh(n.claim_paths, `${t}.claim_paths`);
 	return u.length > 0 && i === null && Q(`${t}.claim_paths`), {
-		runId: Mh(n.run_id, `${t}.run_id`),
-		runSequence: wh(n.run_sequence, `${t}.run_sequence`, 0, 1e6),
-		ghostId: kh(n.ghost_id, `${t}.ghost_id`),
+		runId: Ih(n.run_id, `${t}.run_id`),
+		runSequence: Oh(n.run_sequence, `${t}.run_sequence`, 0, 1e6),
+		ghostId: Nh(n.ghost_id, `${t}.ghost_id`),
 		sessionSlot: c,
 		phase: r,
 		taskId: i,
 		attempt: a,
 		canCancel: o,
-		cancelRequested: Th(n.cancel_requested, `${t}.cancel_requested`),
+		cancelRequested: kh(n.cancel_requested, `${t}.cancel_requested`),
 		canRetry: s,
 		sessionLink: l,
-		summary: Ah(n.summary, (e) => Vh(e, `${t}.summary`, vh)),
-		reasonCode: Ah(n.reason_code, (e) => Ph(e, `${t}.reason_code`)),
+		summary: Ph(n.summary, (e) => Gh(e, `${t}.summary`, Sh)),
+		reasonCode: Ph(n.reason_code, (e) => Rh(e, `${t}.reason_code`)),
 		claimPaths: u
 	};
 }
-function Zh(e, t) {
-	let n = Sh(e, t, [
+function tg(e, t) {
+	let n = Eh(e, t, [
 		"cycle",
 		"status",
 		"ghost_id",
@@ -13191,53 +13180,53 @@ function Zh(e, t) {
 		"findings",
 		"repairs"
 	]), r = n.session_link;
-	r === null || typeof r == "string" && Lh.test(r) || Q(`${t}.session_link`);
-	let i = Eh(n.findings, `${t}.findings`, 50).map((e, n) => {
-		let r = `${t}.findings[${n}]`, i = Sh(e, r, [
+	r === null || typeof r == "string" && Vh.test(r) || Q(`${t}.session_link`);
+	let i = Ah(n.findings, `${t}.findings`, 50).map((e, n) => {
+		let r = `${t}.findings[${n}]`, i = Eh(e, r, [
 			"finding_id",
 			"requirement_ids",
 			"paths",
 			"summary"
-		]), a = Eh(i.requirement_ids, `${r}.requirement_ids`, 64).map((e, t) => Ih(e, `${r}.requirement_ids[${t}]`));
-		return zh(a, `${r}.requirement_ids`), {
-			findingId: Mh(i.finding_id, `${r}.finding_id`),
+		]), a = Ah(i.requirement_ids, `${r}.requirement_ids`, 64).map((e, t) => Bh(e, `${r}.requirement_ids[${t}]`));
+		return Uh(a, `${r}.requirement_ids`), {
+			findingId: Ih(i.finding_id, `${r}.finding_id`),
 			requirementIds: a,
-			paths: Bh(i.paths, `${r}.paths`),
-			summary: Vh(i.summary, `${r}.summary`, vh)
+			paths: Wh(i.paths, `${r}.paths`),
+			summary: Gh(i.summary, `${r}.summary`, Sh)
 		};
 	});
-	zh(i.map((e) => e.findingId), `${t}.findings`);
-	let a = Eh(n.repairs, `${t}.repairs`, 50).map((e, n) => {
-		let r = `${t}.repairs[${n}]`, a = Sh(e, r, [
+	Uh(i.map((e) => e.findingId), `${t}.findings`);
+	let a = Ah(n.repairs, `${t}.repairs`, 50).map((e, n) => {
+		let r = `${t}.repairs[${n}]`, a = Eh(e, r, [
 			"task_id",
 			"finding_id",
 			"title",
 			"writes",
 			"status"
-		]), o = Mh(a.finding_id, `${r}.finding_id`);
+		]), o = Ih(a.finding_id, `${r}.finding_id`);
 		return i.some((e) => e.findingId === o) || Q(`${r}.finding_id`), {
-			taskId: Ih(a.task_id, `${r}.task_id`),
+			taskId: Bh(a.task_id, `${r}.task_id`),
 			findingId: o,
-			title: kh(a.title, `${r}.title`, 200),
-			writes: Bh(a.writes, `${r}.writes`),
-			status: Ch(a.status, _h, `${r}.status`)
+			title: Nh(a.title, `${r}.title`, 200),
+			writes: Wh(a.writes, `${r}.writes`),
+			status: Dh(a.status, xh, `${r}.status`)
 		};
 	});
-	zh(a.map((e) => e.findingId), `${t}.repairs`), zh(a.map((e) => e.taskId), `${t}.repairs`);
-	let o = Ch(n.status, gh, `${t}.status`);
+	Uh(a.map((e) => e.findingId), `${t}.repairs`), Uh(a.map((e) => e.taskId), `${t}.repairs`);
+	let o = Dh(n.status, bh, `${t}.status`);
 	return o === "pass" && (i.length > 0 || a.length > 0) && Q(`${t}.findings`), {
-		cycle: wh(n.cycle, `${t}.cycle`, 1, 3),
+		cycle: Oh(n.cycle, `${t}.cycle`, 1, 3),
 		status: o,
-		ghostId: kh(n.ghost_id, `${t}.ghost_id`),
+		ghostId: Nh(n.ghost_id, `${t}.ghost_id`),
 		sessionLink: r,
 		findings: i,
 		repairs: a
 	};
 }
-var Qh = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-function $h(e, t, n) {
+var ng = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+function rg(e, t, n) {
 	try {
-		let r = Sh(e, "$", [
+		let r = Eh(e, "$", [
 			"schema_version",
 			"mansion_id",
 			"spec_name",
@@ -13251,29 +13240,29 @@ function $h(e, t, n) {
 		], ["read_only"]);
 		r.schema_version !== 1 && Q("$.schema_version"), r.read_only !== void 0 && typeof r.read_only != "boolean" && Q("$.read_only");
 		let i = r.mansion_id;
-		(typeof i != "string" || i.length > 40 || !Mi.test(i)) && Q("$.mansion_id"), t !== void 0 && i !== t && Q("$.mansion_id");
+		(typeof i != "string" || i.length > 40 || !Fi.test(i)) && Q("$.mansion_id"), t !== void 0 && i !== t && Q("$.mansion_id");
 		let a = r.spec_name;
-		(typeof a != "string" || a.length > 40 || !Qh.test(a)) && Q("$.spec_name"), n !== void 0 && a !== n && Q("$.spec_name"), Array.isArray(r.documents) && r.documents.length === ph.length || Q("$.documents");
-		let o = ph.map((e, t) => Gh(r.documents[t], `$.documents[${t}]`, e, a)), s = Eh(r.runs, "$.runs", 64).map((e, t) => Xh(e, `$.runs[${t}]`));
-		zh(s.map((e) => e.runId), "$.runs");
-		let c = Th(r.seance_enabled, "$.seance_enabled"), l = Ah(r.review, (e) => Zh(e, "$.review"));
+		(typeof a != "string" || a.length > 40 || !ng.test(a)) && Q("$.spec_name"), n !== void 0 && a !== n && Q("$.spec_name"), Array.isArray(r.documents) && r.documents.length === _h.length || Q("$.documents");
+		let o = _h.map((e, t) => Yh(r.documents[t], `$.documents[${t}]`, e, a)), s = Ah(r.runs, "$.runs", 64).map((e, t) => eg(e, `$.runs[${t}]`));
+		Uh(s.map((e) => e.runId), "$.runs");
+		let c = kh(r.seance_enabled, "$.seance_enabled"), l = Ph(r.review, (e) => tg(e, "$.review"));
 		return l !== null && !c && Q("$.review"), {
 			ok: !0,
 			roomGhosts: {
 				mansionId: i,
 				specName: a,
-				version: wh(r.version, "$.version"),
-				integrity: Ch(r.integrity, Xa, "$.integrity"),
+				version: Oh(r.version, "$.version"),
+				integrity: Dh(r.integrity, $a, "$.integrity"),
 				readOnly: r.read_only === !0,
 				seanceEnabled: c,
 				documents: o,
-				taskPlan: Ah(r.task_plan, (e) => Yh(e, "$.task_plan")),
+				taskPlan: Ph(r.task_plan, (e) => $h(e, "$.task_plan")),
 				runs: s,
 				review: l
 			}
 		};
 	} catch (e) {
-		if (e instanceof bh) return {
+		if (e instanceof wh) return {
 			ok: !1,
 			path: e.path
 		};
@@ -13281,8 +13270,8 @@ function $h(e, t, n) {
 	}
 }
 // src/core/room-view.ts
-var eg = 4e3;
-function tg(e) {
+var ig = 4e3;
+function ag(e) {
 	switch (e.kind) {
 		case "send_feedback": return `feedback:${e.phase}`;
 		case "start_workshop": return "workshop";
@@ -13290,7 +13279,7 @@ function tg(e) {
 		case "retry_run": return `run:${e.runId}`;
 	}
 }
-var ng = {
+var og = {
 	loading: "Loading this room's output. Its controls are off until it arrives.",
 	unavailable: "This room's output could not be read. Its controls are off; Door and approval decisions are unaffected.",
 	malformed: "The house sent room output this page cannot read. This room's controls are off.",
@@ -13298,20 +13287,20 @@ var ng = {
 	integrity: "The room's output failed its integrity check. Its controls are off until it is repaired.",
 	mismatch: "The room's output and the house's state are from different moments. Refreshing before anything can be sent."
 };
-function rg(e, t) {
+function sg(e, t) {
 	return t.documents.some((n) => {
-		let r = e.phases[W.indexOf(n.phase)], i = r.door.proposal;
+		let r = e.phases[G.indexOf(n.phase)], i = r.door.proposal;
 		return i === null || i.status !== "pending" || r.door.status !== "waiting" ? !1 : n.artifact === null ? !t.readOnly : n.artifact.artifactRevision.sha256 !== i.artifactRevision.sha256 || n.artifact.artifactRevision.revision !== i.artifactRevision.revision;
 	});
 }
-function ig(e) {
+function cg(e) {
 	let t = (e, t = !1) => ({
 		allowed: !1,
 		block: e,
-		text: ng[e],
+		text: og[e],
 		needsRefresh: t
 	});
-	return e.roomGhosts?.readOnly === !0 ? t("read_only") : e.authority.canDecide ? e.roomGhostsStatus === "malformed" ? t("malformed") : e.roomGhosts === null || e.projection === null ? t(e.roomGhostsStatus === "unavailable" ? "unavailable" : "loading") : e.roomGhostsStatus === "ready" ? e.roomGhosts.integrity === "corrupt" || e.projection.integrity === "corrupt" ? t("integrity") : e.roomGhosts.integrity === e.projection.integrity ? e.roomGhosts.integrity === "valid" ? e.roomGhosts.mansionId !== e.projection.mansionId || e.roomGhosts.version !== e.projection.version || rg(e.projection, e.roomGhosts) ? t("mismatch", !0) : {
+	return e.roomGhosts?.readOnly === !0 ? t("read_only") : e.authority.canDecide ? e.roomGhostsStatus === "malformed" ? t("malformed") : e.roomGhosts === null || e.projection === null ? t(e.roomGhostsStatus === "unavailable" ? "unavailable" : "loading") : e.roomGhostsStatus === "ready" ? e.roomGhosts.integrity === "corrupt" || e.projection.integrity === "corrupt" ? t("integrity") : e.roomGhosts.integrity === e.projection.integrity ? e.roomGhosts.integrity === "valid" ? e.roomGhosts.mansionId !== e.projection.mansionId || e.roomGhosts.version !== e.projection.version || sg(e.projection, e.roomGhosts) ? t("mismatch", !0) : {
 		allowed: !0,
 		block: null,
 		text: null,
@@ -13323,9 +13312,9 @@ function ig(e) {
 		needsRefresh: !1
 	};
 }
-var ag = "Another request is on its way. Wait for it to finish.";
-function og(e, t, n, r, i = null) {
-	let a = r === tg(t), o = n.allowed ? i === null ? r === null ? null : ag : i : n.text;
+var lg = "Another request is on its way. Wait for it to finish.";
+function ug(e, t, n, r, i = null) {
+	let a = r === ag(t), o = n.allowed ? i === null ? r === null ? null : lg : i : n.text;
 	return {
 		label: e,
 		command: o === null ? t : null,
@@ -13333,82 +13322,82 @@ function og(e, t, n, r, i = null) {
 		blockedText: a ? null : o
 	};
 }
-var sg = {
+var dg = {
 	requirements: "Requirements document",
 	design: "Design document",
 	tasks: "Task plan"
-}, cg = {
+}, fg = {
 	unwritten: "Not written yet",
 	valid: "Valid: it passed the house's checks",
 	invalid: "Not valid: it failed the house's checks",
 	unknown: "Not checked here"
 };
-function lg(e) {
+function pg(e) {
 	return e === 1 ? "1 byte" : `${e.toLocaleString("en-US")} bytes`;
 }
-function ug(e) {
+function mg(e) {
 	return e === 0 ? "No findings" : e === 1 ? "1 finding" : `${e} findings`;
 }
-var dg = /* @__PURE__ */ new Set(["waiting", "revision_required"]);
-function fg(e, t, n, r, i) {
-	if (!dg.has(e.status) || e.door.status === "open" || !n.runs.some((e) => e.phase === t)) return null;
-	let a = `feedback:${t}`, o = r.allowed ? i !== null && i !== a ? ag : null : r.text;
+var hg = /* @__PURE__ */ new Set(["waiting", "revision_required"]);
+function gg(e, t, n, r, i) {
+	if (!hg.has(e.status) || e.door.status === "open" || !n.runs.some((e) => e.phase === t)) return null;
+	let a = `feedback:${t}`, o = r.allowed ? i !== null && i !== a ? lg : null : r.text;
 	return {
 		phase: t,
-		label: `Ask for a revision of the ${jo[t].toLowerCase()}`,
-		maxCharacters: eg,
+		label: `Ask for a revision of the ${Po[t].toLowerCase()}`,
+		maxCharacters: ig,
 		enabled: o === null && i === null,
 		busy: i === a,
 		blockedText: o,
 		expectedVersion: n.version
 	};
 }
-function pg(e) {
+function _g(e) {
 	let t = e.trim();
 	return t === "" ? {
 		ok: !1,
 		text: "Write what should change before sending."
 	} : t.length > 4e3 ? {
 		ok: !1,
-		text: `Keep the request under ${eg.toLocaleString("en-US")} characters.`
+		text: `Keep the request under ${ig.toLocaleString("en-US")} characters.`
 	} : {
 		ok: !0,
 		feedback: t
 	};
 }
-function mg(e) {
+function vg(e) {
 	for (let t of e.phases) {
 		let e = t.door.proposal?.documentPath;
 		if (e !== void 0 && e.includes("/")) return e.slice(0, e.lastIndexOf("/"));
 	}
 }
-function hg(e, t, n, r, i, a) {
-	let o = t === null ? null : t.phases[W.indexOf(e)], s = o?.door.proposal ?? null, c = n?.documents[ph.indexOf(e)] ?? null, l = c?.artifact ?? null, u = l?.artifactRevision ?? s?.artifactRevision ?? null, d = l !== null || t === null ? void 0 : mg(t), f = (l === null ? s?.documentPath ?? (d === void 0 ? void 0 : `${d}/${e}.md`) : void 0) ?? c?.documentPath ?? `.kiro/specs/${a}/${e}.md`, p = l === null ? u === null ? "unwritten" : "unknown" : l.validated ? "valid" : "invalid", m = s !== null && s.status === "pending" && o?.door.status === "waiting" ? s : null, h = l !== null && m !== null && (l.artifactRevision.sha256 !== m.artifactRevision.sha256 || l.artifactRevision.revision !== m.artifactRevision.revision);
+function yg(e, t, n, r, i, a) {
+	let o = t === null ? null : t.phases[G.indexOf(e)], s = o?.door.proposal ?? null, c = n?.documents[_h.indexOf(e)] ?? null, l = c?.artifact ?? null, u = l?.artifactRevision ?? s?.artifactRevision ?? null, d = l !== null || t === null ? void 0 : vg(t), f = (l === null ? s?.documentPath ?? (d === void 0 ? void 0 : `${d}/${e}.md`) : void 0) ?? c?.documentPath ?? `.kiro/specs/${a}/${e}.md`, p = l === null ? u === null ? "unwritten" : "unknown" : l.validated ? "valid" : "invalid", m = s !== null && s.status === "pending" && o?.door.status === "waiting" ? s : null, h = l !== null && m !== null && (l.artifactRevision.sha256 !== m.artifactRevision.sha256 || l.artifactRevision.revision !== m.artifactRevision.revision);
 	return {
 		phase: e,
-		title: sg[e],
+		title: dg[e],
 		documentPath: f,
 		validation: p,
-		validationText: cg[p],
-		revisionText: u === null ? null : `Revision ${u.revision} (${lg(u.sizeBytes)})`,
+		validationText: fg[p],
+		revisionText: u === null ? null : `Revision ${u.revision} (${pg(u.sizeBytes)})`,
 		digest: u?.sha256 ?? null,
-		digestPrefix: u === null ? null : Uo(u.sha256),
+		digestPrefix: u === null ? null : Ko(u.sha256),
 		content: l?.content ?? null,
 		contentNote: l?.content == null ? u === null ? "Nothing has been written here yet." : n?.readOnly === !0 ? "The séance log records the path, revision and digest of a document, never its text, so this recording has no text to show." : l === null ? "The document text is not loaded. The facts below come from the door proposal." : "The house did not send the text of this document. Its path, revision and digest are exact." : null,
 		findings: l?.findings ?? [],
-		findingsText: ug(l?.findings.length ?? 0),
+		findingsText: mg(l?.findings.length ?? 0),
 		writeScope: c === null || l === null && f !== c.documentPath ? [f] : c.writeScope,
-		doorNote: h ? `The text shown is revision ${l.artifactRevision.revision}. The door proposal covers revision ${m.artifactRevision.revision} (digest ${Uo(m.artifactRevision.sha256)}). The house is refreshing.` : null,
-		feedback: o == null || n === null ? null : fg(o, e, n, r, i)
+		doorNote: h ? `The text shown is revision ${l.artifactRevision.revision}. The door proposal covers revision ${m.artifactRevision.revision} (digest ${Ko(m.artifactRevision.sha256)}). The house is refreshing.` : null,
+		feedback: o == null || n === null ? null : gg(o, e, n, r, i)
 	};
 }
-var gg = "Opening this session from Haunted House is not available yet. Find it in Crew by its name.", _g = "This is a recording: there is no Crew session to open.";
-function vg(e, t = 400) {
+var bg = "Opening this session from Haunted House is not available yet. Find it in Crew by its name.", xg = "This is a recording: there is no Crew session to open.";
+function Sg(e, t = 400) {
 	let n = e.replace(/\s+/g, " ").trim(), r = Array.from(n);
 	return r.length <= t ? n : `${r.slice(0, t - 1).join("").trimEnd()}…`;
 }
-function yg(e, t, n, r, i, a) {
-	let o = t.get(e.ghostId), s = o !== void 0 && o.run_id === e.runId ? o.state : null, c = s === null ? "Earlier run" : Gr[s], l = Po(e.ghostId, a), u = n.version;
+function Cg(e, t, n, r, i, a) {
+	let o = t.get(e.ghostId), s = o !== void 0 && o.run_id === e.runId ? o.state : null, c = s === null ? "Earlier run" : Jr[s], l = Lo(e.ghostId, a), u = n.version;
 	return {
 		runId: e.runId,
 		ghostId: e.ghostId,
@@ -13418,20 +13407,20 @@ function yg(e, t, n, r, i, a) {
 		state: s,
 		stateText: c,
 		attemptText: `Attempt ${e.attempt} of 3`,
-		summary: e.summary === null ? null : vg(e.summary),
-		reasonText: Xr(e.reasonCode),
+		summary: e.summary === null ? null : Sg(e.summary),
+		reasonText: $r(e.reasonCode),
 		writeScope: e.claimPaths,
 		cancel: e.cancelRequested ? {
 			label: "Cancelling…",
 			command: null,
 			busy: !1,
 			blockedText: "Cancellation was requested. Waiting for Crew to confirm it."
-		} : e.canCancel ? og(`Cancel ${l}'s run`, {
+		} : e.canCancel ? ug(`Cancel ${l}'s run`, {
 			kind: "cancel_run",
 			runId: e.runId,
 			expectedVersion: u
 		}, r, i) : null,
-		retry: e.canRetry ? og("Retry with a fresh session", {
+		retry: e.canRetry ? ug("Retry with a fresh session", {
 			kind: "retry_run",
 			runId: e.runId,
 			expectedVersion: u
@@ -13440,11 +13429,11 @@ function yg(e, t, n, r, i, a) {
 		sessionLink: {
 			slotKey: n.readOnly ? null : e.sessionLink,
 			label: `Open ${l}'s Crew session (${c})`,
-			disabledText: n.readOnly ? _g : e.sessionLink === null ? gg : null
+			disabledText: n.readOnly ? xg : e.sessionLink === null ? bg : null
 		}
 	};
 }
-var bg = {
+var wg = {
 	not_selected: "Not selected",
 	queued: "Queued",
 	backpressure: "Queued: waiting for capacity",
@@ -13454,42 +13443,42 @@ var bg = {
 	cancelled: "Cancelled",
 	blocked: "Blocked",
 	skipped: "Skipped"
-}, xg = {
+}, Tg = {
 	crew_capacity: "Crew has no room for another ghost right now",
 	local_capacity: "All 3 Tinker seats are taken",
 	claim_busy: "Another task is writing the same files"
 };
-function Sg(e) {
+function Eg(e) {
 	return e.complete ? "complete" : e.outcome === null ? "not_selected" : e.outcome.status === "queued" && e.backpressure !== null ? "backpressure" : e.outcome.status;
 }
-function Cg(e) {
+function Dg(e) {
 	if (e.complete) return null;
 	if (e.backpressure !== null) {
 		let { dispatchFailures: t, nextDelaySeconds: n, lastReason: r } = e.backpressure, i = t === 1 ? "1 refusal so far" : `${t} refusals so far`, a = n === 1 ? "1 second" : `${n} seconds`;
-		return `${xg[r]}. Next try in ${a} (${i}). This does not use up an attempt.`;
+		return `${Tg[r]}. Next try in ${a} (${i}). This does not use up an attempt.`;
 	}
-	return Xr(e.outcome?.reasonCode ?? null);
+	return $r(e.outcome?.reasonCode ?? null);
 }
-function wg(e) {
+function Og(e) {
 	return !e.complete && (e.outcome === null || e.outcome.status === "skipped");
 }
-function Tg(e, t, n, r, i) {
+function kg(e, t, n, r, i) {
 	let a = t.taskPlan;
 	if (a === null) return null;
 	let o = new Map(n.filter((e) => e.taskId !== null).map((e) => [e.runId, e])), s = (e) => {
-		let t = Sg(e);
+		let t = Eg(e);
 		return {
 			taskId: e.taskId,
 			title: e.title,
 			optional: e.optional,
 			complete: e.complete,
 			status: t,
-			statusText: bg[t],
+			statusText: wg[t],
 			requirementsText: e.requirements.length === 0 ? "None" : e.requirements.join(", "),
 			writes: e.writes,
 			attemptText: e.outcome === null || e.outcome.attempt === 0 ? null : `Attempt ${e.outcome.attempt} of 3`,
-			detail: Cg(e),
-			selectable: wg(e),
+			detail: Dg(e),
+			selectable: Og(e),
 			run: e.outcome?.runId == null ? null : o.get(e.outcome.runId) ?? null
 		};
 	}, c = a.waves.map((e, t) => ({
@@ -13502,7 +13491,7 @@ function Tg(e, t, n, r, i) {
 		title: "Outside the waves",
 		tasks: l
 	});
-	let u = a.tasks.filter((e) => e.outcome?.status === "active").length, d = e?.phases[W.indexOf("tasks")].door.status, f = r.allowed ? d === "open" ? a.findings.length > 0 ? "The task plan has findings. It needs a revision before any task can start." : a.tasks.some(wg) ? i !== null && i !== "workshop" ? ag : null : "Every open task is already selected or done." : "Sealed door: approve the task plan before any task can start." : r.text;
+	let u = a.tasks.filter((e) => e.outcome?.status === "active").length, d = e?.phases[G.indexOf("tasks")].door.status, f = r.allowed ? d === "open" ? a.findings.length > 0 ? "The task plan has findings. It needs a revision before any task can start." : a.tasks.some(Og) ? i !== null && i !== "workshop" ? lg : null : "Every open task is already selected or done." : "Sealed door: approve the task plan before any task can start." : r.text;
 	return {
 		waves: c,
 		taskCount: a.tasks.length,
@@ -13515,7 +13504,7 @@ function Tg(e, t, n, r, i) {
 		expectedVersion: t.version
 	};
 }
-function Eg(e, t) {
+function Ag(e, t) {
 	if (e.startBlockedText !== null || e.startBusy) return null;
 	let n = e.waves.flatMap((e) => e.tasks), r = n.filter((e) => t.has(e.taskId)).map((e) => e.taskId);
 	return r.length === 0 || r.length !== t.size || n.some((e) => t.has(e.taskId) && !e.selectable) ? null : {
@@ -13524,43 +13513,43 @@ function Eg(e, t) {
 		expectedVersion: e.expectedVersion
 	};
 }
-var Dg = {
+var jg = {
 	study: ["requirements"],
 	"drafting-room": ["design"],
 	workshop: ["tasks"]
 };
-function Og(e) {
-	let { room: t, projection: n, roomGhosts: r, snapshots: i } = e, a = e.names ?? {}, o = ig(e), s = t.phases.map((e) => e.phase), c = n === null ? [] : s.map((e) => n.phases[W.indexOf(e)]), l = new Set(t.ghosts.map((e) => e.ghostId)), u = r === null ? [] : r.runs.filter((e) => s.includes(e.phase)).map((t) => yg(t, i, r, o, e.inFlight, a)).reverse(), d = r === null || t.id !== "workshop" ? null : Tg(n, r, u, o, e.inFlight);
+function Mg(e) {
+	let { room: t, projection: n, roomGhosts: r, snapshots: i } = e, a = e.names ?? {}, o = cg(e), s = t.phases.map((e) => e.phase), c = n === null ? [] : s.map((e) => n.phases[G.indexOf(e)]), l = new Set(t.ghosts.map((e) => e.ghostId)), u = r === null ? [] : r.runs.filter((e) => s.includes(e.phase)).map((t) => Cg(t, i, r, o, e.inFlight, a)).reverse(), d = r === null || t.id !== "workshop" ? null : kg(n, r, u, o, e.inFlight);
 	return {
 		projectionVersion: n?.version ?? 0,
-		integrity: n === null ? "uncertain" : r === null ? n.integrity : kg(n.integrity, r.integrity),
+		integrity: n === null ? "uncertain" : r === null ? n.integrity : Ng(n.integrity, r.integrity),
 		room: t.id,
 		ghosts: Array.from(i.values()).filter((e) => l.has(e.ghost_id)),
 		phases: c,
 		gate: o,
-		documents: Dg[t.id].map((t) => hg(t, n, r, o, e.inFlight, e.specName)),
+		documents: jg[t.id].map((t) => yg(t, n, r, o, e.inFlight, e.specName)),
 		taskBoard: d,
 		runs: u,
-		outputNote: r === null ? e.roomGhostsStatus === "loading" ? ng.loading : e.roomGhostsStatus === "malformed" ? ng.malformed : ng.unavailable : null,
+		outputNote: r === null ? e.roomGhostsStatus === "loading" ? og.loading : e.roomGhostsStatus === "malformed" ? og.malformed : og.unavailable : null,
 		ownsImplementationStart: d !== null
 	};
 }
-function kg(e, t) {
+function Ng(e, t) {
 	return e === "corrupt" || t === "corrupt" ? "corrupt" : e === "uncertain" || t === "uncertain" ? "uncertain" : "valid";
 }
-function Ag(e, t, n, r, i) {
+function Pg(e, t, n, r, i) {
 	if (!n.allowed || r !== null || e === null || t === null || i.expectedVersion !== e.version || i.expectedVersion !== t.version) return null;
 	switch (i.kind) {
 		case "send_feedback": {
-			let n = pg(i.feedback);
+			let n = _g(i.feedback);
 			if (!n.ok || n.feedback !== i.feedback) return null;
-			let r = t.phases[W.indexOf(i.phase)];
-			return !dg.has(r.status) || r.door.status === "open" ? null : e.runs.some((e) => e.phase === i.phase) ? i : null;
+			let r = t.phases[G.indexOf(i.phase)];
+			return !hg.has(r.status) || r.door.status === "open" ? null : e.runs.some((e) => e.phase === i.phase) ? i : null;
 		}
 		case "start_workshop": {
 			let n = e.taskPlan;
-			if (n === null || n.findings.length > 0 || t.phases[W.indexOf("tasks")].door.status !== "open" || i.taskIds.length === 0 || new Set(i.taskIds).size !== i.taskIds.length) return null;
-			let r = new Set(n.tasks.filter(wg).map((e) => e.taskId));
+			if (n === null || n.findings.length > 0 || t.phases[G.indexOf("tasks")].door.status !== "open" || i.taskIds.length === 0 || new Set(i.taskIds).size !== i.taskIds.length) return null;
+			let r = new Set(n.tasks.filter(Og).map((e) => e.taskId));
 			return i.taskIds.every((e) => r.has(e)) ? i : null;
 		}
 		case "cancel_run": {
@@ -13573,22 +13562,22 @@ function Ag(e, t, n, r, i) {
 		}
 	}
 }
-var jg = {
+var Fg = {
 	reviewing: "The Medium is reviewing",
 	pass: "Passed: the review found nothing to change",
 	changes_requested: "Changes requested",
 	blocked: "Blocked: the review needs your decision"
-}, Mg = {
+}, Ig = {
 	proposed: "Proposed: not started",
 	approved: "Approved for the Workshop",
 	rejected: "Rejected"
 };
-function Ng(e, t, n = {}) {
+function Lg(e, t, n = {}) {
 	if (e === null || !e.seanceEnabled || e.review === null) return null;
-	let r = e.review, i = t.get(r.ghostId)?.state ?? null, a = i === null ? "No run yet" : Gr[i], o = Po(r.ghostId, n);
+	let r = e.review, i = t.get(r.ghostId)?.state ?? null, a = i === null ? "No run yet" : Jr[i], o = Lo(r.ghostId, n);
 	return {
 		status: r.status,
-		statusText: jg[r.status],
+		statusText: Fg[r.status],
 		cycleText: `Review cycle ${r.cycle} of 3`,
 		limitText: r.status === "blocked" || r.cycle >= 3 && r.status === "changes_requested" ? "Three review cycles ended without a pass. No fourth review starts on its own: the next step is your decision." : null,
 		ghostName: o,
@@ -13598,7 +13587,7 @@ function Ng(e, t, n = {}) {
 			let t = r.repairs.find((t) => t.findingId === e.findingId);
 			return {
 				findingId: e.findingId,
-				summary: vg(e.summary),
+				summary: Sg(e.summary),
 				requirementsText: e.requirementIds.length === 0 ? "None" : e.requirementIds.join(", "),
 				paths: e.paths,
 				repair: t === void 0 ? null : {
@@ -13606,45 +13595,45 @@ function Ng(e, t, n = {}) {
 					title: t.title,
 					writes: t.writes,
 					status: t.status,
-					statusText: Mg[t.status]
+					statusText: Ig[t.status]
 				}
 			};
 		}),
 		sessionLink: {
 			slotKey: e.readOnly ? null : r.sessionLink,
 			label: `Open ${o}'s Crew session (${a})`,
-			disabledText: e.readOnly ? _g : r.sessionLink === null ? gg : null
+			disabledText: e.readOnly ? xg : r.sessionLink === null ? bg : null
 		}
 	};
 }
 // src/core/room-api.ts
-var Pg = "/apps/haunted-house/api";
-function Fg(e, t) {
-	return `${Pg}/mansions/${encodeURIComponent(e)}/specs/${encodeURIComponent(t)}`;
+var Rg = "/apps/haunted-house/api";
+function zg(e, t) {
+	return `${Rg}/mansions/${encodeURIComponent(e)}/specs/${encodeURIComponent(t)}`;
 }
-function Ig(e, t) {
-	return `${Fg(e, t)}/room-ghosts`;
+function Bg(e, t) {
+	return `${zg(e, t)}/room-ghosts`;
 }
-function Lg(e, t) {
-	return `${Fg(e, t)}/feedback`;
+function Vg(e, t) {
+	return `${zg(e, t)}/feedback`;
 }
-function Rg(e, t) {
-	return `${Fg(e, t)}/workshop/start`;
+function Hg(e, t) {
+	return `${zg(e, t)}/workshop/start`;
 }
-function zg(e) {
-	return `${Pg}/room-ghosts/runs/${encodeURIComponent(e)}/cancel`;
+function Ug(e) {
+	return `${Rg}/room-ghosts/runs/${encodeURIComponent(e)}/cancel`;
 }
-function Bg(e) {
-	return `${Pg}/room-ghosts/runs/${encodeURIComponent(e)}/retry`;
+function Wg(e) {
+	return `${Rg}/room-ghosts/runs/${encodeURIComponent(e)}/retry`;
 }
-function Vg(e, t, n, r) {
+function Gg(e, t, n, r) {
 	let i = {
 		command_id: r,
 		expected_version: n.expectedVersion
 	};
 	switch (n.kind) {
 		case "send_feedback": return {
-			path: Lg(e, t),
+			path: Vg(e, t),
 			body: {
 				...i,
 				phase: n.phase,
@@ -13652,21 +13641,21 @@ function Vg(e, t, n, r) {
 			}
 		};
 		case "start_workshop": return {
-			path: Rg(e, t),
+			path: Hg(e, t),
 			body: {
 				...i,
 				task_ids: [...n.taskIds]
 			}
 		};
 		case "cancel_run": return {
-			path: zg(n.runId),
+			path: Ug(n.runId),
 			body: {
 				...i,
 				mansion_id: e
 			}
 		};
 		case "retry_run": return {
-			path: Bg(n.runId),
+			path: Wg(n.runId),
 			body: {
 				...i,
 				mansion_id: e
@@ -13674,7 +13663,7 @@ function Vg(e, t, n, r) {
 		};
 	}
 }
-var Hg = {
+var Kg = {
 	conflict: "The room changed before your request arrived, so nothing was done. Check what is shown now and try again.",
 	invalid: "The house refused that request. Nothing was done.",
 	not_found: "That run or spec no longer exists. Nothing was done.",
@@ -13684,12 +13673,12 @@ var Hg = {
 	read_only: "This is a recording. Nothing was done.",
 	unavailable: "The house could not be reached. It is not known whether anything was done; the state is being read again."
 };
-function Ug(e) {
+function qg(e) {
 	let t = (e) => ({
 		kind: e,
-		text: Hg[e]
+		text: Kg[e]
 	});
-	switch (Mm(e)) {
+	switch (Im(e)) {
 		case 409: return t("conflict");
 		case 400:
 		case 413:
@@ -13701,12 +13690,12 @@ function Ug(e) {
 		case 502:
 		case 504: return t("crew");
 		default: {
-			let n = Pm(e);
+			let n = Rm(e);
 			return t(n === "contract_unavailable" ? "contract" : n === "integrity_unavailable" ? "integrity" : "unavailable");
 		}
 	}
 }
-function Wg(e) {
+function Jg(e) {
 	switch (e.kind) {
 		case "send_feedback": return "Revision request sent to the same session. The door stays sealed until you approve a new revision.";
 		case "start_workshop": return e.taskIds.length === 1 ? "1 task selected. A Tinker starts when a seat and its files are free." : `${e.taskIds.length} tasks selected. Tinkers start as seats and files come free, at most three at a time.`;
@@ -13715,22 +13704,22 @@ function Wg(e) {
 	}
 }
 // src/adapters/room-ghosts-api.ts
-var Gg = {
+var Yg = {
 	status: "loading",
 	roomGhosts: null,
 	inFlight: null,
 	notice: null
-}, Kg = 5e3, qg = 150, Jg = {
+}, Xg = 5e3, Zg = 150, Qg = {
 	set: (e, t) => setTimeout(e, t),
 	clear: (e) => clearTimeout(e)
 };
-function Yg() {
+function $g() {
 	if (typeof crypto < "u" && typeof crypto.randomUUID == "function") return crypto.randomUUID();
 	let e = /* @__PURE__ */ new Uint8Array(16);
 	return crypto.getRandomValues(e), Array.from(e, (e) => e.toString(16).padStart(2, "0")).join("");
 }
-function Xg(e) {
-	let { api: t, mansionId: n, specName: r } = e, i = e.timers ?? Jg, a = e.pollMs ?? Kg, o = e.refreshDelayMs ?? qg, s = e.newCommandId ?? Yg, c = Gg, l = /* @__PURE__ */ new Set(), u = !1, d = !0, f = null, p = !1, m = null, h = null, g = "";
+function e_(e) {
+	let { api: t, mansionId: n, specName: r } = e, i = e.timers ?? Qg, a = e.pollMs ?? Xg, o = e.refreshDelayMs ?? Zg, s = e.newCommandId ?? $g, c = Yg, l = /* @__PURE__ */ new Set(), u = !1, d = !0, f = null, p = !1, m = null, h = null, g = "";
 	function _(e) {
 		if (u) return;
 		let t = {
@@ -13755,8 +13744,8 @@ function Xg(e) {
 		}, a));
 	}
 	function x() {
-		return u ? Promise.resolve() : f === null ? (m = v(m), h = v(h), f = Promise.resolve().then(() => t.get(Ig(n, r))).then((e) => {
-			let t = $h(e, n, r);
+		return u ? Promise.resolve() : f === null ? (m = v(m), h = v(h), f = Promise.resolve().then(() => t.get(Bg(n, r))).then((e) => {
+			let t = rg(e, n, r);
 			if (!t.ok) return _({ status: "malformed" });
 			let i = c.roomGhosts;
 			return i !== null && t.roomGhosts.version < i.version ? _({ status: "ready" }) : _({
@@ -13790,13 +13779,13 @@ function Xg(e) {
 		},
 		send(i, a) {
 			if (u || a.workflowBusy) return Promise.resolve();
-			let o = Ag(c.roomGhosts, a.projection, a.gate, c.inFlight, i);
+			let o = Pg(c.roomGhosts, a.projection, a.gate, c.inFlight, i);
 			if (o === null) return Promise.resolve();
-			let l = Vg(n, r, o, s());
+			let l = Gg(n, r, o, s());
 			return _({
-				inFlight: tg(o),
+				inFlight: ag(o),
 				notice: null
-			}), Promise.resolve().then(() => t.post(l.path, l.body)).then(() => Wg(o), (e) => Ug(e).text).then((e) => S().then(() => _({
+			}), Promise.resolve().then(() => t.post(l.path, l.body)).then(() => Jg(o), (e) => qg(e).text).then((e) => S().then(() => _({
 				inFlight: null,
 				notice: e
 			}))).finally(() => {
@@ -13811,19 +13800,19 @@ function Xg(e) {
 		}
 	};
 }
-var Zg = () => Promise.resolve();
-function Qg(e, t, i, a) {
+var t_ = () => Promise.resolve();
+function n_(e, t, i, a) {
 	let o = xe(), s = c(o);
 	s.current = o;
 	let u = c(a);
 	u.current = a;
-	let d = c(null), [f, p] = l(Gg);
+	let d = c(null), [f, p] = l(Yg);
 	return r(() => {
 		if (e === null) {
-			p(Gg);
+			p(Yg);
 			return;
 		}
-		let n = Xg({
+		let n = e_({
 			mansionId: e,
 			specName: t,
 			api: {
@@ -13845,13 +13834,13 @@ function Qg(e, t, i, a) {
 		f.status
 	]), {
 		state: f,
-		send: n((e, t) => d.current?.send(e, t) ?? Zg(), []),
-		refresh: n(() => d.current?.refresh() ?? Zg(), []),
+		send: n((e, t) => d.current?.send(e, t) ?? t_(), []),
+		refresh: n(() => d.current?.refresh() ?? t_(), []),
 		noteDisagreement: n((e) => d.current?.noteWorkflowVersion(e, !0), [])
 	};
 }
 // src/adapters/seance-live.ts
-var $g = [
+var r_ = [
 	"approval_resolved",
 	"chat_chunk",
 	"chat_done",
@@ -13863,7 +13852,7 @@ var $g = [
 	"shared_crew.decision",
 	"tool_call",
 	"tool_result"
-], e_ = {
+], i_ = {
 	highestSequence: 0,
 	snapshots: /* @__PURE__ */ new Map(),
 	catchingUp: !1,
@@ -13871,35 +13860,35 @@ var $g = [
 	loaded: !1,
 	transitions: [],
 	pendingEnvelopes: 0
-}, t_ = 5e3, n_ = [
+}, a_ = 5e3, o_ = [
 	1e3,
 	2e3,
 	5e3,
 	15e3
-], r_ = 500, i_ = 50, a_ = 3e4, o_ = 200, s_ = 5e3, c_ = {
+], s_ = 500, c_ = 50, l_ = 3e4, u_ = 200, d_ = 5e3, f_ = {
 	set: (e, t) => setTimeout(e, t),
 	clear: (e) => clearTimeout(e)
-}, l_ = {
-	code: "persistence_failed",
-	safe_detail: "The backend did not confirm the latest ghost activity. Trying again."
-}, u_ = {
-	code: "invalid_envelope",
-	safe_detail: "The backend refused a Crew event, so it was not recorded."
-}, d_ = {
-	code: "persistence_failed",
-	safe_detail: "The séance log of this mansion is not available, so new ghost activity was not recorded."
-}, f_ = {
-	code: "persistence_failed",
-	safe_detail: "Too much ghost activity is waiting for the backend. The oldest events were dropped."
 }, p_ = {
 	code: "persistence_failed",
-	safe_detail: "Could not read the séance log. Showing the last confirmed state."
+	safe_detail: "The backend did not confirm the latest ghost activity. Trying again."
 }, m_ = {
+	code: "invalid_envelope",
+	safe_detail: "The backend refused a Crew event, so it was not recorded."
+}, h_ = {
+	code: "persistence_failed",
+	safe_detail: "The séance log of this mansion is not available, so new ghost activity was not recorded."
+}, g_ = {
+	code: "persistence_failed",
+	safe_detail: "Too much ghost activity is waiting for the backend. The oldest events were dropped."
+}, __ = {
+	code: "persistence_failed",
+	safe_detail: "Could not read the séance log. Showing the last confirmed state."
+}, v_ = {
 	code: "history_partial",
 	safe_detail: "Could not recover missed activity from Crew history."
 };
-function h_(e) {
-	let { api: t, mansionId: n } = e, r = e.timers ?? c_, i = e.pollMs ?? t_, a = e.retryDelaysMs ?? n_, o = e.maxQueue ?? r_, s = e_, c = Kf, l = /* @__PURE__ */ new Set(), u = !1, d = !0, f = [], p = !1, m = 0, h = 0, g = null, _ = null, v = null, y = !1, b = !1, x = !1, S = null, C = null, w = null;
+function y_(e) {
+	let { api: t, mansionId: n } = e, r = e.timers ?? f_, i = e.pollMs ?? a_, a = e.retryDelaysMs ?? o_, o = e.maxQueue ?? s_, s = i_, c = Xf, l = /* @__PURE__ */ new Set(), u = !1, d = !0, f = [], p = !1, m = 0, h = 0, g = null, _ = null, v = null, y = !1, b = !1, x = !1, S = null, C = null, w = null;
 	function T(e) {
 		if (!u) {
 			s = {
@@ -13912,10 +13901,10 @@ function h_(e) {
 		}
 	}
 	function E(e) {
-		let t = qf(c, e.events.filter((e) => e.scope.mansion_id === n));
+		let t = Zf(c, e.events.filter((e) => e.scope.mansion_id === n));
 		if (t.applied.length === 0) return;
 		c = t.log;
-		let r = Yf(c);
+		let r = $f(c);
 		T({
 			highestSequence: c.highestSequence,
 			snapshots: new Map(r.snapshots.map((e) => [e.ghost_id, e])),
@@ -13931,7 +13920,7 @@ function h_(e) {
 	}
 	function k(e) {
 		if (_ = D(_), u || !d) return;
-		let t = e === null ? O() ? i : null : Math.min(Math.max(e, i_), a_);
+		let t = e === null ? O() ? i : null : Math.min(Math.max(e, c_), l_);
 		t !== null && (_ = r.set(() => {
 			_ = null, A(!1);
 		}, t));
@@ -13941,10 +13930,10 @@ function h_(e) {
 			let e = null, r = [];
 			try {
 				let i = null;
-				for (let a = 0; a < o_; a += 1) {
-					let a = await t.get(Cm(n, c.contiguousSequence, 500));
+				for (let a = 0; a < u_; a += 1) {
+					let a = await t.get(Dm(n, c.contiguousSequence, 500));
 					if (u) return;
-					let o = jm(a);
+					let o = Fm(a);
 					if (!o.ok) {
 						i = o.diagnostic;
 						break;
@@ -13958,10 +13947,10 @@ function h_(e) {
 				});
 			} catch (e) {
 				if (u) return;
-				Mm(e) === 404 && Pm(e) === "log_not_found" ? (w = null, T({
+				Im(e) === 404 && Rm(e) === "log_not_found" ? (w = null, T({
 					catchingUp: b,
 					loaded: !0
-				})) : (w = p_, T({ catchingUp: b }));
+				})) : (w = __, T({ catchingUp: b }));
 			}
 			r.length > 0 && N(r), k(e);
 		}).finally(() => {
@@ -13984,40 +13973,40 @@ function h_(e) {
 	function M() {
 		if (u || p || g !== null || f.length === 0 || v !== null) return;
 		let e = m > 0 ? 1 : Math.min(f.length, 100), r = f.slice(0, e);
-		p = !0, Promise.resolve().then(() => t.post(Sm(n), { envelopes: r })).then((e) => {
+		p = !0, Promise.resolve().then(() => t.post(Em(n), { envelopes: r })).then((e) => {
 			if (p = !1, u) return;
 			f[0] === r[0] && f.splice(0, r.length), m > 0 && --m, h = 0;
-			let t = jm(e);
+			let t = Fm(e);
 			t.ok ? (C = null, E(t.page), T({}), t.page.reconcileSlots.length > 0 && N(t.page.reconcileSlots), c.contiguousSequence < Math.max(c.highestSequence, t.page.highestSequence) ? A(!1) : k(null)) : (C = t.diagnostic, T({})), M();
 		}, (e) => {
 			if (p = !1, u) return;
-			let t = Mm(e);
-			if (t === 404 || t === 409) f[0] === r[0] && f.splice(0, r.length), m = 0, C = d_, T({}), M();
-			else if (Im(t)) {
-				let t = Fm(e, r.length);
+			let t = Im(e);
+			if (t === 404 || t === 409) f[0] === r[0] && f.splice(0, r.length), m = 0, C = h_, T({}), M();
+			else if (Bm(t)) {
+				let t = zm(e, r.length);
 				if (t !== null && f[0] === r[0]) {
 					for (let { index: e } of [...t].reverse()) f.splice(e, 1);
-					t.some(({ code: e }) => e !== "unknown_session") && (C = u_), T({}), M();
+					t.some(({ code: e }) => e !== "unknown_session") && (C = m_), T({}), M();
 					return;
 				}
-				r.length > 1 ? m = r.length : (f[0] === r[0] && f.shift(), m > 0 && --m, C = u_), T({}), M();
-			} else C = l_, T({}), j();
+				r.length > 1 ? m = r.length : (f[0] === r[0] && f.shift(), m > 0 && --m, C = m_), T({}), M();
+			} else C = p_, T({}), j();
 		});
 	}
 	function N(e) {
 		if (u || x || S !== null || e.length === 0) return Promise.resolve();
 		x = !0;
 		let i = { slots: e.slice(0, 8) };
-		return Promise.resolve().then(() => t.post(wm(n), i)).then((e) => {
+		return Promise.resolve().then(() => t.post(Om(n), i)).then((e) => {
 			if (u) return;
-			let t = jm(e);
-			t.ok ? (E(t.page), w = t.page.diagnostics[0] ?? w) : w = m_, T({});
+			let t = Fm(e);
+			t.ok ? (E(t.page), w = t.page.diagnostics[0] ?? w) : w = v_, T({});
 		}, () => {
-			u || (w = m_, T({}));
+			u || (w = v_, T({}));
 		}).finally(() => {
 			if (x = !1, !u) return S = r.set(() => {
 				S = null;
-			}, s_), A(!1);
+			}, d_), A(!1);
 		});
 	}
 	return {
@@ -14034,7 +14023,7 @@ function h_(e) {
 			u || (f.push({
 				type: e,
 				data: t
-			}), f.length > o && (f.splice(0, f.length - o), C = f_), T({}), g === null && h >= a.length && (h = Math.max(a.length - 1, 0)), M());
+			}), f.length > o && (f.splice(0, f.length - o), C = g_), T({}), g === null && h >= a.length && (h = Math.max(a.length - 1, 0)), M());
 		},
 		catchUp: () => A(!0),
 		reconcile: N,
@@ -14046,16 +14035,16 @@ function h_(e) {
 		}
 	};
 }
-function g_(e) {
+function b_(e) {
 	let t = xe(), i = c(t);
 	i.current = t;
-	let a = c(null), [s, u] = l(e_);
+	let a = c(null), [s, u] = l(i_);
 	r(() => {
 		if (e === null) {
-			u(e_);
+			u(i_);
 			return;
 		}
-		let t = h_({
+		let t = y_({
 			mansionId: e,
 			api: {
 				get: (e) => i.current.get(e),
@@ -14068,8 +14057,8 @@ function g_(e) {
 			document.removeEventListener("visibilitychange", r), n(), t.dispose(), a.current === t && (a.current = null);
 		};
 	}, [e]);
-	let d = o(() => $g.map((e) => (t) => a.current?.forward(e, t)), []);
-	$g.forEach((e, t) => {
+	let d = o(() => r_.map((e) => (t) => a.current?.forward(e, t)), []);
+	r_.forEach((e, t) => {
 		Se(e, d[t]);
 	});
 	let f = n(() => {
@@ -14081,13 +14070,13 @@ function g_(e) {
 	}), [s, f]);
 }
 // src/core/house-reducer.ts
-var __ = {
+var x_ = {
 	projection: null,
 	projectionStatus: "loading",
 	inFlight: null,
 	notice: null
 };
-function v_(e, t) {
+function S_(e, t) {
 	switch (t.type) {
 		case "projection_received": {
 			let n = e.projection;
@@ -14128,10 +14117,10 @@ function v_(e, t) {
 		default: return e;
 	}
 }
-function y_(e, t) {
+function C_(e, t) {
 	return e.revision === t.revision && e.sha256 === t.sha256 && e.sizeBytes === t.sizeBytes;
 }
-function b_(e, t, n) {
+function w_(e, t, n) {
 	let r = e.projection;
 	if (!t.canDecide || e.inFlight !== null || r === null || e.projectionStatus !== "ready" || n.expectedVersion !== r.version) return null;
 	switch (n.kind) {
@@ -14141,7 +14130,7 @@ function b_(e, t, n) {
 		}
 		case "decide_door": {
 			let e = r.phases.find((e) => e.phase === n.phase), t = e?.door.proposal;
-			return e === void 0 || t == null || e.door.status !== "waiting" || t.status !== "pending" || t.proposalId !== n.proposalId || t.documentPath !== n.documentPath ? null : y_(t.artifactRevision, n.artifactRevision) ? n : null;
+			return e === void 0 || t == null || e.door.status !== "waiting" || t.status !== "pending" || t.proposalId !== n.proposalId || t.documentPath !== n.documentPath ? null : C_(t.artifactRevision, n.artifactRevision) ? n : null;
 		}
 		case "decide_risky": {
 			let e = r.riskyProposals.find((e) => e.proposalId === n.proposalId);
@@ -14150,43 +14139,43 @@ function b_(e, t, n) {
 	}
 }
 // src/core/workflow-api.ts
-var x_ = "/apps/haunted-house/api/mansions";
-function S_(e) {
-	return `${x_}/${encodeURIComponent(e)}`;
+var T_ = "/apps/haunted-house/api/mansions";
+function E_(e) {
+	return `${T_}/${encodeURIComponent(e)}`;
 }
-function C_(e) {
-	return `${S_(e)}/workflow`;
+function D_(e) {
+	return `${E_(e)}/workflow`;
 }
-function w_(e, t) {
-	return `${S_(e)}/phases/${t}/start`;
+function O_(e, t) {
+	return `${E_(e)}/phases/${t}/start`;
 }
-function T_(e, t, n) {
-	return `${S_(e)}/doors/${encodeURIComponent(t)}/${n}`;
+function k_(e, t, n) {
+	return `${E_(e)}/doors/${encodeURIComponent(t)}/${n}`;
 }
-function E_(e, t, n) {
-	return `${S_(e)}/approvals/${encodeURIComponent(t)}/${n}`;
+function A_(e, t, n) {
+	return `${E_(e)}/approvals/${encodeURIComponent(t)}/${n}`;
 }
-function D_(e, t, n) {
+function j_(e, t, n) {
 	let r = {
 		command_id: n,
 		expected_version: t.expectedVersion
 	};
 	switch (t.kind) {
 		case "start_phase": return {
-			path: w_(e, t.phase),
+			path: O_(e, t.phase),
 			body: r
 		};
 		case "decide_door": return {
-			path: T_(e, t.proposalId, t.decision),
+			path: k_(e, t.proposalId, t.decision),
 			body: {
 				...r,
 				phase: t.phase,
 				document_path: t.documentPath,
-				artifact_revision: ko(t.artifactRevision)
+				artifact_revision: Mo(t.artifactRevision)
 			}
 		};
 		case "decide_risky": return {
-			path: E_(e, t.proposalId, t.decision),
+			path: A_(e, t.proposalId, t.decision),
 			body: {
 				...r,
 				action_digest: t.actionDigest
@@ -14194,21 +14183,21 @@ function D_(e, t, n) {
 		};
 	}
 }
-function O_(e) {
+function M_(e) {
 	return typeof e == "object" && !!e && !Array.isArray(e);
 }
-function k_(e, t) {
-	if (!O_(e)) return null;
+function N_(e, t) {
+	if (!M_(e)) return null;
 	let { event_id: n, sequence: r, version: i } = e;
 	if (typeof n != "string" || !/^e1:[0-9a-f]{64}$/.test(n) || typeof r != "number" || !Number.isSafeInteger(r) || r < 1) return null;
-	let a = Oo(e.workflow, t);
+	let a = jo(e.workflow, t);
 	return !a.ok || i !== a.projection.version || r > a.projection.version ? null : {
 		eventId: n,
 		sequence: r,
 		projection: a.projection
 	};
 }
-var A_ = {
+var P_ = {
 	conflict: "The house changed before your decision arrived, so nothing was recorded. Check what is shown now and decide again.",
 	invalid: "The house refused that request. Nothing was recorded.",
 	not_found: "That mansion or proposal no longer exists. Nothing was recorded.",
@@ -14216,24 +14205,24 @@ var A_ = {
 	crew: "Crew did not answer in time. Check the state shown before trying again.",
 	read_only: "This is a recording. Nothing was recorded.",
 	unavailable: "The house could not be reached. It is not known whether anything was recorded; the state is being read again."
-}, j_ = 524288;
-function M_(e, t) {
+}, F_ = 524288;
+function I_(e, t) {
 	if (typeof e != "object" || !e) return null;
 	let n = e.body;
-	if (typeof n != "string" || n.length > j_) return null;
+	if (typeof n != "string" || n.length > F_) return null;
 	try {
 		let e = JSON.parse(n);
-		if (!O_(e)) return null;
-		let r = Oo(e.workflow, t);
+		if (!M_(e)) return null;
+		let r = jo(e.workflow, t);
 		return r.ok ? r.projection : null;
 	} catch {
 		return null;
 	}
 }
-function N_(e, t) {
-	let n = Mm(e), r = M_(e, t), i = (e) => ({
+function L_(e, t) {
+	let n = Im(e), r = I_(e, t), i = (e) => ({
 		kind: e,
-		text: A_[e],
+		text: P_[e],
 		projection: r
 	});
 	switch (n) {
@@ -14246,31 +14235,31 @@ function N_(e, t) {
 		case 405: return i("read_only");
 		case 502:
 		case 504: return i("crew");
-		default: return i(Pm(e) === "integrity_unavailable" ? "integrity" : "unavailable");
+		default: return i(Rm(e) === "integrity_unavailable" ? "integrity" : "unavailable");
 	}
 }
-function P_(e) {
+function R_(e) {
 	switch (e.kind) {
-		case "start_phase": return `${jo[e.phase]} started.`;
-		case "decide_door": return e.decision === "approve" ? `${jo[e.phase]} door approved. The next phase starts only when you start it.` : `${jo[e.phase]} door rejected. A revision is required.`;
+		case "start_phase": return `${Po[e.phase]} started.`;
+		case "decide_door": return e.decision === "approve" ? `${Po[e.phase]} door approved. The next phase starts only when you start it.` : `${Po[e.phase]} door rejected. A revision is required.`;
 		case "decide_risky": return e.decision === "approve" ? "Action approved for one attempt." : "Action rejected. It will not run.";
 	}
 }
 // src/adapters/workflow-live.ts
-var F_ = 5e3, I_ = 150, L_ = "The house answered in a way this page cannot read. Reading the state again before anything else.", R_ = {
+var z_ = 5e3, B_ = 150, V_ = "The house answered in a way this page cannot read. Reading the state again before anything else.", H_ = {
 	set: (e, t) => setTimeout(e, t),
 	clear: (e) => clearTimeout(e)
 };
-function z_() {
+function U_() {
 	if (typeof crypto < "u" && typeof crypto.randomUUID == "function") return crypto.randomUUID();
 	let e = /* @__PURE__ */ new Uint8Array(16);
 	return crypto.getRandomValues(e), Array.from(e, (e) => e.toString(16).padStart(2, "0")).join("");
 }
-function B_(e) {
-	let { api: t, mansionId: n } = e, r = e.timers ?? R_, i = e.pollMs ?? F_, a = e.refreshDelayMs ?? I_, o = e.newCommandId ?? z_, s = __, c = /* @__PURE__ */ new Set(), l = !1, u = !0, d = null, f = !1, p = null, m = null, h = 0;
+function W_(e) {
+	let { api: t, mansionId: n } = e, r = e.timers ?? H_, i = e.pollMs ?? z_, a = e.refreshDelayMs ?? B_, o = e.newCommandId ?? U_, s = x_, c = /* @__PURE__ */ new Set(), l = !1, u = !0, d = null, f = !1, p = null, m = null, h = 0;
 	function g(e) {
 		if (l) return;
-		let t = v_(s, e);
+		let t = S_(s, e);
 		if (t !== s) {
 			s = t;
 			for (let e of [...c]) e(s);
@@ -14282,7 +14271,7 @@ function B_(e) {
 	function v() {
 		if (s.projectionStatus !== "ready" || s.projection === null) return !0;
 		let e = s.projection;
-		return e.readOnly ? !1 : h > e.version || e.integrity === "uncertain" || rs(e).length > 0 || e.phases.some((e) => e.status === "starting");
+		return e.readOnly ? !1 : h > e.version || e.integrity === "uncertain" || os(e).length > 0 || e.phases.some((e) => e.status === "starting");
 	}
 	function y() {
 		p = _(p), !l && u && v() && (p = r.set(() => {
@@ -14290,8 +14279,8 @@ function B_(e) {
 		}, i));
 	}
 	function b() {
-		return l ? Promise.resolve() : d === null ? (p = _(p), m = _(m), d = Promise.resolve().then(() => t.get(C_(n))).then((e) => {
-			let t = Oo(e, n);
+		return l ? Promise.resolve() : d === null ? (p = _(p), m = _(m), d = Promise.resolve().then(() => t.get(D_(n))).then((e) => {
+			let t = jo(e, n);
 			g(t.ok ? {
 				type: "projection_received",
 				projection: t.projection
@@ -14321,27 +14310,27 @@ function B_(e) {
 		},
 		send(r, i) {
 			if (l) return Promise.resolve();
-			let a = b_(s, i, r);
+			let a = w_(s, i, r);
 			if (a === null) return Promise.resolve();
-			let c = D_(n, a, o());
+			let c = j_(n, a, o());
 			return g({
 				type: "command_sent",
-				target: Ho(a)
+				target: Go(a)
 			}), Promise.resolve().then(() => t.post(c.path, c.body)).then((e) => {
-				let t = k_(e, n);
+				let t = N_(e, n);
 				if (t === null) return g({
 					type: "command_settled",
-					notice: L_
+					notice: V_
 				}), b();
 				g({
 					type: "projection_received",
 					projection: t.projection
 				}), g({
 					type: "command_settled",
-					notice: P_(a)
+					notice: R_(a)
 				}), y();
 			}, (e) => {
-				let t = N_(e, n);
+				let t = L_(e, n);
 				if (t.projection !== null && g({
 					type: "projection_received",
 					projection: t.projection
@@ -14362,19 +14351,19 @@ function B_(e) {
 		}
 	};
 }
-var V_ = () => Promise.resolve();
-function H_(e, t, i) {
+var G_ = () => Promise.resolve();
+function K_(e, t, i) {
 	let a = xe(), o = c(a);
 	o.current = a;
 	let s = c(i);
 	s.current = i;
-	let u = c(null), [d, f] = l(__);
+	let u = c(null), [d, f] = l(x_);
 	return r(() => {
 		if (e === null) {
-			f(__);
+			f(x_);
 			return;
 		}
-		let t = B_({
+		let t = W_({
 			mansionId: e,
 			api: {
 				get: (e) => o.current.get(e),
@@ -14392,33 +14381,33 @@ function H_(e, t, i) {
 	}, [t, d.projection]), {
 		state: d,
 		dispatch: n((e) => u.current?.dispatch(e) ?? void 0, []),
-		send: n((e, t) => u.current?.send(e, t) ?? V_(), []),
-		refresh: n(() => u.current?.refresh() ?? V_(), [])
+		send: n((e, t) => u.current?.send(e, t) ?? G_(), []),
+		refresh: n(() => u.current?.refresh() ?? G_(), [])
 	};
 }
 // src/adapters/house-projection.ts
-function U_(e) {
+function q_(e) {
 	let t = e.diagnostic;
 	if (t === null) return {
 		integrity: "valid",
 		validRecordCount: e.highestSequence,
 		diagnostics: []
 	};
-	let n = Wp(t);
+	let n = Jp(t);
 	return {
 		integrity: n.code === "integrity_failed" ? "incompatible" : "diagnostic",
 		validRecordCount: e.highestSequence,
 		diagnostics: [n]
 	};
 }
-function W_(e) {
-	let t = e.ghostNames, n = Vo({
+function J_(e) {
+	let t = e.ghostNames, n = Wo({
 		projection: e.workflow,
 		projectionStatus: e.workflowStatus,
 		canonical: e.canonical,
 		readOnly: e.readOnly
 	}), r = e.roomInFlight ?? (e.workflowInFlight === null ? null : `workflow:${e.workflowInFlight}`), i = /* @__PURE__ */ new Map(), a = /* @__PURE__ */ new Map();
-	for (let o of os(e.workflow, e.snapshots.values(), t)) i.set(o.id, ss(e.workflow, o, n, e.workflowInFlight, t)), a.set(o.id, Og({
+	for (let o of ls(e.workflow, e.snapshots.values(), t)) i.set(o.id, us(e.workflow, o, n, e.workflowInFlight, t)), a.set(o.id, Mg({
 		room: o,
 		specName: e.specName,
 		projection: e.workflow,
@@ -14444,10 +14433,10 @@ function W_(e) {
 		}
 	};
 }
-function G_(e) {
-	let { mansion: t, ghostNames: i, seanceRoom: a, mode: s } = e, l = t.name, u = t.projectSpec, d = e.replayed ?? null, { state: f, catchUp: p } = g_(l), { state: m, send: h, refresh: g } = H_(l, f.highestSequence, p), _ = n(() => {
+function Y_(e) {
+	let { mansion: t, ghostNames: i, seanceRoom: a, mode: s } = e, l = t.name, u = t.projectSpec, d = e.replayed ?? null, { state: f, catchUp: p } = b_(l), { state: m, send: h, refresh: g } = K_(l, f.highestSequence, p), _ = n(() => {
 		p(), g();
-	}, [p, g]), v = Qg(l, u, (d === null ? m.projection : d.workflow)?.version ?? null, _), y = yt(), b = d === null ? m.projection : d.workflow, x = d === null ? m.projectionStatus : "ready", S = d === null ? f.snapshots : d.snapshots, C = d === null ? f.transitions : d.transitions, w = v.state.roomGhosts, T = v.state.status, E = d === null ? f.highestSequence : d.highestSequence, D = s === "replay", O = o(() => ({
+	}, [p, g]), v = n_(l, u, (d === null ? m.projection : d.workflow)?.version ?? null, _), y = yt(), b = d === null ? m.projection : d.workflow, x = d === null ? m.projectionStatus : "ready", S = d === null ? f.snapshots : d.snapshots, C = d === null ? f.transitions : d.transitions, w = v.state.roomGhosts, T = v.state.status, E = d === null ? f.highestSequence : d.highestSequence, D = s === "replay", O = o(() => ({
 		loaded: d !== null || f.loaded,
 		catchingUp: d === null && f.catchingUp,
 		highestSequence: E,
@@ -14458,7 +14447,7 @@ function G_(e) {
 		f.catchingUp,
 		f.diagnostic,
 		E
-	]), k = o(() => e.replay ?? U_(O), [e.replay, O]), A = o(() => W_({
+	]), k = o(() => e.replay ?? q_(O), [e.replay, O]), A = o(() => J_({
 		mansion: t,
 		specName: u,
 		workflow: b,
@@ -14486,14 +14475,14 @@ function G_(e) {
 		v.state.inFlight,
 		i,
 		D
-	]), j = o(() => Ns(A.input, {
+	]), j = o(() => Is(A.input, {
 		seanceRoom: a,
 		mode: s
 	}), [
 		A.input,
 		a,
 		s
-	]), M = A.authority, N = o(() => ig({
+	]), M = A.authority, N = o(() => cg({
 		projection: b,
 		roomGhosts: w,
 		roomGhostsStatus: T,
@@ -14513,7 +14502,7 @@ function G_(e) {
 		v.state.roomGhosts,
 		ee
 	]);
-	let te = o(() => a === "enabled" ? Ng(w, S, i) : null, [
+	let te = o(() => a === "enabled" ? Lg(w, S, i) : null, [
 		a,
 		w,
 		S,
@@ -14540,7 +14529,7 @@ function G_(e) {
 	oe.current = M;
 	let P = n((e) => {
 		h(e, oe.current);
-	}, [h]), se = n((e) => Cs(e, b), [b]), ce = n((e) => Po(e, i), [i]), le = o(() => ({
+	}, [h]), se = n((e) => Es(e, b), [b]), ce = n((e) => Lo(e, i), [i]), le = o(() => ({
 		transitions: C,
 		snapshots: S,
 		roomOf: se,
@@ -14555,7 +14544,7 @@ function G_(e) {
 		projection: j,
 		authority: M,
 		loading: d === null && (m.projectionStatus === "loading" || !f.loaded && f.diagnostic === null),
-		logProblem: f.diagnostic === null ? null : ni(f.diagnostic),
+		logProblem: f.diagnostic === null ? null : ai(f.diagnostic),
 		details: A.details,
 		outputs: A.outputs,
 		review: te,
@@ -14569,24 +14558,24 @@ function G_(e) {
 	};
 }
 // src/components/room-output-styles.ts
-var K_ = "\n.hh-output { display: grid; gap: 10px; }\n.hh-artifact { border: 1px solid var(--border, currentColor); border-top: 3px solid var(--border-strong, currentColor);\n  border-radius: 6px; padding: 10px 12px; display: grid; gap: 8px; }\n.hh-artifact[data-validation='invalid'] { border-top-style: double; border-top-width: 5px; }\n.hh-artifact[data-validation='unwritten'] { border-style: dashed; }\n.hh-artifact-head { display: flex; align-items: flex-start; gap: 6px; }\n.hh-artifact-head svg { flex: none; margin-top: 2px; color: var(--hh-candle); }\n.hh-artifact-note { margin: 0; font-size: 0.875rem; color: var(--muted, inherit); }\n.hh-document { max-height: 24rem; overflow: auto; border: 1px solid var(--border, currentColor); border-radius: 4px;\n  padding: 8px 12px; background: var(--input, transparent); font-size: 0.875rem; overflow-wrap: anywhere; }\n.hh-document:focus-visible { outline: 2px solid var(--ring, currentColor); outline-offset: 2px; }\n.hh-document > :first-child { margin-top: 0; }\n.hh-document > :last-child { margin-bottom: 0; }\n.hh-md-heading { font-weight: 600; margin: 12px 0 4px; }\n.hh-md-heading[data-level='1'] { font-size: 1.0625rem; }\n.hh-md-heading[data-level='2'] { font-size: 1rem; }\n.hh-document p { margin: 6px 0; }\n.hh-md-quote { border-left: 3px solid var(--border-strong, currentColor); padding-left: 8px; }\n.hh-md-list { list-style: none; margin: 6px 0; padding: 0; display: grid; gap: 2px; }\n.hh-md-item { display: flex; align-items: flex-start; gap: 6px; }\n.hh-md-item svg { flex: none; margin-top: 3px; }\n.hh-md-marker { flex: none; min-width: 0.75rem; color: var(--muted, inherit); }\n.hh-document pre { margin: 6px 0; padding: 6px 8px; overflow: auto; border: 1px solid var(--border, currentColor);\n  border-radius: 4px; }\n.hh-document code, .hh-document pre, .hh-task code, .hh-run code, .hh-findings code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n  font-size: 0.8125rem; }\n.hh-document hr { border: 0; border-top: 1px solid var(--border, currentColor); margin: 8px 0; }\n.hh-findings { margin: 0; padding: 0 0 0 1.25rem; font-size: 0.875rem; display: grid; gap: 2px; }\n.hh-finding-code { color: var(--muted, inherit); }\n.hh-scope { list-style: none; margin: 0; padding: 0; }\n\n.hh-run { display: grid; gap: 4px; }\n.hh-run-summary { margin: 0; font-size: 0.875rem; overflow-wrap: anywhere; }\n.hh-runs { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }\n.hh-runs > li { display: grid; gap: 6px; }\n.hh-session-link { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin: 0; font-size: 0.875rem; }\n.hh-button-quiet { border-style: dotted; padding: 3px 10px; font-size: 0.875rem; }\n.hh-session-link-note { color: var(--muted, inherit); }\n\n.hh-board { border: 1px solid var(--border, currentColor); border-radius: 6px; padding: 10px 12px; display: grid; gap: 8px; }\n.hh-wave { display: grid; gap: 6px; }\n.hh-tasks { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }\n.hh-task { border: 1px solid var(--border, currentColor); border-left: 4px solid var(--border-strong, currentColor);\n  border-radius: 6px; padding: 8px 10px; display: grid; gap: 4px; }\n.hh-task[data-status='active'] { border-left-style: double; border-left-width: 6px; }\n.hh-task[data-status='not_selected'], .hh-task[data-status='skipped'] { border-left-style: dotted; }\n.hh-task[data-status='failed'], .hh-task[data-status='blocked'], .hh-task[data-status='cancelled'] { border-left-style: dashed; }\n.hh-task-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; font-size: 0.875rem; }\n.hh-task-head input { margin: 0; width: 1rem; height: 1rem; align-self: center; accent-color: var(--accent, auto); }\n.hh-task-head input:focus-visible { outline: 2px solid var(--ring, currentColor); outline-offset: 2px; }\n.hh-task-id { font-weight: 600; }\n.hh-tag { border: 1px solid var(--border-strong, currentColor); border-radius: 999px; padding: 0 8px; font-size: 0.75rem; }\n.hh-task-detail { margin: 0; font-size: 0.875rem; overflow-wrap: anywhere; }\n\n.hh-revision { display: grid; gap: 6px; }\n.hh-revision label { font-weight: 600; font-size: 0.875rem; }\n.hh-revision textarea { font: inherit; color: inherit; background: var(--input, transparent);\n  border: 1px solid var(--border-strong, currentColor); border-radius: 6px; padding: 6px 10px; min-height: 5rem;\n  resize: vertical; width: 100%; box-sizing: border-box; }\n.hh-revision textarea:focus-visible { outline: 2px solid var(--ring, currentColor); outline-offset: 2px; }\n.hh-revision textarea[aria-invalid='true'] { border-width: 2px; }\n\n.hh-visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden;\n  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; }\n", q_ = [
+var X_ = "\n.hh-output { display: grid; gap: 10px; }\n.hh-artifact { border: 1px solid var(--border, currentColor); border-top: 3px solid var(--border-strong, currentColor);\n  border-radius: 6px; padding: 10px 12px; display: grid; gap: 8px; }\n.hh-artifact[data-validation='invalid'] { border-top-style: double; border-top-width: 5px; }\n.hh-artifact[data-validation='unwritten'] { border-style: dashed; }\n.hh-artifact-head { display: flex; align-items: flex-start; gap: 6px; }\n.hh-artifact-head svg { flex: none; margin-top: 2px; color: var(--hh-candle); }\n.hh-artifact-note { margin: 0; font-size: 0.875rem; color: var(--muted, inherit); }\n.hh-document { max-height: 24rem; overflow: auto; border: 1px solid var(--border, currentColor); border-radius: 4px;\n  padding: 8px 12px; background: var(--input, transparent); font-size: 0.875rem; overflow-wrap: anywhere; }\n.hh-document:focus-visible { outline: 2px solid var(--ring, currentColor); outline-offset: 2px; }\n.hh-document > :first-child { margin-top: 0; }\n.hh-document > :last-child { margin-bottom: 0; }\n.hh-md-heading { font-weight: 600; margin: 12px 0 4px; }\n.hh-md-heading[data-level='1'] { font-size: 1.0625rem; }\n.hh-md-heading[data-level='2'] { font-size: 1rem; }\n.hh-document p { margin: 6px 0; }\n.hh-md-quote { border-left: 3px solid var(--border-strong, currentColor); padding-left: 8px; }\n.hh-md-list { list-style: none; margin: 6px 0; padding: 0; display: grid; gap: 2px; }\n.hh-md-item { display: flex; align-items: flex-start; gap: 6px; }\n.hh-md-item svg { flex: none; margin-top: 3px; }\n.hh-md-marker { flex: none; min-width: 0.75rem; color: var(--muted, inherit); }\n.hh-document pre { margin: 6px 0; padding: 6px 8px; overflow: auto; border: 1px solid var(--border, currentColor);\n  border-radius: 4px; }\n.hh-document code, .hh-document pre, .hh-task code, .hh-run code, .hh-findings code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n  font-size: 0.8125rem; }\n.hh-document hr { border: 0; border-top: 1px solid var(--border, currentColor); margin: 8px 0; }\n.hh-findings { margin: 0; padding: 0 0 0 1.25rem; font-size: 0.875rem; display: grid; gap: 2px; }\n.hh-finding-code { color: var(--muted, inherit); }\n.hh-scope { list-style: none; margin: 0; padding: 0; }\n\n.hh-run { display: grid; gap: 4px; }\n.hh-run-summary { margin: 0; font-size: 0.875rem; overflow-wrap: anywhere; }\n.hh-runs { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }\n.hh-runs > li { display: grid; gap: 6px; }\n.hh-session-link { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin: 0; font-size: 0.875rem; }\n.hh-button-quiet { border-style: dotted; padding: 3px 10px; font-size: 0.875rem; }\n.hh-session-link-note { color: var(--muted, inherit); }\n\n.hh-board { border: 1px solid var(--border, currentColor); border-radius: 6px; padding: 10px 12px; display: grid; gap: 8px; }\n.hh-wave { display: grid; gap: 6px; }\n.hh-tasks { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }\n.hh-task { border: 1px solid var(--border, currentColor); border-left: 4px solid var(--border-strong, currentColor);\n  border-radius: 6px; padding: 8px 10px; display: grid; gap: 4px; }\n.hh-task[data-status='active'] { border-left-style: double; border-left-width: 6px; }\n.hh-task[data-status='not_selected'], .hh-task[data-status='skipped'] { border-left-style: dotted; }\n.hh-task[data-status='failed'], .hh-task[data-status='blocked'], .hh-task[data-status='cancelled'] { border-left-style: dashed; }\n.hh-task-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; font-size: 0.875rem; }\n.hh-task-head input { margin: 0; width: 1rem; height: 1rem; align-self: center; accent-color: var(--accent, auto); }\n.hh-task-head input:focus-visible { outline: 2px solid var(--ring, currentColor); outline-offset: 2px; }\n.hh-task-id { font-weight: 600; }\n.hh-tag { border: 1px solid var(--border-strong, currentColor); border-radius: 999px; padding: 0 8px; font-size: 0.75rem; }\n.hh-task-detail { margin: 0; font-size: 0.875rem; overflow-wrap: anywhere; }\n\n.hh-revision { display: grid; gap: 6px; }\n.hh-revision label { font-weight: 600; font-size: 0.875rem; }\n.hh-revision textarea { font: inherit; color: inherit; background: var(--input, transparent);\n  border: 1px solid var(--border-strong, currentColor); border-radius: 6px; padding: 6px 10px; min-height: 5rem;\n  resize: vertical; width: 100%; box-sizing: border-box; }\n.hh-revision textarea:focus-visible { outline: 2px solid var(--ring, currentColor); outline-offset: 2px; }\n.hh-revision textarea[aria-invalid='true'] { border-width: 2px; }\n\n.hh-visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden;\n  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; }\n", Z_ = [
 	"requirements",
 	"design",
 	"tasks"
-], J_ = [
+], Q_ = [
 	"Open Kiro.",
 	"Choose File, then Open Folder.",
 	"Pick the folder shown above.",
 	"The plan is listed under Specs."
-], Y_ = "This is a recording. The folder was on the computer that made it, not on this one.";
-function X_(e, t) {
+], $_ = "This is a recording. The folder was on the computer that made it, not on this one.";
+function ev(e, t) {
 	return e.rooms.some((e) => e.doors.some((e) => e.phase === t && e.state === "open"));
 }
-function Z_(e, t) {
+function tv(e, t) {
 	let n = [];
-	for (let r of q_) {
-		if (!X_(e, r)) continue;
-		let i = qs(r), a = t.documents.find((e) => e.phase === r && i.file !== null && e.path.split("/").pop() === i.file);
+	for (let r of Z_) {
+		if (!ev(e, r)) continue;
+		let i = Xs(r), a = t.documents.find((e) => e.phase === r && i.file !== null && e.path.split("/").pop() === i.file);
 		a !== void 0 && n.push({
 			term: r,
 			plain: i.plain,
@@ -14596,7 +14585,7 @@ function Z_(e, t) {
 	}
 	let r = e.mode === "replay";
 	return {
-		built: bc(e),
+		built: Cc(e),
 		rows: n,
 		tasks: t.tasks.filter((e) => e.complete).map((e) => ({
 			taskId: e.taskId,
@@ -14604,19 +14593,19 @@ function Z_(e, t) {
 			files: [...e.writes]
 		})),
 		folder: t.folder,
-		folderNote: r ? Y_ : null,
-		steps: r ? [] : J_
+		folderNote: r ? $_ : null,
+		steps: r ? [] : Q_
 	};
 }
 // src/rooms/attic/use-own-seance.ts
-var Q_ = "That file could not be read.", $_ = "Open one file at a time.";
-function ev(e) {
+var nv = "That file could not be read.", rv = "Open one file at a time.";
+function iv(e) {
 	let t = Pt?.replace, [r, i] = l(null), a = n((n) => {
 		t !== void 0 && n != null && n.text().then((r) => {
 			let a = t(r, n.size);
 			e(a.message), i(a.ok ? null : a.message);
 		}, () => {
-			e(Q_), i(Q_);
+			e(nv), i(nv);
 		});
 	}, [t, e]);
 	return {
@@ -14626,9 +14615,9 @@ function ev(e) {
 	};
 }
 // src/rooms/attic/OwnSeanceDrop.tsx
-var tv = "Replay your own séance", nv = "Drop a séance log file here, or choose one, to watch that run instead. It is read on this page only: nothing is uploaded or kept, and it is gone when you leave.", rv = "Choose a séance log";
-function iv({ onAnnounce: e }) {
-	let t = ev(e), n = i(), [r, a] = l(!1), [o, s] = l(!1);
+var av = "Replay your own séance", ov = "Drop a séance log file here, or choose one, to watch that run instead. It is read on this page only: nothing is uploaded or kept, and it is gone when you leave.", sv = "Choose a séance log";
+function cv({ onAnnounce: e }) {
+	let t = iv(e), n = i(), [r, a] = l(!1), [o, s] = l(!1);
 	return t.available ? /* @__PURE__ */ R("section", {
 		className: "hh-attic-section hh-attic-own",
 		"aria-labelledby": `${n}-own`,
@@ -14646,9 +14635,9 @@ function iv({ onAnnounce: e }) {
 		children: [
 			/* @__PURE__ */ L("h4", {
 				id: `${n}-own`,
-				children: tv
+				children: av
 			}),
-			/* @__PURE__ */ L("p", { children: nv }),
+			/* @__PURE__ */ L("p", { children: ov }),
 			/* @__PURE__ */ R("label", {
 				className: "hh-attic-own-choose",
 				children: [
@@ -14656,7 +14645,7 @@ function iv({ onAnnounce: e }) {
 						size: 16,
 						"aria-hidden": !0
 					}),
-					/* @__PURE__ */ L("span", { children: rv }),
+					/* @__PURE__ */ L("span", { children: sv }),
 					/* @__PURE__ */ L("input", {
 						type: "file",
 						accept: ".jsonl,.ndjson,.json,.txt,application/x-ndjson,text/plain",
@@ -14670,48 +14659,48 @@ function iv({ onAnnounce: e }) {
 			o || t.refusal !== null ? /* @__PURE__ */ L("p", {
 				className: "hh-attic-own-refusal",
 				"data-own-seance-refusal": !0,
-				children: o ? $_ : t.refusal
+				children: o ? rv : t.refusal
 			}) : null
 		]
 	}) : null;
 }
 // src/core/attic-view.ts
-var av = "This is a recording. It is read-only: nothing here starts, approves, rejects, retries or opens a Crew session.", ov = "The Attic replays this mansion’s séance log. Replaying changes nothing: the rooms keep showing the live house.", sv = "Reading the séance log…", cv = "This log has no events yet. There is nothing to replay.", lv = "No problems were found in this log.", uv = "Start of replay. No event has been shown yet.", dv = "Now showing";
-function fv(e) {
+var lv = "This is a recording. It is read-only: nothing here starts, approves, rejects, retries or opens a Crew session.", uv = "The Attic replays this mansion’s séance log. Replaying changes nothing: the rooms keep showing the live house.", dv = "Reading the séance log…", fv = "This log has no events yet. There is nothing to replay.", pv = "No problems were found in this log.", mv = "Start of replay. No event has been shown yet.", hv = "Now showing";
+function gv(e) {
 	return e === 0 ? "No events recorded" : e === 1 ? "1 event recorded" : `${e} events recorded`;
 }
-function pv(e) {
+function _v(e) {
 	return `${e}×`;
 }
-var mv = Gm.map((e) => ({
+var vv = Ym.map((e) => ({
 	speed: e,
-	text: pv(e)
+	text: _v(e)
 }));
-function hv(e, t, n) {
+function yv(e, t, n) {
 	return e === "playing" ? "Playing" : e === "complete" ? n === 0 ? "Nothing to replay" : "Replay complete" : t === 0 ? "Paused at the start" : "Paused";
 }
-var gv = {
+var bv = {
 	enabled: !0,
 	reason: null
-}, _v = (e) => ({
+}, xv = (e) => ({
 	enabled: !1,
 	reason: e
-}), vv = "There are no events to replay.", yv = "The replay is at its start.", bv = "This is the last event.";
-function xv(e, t) {
+}), Sv = "There are no events to replay.", Cv = "The replay is at its start.", wv = "This is the last event.";
+function Tv(e, t) {
 	let n = e.records.length, r = n === 0, i = t.cursor >= n, a = t.cursor === 0, o = t.status === "playing" ? "pause" : a || i ? "play" : "resume";
 	return {
 		playAction: o,
 		playLabel: o === "pause" ? "Pause" : o === "resume" ? "Resume" : "Play",
-		play: o === "pause" ? gv : r ? _v(vv) : gv,
-		restart: r ? _v(vv) : a && t.status !== "playing" ? _v(yv) : gv,
-		previous: r ? _v(vv) : a ? _v(yv) : gv,
-		next: r ? _v(vv) : i ? _v(bv) : gv,
-		seek: r ? _v(vv) : gv,
+		play: o === "pause" ? bv : r ? xv(Sv) : bv,
+		restart: r ? xv(Sv) : a && t.status !== "playing" ? xv(Cv) : bv,
+		previous: r ? xv(Sv) : a ? xv(Cv) : bv,
+		next: r ? xv(Sv) : i ? xv(wv) : bv,
+		seek: r ? xv(Sv) : bv,
 		previousCursor: Math.max(t.cursor - 1, 0),
 		nextCursor: Math.min(t.cursor + 1, n)
 	};
 }
-function Sv(e, t) {
+function Ev(e, t) {
 	return e.timeline.map((e, n) => ({
 		key: e.recordId,
 		position: n + 1,
@@ -14721,45 +14710,45 @@ function Sv(e, t) {
 		played: n < t
 	}));
 }
-function Cv(e, t) {
+function Dv(e, t) {
 	let n = e.timeline[t - 1];
-	return t <= 0 || n === void 0 ? uv : `${nh(e, t)}. ${n.actorLabel}: ${n.summary}.`;
+	return t <= 0 || n === void 0 ? mv : `${oh(e, t)}. ${n.actorLabel}: ${n.summary}.`;
 }
-function wv(e) {
-	return `Replay complete. ${nh(e, e.records.length)}.`;
+function Ov(e) {
+	return `Replay complete. ${oh(e, e.records.length)}.`;
 }
-function Tv(e) {
+function kv(e) {
 	return e <= 0 ? null : e === 1 ? "1 decision waiting at this point" : `${e} decisions waiting at this point`;
 }
-function Ev(e, t, n) {
-	let r = e.records.length, i = t.projection, a = em(i, n), o = e.timeline[t.cursor - 1];
+function Av(e, t, n) {
+	let r = e.records.length, i = t.projection, a = im(i, n), o = e.timeline[t.cursor - 1];
 	return {
-		statusText: hv(t.status, t.cursor, r),
-		positionText: nh(e, t.cursor),
-		totalText: fv(r),
-		currentText: t.cursor <= 0 || o === void 0 ? uv : `${o.actorLabel}: ${o.summary}`,
+		statusText: yv(t.status, t.cursor, r),
+		positionText: oh(e, t.cursor),
+		totalText: gv(r),
+		currentText: t.cursor <= 0 || o === void 0 ? mv : `${o.actorLabel}: ${o.summary}`,
 		phases: a === null ? [] : a.phases.map((e) => ({
 			phase: e.phase,
 			status: e.status,
 			door: e.door.status,
-			text: `${jo[e.phase]}: ${Mo[e.status]}. ${No[e.door.status]}.`
+			text: `${Po[e.phase]}: ${Fo[e.status]}. ${Io[e.door.status]}.`
 		})),
 		ghosts: i.ghosts.filter((e) => e.mansion_id === n && e.ghost_id !== "house-operator").map((e) => ({
 			ghostId: e.ghost_id,
 			state: e.state,
-			text: `${Zr(e.ghost_id)}: ${Gr[e.state]}`
+			text: `${ei(e.ghost_id)}: ${Jr[e.state]}`
 		})),
-		waitingText: Tv(a?.waitingCount ?? 0)
+		waitingText: kv(a?.waitingCount ?? 0)
 	};
 }
-function Dv(e) {
+function jv(e) {
 	return e.line === void 0 ? e.safeDetail : `Line ${e.line}: ${e.safeDetail}`;
 }
-function Ov(e, t) {
+function Mv(e, t) {
 	let n = [
 		...t.commandError === null ? [] : [t.commandError.safeDetail],
-		...e.diagnostics.map(Dv),
-		...t.projection.diagnostics.map(Dv)
+		...e.diagnostics.map(jv),
+		...t.projection.diagnostics.map(jv)
 	], r = Array.from(new Set(n)), i = r.slice(0, 20), a = r.length - i.length;
 	return {
 		rows: i.map((e, t) => ({
@@ -14771,9 +14760,9 @@ function Ov(e, t) {
 	};
 }
 // src/rooms/attic/attic-styles.ts
-var kv = "\n.hh-attic { display: grid; gap: 14px; min-width: 0; }\n.hh-attic h4 { margin: 0 0 6px; font-size: 0.9375rem; }\n.hh-attic p { margin: 0; overflow-wrap: anywhere; }\n.hh-attic-section { min-width: 0; display: grid; gap: 8px; }\n.hh-attic-note { display: flex; align-items: flex-start; gap: 6px; min-width: 0; padding: 8px 10px;\n  border: 1px solid var(--hh-border, currentColor); border-left-width: 6px; border-left-style: double; border-radius: 6px;\n  background: var(--hh-surface, transparent); }\n.hh-attic-note svg, .hh-attic-line svg { flex: none; margin-top: 2px; }\n.hh-attic-line { display: flex; align-items: flex-start; gap: 6px; min-width: 0; }\n.hh-attic-status { font-weight: 600; }\n.hh-attic-muted { color: var(--hh-text-muted, inherit); }\n.hh-attic-buttons { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; min-width: 0; }\n.hh-attic-button { display: inline-flex; align-items: center; gap: 6px; min-width: 0; max-width: 100%; min-height: 2.25rem;\n  font: inherit; text-align: left; color: var(--hh-text, inherit); background: var(--hh-surface-raised, transparent);\n  border: 1px solid var(--hh-border, currentColor); border-radius: 6px; padding: 6px 12px; cursor: pointer; }\n.hh-attic-button[data-variant='primary'] { color: var(--hh-primary-text, inherit); background: var(--hh-primary, transparent);\n  border-width: 2px; font-weight: 600; }\n.hh-attic-button[aria-disabled='true'] { cursor: not-allowed; border-style: dashed; color: var(--hh-text-muted, inherit);\n  background: var(--hh-surface, transparent); font-weight: 400; }\n.hh-attic-button:focus-visible, .hh-attic-range:focus-visible, .hh-attic-speed input:focus-visible,\n.hh-attic-timeline:focus-visible { outline: 2px solid var(--hh-focus, currentColor); outline-offset: 2px; }\n.hh-attic-reasons { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; font-size: 0.875rem;\n  color: var(--hh-text-muted, inherit); }\n.hh-attic-speed { border: 1px solid var(--hh-border-soft, currentColor); border-radius: 6px; margin: 0; padding: 6px 10px;\n  display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: center; min-width: 0; }\n.hh-attic-speed legend { display: inline-flex; align-items: center; gap: 6px; padding: 0 4px; }\n.hh-attic-speed label { display: inline-flex; align-items: center; gap: 4px; min-height: 2rem; cursor: pointer; }\n.hh-attic-speed input:checked + span { font-weight: 700; text-decoration: underline; }\n.hh-attic-seek { display: grid; gap: 4px; min-width: 0; }\n.hh-attic-range { width: 100%; min-width: 0; margin: 0; accent-color: var(--hh-primary, auto); }\n.hh-attic-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; min-width: 0; }\n.hh-attic-timeline { max-height: 18rem; overflow-y: auto; min-width: 0; padding: 4px;\n  border: 1px solid var(--hh-border-soft, currentColor); border-radius: 6px; }\n.hh-attic-entries { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; min-width: 0; }\n.hh-attic-entry { display: grid; grid-template-columns: 1.25rem 2.5rem minmax(0, 1fr); column-gap: 6px; align-items: start;\n  padding: 4px 6px; border: 1px solid transparent; border-left: 4px solid transparent; border-radius: 4px; }\n.hh-attic-entry[data-played='false'] { color: var(--hh-text-muted, inherit); border-left: 4px dotted var(--hh-border-soft, currentColor); }\n.hh-attic-entry[data-played='true'] { border-left: 4px solid var(--hh-border, currentColor); }\n.hh-attic-entry[aria-current='step'] { font-weight: 700; border: 2px solid var(--hh-border, currentColor);\n  border-left: 6px double var(--hh-accent, currentColor); background: var(--hh-surface-raised, transparent); }\n.hh-attic-entry-mark svg { color: var(--hh-accent, currentColor); }\n.hh-attic-entry-number { font-variant-numeric: tabular-nums; }\n.hh-attic-entry-now { display: block; font-size: 0.8125rem; }\n.hh-attic-diagnostics li { display: flex; align-items: flex-start; gap: 6px; padding: 6px 8px;\n  border: 1px dashed var(--hh-border, currentColor); border-left: 4px solid var(--hh-danger, currentColor); border-radius: 6px; }\n.hh-attic-diagnostics svg { flex: none; margin-top: 2px; color: var(--hh-danger, currentColor); }\n@media (prefers-reduced-motion: no-preference) {\n  .hh-attic[data-motion='low-frequency'] .hh-attic-entry { transition: background-color 0.4s ease-out; }\n}\n.hh-attic[data-motion='none'] *, .hh-attic:not([data-motion]) * { animation: none !important; transition: none !important; }\n@media (prefers-reduced-motion: reduce) {\n  .hh-attic * { animation: none !important; transition: none !important; }\n}\n.hh-attic-own { border: 2px dashed currentColor; border-radius: 10px; padding: 10px 12px; }\n.hh-attic-own[data-over='true'] { border-style: solid; }\n.hh-attic-own p { margin: 4px 0; }\n.hh-attic-own-choose { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; cursor: pointer; }\n.hh-attic-own-choose input { font: inherit; }\n.hh-attic-own-choose input:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }\n.hh-attic-own-refusal { font-weight: 700; }\n";
+var Nv = "\n.hh-attic { display: grid; gap: 14px; min-width: 0; }\n.hh-attic h4 { margin: 0 0 6px; font-size: 0.9375rem; }\n.hh-attic p { margin: 0; overflow-wrap: anywhere; }\n.hh-attic-section { min-width: 0; display: grid; gap: 8px; }\n.hh-attic-note { display: flex; align-items: flex-start; gap: 6px; min-width: 0; padding: 8px 10px;\n  border: 1px solid var(--hh-border, currentColor); border-left-width: 6px; border-left-style: double; border-radius: 6px;\n  background: var(--hh-surface, transparent); }\n.hh-attic-note svg, .hh-attic-line svg { flex: none; margin-top: 2px; }\n.hh-attic-line { display: flex; align-items: flex-start; gap: 6px; min-width: 0; }\n.hh-attic-status { font-weight: 600; }\n.hh-attic-muted { color: var(--hh-text-muted, inherit); }\n.hh-attic-buttons { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; min-width: 0; }\n.hh-attic-button { display: inline-flex; align-items: center; gap: 6px; min-width: 0; max-width: 100%; min-height: 2.25rem;\n  font: inherit; text-align: left; color: var(--hh-text, inherit); background: var(--hh-surface-raised, transparent);\n  border: 1px solid var(--hh-border, currentColor); border-radius: 6px; padding: 6px 12px; cursor: pointer; }\n.hh-attic-button[data-variant='primary'] { color: var(--hh-primary-text, inherit); background: var(--hh-primary, transparent);\n  border-width: 2px; font-weight: 600; }\n.hh-attic-button[aria-disabled='true'] { cursor: not-allowed; border-style: dashed; color: var(--hh-text-muted, inherit);\n  background: var(--hh-surface, transparent); font-weight: 400; }\n.hh-attic-button:focus-visible, .hh-attic-range:focus-visible, .hh-attic-speed input:focus-visible,\n.hh-attic-timeline:focus-visible { outline: 2px solid var(--hh-focus, currentColor); outline-offset: 2px; }\n.hh-attic-reasons { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; font-size: 0.875rem;\n  color: var(--hh-text-muted, inherit); }\n.hh-attic-speed { border: 1px solid var(--hh-border-soft, currentColor); border-radius: 6px; margin: 0; padding: 6px 10px;\n  display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: center; min-width: 0; }\n.hh-attic-speed legend { display: inline-flex; align-items: center; gap: 6px; padding: 0 4px; }\n.hh-attic-speed label { display: inline-flex; align-items: center; gap: 4px; min-height: 2rem; cursor: pointer; }\n.hh-attic-speed input:checked + span { font-weight: 700; text-decoration: underline; }\n.hh-attic-seek { display: grid; gap: 4px; min-width: 0; }\n.hh-attic-range { width: 100%; min-width: 0; margin: 0; accent-color: var(--hh-primary, auto); }\n.hh-attic-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; min-width: 0; }\n.hh-attic-timeline { max-height: 18rem; overflow-y: auto; min-width: 0; padding: 4px;\n  border: 1px solid var(--hh-border-soft, currentColor); border-radius: 6px; }\n.hh-attic-entries { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; min-width: 0; }\n.hh-attic-entry { display: grid; grid-template-columns: 1.25rem 2.5rem minmax(0, 1fr); column-gap: 6px; align-items: start;\n  padding: 4px 6px; border: 1px solid transparent; border-left: 4px solid transparent; border-radius: 4px; }\n.hh-attic-entry[data-played='false'] { color: var(--hh-text-muted, inherit); border-left: 4px dotted var(--hh-border-soft, currentColor); }\n.hh-attic-entry[data-played='true'] { border-left: 4px solid var(--hh-border, currentColor); }\n.hh-attic-entry[aria-current='step'] { font-weight: 700; border: 2px solid var(--hh-border, currentColor);\n  border-left: 6px double var(--hh-accent, currentColor); background: var(--hh-surface-raised, transparent); }\n.hh-attic-entry-mark svg { color: var(--hh-accent, currentColor); }\n.hh-attic-entry-number { font-variant-numeric: tabular-nums; }\n.hh-attic-entry-now { display: block; font-size: 0.8125rem; }\n.hh-attic-diagnostics li { display: flex; align-items: flex-start; gap: 6px; padding: 6px 8px;\n  border: 1px dashed var(--hh-border, currentColor); border-left: 4px solid var(--hh-danger, currentColor); border-radius: 6px; }\n.hh-attic-diagnostics svg { flex: none; margin-top: 2px; color: var(--hh-danger, currentColor); }\n@media (prefers-reduced-motion: no-preference) {\n  .hh-attic[data-motion='low-frequency'] .hh-attic-entry { transition: background-color 0.4s ease-out; }\n}\n.hh-attic[data-motion='none'] *, .hh-attic:not([data-motion]) * { animation: none !important; transition: none !important; }\n@media (prefers-reduced-motion: reduce) {\n  .hh-attic * { animation: none !important; transition: none !important; }\n}\n.hh-attic-own { border: 2px dashed currentColor; border-radius: 10px; padding: 10px 12px; }\n.hh-attic-own[data-over='true'] { border-style: solid; }\n.hh-attic-own p { margin: 4px 0; }\n.hh-attic-own-choose { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; cursor: pointer; }\n.hh-attic-own-choose input { font: inherit; }\n.hh-attic-own-choose input:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }\n.hh-attic-own-refusal { font-weight: 700; }\n";
 // src/rooms/attic/ReplayControls.tsx
-function Av({ transport: e, speed: t, cursor: n, total: r, positionText: a, onPlay: o, onRestart: s, onPrevious: c, onNext: l, onSeek: u, onSpeed: d }) {
+function Pv({ transport: e, speed: t, cursor: n, total: r, positionText: a, onPlay: o, onRestart: s, onPrevious: c, onNext: l, onSeek: u, onSpeed: d }) {
 	let f = i(), p = (e) => `${f}-${e}-reason`, m = (e, t) => t.enabled ? void 0 : p(e), h = [
 		[
 			"play",
@@ -14875,7 +14864,7 @@ function Av({ transport: e, speed: t, cursor: n, total: r, positionText: a, onPl
 				children: [/* @__PURE__ */ R("legend", { children: [/* @__PURE__ */ L(T, {
 					size: 16,
 					"aria-hidden": !0
-				}), "Playback speed"] }), mv.map((e) => /* @__PURE__ */ R("label", { children: [/* @__PURE__ */ L("input", {
+				}), "Playback speed"] }), vv.map((e) => /* @__PURE__ */ R("label", { children: [/* @__PURE__ */ L("input", {
 					type: "radio",
 					name: `${f}-speed`,
 					value: e.speed,
@@ -14916,14 +14905,14 @@ function Av({ transport: e, speed: t, cursor: n, total: r, positionText: a, onPl
 	});
 }
 // src/rooms/attic/ReplayDiagnostics.tsx
-function jv({ diagnostics: e }) {
+function Fv({ diagnostics: e }) {
 	return e.rows.length === 0 ? /* @__PURE__ */ R("p", {
 		className: "hh-attic-line hh-attic-muted",
 		"data-attic": "diagnostics-empty",
 		children: [/* @__PURE__ */ L(_, {
 			size: 16,
 			"aria-hidden": !0
-		}), /* @__PURE__ */ L("span", { children: lv })]
+		}), /* @__PURE__ */ L("span", { children: pv })]
 	}) : /* @__PURE__ */ R("div", {
 		className: "hh-attic-section",
 		"data-attic": "diagnostics",
@@ -14940,13 +14929,13 @@ function jv({ diagnostics: e }) {
 	});
 }
 // src/rooms/attic/ReplaySummary.tsx
-function Mv({ status: e }) {
+function Iv({ status: e }) {
 	return L(e === "playing" ? P : e === "complete" ? _ : oe, {
 		size: 16,
 		"aria-hidden": !0
 	});
 }
-function Nv({ summary: e, status: t }) {
+function Lv({ summary: e, status: t }) {
 	return /* @__PURE__ */ R("div", {
 		className: "hh-attic-section",
 		"data-attic": "summary",
@@ -14954,7 +14943,7 @@ function Nv({ summary: e, status: t }) {
 			/* @__PURE__ */ R("p", {
 				className: "hh-attic-line hh-attic-status",
 				"data-status": t,
-				children: [/* @__PURE__ */ L(Mv, { status: t }), /* @__PURE__ */ R("span", { children: [
+				children: [/* @__PURE__ */ L(Iv, { status: t }), /* @__PURE__ */ R("span", { children: [
 					e.statusText,
 					". ",
 					e.positionText,
@@ -15006,7 +14995,7 @@ function Nv({ summary: e, status: t }) {
 	});
 }
 // src/rooms/attic/ReplayTimeline.tsx
-function Pv({ rows: e, label: t }) {
+function Rv({ rows: e, label: t }) {
 	let n = c(null), i = e.find((e) => e.current)?.key ?? null;
 	return r(() => {
 		let e = n.current;
@@ -15022,7 +15011,7 @@ function Pv({ rows: e, label: t }) {
 	}, [i]), e.length === 0 ? /* @__PURE__ */ L("p", {
 		className: "hh-attic-muted",
 		"data-attic": "timeline-empty",
-		children: cv
+		children: fv
 	}) : /* @__PURE__ */ L("div", {
 		className: "hh-attic-timeline",
 		role: "group",
@@ -15052,7 +15041,7 @@ function Pv({ rows: e, label: t }) {
 					/* @__PURE__ */ R("span", { children: [
 						e.current ? /* @__PURE__ */ R("span", {
 							className: "hh-attic-entry-now",
-							children: [dv, ". "]
+							children: [hv, ". "]
 						}) : null,
 						e.actor,
 						": ",
@@ -15064,14 +15053,14 @@ function Pv({ rows: e, label: t }) {
 	});
 }
 // src/rooms/attic/use-attic-panel.ts
-function Fv(e, t, { watch: i = !0, refresh: a = !0 } = {}) {
+function zv(e, t, { watch: i = !0, refresh: a = !0 } = {}) {
 	let { model: s, state: l, command: u, mansionId: d, source: f, mode: p, refresh: m } = e, h = c(t);
 	h.current = t;
-	let g = o(() => xv(s, l), [s, l]), _ = o(() => Ev(s, l, d), [
+	let g = o(() => Tv(s, l), [s, l]), _ = o(() => Av(s, l, d), [
 		s,
 		l,
 		d
-	]), v = o(() => Sv(s, l.cursor), [s, l.cursor]), y = o(() => Ov(s, l), [s, l]), b = c({
+	]), v = o(() => Ev(s, l.cursor), [s, l.cursor]), y = o(() => Mv(s, l), [s, l]), b = c({
 		transport: g,
 		model: s
 	});
@@ -15084,7 +15073,7 @@ function Fv(e, t, { watch: i = !0, refresh: a = !0 } = {}) {
 		e.play.enabled && u({ kind: e.playAction });
 	}, [u]), S = n(() => {
 		let { transport: e, model: t } = b.current;
-		e.restart.enabled && (u({ kind: "restart" }), h.current(Cv(t, 0)));
+		e.restart.enabled && (u({ kind: "restart" }), h.current(Dv(t, 0)));
 	}, [u]), C = n((e) => {
 		let { transport: t, model: n } = b.current;
 		if (!t[e].enabled) return;
@@ -15092,7 +15081,7 @@ function Fv(e, t, { watch: i = !0, refresh: a = !0 } = {}) {
 		u({
 			kind: "seek",
 			cursor: r
-		}), h.current(Cv(n, r));
+		}), h.current(Dv(n, r));
 	}, [u]), w = n(() => C("previous"), [C]), T = n(() => C("next"), [C]), E = n((e) => u({
 		kind: "seek",
 		cursor: e
@@ -15102,7 +15091,7 @@ function Fv(e, t, { watch: i = !0, refresh: a = !0 } = {}) {
 	}), [u]), O = c(l.status);
 	r(() => {
 		let e = O.current;
-		O.current = l.status, i && e === "playing" && l.status === "complete" && h.current(wv(s));
+		O.current = l.status, i && e === "playing" && l.status === "complete" && h.current(Ov(s));
 	}, [
 		l.status,
 		s,
@@ -15110,7 +15099,7 @@ function Fv(e, t, { watch: i = !0, refresh: a = !0 } = {}) {
 	]), r(() => {
 		i && l.commandError !== null && h.current(l.commandError.safeDetail);
 	}, [l.commandError, i]), r(() => {
-		i && f === "error" && h.current(Hp.fixture_unavailable);
+		i && f === "error" && h.current(Kp.fixture_unavailable);
 	}, [f, i]);
 	let k = c(m);
 	return k.current = m, r(() => {
@@ -15136,8 +15125,8 @@ function Fv(e, t, { watch: i = !0, refresh: a = !0 } = {}) {
 	};
 }
 // src/rooms/attic/AtticPanel.tsx
-function Iv({ replay: e, onAnnounce: t, motion: n = "none", watch: r = !0 }) {
-	let a = Fv(e, t, { watch: r }), o = i(), s = e.source === "loading" && a.total === 0;
+function Bv({ replay: e, onAnnounce: t, motion: n = "none", watch: r = !0 }) {
+	let a = zv(e, t, { watch: r }), o = i(), s = e.source === "loading" && a.total === 0;
 	return /* @__PURE__ */ R("div", {
 		className: "hh-attic",
 		"data-attic-panel": !0,
@@ -15145,7 +15134,7 @@ function Iv({ replay: e, onAnnounce: t, motion: n = "none", watch: r = !0 }) {
 		"data-motion": n,
 		"data-source": e.source,
 		children: [
-			/* @__PURE__ */ L("style", { children: kv }),
+			/* @__PURE__ */ L("style", { children: Nv }),
 			/* @__PURE__ */ R("p", {
 				className: "hh-attic-note",
 				"data-attic": "mode",
@@ -15155,7 +15144,7 @@ function Iv({ replay: e, onAnnounce: t, motion: n = "none", watch: r = !0 }) {
 				}) : /* @__PURE__ */ L(k, {
 					size: 16,
 					"aria-hidden": !0
-				}), /* @__PURE__ */ L("span", { children: e.readOnly ? av : ov })]
+				}), /* @__PURE__ */ L("span", { children: e.readOnly ? lv : uv })]
 			}),
 			s ? /* @__PURE__ */ R("p", {
 				className: "hh-attic-line hh-attic-muted",
@@ -15163,16 +15152,16 @@ function Iv({ replay: e, onAnnounce: t, motion: n = "none", watch: r = !0 }) {
 				children: [/* @__PURE__ */ L(ce, {
 					size: 16,
 					"aria-hidden": !0
-				}), /* @__PURE__ */ L("span", { children: sv })]
+				}), /* @__PURE__ */ L("span", { children: dv })]
 			}) : null,
-			e.mode === "replay" ? /* @__PURE__ */ L(iv, { onAnnounce: t }) : null,
+			e.mode === "replay" ? /* @__PURE__ */ L(cv, { onAnnounce: t }) : null,
 			/* @__PURE__ */ R("section", {
 				className: "hh-attic-section",
 				"aria-labelledby": `${o}-controls`,
 				children: [/* @__PURE__ */ L("h4", {
 					id: `${o}-controls`,
 					children: "Playback"
-				}), /* @__PURE__ */ L(Av, {
+				}), /* @__PURE__ */ L(Pv, {
 					transport: a.transport,
 					speed: a.speed,
 					cursor: a.cursor,
@@ -15192,7 +15181,7 @@ function Iv({ replay: e, onAnnounce: t, motion: n = "none", watch: r = !0 }) {
 				children: [/* @__PURE__ */ L("h4", {
 					id: `${o}-summary`,
 					children: "The house at this point"
-				}), /* @__PURE__ */ L(Nv, {
+				}), /* @__PURE__ */ L(Lv, {
 					summary: a.summary,
 					status: e.state.status
 				})]
@@ -15203,7 +15192,7 @@ function Iv({ replay: e, onAnnounce: t, motion: n = "none", watch: r = !0 }) {
 				children: [/* @__PURE__ */ L("h4", {
 					id: `${o}-timeline`,
 					children: "Timeline"
-				}), /* @__PURE__ */ L(Pv, {
+				}), /* @__PURE__ */ L(Rv, {
 					rows: a.rows,
 					label: "Timeline of recorded events"
 				})]
@@ -15214,14 +15203,14 @@ function Iv({ replay: e, onAnnounce: t, motion: n = "none", watch: r = !0 }) {
 				children: [/* @__PURE__ */ L("h4", {
 					id: `${o}-diagnostics`,
 					children: "Diagnostics"
-				}), /* @__PURE__ */ L(jv, { diagnostics: a.diagnostics })]
+				}), /* @__PURE__ */ L(Fv, { diagnostics: a.diagnostics })]
 			})
 		]
 	});
 }
 // src/rooms/attic/ReplayBar.tsx
-var Lv = "Recording playback";
-function Rv({ panel: e, readOnlyText: t, startText: n }) {
+var Vv = "Recording playback";
+function Hv({ panel: e, readOnlyText: t, startText: n }) {
 	let r = i(), { transport: a } = e, o = (e, t) => t.enabled ? null : /* @__PURE__ */ L("span", {
 		className: "hh-ui-visually-hidden",
 		id: `${r}-${e}`,
@@ -15230,7 +15219,7 @@ function Rv({ panel: e, readOnlyText: t, startText: n }) {
 	return /* @__PURE__ */ R("div", {
 		className: "hh-ui-replay-bar",
 		role: "group",
-		"aria-label": Lv,
+		"aria-label": Vv,
 		"data-replay-bar": !0,
 		children: [
 			/* @__PURE__ */ R("span", {
@@ -15305,7 +15294,7 @@ function Rv({ panel: e, readOnlyText: t, startText: n }) {
 				children: [/* @__PURE__ */ R("legend", { children: [/* @__PURE__ */ L(T, {
 					size: 14,
 					"aria-hidden": !0
-				}), " Speed"] }), mv.map((t) => /* @__PURE__ */ R("label", { children: [/* @__PURE__ */ L("input", {
+				}), " Speed"] }), vv.map((t) => /* @__PURE__ */ R("label", { children: [/* @__PURE__ */ L("input", {
 					type: "radio",
 					name: `${r}-speed`,
 					value: t.speed,
@@ -15329,7 +15318,7 @@ function Rv({ panel: e, readOnlyText: t, startText: n }) {
 	});
 }
 // src/core/practice.ts
-var zv = {
+var Uv = {
 	door_approved: {
 		subject: "door",
 		outcome: "approved"
@@ -15346,24 +15335,24 @@ var zv = {
 		subject: "risky",
 		outcome: "rejected"
 	}
-}, Bv = {
+}, Wv = {
 	requirements: "what it must do (the requirements)",
 	design: "how it will be built (the design)",
 	tasks: "the to-do list (the tasks)",
 	implementation: "the finished work"
-}, Vv = "Practice. Nothing real changes: this is a recording.";
-function Hv(e) {
+}, Gv = "Practice. Nothing real changes: this is a recording.";
+function Kv(e) {
 	let [t, n] = e.split("-"), r = t.charAt(0).toUpperCase() + t.slice(1);
 	return n === void 0 ? `the ${r}` : `${r} ${n}`;
 }
-function Uv(e, t) {
+function qv(e, t) {
 	let n = (e.find((e) => e.kind === "risky_action_proposed" && e.data.proposal_id === t)?.data.descriptor)?.arguments?.argv;
 	return Array.isArray(n) && n.every((e) => typeof e == "string") ? n.join(" ") : null;
 }
-function Wv(e) {
-	let t = e.map(kp).filter((e) => e !== null && typeof e != "string"), n = /* @__PURE__ */ new Set(), r = [];
+function Jv(e) {
+	let t = e.map(Np).filter((e) => e !== null && typeof e != "string"), n = /* @__PURE__ */ new Set(), r = [];
 	for (let e of t) {
-		let i = zv[e.kind], a = e.data.proposal_id;
+		let i = Uv[e.kind], a = e.data.proposal_id;
 		if (!(i === void 0 || typeof a != "string" || n.has(a))) {
 			if (n.add(a), i.subject === "door") {
 				let t = typeof e.data.phase == "string" ? e.data.phase : "";
@@ -15373,19 +15362,19 @@ function Wv(e) {
 					subject: "door",
 					proposalId: a,
 					ghostId: e.ghostId,
-					question: `${Hv(e.ghostId).replace(/^the/, "The")} has finished ${Bv[t] ?? "its work"}. Do you open the door?`,
+					question: `${Kv(e.ghostId).replace(/^the/, "The")} has finished ${Wv[t] ?? "its work"}. Do you open the door?`,
 					choices: ["Open the door", "Keep it shut and ask for changes"],
 					recorded: i.outcome
 				});
 			} else {
-				let n = Uv(t, a);
+				let n = qv(t, a);
 				r.push({
 					sequence: e.sequence,
 					eventId: e.eventId,
 					subject: "risky",
 					proposalId: a,
 					ghostId: e.ghostId,
-					question: `${Hv(e.ghostId).replace(/^the/, "The")} wants to run ${n === null ? "a command" : `"${n}"`}. Do you let it?`,
+					question: `${Kv(e.ghostId).replace(/^the/, "The")} wants to run ${n === null ? "a command" : `"${n}"`}. Do you let it?`,
 					choices: ["Allow it, once", "Refuse it"],
 					recorded: i.outcome
 				});
@@ -15394,17 +15383,17 @@ function Wv(e) {
 	}
 	return r.sort((e, t) => e.sequence - t.sequence);
 }
-function Gv(e, t) {
+function Yv(e, t) {
 	return {
 		meaning: e.subject === "door" ? t === "approved" ? "Opening the door accepts this version, and the next room may start." : "Keeping it shut stops the next room from starting until the work is changed and shown to you again." : t === "approved" ? "Allowing it lets this exact command run once, in the folder it named, and nothing else." : "Refusing it means nothing runs. The ghost goes back to its work and may ask again for less.",
 		recorded: e.recorded === "approved" ? `In the recording, the owner chose: ${e.choices[0].toLowerCase()}.` : `In the recording, the owner chose: ${e.choices[1].toLowerCase()}.`,
 		same: t === e.recorded
 	};
 }
-function Kv(e) {
+function Xv(e) {
 	let t = new Set(e.map((e) => e.scope.ghost_id).filter((e) => e !== "")), n = 0;
 	for (let t of e) {
-		let e = kp(t);
+		let e = Np(t);
 		e !== null && typeof e != "string" && (e.kind === "phase_output_ready" || e.kind === "risky_action_proposed") && (n += 1);
 	}
 	return {
@@ -15413,14 +15402,14 @@ function Kv(e) {
 		waits: n
 	};
 }
-function qv(e) {
+function Zv(e) {
 	let t = (e, t, n) => `${e} ${e === 1 ? t : n}`;
 	return `This recording holds ${t(e.records, "event", "events")} from ${t(e.ghosts, "ghost", "ghosts")}. The house stopped and waited for a person ${t(e.waits, "time", "times")}.`;
 }
 // src/rooms/attic/PracticeBoard.tsx
-var Jv = "Practice: you decide", Yv = "The recording stops wherever its owner had to decide, and the Warden asks you instead. Nothing real changes.", Xv = "Practice is on. Press Play: the recording stops at the next decision.", Zv = "You have made every decision in this recording.";
-function Qv({ practice: e }) {
-	let t = i(), { on: n, asking: r } = e, a = n && r === null ? e.made > 0 && e.made === e.total ? Zv : Xv : null;
+var Qv = "Practice: you decide", $v = "The recording stops wherever its owner had to decide, and the Warden asks you instead. Nothing real changes.", ey = "Practice is on. Press Play: the recording stops at the next decision.", ty = "You have made every decision in this recording.";
+function ny({ practice: e }) {
+	let t = i(), { on: n, asking: r } = e, a = n && r === null ? e.made > 0 && e.made === e.total ? ty : ey : null;
 	return /* @__PURE__ */ R("section", {
 		className: "hh-ui-practice",
 		"aria-label": "Practice",
@@ -15429,7 +15418,7 @@ function Qv({ practice: e }) {
 			/* @__PURE__ */ L("p", {
 				className: "hh-ui-practice-numbers",
 				"data-log-numbers": !0,
-				children: qv(e.numbers)
+				children: Zv(e.numbers)
 			}),
 			/* @__PURE__ */ R("button", {
 				type: "button",
@@ -15443,7 +15432,7 @@ function Qv({ practice: e }) {
 						size: 16,
 						"aria-hidden": !0
 					}),
-					Jv,
+					Qv,
 					": ",
 					n ? "on" : "off"
 				]
@@ -15451,7 +15440,7 @@ function Qv({ practice: e }) {
 			/* @__PURE__ */ L("span", {
 				className: "hh-ui-visually-hidden",
 				id: t,
-				children: Yv
+				children: $v
 			}),
 			a === null ? null : /* @__PURE__ */ L("p", {
 				className: "hh-ui-practice-state",
@@ -15461,7 +15450,7 @@ function Qv({ practice: e }) {
 		]
 	});
 }
-function $v({ practice: e }) {
+function ry({ practice: e }) {
 	let { asking: t, answer: n } = e;
 	return t === null ? null : /* @__PURE__ */ R("div", {
 		className: "hh-guide-balloon hh-practice-balloon",
@@ -15472,7 +15461,7 @@ function $v({ practice: e }) {
 			children: [/* @__PURE__ */ L("p", {
 				className: "hh-guide-note",
 				"data-practice-note": !0,
-				children: Vv
+				children: Gv
 			}), /* @__PURE__ */ L("p", {
 				className: "hh-guide-status hh-ui-practice-question",
 				"data-guide-text": !0,
@@ -15514,8 +15503,8 @@ function $v({ practice: e }) {
 	});
 }
 // src/rooms/attic/use-practice.ts
-function ey(e) {
-	let t = e.model.records, i = o(() => Wv(t), [t]), a = o(() => Kv(t), [t]), [s, u] = l(!1), [d, f] = l(/* @__PURE__ */ new Set()), [p, m] = l(null), { cursor: h, status: g } = e.state, _ = e.command, v = c(h);
+function iy(e) {
+	let t = e.model.records, i = o(() => Jv(t), [t]), a = o(() => Xv(t), [t]), [s, u] = l(!1), [d, f] = l(/* @__PURE__ */ new Set()), [p, m] = l(null), { cursor: h, status: g } = e.state, _ = e.command, v = c(h);
 	r(() => {
 		let e = v.current;
 		if (v.current = h, !s) return;
@@ -15552,7 +15541,7 @@ function ey(e) {
 		_
 	]);
 	let S = n((e) => {
-		y !== null && m(Gv(y, e));
+		y !== null && m(Yv(y, e));
 	}, [y]), C = n(() => {
 		y !== null && (f((e) => /* @__PURE__ */ new Set([...e, y.eventId])), m(null), v.current = y.sequence, _({
 			kind: "seek",
@@ -15572,7 +15561,7 @@ function ey(e) {
 	};
 }
 // src/rooms/house/RoomNote.tsx
-function ty({ room: e }) {
+function ay({ room: e }) {
 	if (e.diagnostic === null) return null;
 	let t = e.integrity === "valid" ? e.locked ? "locked" : e.readOnly ? "read-only" : "diagnostic" : "diagnostic";
 	return /* @__PURE__ */ R("p", {
@@ -15586,7 +15575,7 @@ function ty({ room: e }) {
 	});
 }
 // src/rooms/house/DecisionButtons.tsx
-function ny({ approve: e, reject: t, busy: n, subject: r, describedBy: i, proposalId: a, onSend: o }) {
+function oy({ approve: e, reject: t, busy: n, subject: r, describedBy: i, proposalId: a, onSend: o }) {
 	return /* @__PURE__ */ R("div", {
 		className: "hh-decide",
 		"aria-busy": n,
@@ -15622,7 +15611,7 @@ function ny({ approve: e, reject: t, busy: n, subject: r, describedBy: i, propos
 	});
 }
 // src/rooms/house/DoorPanel.tsx
-function ry({ view: e, onSend: t }) {
+function sy({ view: e, onSend: t }) {
 	let n = i(), r = i(), a = e.state === "pending";
 	return /* @__PURE__ */ R("article", {
 		className: "hh-proposal",
@@ -15668,7 +15657,7 @@ function ry({ view: e, onSend: t }) {
 						"aria-hidden": !0
 					}), /* @__PURE__ */ L("span", { children: e.blockedText })]
 				}),
-				/* @__PURE__ */ L(ny, {
+				/* @__PURE__ */ L(oy, {
 					approve: e.approve,
 					reject: e.reject,
 					busy: e.busy,
@@ -15695,7 +15684,7 @@ function ry({ view: e, onSend: t }) {
 var $ = {
 	size: 16,
 	"aria-hidden": !0
-}, iy = {
+}, cy = {
 	not_started: "plain",
 	ready: "plain",
 	starting: "plain",
@@ -15705,12 +15694,12 @@ var $ = {
 	approved: "ok",
 	failed: "attention",
 	done: "ok"
-}, ay = {
+}, ly = {
 	sealed: "plain",
 	waiting: "attention",
 	open: "ok",
 	rejected: "attention"
-}, oy = {
+}, uy = {
 	idle: "plain",
 	working: "plain",
 	waiting: "attention",
@@ -15718,7 +15707,7 @@ var $ = {
 	failed: "attention",
 	done: "ok"
 };
-function sy({ status: e }) {
+function dy({ status: e }) {
 	switch (e) {
 		case "not_started": return /* @__PURE__ */ L(v, { ...$ });
 		case "ready": return /* @__PURE__ */ L(P, { ...$ });
@@ -15734,7 +15723,7 @@ function sy({ status: e }) {
 		case "done": return /* @__PURE__ */ L(_, { ...$ });
 	}
 }
-function cy({ status: e }) {
+function fy({ status: e }) {
 	switch (e) {
 		case "sealed": return /* @__PURE__ */ L(N, { ...$ });
 		case "waiting": return /* @__PURE__ */ L(b, { ...$ });
@@ -15742,7 +15731,7 @@ function cy({ status: e }) {
 		case "rejected": return /* @__PURE__ */ L(f, { ...$ });
 	}
 }
-function ly({ state: e }) {
+function py({ state: e }) {
 	switch (e) {
 		case "idle": return /* @__PURE__ */ L(ie, { ...$ });
 		case "working": return /* @__PURE__ */ L(M, {
@@ -15755,7 +15744,7 @@ function ly({ state: e }) {
 		case "done": return /* @__PURE__ */ L(_, { ...$ });
 	}
 }
-function uy({ status: e }) {
+function my({ status: e }) {
 	switch (e) {
 		case "pending": return /* @__PURE__ */ L(A, { ...$ });
 		case "approved":
@@ -15770,7 +15759,7 @@ function uy({ status: e }) {
 	}
 }
 // src/rooms/house/use-revision-request.ts
-function dy(e, t) {
+function hy(e, t) {
 	let [i, a] = l(!1), [o, s] = l(""), [u, d] = l(null), f = c(null), p = c(null), m = c(!1);
 	return r(() => {
 		i && !m.current && p.current?.focus(), !i && m.current && f.current?.focus(), m.current = i;
@@ -15789,7 +15778,7 @@ function dy(e, t) {
 		}, []),
 		submit: n(() => {
 			if (!e.enabled) return;
-			let n = pg(o);
+			let n = _g(o);
 			n.ok ? (t({
 				kind: "send_feedback",
 				phase: e.phase,
@@ -15806,8 +15795,8 @@ function dy(e, t) {
 	};
 }
 // src/rooms/house/RevisionRequest.tsx
-function fy({ view: e, onSend: t }) {
-	let n = dy(e, t), r = i(), a = i(), o = i(), s = i(), c = i();
+function gy({ view: e, onSend: t }) {
+	let n = hy(e, t), r = i(), a = i(), o = i(), s = i(), c = i();
 	return /* @__PURE__ */ R("div", {
 		className: "hh-revision",
 		"data-revision": e.phase,
@@ -15904,7 +15893,7 @@ function fy({ view: e, onSend: t }) {
 	});
 }
 // src/rooms/house/RiskyActionPanel.tsx
-function py({ title: e, lines: t, empty: n }) {
+function _y({ title: e, lines: t, empty: n }) {
 	return /* @__PURE__ */ R(I, { children: [/* @__PURE__ */ L("p", {
 		className: "hh-proposal-group",
 		children: e
@@ -15919,7 +15908,7 @@ function py({ title: e, lines: t, empty: n }) {
 		}, `${e.label}-${t}`))
 	})] });
 }
-function my({ view: e, onSend: t }) {
+function vy({ view: e, onSend: t }) {
 	let n = e.ghostName, r = i(), a = i(), o = e.status === "pending";
 	return /* @__PURE__ */ R("article", {
 		className: "hh-proposal",
@@ -15930,7 +15919,7 @@ function my({ view: e, onSend: t }) {
 		children: [
 			/* @__PURE__ */ R("div", {
 				className: "hh-proposal-head",
-				children: [/* @__PURE__ */ L(uy, { status: e.status }), /* @__PURE__ */ R("h5", {
+				children: [/* @__PURE__ */ L(my, { status: e.status }), /* @__PURE__ */ R("h5", {
 					id: r,
 					children: [
 						n,
@@ -15944,17 +15933,17 @@ function my({ view: e, onSend: t }) {
 				children: e.statusText
 			}),
 			e.complete ? /* @__PURE__ */ R(I, { children: [
-				/* @__PURE__ */ L(py, {
+				/* @__PURE__ */ L(_y, {
 					title: "Scope",
 					lines: e.scope,
 					empty: "No scope."
 				}),
-				/* @__PURE__ */ L(py, {
+				/* @__PURE__ */ L(_y, {
 					title: "Exact arguments",
 					lines: e.arguments,
 					empty: "No arguments."
 				}),
-				/* @__PURE__ */ L(py, {
+				/* @__PURE__ */ L(_y, {
 					title: "Paths it may touch",
 					lines: e.paths,
 					empty: "No paths."
@@ -15977,7 +15966,7 @@ function my({ view: e, onSend: t }) {
 						"aria-hidden": !0
 					}), /* @__PURE__ */ L("span", { children: e.blockedText })]
 				}),
-				/* @__PURE__ */ L(ny, {
+				/* @__PURE__ */ L(oy, {
 					approve: e.approve,
 					reject: e.reject,
 					busy: e.busy,
@@ -15989,20 +15978,20 @@ function my({ view: e, onSend: t }) {
 			] }) : e.outcomeText === null ? null : /* @__PURE__ */ R("p", {
 				className: "hh-proposal-note hh-proposal-outcome",
 				"data-outcome": e.status,
-				children: [/* @__PURE__ */ L(uy, { status: e.status }), /* @__PURE__ */ L("span", { children: e.outcomeText })]
+				children: [/* @__PURE__ */ L(my, { status: e.status }), /* @__PURE__ */ L("span", { children: e.outcomeText })]
 			})
 		]
 	});
 }
 // src/core/markdown-blocks.ts
-var hy = 1500, gy = /* @__PURE__ */ RegExp("[\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f-\\u009f\u2028\u2029\\u202a-\\u202e\\u2066-\\u2069]", "g");
-function _y(e) {
-	return e.replace(/\r\n?/g, "\n").replace(gy, "");
+var yy = 1500, by = /* @__PURE__ */ RegExp("[\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f-\\u009f\u2028\u2029\\u202a-\\u202e\\u2066-\\u2069]", "g");
+function xy(e) {
+	return e.replace(/\r\n?/g, "\n").replace(by, "");
 }
-var vy = /(`[^`\n]+`)|(\*\*[^*\n]+\*\*)|(\*[^*\s][^*\n]*\*)|((?<![A-Za-z0-9_])_(?![\s_])[^_\n]+(?<!\s)_(?![A-Za-z0-9_]))/g;
-function yy(e) {
+var Sy = /(`[^`\n]+`)|(\*\*[^*\n]+\*\*)|(\*[^*\s][^*\n]*\*)|((?<![A-Za-z0-9_])_(?![\s_])[^_\n]+(?<!\s)_(?![A-Za-z0-9_]))/g;
+function Cy(e) {
 	let t = [], n = 0;
-	for (let r of e.matchAll(vy)) {
+	for (let r of e.matchAll(Sy)) {
 		let i = r.index ?? 0;
 		i > n && t.push({
 			kind: "text",
@@ -16025,12 +16014,12 @@ function yy(e) {
 		text: e.slice(n)
 	}), t;
 }
-var by = /^ {0,3}(#{1,6})\s+(.*?)\s*#*\s*$/, xy = /^ {0,3}(`{3,}|~{3,})\s*([A-Za-z0-9_+-]{0,24})/, Sy = /^ {0,3}(?:-{3,}|\*{3,}|_{3,})\s*$/, Cy = /^(\s*)(?:([-*+])|(\d{1,4})[.)])\s+(.*)$/, wy = /^\[( |x|X)\](\*?)\s+(.*)$/, Ty = /^\s*\|.*\|\s*$/;
-function Ey(e, t = hy) {
-	let n = _y(e).split("\n"), r = [], i = [], a = [], o = !1, s = () => {
+var wy = /^ {0,3}(#{1,6})\s+(.*?)\s*#*\s*$/, Ty = /^ {0,3}(`{3,}|~{3,})\s*([A-Za-z0-9_+-]{0,24})/, Ey = /^ {0,3}(?:-{3,}|\*{3,}|_{3,})\s*$/, Dy = /^(\s*)(?:([-*+])|(\d{1,4})[.)])\s+(.*)$/, Oy = /^\[( |x|X)\](\*?)\s+(.*)$/, ky = /^\s*\|.*\|\s*$/;
+function Ay(e, t = yy) {
+	let n = xy(e).split("\n"), r = [], i = [], a = [], o = !1, s = () => {
 		i.length > 0 && (r.push({
 			kind: "paragraph",
-			inlines: yy(i.join(" "))
+			inlines: Cy(i.join(" "))
 		}), i = []), a.length > 0 && (r.push({
 			kind: "list",
 			items: a
@@ -16041,7 +16030,7 @@ function Ey(e, t = hy) {
 			o = !0;
 			break;
 		}
-		let c = n[e], l = xy.exec(c);
+		let c = n[e], l = Ty.exec(c);
 		if (l !== null) {
 			s();
 			let t = [];
@@ -16057,23 +16046,23 @@ function Ey(e, t = hy) {
 			s();
 			continue;
 		}
-		let u = by.exec(c);
+		let u = wy.exec(c);
 		if (u !== null) {
 			s(), r.push({
 				kind: "heading",
 				level: u[1].length,
-				inlines: yy(u[2])
+				inlines: Cy(u[2])
 			});
 			continue;
 		}
-		if (Sy.test(c)) {
+		if (Ey.test(c)) {
 			s(), r.push({ kind: "rule" });
 			continue;
 		}
-		if (Ty.test(c)) {
+		if (ky.test(c)) {
 			s();
 			let t = [c];
-			for (; e + 1 < n.length && Ty.test(n[e + 1]);) e += 1, t.push(n[e]);
+			for (; e + 1 < n.length && ky.test(n[e + 1]);) e += 1, t.push(n[e]);
 			r.push({
 				kind: "code",
 				language: "table",
@@ -16081,20 +16070,20 @@ function Ey(e, t = hy) {
 			});
 			continue;
 		}
-		let d = Cy.exec(c);
+		let d = Dy.exec(c);
 		if (d !== null) {
 			i.length > 0 && s();
-			let e = wy.exec(d[4]);
+			let e = Oy.exec(d[4]);
 			a.push({
 				depth: Math.min(Math.floor(d[1].replace(/\t/g, "  ").length / 2), 5),
 				checked: e === null ? null : e[1] !== " ",
 				optional: e !== null && e[2] === "*",
 				number: d[3] === void 0 ? null : `${d[3]}.`,
-				inlines: yy(e === null ? d[4] : e[3])
+				inlines: Cy(e === null ? d[4] : e[3])
 			});
 		} else c.trimStart().startsWith(">") ? (s(), r.push({
 			kind: "quote",
-			inlines: yy(c.trimStart().replace(/^>\s?/, ""))
+			inlines: Cy(c.trimStart().replace(/^>\s?/, ""))
 		})) : (a.length > 0 && s(), i.push(c.trim()));
 	}
 	return o || s(), {
@@ -16103,7 +16092,7 @@ function Ey(e, t = hy) {
 	};
 }
 // src/components/MarkdownView.tsx
-function Dy({ parts: e }) {
+function jy({ parts: e }) {
 	return /* @__PURE__ */ L(I, { children: e.map((e, t) => {
 		switch (e.kind) {
 			case "code": return /* @__PURE__ */ L("code", { children: e.text }, t);
@@ -16113,7 +16102,7 @@ function Dy({ parts: e }) {
 		}
 	}) });
 }
-function Oy({ item: e }) {
+function My({ item: e }) {
 	return /* @__PURE__ */ R("li", {
 		className: "hh-md-item",
 		style: { marginLeft: `${e.depth * 1.25}rem` },
@@ -16141,7 +16130,7 @@ function Oy({ item: e }) {
 					" "
 				]
 			}),
-			/* @__PURE__ */ L(Dy, { parts: e.inlines }),
+			/* @__PURE__ */ L(jy, { parts: e.inlines }),
 			e.optional ? /* @__PURE__ */ L("span", {
 				"aria-hidden": !0,
 				children: " (optional)"
@@ -16149,27 +16138,27 @@ function Oy({ item: e }) {
 		] })]
 	});
 }
-var ky = 6;
-function Ay(e, t) {
-	return Math.min(ky, e + t - 1);
+var Ny = 6;
+function Py(e, t) {
+	return Math.min(Ny, e + t - 1);
 }
-function jy({ block: e, baseLevel: t }) {
+function Fy({ block: e, baseLevel: t }) {
 	switch (e.kind) {
 		case "heading": return /* @__PURE__ */ L("p", {
 			className: "hh-md-heading",
 			role: "heading",
-			"aria-level": Ay(t, e.level),
+			"aria-level": Py(t, e.level),
 			"data-level": e.level,
-			children: /* @__PURE__ */ L(Dy, { parts: e.inlines })
+			children: /* @__PURE__ */ L(jy, { parts: e.inlines })
 		});
-		case "paragraph": return /* @__PURE__ */ L("p", { children: /* @__PURE__ */ L(Dy, { parts: e.inlines }) });
+		case "paragraph": return /* @__PURE__ */ L("p", { children: /* @__PURE__ */ L(jy, { parts: e.inlines }) });
 		case "quote": return /* @__PURE__ */ L("p", {
 			className: "hh-md-quote",
-			children: /* @__PURE__ */ L(Dy, { parts: e.inlines })
+			children: /* @__PURE__ */ L(jy, { parts: e.inlines })
 		});
 		case "list": return /* @__PURE__ */ L("ul", {
 			className: "hh-md-list",
-			children: e.items.map((e, t) => /* @__PURE__ */ L(Oy, { item: e }, t))
+			children: e.items.map((e, t) => /* @__PURE__ */ L(My, { item: e }, t))
 		});
 		case "code": return /* @__PURE__ */ L("pre", {
 			"data-language": e.language === "" ? void 0 : e.language,
@@ -16178,9 +16167,9 @@ function jy({ block: e, baseLevel: t }) {
 		case "rule": return /* @__PURE__ */ L("hr", {});
 	}
 }
-function My({ text: e, baseLevel: t = 6 }) {
-	let n = o(() => Ey(e), [e]);
-	return /* @__PURE__ */ R(I, { children: [n.blocks.map((e, n) => /* @__PURE__ */ L(jy, {
+function Iy({ text: e, baseLevel: t = 6 }) {
+	let n = o(() => Ay(e), [e]);
+	return /* @__PURE__ */ R(I, { children: [n.blocks.map((e, n) => /* @__PURE__ */ L(Fy, {
 		block: e,
 		baseLevel: t
 	}, n)), n.truncated ? /* @__PURE__ */ L("p", {
@@ -16189,13 +16178,13 @@ function My({ text: e, baseLevel: t = 6 }) {
 	}) : null] });
 }
 // src/components/ArtifactView.tsx
-var Ny = {
+var Ly = {
 	unwritten: "plain",
 	unknown: "plain",
 	valid: "ok",
 	invalid: "attention"
 };
-function Py({ state: e }) {
+function Ry({ state: e }) {
 	let t = {
 		size: 16,
 		"aria-hidden": !0
@@ -16206,7 +16195,7 @@ function Py({ state: e }) {
 		default: return /* @__PURE__ */ L(v, { ...t });
 	}
 }
-function Fy({ view: e }) {
+function zy({ view: e }) {
 	let t = i();
 	return /* @__PURE__ */ R("article", {
 		className: "hh-artifact",
@@ -16234,7 +16223,7 @@ function Fy({ view: e }) {
 				"aria-label": `${e.title} text`,
 				tabIndex: 0,
 				"data-content": "text",
-				children: /* @__PURE__ */ L(My, { text: e.content })
+				children: /* @__PURE__ */ L(Iy, { text: e.content })
 			}),
 			e.doorNote === null ? null : /* @__PURE__ */ R("p", {
 				className: "hh-proposal-note hh-proposal-blocked",
@@ -16246,9 +16235,9 @@ function Fy({ view: e }) {
 			}),
 			/* @__PURE__ */ R("p", {
 				className: "hh-room-line",
-				"data-tone": Ny[e.validation],
+				"data-tone": Ly[e.validation],
 				"data-validation-line": !0,
-				children: [/* @__PURE__ */ L(Py, { state: e.validation }), /* @__PURE__ */ R("span", { children: [e.validationText, e.findings.length > 0 ? `. ${e.findingsText}:` : ""] })]
+				children: [/* @__PURE__ */ L(Ry, { state: e.validation }), /* @__PURE__ */ R("span", { children: [e.validationText, e.findings.length > 0 ? `. ${e.findingsText}:` : ""] })]
 			}),
 			e.findings.length === 0 ? null : /* @__PURE__ */ L("ul", {
 				className: "hh-findings",
@@ -16296,7 +16285,7 @@ function Fy({ view: e }) {
 	});
 }
 // src/components/GhostOutputSummary.tsx
-function Iy({ run: e }) {
+function By({ run: e }) {
 	return /* @__PURE__ */ R("div", {
 		className: "hh-run",
 		"data-run": e.runId,
@@ -16305,11 +16294,11 @@ function Iy({ run: e }) {
 		children: [
 			/* @__PURE__ */ R("p", {
 				className: "hh-room-line",
-				"data-tone": e.state === null ? "plain" : oy[e.state],
+				"data-tone": e.state === null ? "plain" : uy[e.state],
 				children: [e.state === null ? /* @__PURE__ */ L(v, {
 					size: 16,
 					"aria-hidden": !0
-				}) : /* @__PURE__ */ L(ly, { state: e.state }), /* @__PURE__ */ R("span", { children: [
+				}) : /* @__PURE__ */ L(py, { state: e.state }), /* @__PURE__ */ R("span", { children: [
 					e.ghostName,
 					": ",
 					e.stateText,
@@ -16349,7 +16338,7 @@ function Iy({ run: e }) {
 	});
 }
 // src/components/RunRecoveryControls.tsx
-function Ly({ view: e, kind: t, runId: n, describedBy: r, onSend: i }) {
+function Vy({ view: e, kind: t, runId: n, describedBy: r, onSend: i }) {
 	let a = e.command;
 	return /* @__PURE__ */ R("button", {
 		type: "button",
@@ -16367,7 +16356,7 @@ function Ly({ view: e, kind: t, runId: n, describedBy: r, onSend: i }) {
 		}), e.busy ? "Sending…" : e.label]
 	});
 }
-function Ry({ run: e, onSend: t }) {
+function Hy({ run: e, onSend: t }) {
 	let n = i(), r = e.cancel?.blockedText ?? e.retry?.blockedText ?? null;
 	return e.cancel === null && e.retry === null && e.exhaustedText === null ? null : /* @__PURE__ */ R("div", {
 		className: "hh-recovery",
@@ -16376,13 +16365,13 @@ function Ry({ run: e, onSend: t }) {
 			e.cancel === null && e.retry === null ? null : /* @__PURE__ */ R("div", {
 				className: "hh-decide",
 				"aria-busy": (e.cancel?.busy ?? !1) || (e.retry?.busy ?? !1),
-				children: [e.cancel === null ? null : /* @__PURE__ */ L(Ly, {
+				children: [e.cancel === null ? null : /* @__PURE__ */ L(Vy, {
 					view: e.cancel,
 					kind: "cancel",
 					runId: e.runId,
 					describedBy: n,
 					onSend: t
-				}), e.retry === null ? null : /* @__PURE__ */ L(Ly, {
+				}), e.retry === null ? null : /* @__PURE__ */ L(Vy, {
 					view: e.retry,
 					kind: "retry",
 					runId: e.runId,
@@ -16409,7 +16398,7 @@ function Ry({ run: e, onSend: t }) {
 		]
 	});
 }
-function zy({ view: e, onOpen: t }) {
+function Uy({ view: e, onOpen: t }) {
 	let n = i(), r = e.slotKey, a = r === null || t === null, o = e.disabledText ?? (t === null ? "This version of Crew offers no way to open the session from here. Find it in Crew by its name." : null);
 	return /* @__PURE__ */ R("p", {
 		className: "hh-session-link",
@@ -16435,7 +16424,7 @@ function zy({ view: e, onOpen: t }) {
 	});
 }
 // src/rooms/workshop/use-task-selection.ts
-function By(e) {
+function Wy(e) {
 	let [t, r] = l(() => /* @__PURE__ */ new Set()), i = o(() => {
 		let n = new Set(e.waves.flatMap((e) => e.tasks.filter((e) => e.selectable).map((e) => e.taskId)));
 		return new Set([...t].filter((e) => n.has(e)));
@@ -16448,12 +16437,12 @@ function By(e) {
 	return {
 		chosen: i,
 		toggle: a,
-		command: o(() => Eg(e, i), [e, i]),
+		command: o(() => Ag(e, i), [e, i]),
 		clear: s
 	};
 }
 // src/rooms/workshop/WorkshopTaskBoard.tsx
-var Vy = {
+var Gy = {
 	not_selected: "plain",
 	queued: "plain",
 	backpressure: "attention",
@@ -16464,7 +16453,7 @@ var Vy = {
 	blocked: "attention",
 	skipped: "plain"
 };
-function Hy({ status: e }) {
+function Ky({ status: e }) {
 	let t = {
 		size: 16,
 		"aria-hidden": !0
@@ -16484,7 +16473,7 @@ function Hy({ status: e }) {
 		case "skipped": return /* @__PURE__ */ L(v, { ...t });
 	}
 }
-function Uy({ row: e, chosen: t, onToggle: n, onSend: r, onOpenSession: a }) {
+function qy({ row: e, chosen: t, onToggle: n, onSend: r, onOpenSession: a }) {
 	let o = i();
 	return /* @__PURE__ */ R("li", {
 		className: "hh-task",
@@ -16521,9 +16510,9 @@ function Uy({ row: e, chosen: t, onToggle: n, onSend: r, onOpenSession: a }) {
 			}),
 			/* @__PURE__ */ R("p", {
 				className: "hh-room-line",
-				"data-tone": Vy[e.status],
+				"data-tone": Gy[e.status],
 				"data-task-status": !0,
-				children: [/* @__PURE__ */ L(Hy, { status: e.status }), /* @__PURE__ */ R("span", { children: [e.statusText, e.attemptText === null ? "" : `. ${e.attemptText}`] })]
+				children: [/* @__PURE__ */ L(Ky, { status: e.status }), /* @__PURE__ */ R("span", { children: [e.statusText, e.attemptText === null ? "" : `. ${e.attemptText}`] })]
 			}),
 			e.detail === null ? null : /* @__PURE__ */ L("p", {
 				className: "hh-task-detail",
@@ -16540,12 +16529,12 @@ function Uy({ row: e, chosen: t, onToggle: n, onSend: r, onOpenSession: a }) {
 				]
 			}),
 			e.run === null ? null : /* @__PURE__ */ R(I, { children: [
-				/* @__PURE__ */ L(Iy, { run: e.run }),
-				/* @__PURE__ */ L(Ry, {
+				/* @__PURE__ */ L(By, { run: e.run }),
+				/* @__PURE__ */ L(Hy, {
 					run: e.run,
 					onSend: r
 				}),
-				/* @__PURE__ */ L(zy, {
+				/* @__PURE__ */ L(Uy, {
 					view: e.run.sessionLink,
 					onOpen: a
 				})
@@ -16553,8 +16542,8 @@ function Uy({ row: e, chosen: t, onToggle: n, onSend: r, onOpenSession: a }) {
 		]
 	});
 }
-function Wy({ board: e, onSend: t, onOpenSession: n }) {
-	let r = By(e), a = i(), o = i(), s = r.chosen.size, c = e.startBlockedText ?? (s === 0 ? "Tick at least one open task to start." : null);
+function Jy({ board: e, onSend: t, onOpenSession: n }) {
+	let r = Wy(e), a = i(), o = i(), s = r.chosen.size, c = e.startBlockedText ?? (s === 0 ? "Tick at least one open task to start." : null);
 	return /* @__PURE__ */ R("section", {
 		className: "hh-board",
 		"aria-labelledby": a,
@@ -16600,9 +16589,9 @@ function Wy({ board: e, onSend: t, onOpenSession: n }) {
 					]
 				}, `${e.code}-${e.location}-${t}`))
 			}),
-			e.waves.map((e) => /* @__PURE__ */ L(Gy, {
+			e.waves.map((e) => /* @__PURE__ */ L(Yy, {
 				title: e.title,
-				children: e.tasks.map((e) => /* @__PURE__ */ L(Uy, {
+				children: e.tasks.map((e) => /* @__PURE__ */ L(qy, {
 					row: e,
 					chosen: r.chosen.has(e.taskId),
 					onToggle: r.toggle,
@@ -16640,7 +16629,7 @@ function Wy({ board: e, onSend: t, onOpenSession: n }) {
 		]
 	});
 }
-function Gy({ title: e, children: t }) {
+function Yy({ title: e, children: t }) {
 	let n = i();
 	return /* @__PURE__ */ R("div", {
 		className: "hh-wave",
@@ -16657,7 +16646,7 @@ function Gy({ title: e, children: t }) {
 	});
 }
 // src/rooms/house/RoomOutput.tsx
-function Ky({ output: e, onSend: t, onOpenSession: n }) {
+function Xy({ output: e, onSend: t, onOpenSession: n }) {
 	return /* @__PURE__ */ R("div", {
 		className: "hh-output",
 		"data-room-output": e.room,
@@ -16670,8 +16659,8 @@ function Ky({ output: e, onSend: t, onOpenSession: n }) {
 					"aria-hidden": !0
 				}), /* @__PURE__ */ L("span", { children: e.outputNote })]
 			}),
-			e.documents.map((e) => /* @__PURE__ */ L(Fy, { view: e }, e.phase)),
-			e.taskBoard === null ? null : /* @__PURE__ */ L(Wy, {
+			e.documents.map((e) => /* @__PURE__ */ L(zy, { view: e }, e.phase)),
+			e.taskBoard === null ? null : /* @__PURE__ */ L(Jy, {
 				board: e.taskBoard,
 				onSend: t,
 				onOpenSession: n
@@ -16680,7 +16669,7 @@ function Ky({ output: e, onSend: t, onOpenSession: n }) {
 	});
 }
 // src/rooms/house/RoomRuns.tsx
-function qy({ output: e, onSend: t, onOpenSession: n }) {
+function Zy({ output: e, onSend: t, onOpenSession: n }) {
 	let r = new Set(e.taskBoard?.waves.flatMap((e) => e.tasks.flatMap((e) => e.run === null ? [] : [e.run.runId])) ?? []), i = e.runs.filter((e) => !r.has(e.runId));
 	return i.length === 0 ? null : /* @__PURE__ */ R("div", {
 		className: "hh-phase",
@@ -16691,12 +16680,12 @@ function qy({ output: e, onSend: t, onOpenSession: n }) {
 		}), /* @__PURE__ */ L("ul", {
 			className: "hh-runs",
 			children: i.map((e) => /* @__PURE__ */ R("li", { children: [
-				/* @__PURE__ */ L(Iy, { run: e }),
-				/* @__PURE__ */ L(Ry, {
+				/* @__PURE__ */ L(By, { run: e }),
+				/* @__PURE__ */ L(Hy, {
 					run: e,
 					onSend: t
 				}),
-				/* @__PURE__ */ L(zy, {
+				/* @__PURE__ */ L(Uy, {
 					view: e.sessionLink,
 					onOpen: n
 				})
@@ -16705,14 +16694,14 @@ function qy({ output: e, onSend: t, onOpenSession: n }) {
 	});
 }
 // src/rooms/house/RoomPanel.tsx
-var Jy = () => {};
-function Yy({ detail: e, onSend: t, output: n = null, onRoomSend: r = Jy, onOpenSession: i = null }) {
+var Qy = () => {};
+function $y({ detail: e, onSend: t, output: n = null, onRoomSend: r = Qy, onOpenSession: i = null }) {
 	let { room: a } = e;
 	return /* @__PURE__ */ R("div", {
 		className: "hh-room-panel",
 		"data-room-body": a.id,
 		children: [
-			n === null ? null : /* @__PURE__ */ L(Ky, {
+			n === null ? null : /* @__PURE__ */ L(Xy, {
 				output: n,
 				onSend: r,
 				onOpenSession: i
@@ -16724,8 +16713,8 @@ function Yy({ detail: e, onSend: t, output: n = null, onRoomSend: r = Jy, onOpen
 				children: [
 					/* @__PURE__ */ R("p", {
 						className: "hh-room-line",
-						"data-tone": iy[e.status],
-						children: [/* @__PURE__ */ L(sy, { status: e.status }), /* @__PURE__ */ R("span", { children: [
+						"data-tone": cy[e.status],
+						children: [/* @__PURE__ */ L(dy, { status: e.status }), /* @__PURE__ */ R("span", { children: [
 							e.name,
 							": ",
 							e.statusText
@@ -16733,8 +16722,8 @@ function Yy({ detail: e, onSend: t, output: n = null, onRoomSend: r = Jy, onOpen
 					}),
 					/* @__PURE__ */ R("p", {
 						className: "hh-room-line",
-						"data-tone": ay[e.doorStatus],
-						children: [/* @__PURE__ */ L(cy, { status: e.doorStatus }), /* @__PURE__ */ L("span", { children: e.doorHint })]
+						"data-tone": ly[e.doorStatus],
+						children: [/* @__PURE__ */ L(fy, { status: e.doorStatus }), /* @__PURE__ */ L("span", { children: e.doorHint })]
 					}),
 					i === null || e.phase === "implementation" && n?.ownsImplementationStart === !0 ? null : /* @__PURE__ */ L("div", {
 						className: "hh-decide",
@@ -16753,11 +16742,11 @@ function Yy({ detail: e, onSend: t, output: n = null, onRoomSend: r = Jy, onOpen
 							}), i.busy ? "Starting…" : i.label]
 						})
 					}),
-					a === null ? null : /* @__PURE__ */ L(ry, {
+					a === null ? null : /* @__PURE__ */ L(sy, {
 						view: a,
 						onSend: t
 					}),
-					n?.documents.map((t) => t.phase === e.phase && t.feedback !== null ? /* @__PURE__ */ L(fy, {
+					n?.documents.map((t) => t.phase === e.phase && t.feedback !== null ? /* @__PURE__ */ L(gy, {
 						view: t.feedback,
 						onSend: r
 					}, t.phase) : null)
@@ -16770,14 +16759,14 @@ function Yy({ detail: e, onSend: t, output: n = null, onRoomSend: r = Jy, onOpen
 					children: "Ghosts in this room"
 				}), a.ghosts.length === 0 ? /* @__PURE__ */ R("p", {
 					className: "hh-room-line",
-					children: [/* @__PURE__ */ L(ly, { state: "idle" }), /* @__PURE__ */ L("span", { children: "No ghost here yet" })]
+					children: [/* @__PURE__ */ L(py, { state: "idle" }), /* @__PURE__ */ L("span", { children: "No ghost here yet" })]
 				}) : /* @__PURE__ */ L("ul", {
 					className: "hh-ghost-lines",
 					children: a.ghosts.map((e) => /* @__PURE__ */ R("li", {
 						className: "hh-room-line",
-						"data-tone": oy[e.state],
+						"data-tone": uy[e.state],
 						"data-ghost": e.ghostId,
-						children: [/* @__PURE__ */ L(ly, { state: e.state }), /* @__PURE__ */ R("span", { children: [
+						children: [/* @__PURE__ */ L(py, { state: e.state }), /* @__PURE__ */ R("span", { children: [
 							e.name,
 							": ",
 							e.stateText,
@@ -16792,12 +16781,12 @@ function Yy({ detail: e, onSend: t, output: n = null, onRoomSend: r = Jy, onOpen
 				children: [/* @__PURE__ */ L("p", {
 					className: "hh-proposal-group",
 					children: "Risky actions"
-				}), e.risky.map((e) => /* @__PURE__ */ L(my, {
+				}), e.risky.map((e) => /* @__PURE__ */ L(vy, {
 					view: e,
 					onSend: t
 				}, e.proposalId))]
 			}),
-			n === null ? null : /* @__PURE__ */ L(qy, {
+			n === null ? null : /* @__PURE__ */ L(Zy, {
 				output: n,
 				onSend: r,
 				onOpenSession: i
@@ -16806,13 +16795,13 @@ function Yy({ detail: e, onSend: t, output: n = null, onRoomSend: r = Jy, onOpen
 	});
 }
 // src/rooms/house/room-house-panel.ts
-var Xy = "This room's state has not been read yet.";
+var eb = "This room's state has not been read yet.";
 // src/rooms/drafting-room/DraftingHousePanel.tsx
-function Zy({ room: e, detail: t, output: n, onSend: r, onRoomSend: i, onOpenSession: a }) {
-	return /* @__PURE__ */ R(I, { children: [/* @__PURE__ */ L(ty, { room: e }), t === null ? /* @__PURE__ */ L("p", {
+function tb({ room: e, detail: t, output: n, onSend: r, onRoomSend: i, onOpenSession: a }) {
+	return /* @__PURE__ */ R(I, { children: [/* @__PURE__ */ L(ay, { room: e }), t === null ? /* @__PURE__ */ L("p", {
 		className: "hh-ui-reason",
-		children: Xy
-	}) : /* @__PURE__ */ L(Yy, {
+		children: eb
+	}) : /* @__PURE__ */ L($y, {
 		detail: t,
 		output: n,
 		onSend: r,
@@ -16821,11 +16810,11 @@ function Zy({ room: e, detail: t, output: n, onSend: r, onRoomSend: i, onOpenSes
 	})] });
 }
 // src/rooms/foyer/BuiltPage.tsx
-var Qy = "What was made", $y = "Every door is open. This is what now exists, under the names Kiro uses for it.", eb = "Finished work", tb = "Open this project in Kiro";
-function nb(e) {
+var nb = "What was made", rb = "Every door is open. This is what now exists, under the names Kiro uses for it.", ib = "Finished work", ab = "Open this project in Kiro";
+function ob(e) {
 	return e === "" ? e : e[0].toUpperCase() + e.slice(1);
 }
-function rb({ view: e }) {
+function sb({ view: e }) {
 	let t = i();
 	return e.built ? /* @__PURE__ */ R("section", {
 		className: "hh-built",
@@ -16836,11 +16825,11 @@ function rb({ view: e }) {
 		children: [
 			/* @__PURE__ */ L("h5", {
 				id: t,
-				children: Qy
+				children: nb
 			}),
 			/* @__PURE__ */ L("p", {
 				className: "hh-built-lede",
-				children: $y
+				children: rb
 			}),
 			e.rows.length === 0 ? null : /* @__PURE__ */ R("table", {
 				className: "hh-built-table",
@@ -16862,7 +16851,7 @@ function rb({ view: e }) {
 					children: [
 						/* @__PURE__ */ L("th", {
 							scope: "row",
-							children: nb(e.plain)
+							children: ob(e.plain)
 						}),
 						/* @__PURE__ */ L("td", { children: e.kiro }),
 						/* @__PURE__ */ L("td", { children: /* @__PURE__ */ L("code", { children: e.path }) })
@@ -16871,7 +16860,7 @@ function rb({ view: e }) {
 			}),
 			e.tasks.length === 0 ? null : /* @__PURE__ */ R(I, { children: [/* @__PURE__ */ L("p", {
 				className: "hh-built-group",
-				children: eb
+				children: ib
 			}), /* @__PURE__ */ L("ul", {
 				className: "hh-built-tasks",
 				children: e.tasks.map((e) => /* @__PURE__ */ R("li", {
@@ -16881,7 +16870,7 @@ function rb({ view: e }) {
 			})] }),
 			/* @__PURE__ */ L("p", {
 				className: "hh-built-group",
-				children: tb
+				children: ab
 			}),
 			/* @__PURE__ */ R("dl", {
 				className: "hh-facts",
@@ -16902,10 +16891,10 @@ function rb({ view: e }) {
 	}) : null;
 }
 // src/rooms/foyer/ActiveMansionFoyerPanel.tsx
-var ib = "Escape also returns to the Foyer when no room is open.";
-function ab({ room: e, mansion: t, onReturn: n, built: r }) {
+var cb = "Escape also returns to the Foyer when no room is open.";
+function lb({ room: e, mansion: t, onReturn: n, built: r }) {
 	return /* @__PURE__ */ R(I, { children: [
-		/* @__PURE__ */ L(ty, { room: e }),
+		/* @__PURE__ */ L(ay, { room: e }),
 		/* @__PURE__ */ R("dl", {
 			className: "hh-shell-facts",
 			"data-active-mansion": t.name,
@@ -16930,14 +16919,14 @@ function ab({ room: e, mansion: t, onReturn: n, built: r }) {
 				}), "Return to Foyer"]
 			}), /* @__PURE__ */ L("span", {
 				className: "hh-foyer-hint",
-				children: ib
+				children: cb
 			})]
 		}),
-		r === void 0 ? null : /* @__PURE__ */ L(rb, { view: r })
+		r === void 0 ? null : /* @__PURE__ */ L(sb, { view: r })
 	] });
 }
 // src/rooms/seance-room/LockedSeancePanel.tsx
-function ob() {
+function ub() {
 	return /* @__PURE__ */ R("p", {
 		className: "hh-ui-note",
 		"data-kind": "locked",
@@ -16945,11 +16934,11 @@ function ob() {
 		children: [/* @__PURE__ */ L(N, {
 			size: 16,
 			"aria-hidden": !0
-		}), /* @__PURE__ */ L("span", { children: fs })]
+		}), /* @__PURE__ */ L("span", { children: hs })]
 	});
 }
 // src/rooms/seance-room/SeanceRoomPanel.tsx
-function sb({ status: e }) {
+function db({ status: e }) {
 	let t = {
 		size: 16,
 		"aria-hidden": !0
@@ -16964,7 +16953,7 @@ function sb({ status: e }) {
 		case "blocked": return /* @__PURE__ */ L(N, { ...t });
 	}
 }
-function cb({ view: e, onOpenSession: t }) {
+function fb({ view: e, onOpenSession: t }) {
 	return /* @__PURE__ */ R("div", {
 		className: "hh-room-panel",
 		"data-review": e.status,
@@ -16975,7 +16964,7 @@ function cb({ view: e, onOpenSession: t }) {
 					className: "hh-room-line",
 					"data-tone": e.status === "pass" ? "ok" : e.status === "reviewing" ? "plain" : "attention",
 					"data-verdict": !0,
-					children: [/* @__PURE__ */ L(sb, { status: e.status }), /* @__PURE__ */ R("span", { children: [
+					children: [/* @__PURE__ */ L(db, { status: e.status }), /* @__PURE__ */ R("span", { children: [
 						e.statusText,
 						". ",
 						e.cycleText,
@@ -17036,13 +17025,13 @@ function cb({ view: e, onOpenSession: t }) {
 			className: "hh-phase",
 			children: [/* @__PURE__ */ R("p", {
 				className: "hh-room-line",
-				"data-tone": e.state === null ? "plain" : oy[e.state],
-				children: [/* @__PURE__ */ L(ly, { state: e.state ?? "idle" }), /* @__PURE__ */ R("span", { children: [
+				"data-tone": e.state === null ? "plain" : uy[e.state],
+				children: [/* @__PURE__ */ L(py, { state: e.state ?? "idle" }), /* @__PURE__ */ R("span", { children: [
 					e.ghostName,
 					": ",
 					e.stateText
 				] })]
-			}), /* @__PURE__ */ L(zy, {
+			}), /* @__PURE__ */ L(Uy, {
 				view: e.sessionLink,
 				onOpen: t
 			})]
@@ -17050,23 +17039,23 @@ function cb({ view: e, onOpenSession: t }) {
 	});
 }
 // src/rooms/seance-room/SeanceHousePanel.tsx
-var lb = "No review yet. The Medium reviews only when the house asks it to.";
-function ub({ room: e, review: t, onOpenSession: n }) {
-	return /* @__PURE__ */ R(I, { children: [/* @__PURE__ */ L(ty, { room: e }), t === null ? /* @__PURE__ */ L("p", {
+var pb = "No review yet. The Medium reviews only when the house asks it to.";
+function mb({ room: e, review: t, onOpenSession: n }) {
+	return /* @__PURE__ */ R(I, { children: [/* @__PURE__ */ L(ay, { room: e }), t === null ? /* @__PURE__ */ L("p", {
 		className: "hh-ui-reason",
 		"data-seance": "empty",
-		children: lb
-	}) : /* @__PURE__ */ L(cb, {
+		children: pb
+	}) : /* @__PURE__ */ L(fb, {
 		view: t,
 		onOpenSession: n
 	})] });
 }
 // src/rooms/study/StudyHousePanel.tsx
-function db({ room: e, detail: t, output: n, onSend: r, onRoomSend: i, onOpenSession: a }) {
-	return /* @__PURE__ */ R(I, { children: [/* @__PURE__ */ L(ty, { room: e }), t === null ? /* @__PURE__ */ L("p", {
+function hb({ room: e, detail: t, output: n, onSend: r, onRoomSend: i, onOpenSession: a }) {
+	return /* @__PURE__ */ R(I, { children: [/* @__PURE__ */ L(ay, { room: e }), t === null ? /* @__PURE__ */ L("p", {
 		className: "hh-ui-reason",
-		children: Xy
-	}) : /* @__PURE__ */ L(Yy, {
+		children: eb
+	}) : /* @__PURE__ */ L($y, {
 		detail: t,
 		output: n,
 		onSend: r,
@@ -17075,11 +17064,11 @@ function db({ room: e, detail: t, output: n, onSend: r, onRoomSend: i, onOpenSes
 	})] });
 }
 // src/rooms/workshop/WorkshopHousePanel.tsx
-function fb({ room: e, detail: t, output: n, onSend: r, onRoomSend: i, onOpenSession: a }) {
-	return /* @__PURE__ */ R(I, { children: [/* @__PURE__ */ L(ty, { room: e }), t === null ? /* @__PURE__ */ L("p", {
+function gb({ room: e, detail: t, output: n, onSend: r, onRoomSend: i, onOpenSession: a }) {
+	return /* @__PURE__ */ R(I, { children: [/* @__PURE__ */ L(ay, { room: e }), t === null ? /* @__PURE__ */ L("p", {
 		className: "hh-ui-reason",
-		children: Xy
-	}) : /* @__PURE__ */ L(Yy, {
+		children: eb
+	}) : /* @__PURE__ */ L($y, {
 		detail: t,
 		output: n,
 		onSend: r,
@@ -17088,18 +17077,18 @@ function fb({ room: e, detail: t, output: n, onSend: r, onRoomSend: i, onOpenSes
 	})] });
 }
 // src/rooms/house/DoorSurface.tsx
-function pb({ room: e, door: t, decision: n, onSend: r, onOpenRoom: i }) {
+function _b({ room: e, door: t, decision: n, onSend: r, onOpenRoom: i }) {
 	return /* @__PURE__ */ R("div", {
 		className: "hh-door-surface",
 		"data-door-surface": t.phase,
 		children: [
-			/* @__PURE__ */ L(ty, { room: e }),
+			/* @__PURE__ */ L(ay, { room: e }),
 			/* @__PURE__ */ R("p", {
 				className: "hh-ui-state",
 				"data-door": t.state,
 				children: [/* @__PURE__ */ L(Kt, { state: t.state }), /* @__PURE__ */ R("span", { children: ["Door state: ", /* @__PURE__ */ L("span", {
 					className: "hh-ui-state-word",
-					children: fi(t.state)
+					children: hi(t.state)
 				})] })]
 			}),
 			/* @__PURE__ */ L("p", {
@@ -17110,7 +17099,7 @@ function pb({ room: e, door: t, decision: n, onSend: r, onOpenRoom: i }) {
 				className: "hh-ui-reason",
 				children: t.phaseText
 			}),
-			n === null ? null : /* @__PURE__ */ L(ry, {
+			n === null ? null : /* @__PURE__ */ L(sy, {
 				view: n,
 				onSend: r
 			}),
@@ -17138,7 +17127,7 @@ function pb({ room: e, door: t, decision: n, onSend: r, onOpenRoom: i }) {
 	});
 }
 // src/rooms/house/GhostSurface.tsx
-function mb({ room: e, ghost: t, onOpenRoom: n }) {
+function vb({ room: e, ghost: t, onOpenRoom: n }) {
 	return /* @__PURE__ */ R("div", {
 		className: "hh-ghost-surface",
 		"data-ghost-surface": t.ghostId,
@@ -17153,7 +17142,7 @@ function mb({ room: e, ghost: t, onOpenRoom: n }) {
 					"Ghost state: ",
 					/* @__PURE__ */ L("span", {
 						className: "hh-ui-state-word",
-						children: fi(t.state)
+						children: hi(t.state)
 					}),
 					t.pendingText === null ? null : `, ${t.pendingText}`
 				] })]
@@ -17195,11 +17184,11 @@ function mb({ room: e, ghost: t, onOpenRoom: n }) {
 	});
 }
 // src/rooms/house/panel-styles.ts
-var hb = "\n.hh-room-panel h5, .hh-proposal h5, .hh-artifact h5 { font-size: 0.875rem; margin: 0; overflow-wrap: anywhere; }\n[data-surface] .hh-button { display: inline-flex; align-items: center; gap: 6px; font: inherit; cursor: pointer; min-width: 0;\n  max-width: 100%; text-align: left; color: var(--hh-text); background: var(--hh-surface-raised);\n  border: 1px solid var(--hh-border); border-radius: 6px; padding: 6px 12px; overflow-wrap: anywhere; }\n[data-surface] .hh-button-primary { color: var(--hh-primary-text); background: var(--hh-primary); }\n[data-surface] .hh-button:focus-visible { outline: 2px solid var(--hh-focus); outline-offset: 2px; }\n[data-surface] .hh-button[aria-disabled='true'] { cursor: not-allowed; border-style: dashed; color: var(--hh-text-muted);\n  background: var(--hh-surface); }\n[data-surface] .hh-button-reject { border-style: double; border-width: 3px; padding: 4px 10px; }\n[data-surface] .hh-button-reject[aria-disabled='true'] { border-style: dashed; border-width: 1px; padding: 6px 12px; }\n\n.hh-room-panel { display: grid; gap: 12px; min-width: 0; }\n.hh-room-line { display: flex; align-items: flex-start; gap: 6px; font-size: 0.875rem; overflow-wrap: anywhere; margin: 0; }\n.hh-room-line svg { flex: none; margin-top: 2px; color: var(--hh-text-muted); }\n.hh-room-line[data-tone='ok'] svg { color: var(--hh-ok); }\n.hh-room-line[data-tone='attention'] svg { color: var(--hh-accent); }\n.hh-house-note { display: flex; align-items: flex-start; gap: 6px; margin: 0; overflow-wrap: anywhere; }\n.hh-house-note svg { flex: none; margin-top: 2px; }\n.hh-house-muted { color: var(--hh-text-muted); }\n.hh-phase { display: grid; gap: 6px; border-top: 1px solid var(--hh-border-soft); padding-top: 10px; min-width: 0; }\n/* What was made: a plain table of names and files, the finished work, and how to open the folder in Kiro. */\n.hh-built { container-type: inline-size; display: grid; gap: 8px; min-width: 0; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--hh-border); }\n.hh-built:focus-visible { outline: 2px solid var(--hh-focus); outline-offset: 4px; }\n.hh-built h5 { margin: 0; font-size: 1rem; }\n.hh-built-lede { margin: 0; font-size: 0.875rem; color: var(--hh-text-muted); }\n.hh-built-group { margin: 6px 0 0; font-weight: 600; }\n.hh-built-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }\n.hh-built-table th, .hh-built-table td { text-align: left; vertical-align: top; padding: 4px 12px 4px 0; border-bottom: 1px solid var(--hh-border); overflow-wrap: anywhere; }\n.hh-built-table thead th { font-weight: 600; color: var(--hh-text-muted); }\n.hh-built-table code, .hh-built-tasks code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.8125rem; overflow-wrap: anywhere; }\n/* In a narrow sheet each row stacks: the everyday name and Kiro's name on one line, the file under them, so no word\n   is broken in the middle. */\n.hh-built-table th, .hh-built-table td { overflow-wrap: break-word; }\n@container (max-width: 30rem) {\n  .hh-built-table thead { position: absolute; width: 1px; height: 1px; clip-path: inset(50%); }\n  .hh-built-table, .hh-built-table tbody { display: block; }\n  .hh-built-table tr { display: grid; grid-template-columns: auto 1fr; gap: 0 10px; padding: 6px 0; border-bottom: 1px solid var(--hh-border); }\n  .hh-built-table th, .hh-built-table td { padding: 0; border: 0; }\n  .hh-built-table td:nth-of-type(1) { color: var(--hh-text-muted); }\n  .hh-built-table td:nth-of-type(1)::before { content: '(Kiro: '; }\n  .hh-built-table td:nth-of-type(1)::after { content: ')'; }\n  .hh-built-table td:nth-of-type(2) { grid-column: 1 / -1; }\n}\n.hh-built-tasks { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: 0.875rem; }\n.hh-built-tasks li { display: flex; flex-wrap: wrap; gap: 2px 10px; min-width: 0; }\n.hh-built-steps { margin: 0; padding-left: 1.25rem; font-size: 0.875rem; }\n.hh-facts { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 12px; margin: 0; font-size: 0.875rem; }\n.hh-facts dt { color: var(--hh-text-muted); }\n.hh-facts dd { margin: 0; overflow-wrap: anywhere; min-width: 0; }\n.hh-facts code, .hh-proposal code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n  font-size: 0.8125rem; overflow-wrap: anywhere; }\n.hh-ghost-lines { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }\n.hh-ghost-surface, .hh-door-surface { display: grid; gap: 10px; min-width: 0; }\n.hh-ghost-surface p, .hh-door-surface p { margin: 0; }\n.hh-shell-facts { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 12px; margin: 0; }\n.hh-shell-facts dt { font-weight: 600; }\n.hh-shell-facts dd { margin: 0; overflow-wrap: anywhere; min-width: 0; }\n\n.hh-proposal { border: 1px solid var(--hh-border-soft); border-left: 4px solid var(--hh-border);\n  border-radius: 6px; padding: 10px 12px; display: grid; gap: 8px; min-width: 0; }\n.hh-proposal:focus-visible { outline: 2px solid var(--hh-focus); outline-offset: 2px; }\n.hh-proposal[data-state='pending'] { border-left-style: double; border-left-width: 6px; }\n.hh-proposal[data-blocked='true'] { border-style: dashed; border-left-style: dashed; }\n.hh-proposal-head { display: flex; align-items: flex-start; gap: 6px; }\n.hh-proposal-head svg { flex: none; margin-top: 2px; color: var(--hh-accent); }\n.hh-proposal-sub { font-size: 0.875rem; margin: 0; }\n.hh-proposal-group { font-size: 0.8125rem; font-weight: 600; margin: 4px 0 0; color: var(--hh-text-muted); }\n.hh-proposal-note { display: flex; align-items: flex-start; gap: 6px; margin: 0; font-size: 0.875rem; overflow-wrap: anywhere; }\n.hh-proposal-note svg { flex: none; margin-top: 2px; }\n.hh-proposal-blocked svg { color: var(--hh-accent); }\n.hh-proposal-outcome[data-outcome='approved'] svg { color: var(--hh-ok); }\n.hh-decide { display: flex; flex-wrap: wrap; gap: 8px; min-width: 0; }\n\n@keyframes hh-house-spin { to { transform: rotate(360deg); } }\n@media (prefers-reduced-motion: no-preference) {\n  [data-motion='low-frequency'] .hh-spin { animation: hh-house-spin 2s linear infinite; }\n}\n", gb = "locked", _b = "The recording is paused at its start. Press Play to watch the house fill, or open the Attic to step through it.", vb = "This is a recording. Nothing can be started, approved or rejected here.", yb = hb + K_;
-function bb({ mansion: e, onReturn: t, announcement: i = "", status: a, ghostNames: s, seanceRoom: c = gb, panelMode: u, replayScheduler: d, now: f, guide: p }) {
+var yb = "\n.hh-room-panel h5, .hh-proposal h5, .hh-artifact h5 { font-size: 0.875rem; margin: 0; overflow-wrap: anywhere; }\n[data-surface] .hh-button { display: inline-flex; align-items: center; gap: 6px; font: inherit; cursor: pointer; min-width: 0;\n  max-width: 100%; text-align: left; color: var(--hh-text); background: var(--hh-surface-raised);\n  border: 1px solid var(--hh-border); border-radius: 6px; padding: 6px 12px; overflow-wrap: anywhere; }\n[data-surface] .hh-button-primary { color: var(--hh-primary-text); background: var(--hh-primary); }\n[data-surface] .hh-button:focus-visible { outline: 2px solid var(--hh-focus); outline-offset: 2px; }\n[data-surface] .hh-button[aria-disabled='true'] { cursor: not-allowed; border-style: dashed; color: var(--hh-text-muted);\n  background: var(--hh-surface); }\n[data-surface] .hh-button-reject { border-style: double; border-width: 3px; padding: 4px 10px; }\n[data-surface] .hh-button-reject[aria-disabled='true'] { border-style: dashed; border-width: 1px; padding: 6px 12px; }\n\n.hh-room-panel { display: grid; gap: 12px; min-width: 0; }\n.hh-room-line { display: flex; align-items: flex-start; gap: 6px; font-size: 0.875rem; overflow-wrap: anywhere; margin: 0; }\n.hh-room-line svg { flex: none; margin-top: 2px; color: var(--hh-text-muted); }\n.hh-room-line[data-tone='ok'] svg { color: var(--hh-ok); }\n.hh-room-line[data-tone='attention'] svg { color: var(--hh-accent); }\n.hh-house-note { display: flex; align-items: flex-start; gap: 6px; margin: 0; overflow-wrap: anywhere; }\n.hh-house-note svg { flex: none; margin-top: 2px; }\n.hh-house-muted { color: var(--hh-text-muted); }\n.hh-phase { display: grid; gap: 6px; border-top: 1px solid var(--hh-border-soft); padding-top: 10px; min-width: 0; }\n/* What was made: a plain table of names and files, the finished work, and how to open the folder in Kiro. */\n.hh-built { container-type: inline-size; display: grid; gap: 8px; min-width: 0; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--hh-border); }\n.hh-built:focus-visible { outline: 2px solid var(--hh-focus); outline-offset: 4px; }\n.hh-built h5 { margin: 0; font-size: 1rem; }\n.hh-built-lede { margin: 0; font-size: 0.875rem; color: var(--hh-text-muted); }\n.hh-built-group { margin: 6px 0 0; font-weight: 600; }\n.hh-built-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }\n.hh-built-table th, .hh-built-table td { text-align: left; vertical-align: top; padding: 4px 12px 4px 0; border-bottom: 1px solid var(--hh-border); overflow-wrap: anywhere; }\n.hh-built-table thead th { font-weight: 600; color: var(--hh-text-muted); }\n.hh-built-table code, .hh-built-tasks code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.8125rem; overflow-wrap: anywhere; }\n/* In a narrow sheet each row stacks: the everyday name and Kiro's name on one line, the file under them, so no word\n   is broken in the middle. */\n.hh-built-table th, .hh-built-table td { overflow-wrap: break-word; }\n@container (max-width: 30rem) {\n  .hh-built-table thead { position: absolute; width: 1px; height: 1px; clip-path: inset(50%); }\n  .hh-built-table, .hh-built-table tbody { display: block; }\n  .hh-built-table tr { display: grid; grid-template-columns: auto 1fr; gap: 0 10px; padding: 6px 0; border-bottom: 1px solid var(--hh-border); }\n  .hh-built-table th, .hh-built-table td { padding: 0; border: 0; }\n  .hh-built-table td:nth-of-type(1) { color: var(--hh-text-muted); }\n  .hh-built-table td:nth-of-type(1)::before { content: '(Kiro: '; }\n  .hh-built-table td:nth-of-type(1)::after { content: ')'; }\n  .hh-built-table td:nth-of-type(2) { grid-column: 1 / -1; }\n}\n.hh-built-tasks { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: 0.875rem; }\n.hh-built-tasks li { display: flex; flex-wrap: wrap; gap: 2px 10px; min-width: 0; }\n.hh-built-steps { margin: 0; padding-left: 1.25rem; font-size: 0.875rem; }\n.hh-facts { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 12px; margin: 0; font-size: 0.875rem; }\n.hh-facts dt { color: var(--hh-text-muted); }\n.hh-facts dd { margin: 0; overflow-wrap: anywhere; min-width: 0; }\n.hh-facts code, .hh-proposal code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;\n  font-size: 0.8125rem; overflow-wrap: anywhere; }\n.hh-ghost-lines { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }\n.hh-ghost-surface, .hh-door-surface { display: grid; gap: 10px; min-width: 0; }\n.hh-ghost-surface p, .hh-door-surface p { margin: 0; }\n.hh-shell-facts { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 12px; margin: 0; }\n.hh-shell-facts dt { font-weight: 600; }\n.hh-shell-facts dd { margin: 0; overflow-wrap: anywhere; min-width: 0; }\n\n.hh-proposal { border: 1px solid var(--hh-border-soft); border-left: 4px solid var(--hh-border);\n  border-radius: 6px; padding: 10px 12px; display: grid; gap: 8px; min-width: 0; }\n.hh-proposal:focus-visible { outline: 2px solid var(--hh-focus); outline-offset: 2px; }\n.hh-proposal[data-state='pending'] { border-left-style: double; border-left-width: 6px; }\n.hh-proposal[data-blocked='true'] { border-style: dashed; border-left-style: dashed; }\n.hh-proposal-head { display: flex; align-items: flex-start; gap: 6px; }\n.hh-proposal-head svg { flex: none; margin-top: 2px; color: var(--hh-accent); }\n.hh-proposal-sub { font-size: 0.875rem; margin: 0; }\n.hh-proposal-group { font-size: 0.8125rem; font-weight: 600; margin: 4px 0 0; color: var(--hh-text-muted); }\n.hh-proposal-note { display: flex; align-items: flex-start; gap: 6px; margin: 0; font-size: 0.875rem; overflow-wrap: anywhere; }\n.hh-proposal-note svg { flex: none; margin-top: 2px; }\n.hh-proposal-blocked svg { color: var(--hh-accent); }\n.hh-proposal-outcome[data-outcome='approved'] svg { color: var(--hh-ok); }\n.hh-decide { display: flex; flex-wrap: wrap; gap: 8px; min-width: 0; }\n\n@keyframes hh-house-spin { to { transform: rotate(360deg); } }\n@media (prefers-reduced-motion: no-preference) {\n  [data-motion='low-frequency'] .hh-spin { animation: hh-house-spin 2s linear infinite; }\n}\n", bb = "locked", xb = "The recording is paused at its start. Press Play to watch the house fill, or open the Attic to step through it.", Sb = "This is a recording. Nothing can be started, approved or rejected here.", Cb = yb + X_;
+function wb({ mansion: e, onReturn: t, announcement: i = "", status: a, ghostNames: s, seanceRoom: c = bb, panelMode: u, replayScheduler: d, now: f, guide: p }) {
 	let [m, h] = l(i);
 	r(() => h(i), [i]);
-	let g = n((e) => h(e), []), _ = fh(e.name, d), v = _.mode, y = G_({
+	let g = n((e) => h(e), []), _ = gh(e.name, d), v = _.mode, y = Y_({
 		mansion: e,
 		ghostNames: s,
 		seanceRoom: c,
@@ -17207,10 +17196,10 @@ function bb({ mansion: e, onReturn: t, announcement: i = "", status: a, ghostNam
 		replay: _.upstream,
 		replayed: _.house,
 		onAnnounce: g
-	}), { projection: b } = y, x = Fv(_, g, {
+	}), { projection: b } = y, x = zv(_, g, {
 		watch: v === "replay",
 		refresh: !1
-	}), S = ey(_), C = o(() => ({
+	}), S = iy(_), C = o(() => ({
 		mansionId: e.name,
 		active: v === "live",
 		transitions: y.canonical.transitions,
@@ -17241,7 +17230,7 @@ function bb({ mansion: e, onReturn: t, announcement: i = "", status: a, ghostNam
 		let o = y.details.get(a.roomId) ?? null, s = y.outputs.get(a.roomId) ?? null;
 		if (i.kind === "ghost") {
 			let e = a.ghosts.find((e) => e.ghostId === i.ghostId);
-			return e === void 0 ? null : /* @__PURE__ */ L(mb, {
+			return e === void 0 ? null : /* @__PURE__ */ L(vb, {
 				room: a,
 				ghost: e,
 				onOpenRoom: r.openNested
@@ -17251,7 +17240,7 @@ function bb({ mansion: e, onReturn: t, announcement: i = "", status: a, ghostNam
 			let e = a.doors.find((e) => e.phase === i.phase);
 			if (e === void 0) return null;
 			let t = o?.phases.find((e) => e.line.phase === i.phase)?.door ?? null;
-			return /* @__PURE__ */ L(pb, {
+			return /* @__PURE__ */ L(_b, {
 				room: a,
 				door: e,
 				decision: t,
@@ -17268,15 +17257,15 @@ function bb({ mansion: e, onReturn: t, announcement: i = "", status: a, ghostNam
 			onOpenSession: y.openSession
 		};
 		switch (a.roomId) {
-			case "foyer": return /* @__PURE__ */ L(ab, {
+			case "foyer": return /* @__PURE__ */ L(lb, {
 				room: a,
 				mansion: e,
 				onReturn: t,
-				built: Z_(b, w)
+				built: tv(b, w)
 			});
-			case "study": return /* @__PURE__ */ L(db, { ...c });
-			case "drafting-room": return /* @__PURE__ */ L(Zy, { ...c });
-			case "workshop": return /* @__PURE__ */ L(fb, { ...c });
+			case "study": return /* @__PURE__ */ L(hb, { ...c });
+			case "drafting-room": return /* @__PURE__ */ L(tb, { ...c });
+			case "workshop": return /* @__PURE__ */ L(gb, { ...c });
 			case "attic": return /* @__PURE__ */ R(I, { children: [a.diagnostic === null || a.readOnly && a.integrity === "valid" ? null : /* @__PURE__ */ R("p", {
 				className: "hh-ui-note",
 				"data-kind": "diagnostic",
@@ -17285,13 +17274,13 @@ function bb({ mansion: e, onReturn: t, announcement: i = "", status: a, ghostNam
 					size: 16,
 					"aria-hidden": !0
 				}), /* @__PURE__ */ L("span", { children: a.diagnostic })]
-			}), /* @__PURE__ */ L(Iv, {
+			}), /* @__PURE__ */ L(Bv, {
 				replay: _,
 				onAnnounce: g,
 				motion: r.stillHouse ? "none" : "low-frequency",
 				watch: v !== "replay"
 			})] });
-			case "seance-room": return a.locked ? /* @__PURE__ */ L(ob, {}) : /* @__PURE__ */ L(ub, {
+			case "seance-room": return a.locked ? /* @__PURE__ */ L(ub, {}) : /* @__PURE__ */ L(mb, {
 				room: a,
 				review: y.review,
 				onOpenSession: y.openSession
@@ -17341,7 +17330,7 @@ function bb({ mansion: e, onReturn: t, announcement: i = "", status: a, ghostNam
 			})
 		]
 	});
-	return /* @__PURE__ */ L(hd, {
+	return /* @__PURE__ */ L(yd, {
 		projection: b,
 		renderSurface: T,
 		host: C,
@@ -17350,23 +17339,23 @@ function bb({ mansion: e, onReturn: t, announcement: i = "", status: a, ghostNam
 		notes: E,
 		banner: v === "replay" ? /* @__PURE__ */ R("div", {
 			className: "hh-ui-replay-head",
-			children: [/* @__PURE__ */ L(Rv, {
+			children: [/* @__PURE__ */ L(Hv, {
 				panel: x,
-				readOnlyText: y.authority.block === "read_only" && y.authority.text !== null ? y.authority.text : vb,
-				startText: _.state.cursor === 0 ? _b : null
-			}), /* @__PURE__ */ L(Qv, { practice: S })]
+				readOnlyText: y.authority.block === "read_only" && y.authority.text !== null ? y.authority.text : Sb,
+				startText: _.state.cursor === 0 ? xb : null
+			}), /* @__PURE__ */ L(ny, { practice: S })]
 		}) : void 0,
 		busy: y.loading,
 		onReturn: t,
 		panelMode: u,
 		inFlight: y.inFlight,
-		panelStyles: yb,
+		panelStyles: Cb,
 		guide: p,
-		guideOverride: v === "replay" && S.asking !== null ? /* @__PURE__ */ L($v, { practice: S }) : null
+		guideOverride: v === "replay" && S.asking !== null ? /* @__PURE__ */ L(ry, { practice: S }) : null
 	});
 }
 // src/App.tsx
-var xb = {
+var Tb = {
 	denied: {
 		short: "Refused the app token",
 		long: "Gateway refused the app token. Re-enable the app or approve its permissions on the app page."
@@ -17384,10 +17373,10 @@ var xb = {
 		long: "Gateway settings for this app are missing or not local, so the backend did not call it."
 	}
 };
-function Sb(e) {
+function Eb(e) {
 	return e === void 0 ? "" : ` (HTTP ${e})`;
 }
-function Cb(e) {
+function Db(e) {
 	switch (e.kind) {
 		case "loading": return {
 			tone: "pending",
@@ -17399,12 +17388,12 @@ function Cb(e) {
 		};
 		case "unreachable": return {
 			tone: "problem",
-			text: `Not reachable${Sb(e.status)}`,
+			text: `Not reachable${Eb(e.status)}`,
 			detail: e.message
 		};
 	}
 }
-function wb(e) {
+function Ob(e) {
 	switch (e.kind) {
 		case "loading": return {
 			tone: "pending",
@@ -17419,18 +17408,18 @@ function wb(e) {
 			text: `Version ${e.gateway.version}`
 		} : {
 			tone: "problem",
-			text: xb[e.gateway.error].short
+			text: Tb[e.gateway.error].short
 		};
 	}
 }
-function Tb(e) {
+function kb(e) {
 	switch (e.kind) {
 		case "loading": return "Checking the backend…";
-		case "unreachable": return `Backend not reachable${Sb(e.status)}`;
-		case "ok": return "version" in e.gateway ? `Backend reachable · Gateway ${e.gateway.version}` : `Backend reachable · ${xb[e.gateway.error].long}`;
+		case "unreachable": return `Backend not reachable${Eb(e.status)}`;
+		case "ok": return "version" in e.gateway ? `Backend reachable · Gateway ${e.gateway.version}` : `Backend reachable · ${Tb[e.gateway.error].long}`;
 	}
 }
-function Eb({ tone: e }) {
+function Ab({ tone: e }) {
 	let t = {
 		size: 18,
 		"aria-hidden": !0
@@ -17454,12 +17443,12 @@ function Eb({ tone: e }) {
 		});
 	}
 }
-function Db({ name: e, view: t }) {
+function jb({ name: e, view: t }) {
 	return /* @__PURE__ */ R("li", {
 		className: "hh-row",
 		"data-tone": t.tone,
 		children: [
-			/* @__PURE__ */ L(Eb, { tone: t.tone }),
+			/* @__PURE__ */ L(Ab, { tone: t.tone }),
 			/* @__PURE__ */ L("span", {
 				className: "hh-row-name",
 				children: e
@@ -17475,8 +17464,8 @@ function Db({ name: e, view: t }) {
 		]
 	});
 }
-var Ob = `
-.hh-house { ${xr("dark")} ${Tr("dark")}
+var Mb = `
+.hh-house { ${Tr("dark")} ${kr("dark")}
   --hh-font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, "Times New Roman", serif;
   font-family: var(--font-sans, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
   color: var(--card-fg, var(--text, var(--hh-fb-text))); line-height: 1.45;
@@ -17545,7 +17534,7 @@ var Ob = `
 .hh-house[data-landing='true'] .hh-status[data-quiet='true'] .hh-tagline { margin: 0 auto 6px; }
 .hh-house[data-landing='true'] .hh-status[data-quiet='true'] .hh-summary { color: var(--hh-sc-ink); }
 .hh-house[data-landing='true'] .hh-foyer { position: relative; z-index: 1; box-sizing: border-box; width: 100%; max-width: 44rem; }
-.hh-house[data-landing='true'] .hh-foyer-hall { ${xr("dark")}
+.hh-house[data-landing='true'] .hh-foyer-hall { ${Tr("dark")}
   --card: var(--hh-sc-balloon); --card-fg: var(--hh-fb-text); --text: var(--hh-fb-text); --muted: var(--hh-fb-text-muted);
   --border: var(--hh-fb-border); --border-strong: var(--hh-fb-border); --input: var(--hh-fb-surface-raised); --ok: var(--hh-fb-ok);
   --warn: var(--hh-fb-accent); --accent: var(--hh-fb-accent); --accent-fg: var(--hh-fb-accent-text); --ring: var(--hh-fb-focus);
@@ -17562,26 +17551,26 @@ var Ob = `
   .hh-icon-pending { animation: hh-spin 2s linear infinite; }
 }
 `;
-function kb({ state: e }) {
+function Nb({ state: e }) {
 	return /* @__PURE__ */ R("ul", {
 		className: "hh-rows",
 		"aria-label": "Status",
-		children: [/* @__PURE__ */ L(Db, {
+		children: [/* @__PURE__ */ L(jb, {
 			name: "Backend",
-			view: Cb(e)
-		}), /* @__PURE__ */ L(Db, {
+			view: Db(e)
+		}), /* @__PURE__ */ L(jb, {
 			name: "Gateway",
-			view: wb(e)
+			view: Ob(e)
 		})]
 	});
 }
-var Ab = [], jb = Pt?.subscribe ?? (() => () => void 0), Mb = () => Pt?.version?.() ?? 0;
-function Nb(e = {}) {
-	let t = u(jb, Mb, Mb);
-	return /* @__PURE__ */ L(Pb, { ...e }, t);
+var Pb = [], Fb = Pt?.subscribe ?? (() => () => void 0), Ib = () => Pt?.version?.() ?? 0;
+function Lb(e = {}) {
+	let t = u(Fb, Ib, Ib);
+	return /* @__PURE__ */ L(Rb, { ...e }, t);
 }
-function Pb({ landing: e }) {
-	let { state: t, retry: a } = gt(), o = Pt !== null, u = e ?? (o ? Zd : void 0), [d, f] = l(""), [p, m] = l(null), [h, g] = l(sd), [_, v] = s(Fd, o, Pd), [y, b] = l(!0), x = t.kind === "ok", S = x && p !== null, C = x && !S && _.place === "gate", w = i(), T = c(null);
+function Rb({ landing: e }) {
+	let { state: t, retry: a } = gt(), o = Pt !== null, u = e ?? (o ? tf : void 0), [d, f] = l(""), [p, m] = l(null), [h, g] = l(dd), [_, v] = s(zd, o, Rd), [y, b] = l(!0), x = t.kind === "ok", S = x && p !== null, C = x && !S && _.place === "gate", w = i(), T = c(null);
 	we(T, C);
 	let E = n((e) => {
 		b(e.kind === "loading"), e.kind === "ready" && v({
@@ -17605,7 +17594,7 @@ function Pb({ landing: e }) {
 		k.current = e ? "call" : "status", g((t) => ({
 			...t,
 			quiet: e
-		})), f(cd.quiet(e));
+		})), f(fd.quiet(e));
 	}, j = {
 		words: h.kiroWords ? "with-kiro" : "plain",
 		quiet: h.quiet,
@@ -17616,8 +17605,8 @@ function Pb({ landing: e }) {
 		e.id.startsWith("enter:") || e.id.startsWith("watch:") ? n.open(e.id.slice(e.id.indexOf(":") + 1), t) : e.id === "build-new" ? (k.current = "idea", v({ type: "idea_opened" })) : e.id === "name-myself" ? (v({ type: "idea_closed" }), document.querySelector(".hh-create input")?.focus()) : e.id === "step-outside" && (k.current = "status", v({ type: "stepped_outside" }));
 	}, N = (e) => {
 		if (_.place !== "hall" && _.place !== "mansion") return null;
-		let t = Yd(_, e.mansions, e.selectedName, u?.mansion ?? null);
-		return /* @__PURE__ */ L(If, {
+		let t = $d(_, e.mansions, e.selectedName, u?.mansion ?? null);
+		return /* @__PURE__ */ L(Bf, {
 			...j,
 			status: t.status,
 			question: t.question,
@@ -17625,7 +17614,7 @@ function Pb({ landing: e }) {
 			pose: t.pose,
 			poseLabel: t.poseLabel,
 			onPress: (t, n) => M(t, n, e),
-			children: _.idea ? /* @__PURE__ */ L(Vf, {
+			children: _.idea ? /* @__PURE__ */ L(Gf, {
 				mansions: e.mansions,
 				ready: e.ready,
 				mutation: e.mutation,
@@ -17633,7 +17622,7 @@ function Pb({ landing: e }) {
 				onBuild: e.build
 			}) : null
 		});
-	}, ee = n((e, n) => /* @__PURE__ */ L(bb, {
+	}, ee = n((e, n) => /* @__PURE__ */ L(wb, {
 		mansion: e,
 		onReturn: n,
 		announcement: d,
@@ -17641,9 +17630,9 @@ function Pb({ landing: e }) {
 			settings: h,
 			onChange: g
 		},
-		status: /* @__PURE__ */ R(I, { children: [/* @__PURE__ */ L(kb, { state: t }), /* @__PURE__ */ L("p", {
+		status: /* @__PURE__ */ R(I, { children: [/* @__PURE__ */ L(Nb, { state: t }), /* @__PURE__ */ L("p", {
 			className: "hh-summary",
-			children: Tb(t)
+			children: kb(t)
 		})] })
 	}), [
 		d,
@@ -17656,12 +17645,12 @@ function Pb({ landing: e }) {
 		"data-landing": x && !S,
 		"data-place": x ? _.place : void 0,
 		children: [
-			/* @__PURE__ */ L("style", { children: Ob + hr + It + Qd }),
+			/* @__PURE__ */ L("style", { children: Mb + yr + It + nf }),
 			x && !S ? /* @__PURE__ */ R("span", {
 				className: "hh-landing-door",
 				"aria-hidden": "true",
 				ref: T,
-				children: [/* @__PURE__ */ L(ur, { knocker: _.place !== "hall" }), C ? /* @__PURE__ */ L("span", {
+				children: [/* @__PURE__ */ L(mr, { knocker: _.place !== "hall" }), C ? /* @__PURE__ */ L("span", {
 					className: "hh-landing-knocker",
 					"data-knocker": !0,
 					onClick: () => {
@@ -17680,13 +17669,13 @@ function Pb({ landing: e }) {
 				}), S ? null : /* @__PURE__ */ R(I, { children: [
 					x ? /* @__PURE__ */ L("p", {
 						className: "hh-tagline",
-						children: Xd
+						children: ef
 					}) : null,
-					/* @__PURE__ */ L(kb, { state: t }),
+					/* @__PURE__ */ L(Nb, { state: t }),
 					/* @__PURE__ */ R("p", {
 						className: "hh-summary",
 						"aria-live": "polite",
-						children: [Tb(t), x && d !== "" ? /* @__PURE__ */ R(I, { children: [" ", /* @__PURE__ */ L("span", {
+						children: [kb(t), x && d !== "" ? /* @__PURE__ */ R(I, { children: [" ", /* @__PURE__ */ L("span", {
 							className: "hh-announcement",
 							children: d
 						})] }) : null]
@@ -17708,15 +17697,15 @@ function Pb({ landing: e }) {
 			C ? /* @__PURE__ */ L("div", {
 				className: "hh-gate",
 				"data-gate-screen": !0,
-				children: /* @__PURE__ */ L(If, {
+				children: /* @__PURE__ */ L(Bf, {
 					...j,
-					status: Id,
+					status: Bd,
 					question: null,
-					options: Ab,
+					options: Pb,
 					pose: "watching",
-					poseLabel: _c.watching,
+					poseLabel: bc.watching,
 					onPress: () => {},
-					children: /* @__PURE__ */ L(Mf, {
+					children: /* @__PURE__ */ L(If, {
 						formId: w,
 						onKnock: (e) => {
 							k.current = "status", v({
@@ -17727,7 +17716,7 @@ function Pb({ landing: e }) {
 					})
 				})
 			}) : null,
-			x ? /* @__PURE__ */ L(jf, {
+			x ? /* @__PURE__ */ L(Ff, {
 				onAnnounce: f,
 				onMansionChange: D,
 				onLoad: E,
@@ -17742,4 +17731,4 @@ function Pb({ landing: e }) {
 		]
 	});
 }
-export { Nb as default };
+export { Lb as default };

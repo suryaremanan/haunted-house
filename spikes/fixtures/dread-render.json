@@ -336,20 +336,12 @@
  "lookedAt": "Looked at by the agent that made them (Claude Code), 18 Nov, in contact sheets of 1280x720 screenshots: the Gate; the Foyer, Study, Drafting Room, Workshop and Attic at the held moment (record 64) and at the end (record 91), at Calm, Eerie and Dread; the Workshop mid-refusal (Tinker 2 dragged back, record 66) and mid-release (a ghost fleeing the Warden's chain, record 82); a practice question in the Warden's balloon at 1280x720, 1024x768, 768x1024 and 390x844 with the room fully inside the window; and 'What was made' at 1280x720 and 390x844. Screenshots are not committed.",
  "practiceFit": {
   "1280x720": {
-   "sceneBottom": 621,
-   "viewport": 720
+   "pageHeight": 720,
+   "sceneWidth": 746
   },
   "1024x768": {
-   "sceneBottom": 640,
-   "viewport": 768
-  },
-  "768x1024": {
-   "sceneBottom": 825,
-   "viewport": 1024
-  },
-  "390x844": {
-   "sceneBottom": 664,
-   "viewport": 844
+   "pageHeight": 768,
+   "sceneWidth": 644
   }
  },
  "holdAftermath": {
@@ -357,5 +349,6 @@
   "releasedFled": true,
   "clearedAfterPlaying": true,
   "runsAtHeldMomentInWorkshop": "3 of 3"
- }
+ },
+ "afterReview": "After the owner's review on 18 Nov: the head of the house is one slim line in a wide window, the brand plate folds away inside a mansion, and the page fits a 1280x720 window exactly (scroll height 720) with the room about 740 px wide, up from about 480. The ghosts are redrawn as tall, translucent torn shrouds with reaching hands, drawn 1.55 times larger at Eerie and Dread; the Warden stands at 0.8 when nothing waits, 1.25 forward and 1.6 holding a ghost, anchored at his right foot so he never reaches the balloon. Looked at again: every room at the held moment and at the end at Eerie and Dread, at 1280x720."
 }
