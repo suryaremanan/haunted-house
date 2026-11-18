@@ -15479,8 +15479,20 @@ function Jv(e) {
 		_
 	]);
 	let y = s ? i.find((e) => !d.has(e.eventId) && h === e.sequence - 1) ?? null : null, b = n(() => {
-		u((e) => !e), f(/* @__PURE__ */ new Set()), m(null);
-	}, []), x = n((e) => {
+		let e = !s;
+		if (u(e), f(/* @__PURE__ */ new Set()), m(null), !e) return;
+		let t = i.find((e) => e.sequence > h) ?? i[0];
+		t !== void 0 && (g === "playing" && _({ kind: "pause" }), v.current = t.sequence - 1, _({
+			kind: "seek",
+			cursor: t.sequence - 1
+		}));
+	}, [
+		s,
+		i,
+		h,
+		g,
+		_
+	]), x = n((e) => {
 		y !== null && m(Bv(y, e));
 	}, [y]), S = n(() => {
 		y !== null && (f((e) => /* @__PURE__ */ new Set([...e, y.eventId])), m(null), v.current = y.sequence, _({

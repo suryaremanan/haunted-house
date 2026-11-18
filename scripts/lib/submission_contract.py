@@ -220,6 +220,10 @@ _PLACEHOLDER = re.compile(
 _LOCAL_PATH = re.compile(r"(?:/Users/|/home/)[A-Za-z0-9._-]+/|[A-Za-z]:\\Users\\|file://")
 # Assembled so this module does not itself contain the names it rejects.
 _PROHIBITED = re.compile(r"\b(?:" + "|".join(("micro" + "soft", "b" + "ob")) + r")\b", re.IGNORECASE)
+# The two documents that say what is being resurrected may name it (owner's
+# decision, 18 Nov). The app, its assets, its fixtures and every other
+# document still may not; scripts/lib/asset_contract.py keeps the app clean.
+NAMES_ALLOWED_IN = ("README.md", "docs/writeup.md")
 
 
 def _safe(text: str) -> str:
@@ -367,7 +371,7 @@ def check_markdown(path: str, text: str, exists: Exists) -> list[Finding]:
             found.append(Finding(path, number, PLACEHOLDER))
         if _LOCAL_PATH.search(line):
             found.append(Finding(path, number, LOCAL_PATH))
-        if _PROHIBITED.search(line):
+        if _PROHIBITED.search(line) and path not in NAMES_ALLOWED_IN:
             found.append(Finding(path, number, PROHIBITED_NAME))
         for script in _SCRIPT.findall(line):
             if not exists(script):

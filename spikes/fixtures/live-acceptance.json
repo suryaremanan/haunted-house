@@ -1,0 +1,35 @@
+{
+ "spike": "live-acceptance",
+ "startedAt": "2026-11-18T02:52:20.763Z",
+ "finishedAt": "2026-11-18T02:52:20.764Z",
+ "phase": "preflight",
+ "result": "pass",
+ "steps": [
+  {
+   "id": "gateway-answers",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "app-installed",
+   "pass": true,
+   "detail": "version 0.1.0"
+  },
+  {
+   "id": "app-enabled",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "app-trusted",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "installed-from-this-checkout",
+   "pass": true,
+   "detail": ""
+  }
+ ],
+ "appVersion": "0.1.0"
+}

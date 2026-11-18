@@ -2,7 +2,15 @@
 
 Haunted House is a spatial home for AI agents. Rooms are spec phases, ghosts are agents, and doors are your approvals. You walk through the house to see what each agent is doing and what it is allowed to touch, instead of reading a chat log.
 
-It is a [Kiro Crew](https://kiro.dev/docs/crew/) app, built for Kiroween 2026 (Resurrection category): the 1990s "house as interface" idea, remade for the agent era.
+It is a [Kiro Crew](https://kiro.dev/docs/crew/) app, built for Kiroween 2026 (Resurrection category). What it brings back is Microsoft Bob (1995): a desktop drawn as a house, with rooms to walk into and a guide who spoke in balloons. Bob failed because its rooms were decoration over a few simple programs and its guide talked down and got in the way. Several AI agents working on one project are different: they have jobs, limits and moments when they need you, and a house with rooms, walls, doors and occupants is a good way to show exactly that. Haunted House keeps Bob's idea and treats each of its failures as a rule. It uses no Microsoft or Bob name, character, art or sound in the app; everything is original SVG.
+
+| | Spec Builder | Agent Worlds | Haunted House |
+|---|---|---|---|
+| What you see | Requirements, design and tasks as documents | Running agents as animated characters | One project as a house: rooms are phases, ghosts are agents |
+| Approvals | Gates between documents | None of its own | Doors that open only on your approval, plus exact approvals for risky actions |
+| What an agent may touch | Not shown | Not shown | Walls: each room's allowed paths, shown and enforced |
+| History | The documents | Live only | An append-only séance log, replayed by the Attic |
+| Without Crew | No | No | A public replay with a practice mode, and any run's séance log can be opened in it |
 
 What the house shows that a chat log does not is each agent's authority:
 
@@ -14,9 +22,9 @@ What the house shows that a chat log does not is each agent's authority:
 
 The static replay is the same interface built as a plain web page. It plays a recorded, synthetic séance log and needs no Crew, no account and no install. It is read-only: it cannot start a ghost, approve anything or reach a Crew gateway.
 
-The public replay link is not listed yet. It is published by the Pages workflow (`.github/workflows/pages.yml`) and will be added here only after the repository check recorded in [docs/publication-metadata.json](docs/publication-metadata.json) has verified it.
+**Open it: https://suryaremanan.github.io/haunted-house/** — knock, watch demo-mansion get built, and turn on "Practice: you decide" to make the owner's decisions yourself. You can also drop a séance log of your own run on the Attic. The source is at https://github.com/suryaremanan/haunted-house.
 
-Until then you can build the same page from a clone:
+You can also build the same page from a clone:
 
 ```bash
 bun install --cwd app/ui --frozen-lockfile
