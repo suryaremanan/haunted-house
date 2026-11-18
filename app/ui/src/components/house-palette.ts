@@ -72,9 +72,9 @@ export const HOUSE_PALETTES: Readonly<Record<ThemeMode, HousePalette>> = {
     working: '#125c8c',
   },
   dark: {
-    canvas: '#0c1530',
-    surface: '#141f3f',
-    surfaceRaised: '#1d2a52',
+    canvas: '#08070f',
+    surface: '#13101d',
+    surfaceRaised: '#1d1829',
     text: '#eef2ff',
     textMuted: '#bcc7e8',
     border: '#8c9bd0',
@@ -208,6 +208,12 @@ export interface ScenePalette {
   readonly iron: string
   /** A ghost's sheet in the painted rooms. */
   readonly spectre: string
+  /** Night paper: the dark slate everything with words on the house's own paper is set on. */
+  readonly slate: string
+  /** The bone ink set on `slate`. */
+  readonly slateInk: string
+  /** The dull brass of a pressed tag on `slate`. */
+  readonly slateBrass: string
 }
 
 const INTERIOR = {
@@ -242,11 +248,17 @@ const INTERIOR = {
   frontDoor: '#5b1626',
   iron: '#17151d',
   spectre: '#eaf6ff',
+  slate: '#1d1626',
+  slateInk: '#efe4cc',
+  slateBrass: '#6d5426',
 } as const
 
+// The house is night in either colour scheme (dread-and-night, Requirement 1.1): both modes are the same night sheet.
+const NIGHT_SHEET = { ...INTERIOR, sheet: '#0b0a14', sheetLine: '#1d1a2e', sheetInk: '#a99cc9', poche: '#050409' } as const
+
 export const SCENE_PALETTES: Readonly<Record<ThemeMode, ScenePalette>> = {
-  light: { ...INTERIOR, sheet: '#d6e3f8', sheetLine: '#b4c8ec', sheetInk: '#355aa6', poche: '#1b2547' },
-  dark: { ...INTERIOR, sheet: '#0d1838', sheetLine: '#1c3166', sheetInk: '#8fb3f5', poche: '#060a18' },
+  light: NIGHT_SHEET,
+  dark: NIGHT_SHEET,
 }
 
 /** `wallFoyer` becomes `--hh-sc-wall-foyer`. */

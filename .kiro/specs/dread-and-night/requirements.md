@@ -26,7 +26,7 @@ Terms of `house-ui-and-accessibility` and `warden-guide-and-first-visit` keep th
 - **Room_Light**: One of `moonlit` (nothing happens), `candle` (a ghost works), `leak` (work waits behind a sealed Door). Derived from the House_Projection.
 - **Window_Glow**: One of `dark`, `lit`, `held`, the map's window for a Room.
 - **Warden_Stance**: How far the Warden steps forward: `edge` when nothing waits, `forward` when something needs the Visitor, `holding` when a ghost is held.
-- **Neglect**: How many records of the log have passed since anything happened in a Room. Thickens cobwebs.
+- **Neglect**: How long nobody has worked in a Room, read from what the Room holds now: none where work happens or waits, most where no ghost has ever been. Thickens cobwebs.
 - **Atmosphere**: Fog, dust and rain. Decoration with no state of its own; never above a control.
 - **Seance_Board**: The replay scrubber drawn as a board, with a planchette thumb and one mark per recorded event.
 - **Dread_Effects**: The pure value that says, for one Fright_Level and one Motion_Policy, which effects are drawn and which move.

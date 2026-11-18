@@ -26,7 +26,7 @@ Every effect, the state it shows, and how it reads with motion off. "Text" names
 | Chain empty after release; ghost back in room after refusal | The decision was made | Same | The room's proposal shows "Released" or "Refused" |
 | Hollow-eyed ghost per state silhouette | Ghost_State | Same silhouettes, no drift | Ghost text label |
 | Chain and wax seal on a door; broken seal | Door sealed / open | Same | Door label |
-| Cobwebs, three steps | How long since anything happened in the room | Same | None needed: no decision depends on it |
+| Cobwebs, three steps | How long nobody has worked in the room: none where work happens, thickest where no ghost has ever been | Same | None needed: no decision depends on it |
 | Fog, dust, rain | Nothing (atmosphere only, at Eerie and Dread) | Drawn still at Eerie/Dread, absent at Calm | None needed |
 | Séance-board scrubber, planchette thumb, event marks | Replay position and where events fall | Same | The range's label and value text "Event 64 of 91" |
 | Knocker eyes follow the pointer; one shudder on knock | That the Gate is listening; that you knocked | Eyes fixed ahead, no shudder | Balloon Status_Line |
@@ -60,7 +60,7 @@ export type WindowGlow = 'dark' | 'lit' | 'held'
 export function windowGlow(room: RoomPresentation, needsYou: readonly NeedsYouItem[]): WindowGlow
 export interface WardenStance { stance: 'edge' | 'forward' | 'holding'; heldGhostId: string | null }
 export function wardenStance(projection: HouseProjection): WardenStance
-export function cobwebStep(room: RoomPresentation, version: number): 0 | 1 | 2 | 3
+export function cobwebStep(room: RoomPresentation): 0 | 1 | 2 | 3
 export interface DreadEffects { night: boolean; stateLight: boolean; fog: boolean; dust: boolean; rain: boolean; moves: boolean }
 export function dreadEffects(level: FrightLevel, motion: EffectiveMotion): DreadEffects
 export function heartbeatBpm(waiting: number): number | null
@@ -72,7 +72,7 @@ export function heartbeatBpm(waiting: number): number | null
 
 `wardenStance` gives `holding` with the ghost of the first waiting risky action, `forward` when anything else needs the Visitor, else `edge`.
 
-`cobwebStep` uses the room's last activity sequence (the highest sequence of a record about one of its ghosts or doors, already on the Room presentation as `lastSequence`) against the projection version: fewer than 10 records since: 0; fewer than 30: 1; fewer than 60: 2; else 3. A room with no activity at all is step 3.
+`cobwebStep` reads how long nobody has been in the room from what the room holds now: 0 where a ghost works or waits or a Door waits, 1 where the work is over (done, blocked or failed and nothing waits), 2 where ghosts have been but all are idle, 3 where no ghost has ever been. (The House_Projection carries no per-room sequence, so the step is not measured in records.)
 
 `dreadEffects`: at `calm` nothing but night; at `eerie` night, state light, fog and dust; at `dread` all of them and rain. `moves` is true only when the Motion_Policy is `low-frequency`.
 
@@ -104,9 +104,9 @@ For every House_Projection, `wardenStance` is `edge` exactly when nothing needs 
 
 **Validates: Requirement 7.3**
 
-### Property 5: Cobwebs only thicken with neglect
+### Property 5: Cobwebs never lie where something happens
 
-For a fixed room, `cobwebStep` never decreases as the projection version grows, and is 0 right after activity.
+For every room, `cobwebStep` is 0 when a ghost there works or waits or a Door there waits, and 3 when no ghost has ever been there.
 
 **Validates: Requirement 5.2**
 

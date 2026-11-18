@@ -8,15 +8,18 @@
 // real, labelled button. Every press, from the painting, a label or the
 // balloon, is a press plan: the page presses the one real control for it
 // elsewhere. Nothing here decides anything.
-import { Languages, LogOut, Map as MapIcon, Megaphone, MousePointerClick } from 'lucide-react'
+import { Ghost, Languages, LogOut, Map as MapIcon, Megaphone, MousePointerClick } from 'lucide-react'
 import { useId, type CSSProperties, type RefObject } from 'react'
+import { FRIGHT_TEXT, cobwebStep, dreadEffects, roomLight, wardenStance, type FrightLevel } from '../core/dread'
 import { workingObjects, type Box, type WorkingObject } from '../core/guide-layout'
 import { pressedControls, type GuideView, type PressStep } from '../core/house-guide'
 import type { HouseProjection } from '../core/house-projection'
+import type { EffectiveMotion } from '../core/motion-policy'
 import type { RoomId } from '../core/house-registry'
 import type { WordMode } from '../core/house-words'
 import { GuideBalloon } from './GuideBalloon'
 import { ObjectLabels } from './ObjectLabels'
+import { Atmosphere, HollowSpectre, StateLight, WardenShadow, type LeakAt } from './dread-art'
 import { DeskPainting, RoomPainting, SpectreArt, WardenArt, spectreRoleOf } from './room-paint'
 
 /** The guide's own settings, kept on the apron so they work while the Warden has stepped back. */
@@ -28,6 +31,9 @@ export interface StageSettings {
   readonly onToggleWords: () => void
   readonly reveal: boolean
   readonly onToggleReveal: () => void
+  /** How frightening the house is drawn: Calm, Eerie or Dread. It changes no word and no control. */
+  readonly fright: FrightLevel
+  readonly onCycleFright: () => void
 }
 
 export interface RoomStageProps {
@@ -50,8 +56,12 @@ export interface RoomStageProps {
   /** Why the last press did nothing. */
   refusal?: string | null
   statusRef?: RefObject<HTMLParagraphElement>
+  /** Whether the house may move (the Motion Policy). */
+  motion?: EffectiveMotion
 }
 
+export const FRIGHT_LABEL = 'Fright'
+export const FRIGHT_HINT = 'Calm, Eerie or Dread: how dark and frightening the house is drawn. It changes nothing else.'
 export const CALL_WARDEN_LABEL = 'Call the Warden'
 export const CALL_WARDEN_HINT = 'He says what is going on in this room and lists what you can do.'
 export const GUIDE_SETTINGS_NAME = 'Guide settings'
@@ -79,13 +89,21 @@ export function RoomStage({
   onReturn,
   refusal = null,
   statusRef,
+  motion = 'none',
 }: RoomStageProps) {
   const callHintId = useId()
+  const frightHintId = useId()
   const room = projection.rooms.find((candidate) => candidate.roomId === roomId)
   if (room === undefined) return null
   const lit = room.ghosts.some((ghost) => ghost.state === 'working' || ghost.state === 'waiting')
   const [firstDoor, secondDoor] = room.doors
   const objects = workingObjects(room, view, words, projection.needsYou.length)
+  // Dread: every effect is read from the projection, so it shows something true.
+  const effects = dreadEffects(settings.fright, motion)
+  const dread = settings.fright !== 'calm'
+  const light = roomLight(room)
+  const stance = wardenStance(projection).stance
+  const leakAt: LeakAt = firstDoor?.state === 'waiting' ? 'side' : secondDoor?.state === 'waiting' ? 'back' : null
 
   const spot = (object: WorkingObject) => {
     const ghost = object.kind === 'ghost' ? room.ghosts.find((candidate) => `ghost:${candidate.ghostId}` === object.key) : undefined
@@ -93,13 +111,21 @@ export function RoomStage({
       <span key={object.key} className="hh-stage-spot" data-spot={object.key} data-label={object.label} style={placed(object.box)} onClick={() => onPress(object.steps)} />
     ) : (
       <span key={object.key} className="hh-stage-figure" data-ghost={ghost.state} data-label={object.label} style={placed(object.box)} onClick={() => onPress(object.steps)}>
-        <SpectreArt state={ghost.state} role={spectreRoleOf(ghost.ghostId)} />
+        {dread ? <HollowSpectre state={ghost.state} role={spectreRoleOf(ghost.ghostId)} /> : <SpectreArt state={ghost.state} role={spectreRoleOf(ghost.ghostId)} />}
       </span>
     )
   }
 
   return (
-    <div className="hh-stage-room" data-stage-room={roomId} data-open={open} data-quiet={quiet} data-reveal={settings.reveal}>
+    <div
+      className="hh-stage-room"
+      data-stage-room={roomId}
+      data-open={open}
+      data-quiet={quiet}
+      data-reveal={settings.reveal}
+      data-light={dread ? light : undefined}
+      data-stance={stance}
+    >
       <h3 className="hh-stage-room-title" data-stage-title>
         You are in the {room.name}
       </h3>
@@ -111,11 +137,15 @@ export function RoomStage({
           lit={lit}
           hasPrevious={view.previous !== null}
           hasNext={view.next !== null}
+          dread={dread ? { webs: cobwebStep(room) } : undefined}
         />
         <div className="hh-stage-spots" aria-hidden="true">
           {objects.filter((object) => !ON_DESK.includes(object.kind)).map(spot)}
         </div>
         <DeskPainting />
+        <StateLight light={light} leakAt={leakAt} effects={effects} />
+        <Atmosphere effects={effects} />
+        {dread ? <WardenShadow stance={stance} /> : null}
         <div className="hh-stage-spots" aria-hidden="true">
           {objects.filter((object) => ON_DESK.includes(object.kind)).map(spot)}
         </div>
@@ -146,6 +176,13 @@ export function RoomStage({
             <MousePointerClick size={13} aria-hidden />
             {REVEAL_TOGGLE_LABEL}: {settings.reveal ? 'on' : 'off'}
           </button>
+          <button type="button" className="hh-stage-setting" data-fright-toggle={settings.fright} aria-describedby={frightHintId} onClick={settings.onCycleFright}>
+            <Ghost size={13} aria-hidden />
+            {FRIGHT_LABEL}: {FRIGHT_TEXT[settings.fright]}
+          </button>
+          <span className="hh-guide-hidden" id={frightHintId}>
+            {FRIGHT_HINT}
+          </span>
         </div>
         <div className="hh-stage-keeper" data-guide-keeper>
           <span className="hh-stage-warden" aria-hidden="true">

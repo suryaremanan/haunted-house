@@ -80,6 +80,7 @@ export function ReplayBar({ panel, readOnlyText, startText }: ReplayBarProps) {
           aria-label={`Recording position: ${panel.summary.positionText}`}
           aria-valuetext={panel.summary.positionText}
           aria-disabled={!transport.seek.enabled}
+          style={{ ['--hh-marks' as string]: Math.max(1, panel.total) }}
           onChange={(event) => {
             if (transport.seek.enabled) panel.onSeek(Number(event.currentTarget.value))
           }}

@@ -6,6 +6,7 @@
 //
 // Viewing is not deciding: a control here only asks the shell to open a
 // surface. Nothing in this file can approve, start or send anything.
+import { WINDOW_GLOW_TEXT, type WindowGlow } from '../core/dread'
 import { Bell, CircleDashed, Lock, TriangleAlert } from 'lucide-react'
 import { useId } from 'react'
 import {
@@ -33,11 +34,13 @@ export interface RoomHotspotsProps {
   onOpen: (target: HouseSurfaceTarget, opener: HTMLElement) => void
   /** An arrow key was pressed on the Room control. */
   onArrow: (room: RoomId, direction: ArrowDirection | 'Home' | 'End') => void
+  /** The room's window from outside: lit for work, dark when idle, red when something is held. Its words are in the room's name. */
+  glow?: WindowGlow
 }
 
 const ARROWS: ReadonlySet<string> = new Set(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End'])
 
-export function RoomHotspots({ room, needsYou, openKey, panelId, onOpen, onArrow }: RoomHotspotsProps) {
+export function RoomHotspots({ room, needsYou, openKey, panelId, onOpen, onArrow, glow = 'dark' }: RoomHotspotsProps) {
   const needsId = useId()
   const reasonId = useId()
   const roomTarget: HouseSurfaceTarget = { kind: 'room', roomId: room.roomId }
@@ -55,6 +58,7 @@ export function RoomHotspots({ room, needsYou, openKey, panelId, onOpen, onArrow
       data-locked={room.locked}
       data-read-only={room.readOnly}
       data-needs={needsYou > 0}
+      data-glow={glow}
     >
       <div className="hh-ui-room-controls">
         <button
@@ -188,6 +192,7 @@ export function RoomHotspots({ room, needsYou, openKey, panelId, onOpen, onArrow
       </div>
       <div className="hh-ui-room-scene">
         <RoomDiorama room={room} interactive />
+        <span className="hh-ui-window" data-glow={glow} title={WINDOW_GLOW_TEXT[glow]} aria-hidden="true" />
       </div>
     </li>
   )

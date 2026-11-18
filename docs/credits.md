@@ -20,7 +20,7 @@ Screenshots and the video thumbnail are not captured yet. Each will be an origin
 
 ## Audio
 
-No audio file ships. The house's optional sounds (a door creak, a knock, a latch, a draught, two small bells and a moan) are synthesised in the browser by `app/ui/src/adapters/house-sound.ts` from oscillators and filtered noise written for this repository. There is no sample, no music and no recording. Sound is off on every visit until you press Sound.
+No audio file ships. The house's optional sounds (a door creak, a knock, a latch, a draught, two small bells, a moan, and at the Eerie and Dread levels a low drone and a heartbeat) are synthesised in the browser by `app/ui/src/adapters/house-sound.ts` from oscillators and filtered noise written for this repository. There is no sample, no music and no recording. Sound is off on every visit until you press Sound.
 
 ## Software acknowledgements
 

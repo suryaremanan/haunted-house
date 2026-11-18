@@ -1,0 +1,337 @@
+{
+ "spike": "dread-render",
+ "date": "2026-11-18",
+ "runner": "headless Comet over CDP (scripts/capture-house.mjs) on app/ui/dist-replay served from loopback",
+ "checks": [
+  "every visible control's centre hits the control itself (nothing atmospheric covers it)",
+  "the page never scrolls sideways",
+  "no request failed"
+ ],
+ "windows": [
+  [
+   1280,
+   720
+  ],
+  [
+   1024,
+   768
+  ],
+  [
+   768,
+   1024
+  ],
+  [
+   390,
+   844
+  ]
+ ],
+ "frightLevels": [
+  "calm",
+  "eerie",
+  "dread"
+ ],
+ "stillHouse": [
+  false,
+  true
+ ],
+ "records": [
+  64,
+  91
+ ],
+ "states": 48,
+ "covered": 0,
+ "sidewaysScroll": 0,
+ "failedRequests": 0,
+ "result": "pass",
+ "cases": [
+  {
+   "tag": "64-calm-move-1280",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "91-calm-move-1280",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "64-eerie-move-1280",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "91-eerie-move-1280",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "64-dread-move-1280",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "91-dread-move-1280",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "64-calm-still-1280",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "91-calm-still-1280",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "64-eerie-still-1280",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "91-eerie-still-1280",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "64-dread-still-1280",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "91-dread-still-1280",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "64-calm-move-1024",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "91-calm-move-1024",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "64-eerie-move-1024",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "91-eerie-move-1024",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "64-dread-move-1024",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "91-dread-move-1024",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "64-calm-still-1024",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "91-calm-still-1024",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "64-eerie-still-1024",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "91-eerie-still-1024",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "64-dread-still-1024",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "91-dread-still-1024",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "64-calm-move-768",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "91-calm-move-768",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "64-eerie-move-768",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "91-eerie-move-768",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "64-dread-move-768",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "91-dread-move-768",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "64-calm-still-768",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "91-calm-still-768",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "64-eerie-still-768",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "91-eerie-still-768",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "64-dread-still-768",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "91-dread-still-768",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "64-calm-move-390",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "91-calm-move-390",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "64-eerie-move-390",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "91-eerie-move-390",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "64-dread-move-390",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "91-dread-move-390",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "64-calm-still-390",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "91-calm-still-390",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "64-eerie-still-390",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "91-eerie-still-390",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "64-dread-still-390",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  },
+  {
+   "tag": "91-dread-still-390",
+   "covered": [],
+   "hscroll": false,
+   "failed": 0
+  }
+ ],
+ "lookedAt": "Screenshots of the Gate, the Workshop at the held moment and the Attic at the end were looked at by the agent that made them, at each window size and level; they are not committed."
+}

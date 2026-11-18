@@ -5,6 +5,7 @@
 //
 // Arrow keys act on Room controls only and follow the fixed map of
 // `house-registry.ts`. Ghost and Door controls are reached with Tab.
+import { windowGlow } from '../core/dread'
 import { useCallback, useId, useMemo, useRef } from 'react'
 import type { HouseProjection, HouseSurfaceTarget } from '../core/house-projection'
 import { nextRoom, type ArrowDirection, type RoomId } from '../core/house-registry'
@@ -62,6 +63,7 @@ export function HouseMap({ projection, openSurface, motion, openKey = null, pane
               key={room.roomId}
               room={room}
               needsYou={projection.needsYou.filter((item) => item.roomId === room.roomId).length}
+              glow={windowGlow(room, projection.needsYou)}
               openKey={openKey}
               panelId={panelId}
               onOpen={openSurface}

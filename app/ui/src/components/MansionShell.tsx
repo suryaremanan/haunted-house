@@ -10,6 +10,8 @@
 // It has no reducer for rooms, Doors, ghosts or approvals, no generic approve
 // function, no raw path and no composer. What a panel shows and sends is
 // decided by `renderSurface`, which the upstream room modules fill.
+import { DEFAULT_FRIGHT, FRIGHT_TEXT, nextFright, type FrightLevel } from '../core/dread'
+import { DREAD_STYLES } from './dread-styles'
 import { useCallback, useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react'
 import { useHostEffects, type HostEffectsInput } from '../adapters/host-effects'
 import {
@@ -277,7 +279,9 @@ export function MansionShell({
 
   const top = stack.top
   const openKey = top === null ? null : surfaceKey(top.target)
-  const sound = useHouseSound(projection, openKey)
+  // How frightening the house is drawn. Like Still House, it lasts while the page is open.
+  const [fright, setFright] = useState<FrightLevel>(DEFAULT_FRIGHT)
+  const sound = useHouseSound(projection, openKey, undefined, fright)
   const [turned, setTurned] = useState(false)
   // The room the visitor is standing in: the one on show, else the last one visited,
   // else where the work is (`landingRoom`).
@@ -330,6 +334,13 @@ export function MansionShell({
     },
     [changeSettings, say],
   )
+  const frightNow = useRef(fright)
+  frightNow.current = fright
+  const cycleFright = useCallback(() => {
+    const next = nextFright(frightNow.current)
+    setFright(next)
+    say(`Fright: ${FRIGHT_TEXT[next]}.`)
+  }, [say])
   escape.current.reveal = settings.reveal
   escape.current.setReveal = (on) => setSetting('reveal', on)
 
@@ -390,6 +401,7 @@ export function MansionShell({
       aria-busy={busy}
       data-theme={theme.mode}
       data-motion={motion.effective}
+      data-fright={fright}
       data-still={motion.effective === 'none'}
       data-mode={projection.mode}
       data-map={mapOpen ? 'open' : 'closed'}
@@ -402,7 +414,7 @@ export function MansionShell({
         stack.close()
       }}
     >
-      <style>{HOUSE_UI_STYLES + HOUSE_STAGE_STYLES + ROOM_PAINT_STYLES + panelStyles}</style>
+      <style>{HOUSE_UI_STYLES + HOUSE_STAGE_STYLES + ROOM_PAINT_STYLES + DREAD_STYLES + panelStyles}</style>
       <div className="hh-ui-behind" {...behind}>
         <HouseToolbar
           ref={mansionTitle}
@@ -430,7 +442,10 @@ export function MansionShell({
               onToggleWords: () => setSetting('kiroWords', !settingsNow.current.kiroWords),
               reveal: settings.reveal,
               onToggleReveal: () => setSetting('reveal', !settingsNow.current.reveal),
+              fright,
+              onCycleFright: cycleFright,
             }}
+            motion={motion.effective}
             open={top !== null && top.target.roomId === current}
             onPress={press.run}
             onStepBack={stepBack}

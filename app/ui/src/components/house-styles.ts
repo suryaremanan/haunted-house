@@ -37,21 +37,21 @@ export const LINEAR_BREAKPOINT_PX = 640
 export const MIN_ANIMATION_SECONDS = MIN_MOTION_CYCLE_SECONDS
 
 export const HOUSE_UI_STYLES = `
-.hh-ui { ${paletteCssVariables('light')}
-  --hh-canvas: var(--card, var(--hh-fb-canvas));
-  --hh-surface: var(--card, var(--hh-fb-surface));
-  --hh-surface-raised: var(--input, var(--hh-fb-surface-raised));
-  --hh-text: var(--card-fg, var(--text, var(--hh-fb-text)));
-  --hh-text-muted: var(--muted, var(--hh-fb-text-muted));
-  --hh-border: var(--border-strong, var(--hh-fb-border));
-  --hh-border-soft: var(--border, var(--hh-fb-border));
-  --hh-focus: var(--ring, var(--hh-fb-focus));
-  --hh-accent: var(--warn, var(--hh-fb-accent));
-  --hh-primary: var(--accent, var(--hh-fb-accent));
-  --hh-primary-text: var(--accent-fg, var(--hh-fb-accent-text));
-  --hh-danger: var(--warn, var(--hh-fb-danger));
-  --hh-ok: var(--ok, var(--hh-fb-ok));
-  --hh-candle: var(--warn, var(--hh-fb-candle));
+.hh-ui { ${paletteCssVariables('dark')}
+  --hh-canvas: var(--hh-fb-canvas);
+  --hh-surface: var(--hh-fb-surface);
+  --hh-surface-raised: var(--hh-fb-surface-raised);
+  --hh-text: var(--hh-fb-text);
+  --hh-text-muted: var(--hh-fb-text-muted);
+  --hh-border: var(--hh-fb-border);
+  --hh-border-soft: var(--hh-fb-border);
+  --hh-focus: var(--hh-fb-focus);
+  --hh-accent: var(--hh-fb-accent);
+  --hh-primary: var(--hh-fb-accent);
+  --hh-primary-text: var(--hh-fb-accent-text);
+  --hh-danger: var(--hh-fb-danger);
+  --hh-ok: var(--hh-fb-ok);
+  --hh-candle: var(--hh-fb-candle);
   --hh-ghost: var(--hh-fb-ghost);
   --hh-working: var(--hh-fb-working);
   --hh-font-sans: var(--font-sans, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);

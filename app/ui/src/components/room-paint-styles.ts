@@ -56,6 +56,8 @@ const FILLS: Readonly<Record<string, string>> = {
   ghost: 'var(--hh-sc-spectre)',
   'ghost-d': dark('--hh-sc-spectre', 80),
   'ghost-faint': veil('--hh-sc-spectre', 22),
+  // A burnt-out sheet: the outline a failed ghost leaves.
+  scorch: dark('--hh-sc-wood-dark', 38),
   door: 'var(--hh-sc-front-door)',
   'door-l': light('--hh-sc-front-door', 80),
   'door-d': dark('--hh-sc-front-door', 76),

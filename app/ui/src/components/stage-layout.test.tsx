@@ -36,14 +36,17 @@ describe('the stage sheet', () => {
     expect(css).not.toMatch(/aspect-ratio:\s*\d+\s*\/\s*\d+\s*\)/)
   })
 
-  it('lays the open sheet and the house map over the room, under the toolbar and clear of the Guide Reserve', () => {
+  it('lays the open sheet and the house map over the room, below the toolbar row and clear of the Guide Reserve', () => {
     // Both end before the reserve begins, so neither can reach it however tall it is.
     expect((SHEET_LEFT + ROOM_SHEET_WIDTH) * 100).toBeLessThanOrEqual(GUIDE_RESERVE.left)
     expect((SHEET_LEFT + MAP_SHEET_WIDTH) * 100).toBeLessThanOrEqual(GUIDE_RESERVE.left)
     const both = rule(".hh-ui-panel[data-mode='region'], .hh-ui > .hh-ui-behind ~ .hh-ui-behind")
-    // They start under the toolbar, however many rows its tags have wrapped onto, and end inside the room.
-    expect(both).toContain('margin: calc(var(--hh-toolbar-h) + 4px) 0 0')
-    expect(both).toContain('max-height: calc(var(--hh-scene-h) - var(--hh-toolbar-h) - 1rem)')
+    // The toolbar has its own row above the room, so they start at the room's top and end inside it.
+    expect(both).toContain('grid-row: 3;')
+    expect(both).toContain('margin: 12px 0 0')
+    expect(both).toContain('max-height: calc(var(--hh-scene-h) - 1.5rem)')
+    expect(css).toContain(".hh-ui-toolbar { grid-row: 2; align-self: end; z-index: 5; }")
+    expect(css).toContain('.hh-stage-room { grid-row: 3; }')
     expect(both).toContain('overflow-y: auto')
     expect(rule(".hh-ui-panel[data-mode='region']")).toContain(`width: calc(var(--hh-scene-w) * ${ROOM_SHEET_WIDTH})`)
     expect(css).toContain(`.hh-ui > .hh-ui-behind ~ .hh-ui-behind { z-index: 6; width: calc(var(--hh-scene-w) * ${MAP_SHEET_WIDTH});`)

@@ -186,9 +186,14 @@ describe('the room the Operator stands in', () => {
       expect(contrastRatio(scene.ink, scene.brass)).toBeGreaterThan(7)
       // The words beside the Warden sit on the apron, in the balloon's colour.
       expect(contrastRatio(scene.balloon, scene.poche)).toBeGreaterThan(7)
+      // Night paper: words on the house's own paper are bone on dark slate.
+      expect(contrastRatio(scene.slateInk, scene.slate)).toBeGreaterThan(7)
+      expect(contrastRatio(scene.slateInk, scene.slateBrass)).toBeGreaterThan(4.5)
+      expect(contrastRatio(scene.slateInk, scene.poche)).toBeGreaterThan(7)
     }
     expect(css).toMatch(/\.hh-guide-balloon \{[^}]*color: var\(--hh-sc-ink\); background: var\(--hh-sc-balloon\)/)
-    expect(css).toMatch(/\.hh-stage-pose \{[^}]*color: var\(--hh-sc-balloon\)/)
+    expect(css).toMatch(/\.hh-stage-pose \{[^}]*color: var\(--hh-sc-ink\)/)
+    expect(css).toMatch(/--hh-sc-ink: var\(--hh-sc-slate-ink\); --hh-sc-balloon: var\(--hh-sc-slate\)/)
     expect(css).toMatch(/\.hh-guide-option:focus-visible \{ outline: 3px solid/)
     expect(css).toMatch(/\.hh-stage-exit:focus-visible \{ outline: 3px solid/)
   })

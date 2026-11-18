@@ -212,7 +212,7 @@ describe('a catch', () => {
   it('says who is held and what it asked, and shows the action before any decision', () => {
     const workshop = view(house, 'workshop')
     expect(workshop.statusKind).toBe('catch')
-    expect(workshop.status).toBe('Tinker 2 is held. Tinker 2 asks to run a command. Nothing runs until you decide.')
+    expect(workshop.status).toBe('I have Tinker 2. Tinker 2 asks to run a command. Nothing runs until you say.')
     expect(workshop.pose).toBe('holding')
     expect(workshop.poseLabel).toBe('The Warden is holding Tinker 2.')
     expect(labels(workshop)[0]).toBe('See exactly what it asked')

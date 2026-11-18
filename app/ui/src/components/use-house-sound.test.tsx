@@ -21,6 +21,25 @@ const opened = (house: HouseProjection): HouseProjection => ({
 })
 
 describe('useHouseSound', () => {
+  it('asks for the drone at Eerie and the heartbeat only while something waits, never at Calm (dread-and-night 7)', () => {
+    const asked: { drone: boolean; heartbeatBpm: number | null }[] = []
+    const engine: HouseSound = { play: () => undefined, close: () => undefined, setDread: (dread) => asked.push(dread) }
+    const house = waitingHouse()
+    const quiet: HouseProjection = { ...house, needsYou: [] }
+    const { result, rerender } = renderHook(({ projection, fright }) => useHouseSound(projection, null, () => engine, fright), {
+      initialProps: { projection: house, fright: 'eerie' as 'calm' | 'eerie' | 'dread' },
+    })
+    // Off: nothing exists, nothing is asked.
+    expect(asked).toEqual([])
+    act(() => result.current.toggle())
+    expect(house.needsYou.length).toBeGreaterThan(0)
+    expect(asked.at(-1)).toEqual({ drone: true, heartbeatBpm: 48 + 12 * (house.needsYou.length - 1) })
+    rerender({ projection: quiet, fright: 'eerie' })
+    expect(asked.at(-1)).toEqual({ drone: true, heartbeatBpm: null })
+    rerender({ projection: house, fright: 'calm' })
+    expect(asked.at(-1)).toEqual({ drone: false, heartbeatBpm: null })
+  })
+
   it('creates nothing and plays nothing until it is turned on', () => {
     let created = 0
     const fake = fakeEngine()
