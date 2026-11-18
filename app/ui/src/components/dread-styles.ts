@@ -34,6 +34,20 @@ export const DREAD_STYLES = `
   clip-path: polygon(50% 0%, 96% 62%, 78% 100%, 22% 100%, 4% 62%);
   background: radial-gradient(circle at 50% 60%, ${wood(30)} 0 5px, var(--hh-sc-brass) 5.5px 8px, var(--hh-sc-bone) 8.5px); }
 .hh-ui-replay-range:focus-visible { outline: 3px solid var(--hh-sc-lamp); outline-offset: 3px; border-radius: 12px; }
+/* The replay bar and the practice board stand together at the head of the house. */
+.hh-ui-replay-head { display: grid; gap: 8px; min-width: 0; }
+/* The practice board sits under the replay bar, in the same wood: the run's numbers, the switch, and the question. */
+.hh-ui-practice { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; min-width: 0; padding: 10px 14px; font-family: var(--hh-font-serif);
+  color: var(--hh-sc-slate-ink); background: ${wood(30)}; border: 2px solid ${brass(55)}; border-radius: 12px; }
+.hh-ui-practice-numbers { flex: 1 1 18rem; margin: 0; font-size: 0.9375rem; }
+.hh-ui-practice .hh-ui-button { font-family: var(--hh-font-serif); color: var(--hh-sc-slate-ink); background: ${wood(40)}; border: 2px solid ${brass(70)}; }
+.hh-ui-practice .hh-ui-button[data-variant='primary'], .hh-ui-practice .hh-ui-button[aria-pressed='true'] { color: var(--hh-sc-ink); background: var(--hh-sc-brass); border-color: var(--hh-sc-ink); }
+.hh-ui-practice-body { flex: 1 1 100%; display: grid; gap: 8px; min-width: 0; }
+.hh-ui-practice-note { margin: 0; padding: 2px 8px; border-left: 4px solid var(--hh-sc-lamp); font-weight: 700; }
+.hh-ui-practice-question { margin: 0; font-size: 1.0625rem; font-weight: 700; }
+.hh-ui-practice-choices { display: flex; flex-wrap: wrap; gap: 8px; }
+.hh-ui-practice-answer { display: grid; gap: 6px; justify-items: start; }
+.hh-ui-practice-answer p { margin: 0; }
 /* The map's windows from outside: lit where a ghost works, dark where nothing happens, red where something is held. */
 .hh-ui-room-scene { position: relative; }
 .hh-ui-window { position: absolute; z-index: 2; right: 8%; top: 10%; width: 9%; min-width: 12px; aspect-ratio: 2 / 3; border-radius: 50% 50% 2px 2px / 30% 30% 2px 2px;

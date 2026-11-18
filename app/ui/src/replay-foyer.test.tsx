@@ -151,7 +151,7 @@ function hallBalloon(container: Element): { says: string | null; offers: (string
  */
 function sharedMarkup(container: Element): string {
   const copy = container.cloneNode(true) as Element
-  copy.querySelectorAll('[data-replay-start], [data-replay-bar], .hh-ui-notes > [data-block="read_only"], [data-guide-primary]').forEach((note) => note.remove())
+  copy.querySelectorAll('[data-replay-start], .hh-ui-replay-head, [data-replay-bar], .hh-ui-notes > [data-block="read_only"], [data-guide-primary]').forEach((note) => note.remove())
   copy.querySelectorAll('[data-mode]').forEach((node) => node.removeAttribute('data-mode'))
   for (const node of [copy, ...Array.from(copy.querySelectorAll('*'))]) {
     const attributes = Array.from(node.attributes, ({ name, value }) => [name, value] as const).sort(([a], [b]) => (a < b ? -1 : 1))

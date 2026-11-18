@@ -19,6 +19,8 @@ import type { MansionDescriptor } from '../../core/mansion-api'
 import { AtticPanel } from '../attic/AtticPanel'
 import { ReplayBar } from '../attic/ReplayBar'
 import { useAtticPanel } from '../attic/use-attic-panel'
+import { PracticeBoard } from '../attic/PracticeBoard'
+import { usePractice } from '../attic/use-practice'
 import { DraftingHousePanel } from '../drafting-room/DraftingHousePanel'
 import { ActiveMansionFoyerPanel } from '../foyer/ActiveMansionFoyerPanel'
 import { LockedSeancePanel } from '../seance-room/LockedSeancePanel'
@@ -89,6 +91,7 @@ export function House({
   // The replay bar is a second view of the same replay. In the static replay it,
   // not the Attic room, says when playback ends or a command is refused.
   const bar = useAtticPanel(attic, announce, { watch: mode === 'replay', refresh: false })
+  const practice = usePractice(attic)
 
   const host = useMemo(
     () => ({
@@ -203,11 +206,14 @@ export function House({
       notes={notes}
       banner={
         mode === 'replay' ? (
-          <ReplayBar
-            panel={bar}
-            readOnlyText={house.authority.block === 'read_only' && house.authority.text !== null ? house.authority.text : READ_ONLY_BAR_TEXT}
-            startText={attic.state.cursor === 0 ? REPLAY_START_TEXT : null}
-          />
+          <div className="hh-ui-replay-head">
+            <ReplayBar
+              panel={bar}
+              readOnlyText={house.authority.block === 'read_only' && house.authority.text !== null ? house.authority.text : READ_ONLY_BAR_TEXT}
+              startText={attic.state.cursor === 0 ? REPLAY_START_TEXT : null}
+            />
+            <PracticeBoard practice={practice} />
+          </div>
         ) : undefined
       }
       busy={house.loading}
