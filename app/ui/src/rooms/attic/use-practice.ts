@@ -47,19 +47,25 @@ export function usePractice(attic: AtticReplay): PracticeModel {
   const asking = on ? (points.find((point) => !answered.has(point.eventId) && cursor === point.sequence - 1) ?? null) : null
 
   // Turning practice on goes straight to the next decision, so a visitor is asked at once rather than after a minute
-  // of playback; "Go on" then plays the recording from that decision to the next.
+  // of playback; "Go on" then plays the recording from that decision to the next. If the log is still loading when
+  // practice is turned on, the jump happens as soon as its decisions are known.
+  const jumpPending = useRef(false)
   const toggle = useCallback(() => {
     const turningOn = !on
     setOn(turningOn)
     setAnswered(new Set())
     setAnswer(null)
-    if (!turningOn) return
+    jumpPending.current = turningOn
+  }, [on])
+  useEffect(() => {
+    if (!on || !jumpPending.current || points.length === 0) return
+    jumpPending.current = false
     const next = points.find((point) => point.sequence > cursor) ?? points[0]
-    if (next === undefined) return
     if (status === 'playing') command({ kind: 'pause' })
     previous.current = next.sequence - 1
     command({ kind: 'seek', cursor: next.sequence - 1 })
   }, [on, points, cursor, status, command])
+
   const choose = useCallback(
     (choice: PracticeChoice) => {
       if (asking !== null) setAnswer(practiceAnswer(asking, choice))
