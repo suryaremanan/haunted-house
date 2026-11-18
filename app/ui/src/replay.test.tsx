@@ -8,6 +8,7 @@ import { isValidElement } from 'react'
 import type { Root } from 'react-dom/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import demo from '../../../fixtures/replay/demo.jsonl?raw'
+import { HELD_MOMENT_RECORDS } from './test/held-moment'
 import { ghostRows } from './core/ghost-status'
 import { parseEventLog, projectEvents } from './core/seance-log'
 
@@ -208,9 +209,11 @@ describe('replay page', () => {
     // Playback: at every Cursor the page shows exactly the fold of that prefix
     // of the canonical log, the prefix grows by one record, and it ends as the whole log.
     const stateSeries = new Map<string, string[]>()
+    let heldStates = new Set<string | null>()
     for (let cursor = 1; cursor <= LOG.length; cursor += 1) {
       await present(cursor)
       const shown = shownRows(view.container)
+      if (cursor === HELD_MOMENT_RECORDS) heldStates = new Set(shown.map((row) => row.stateText))
       expect(shown).toEqual(foldedRows(cursor))
       for (const row of shown) {
         const series = stateSeries.get(row.name!) ?? []
@@ -224,14 +227,14 @@ describe('replay page', () => {
 
     // The story played out over time, not in one jump, and in canonical order.
     expect(stateSeries.get('Archivist')).toEqual(['Working', 'Waiting', 'Working', 'Done'])
-    expect(stateSeries.get('Foreman')).toEqual(['Working', 'Failed', 'Working'])
+    expect(stateSeries.get('Foreman')).toEqual(['Working', 'Failed', 'Working', 'Done'])
     // One record per step shows the instant before Tinker 1's run starts, which the
     // wall-clock player presented together with the start.
-    expect(stateSeries.get('Tinker 1')).toEqual(['Idle', 'Working', 'Blocked'])
-    expect(stateSeries.get('Tinker 3')).toEqual(['Working', 'Failed'])
-    expect(new Set(shownRows(view.container).map((row) => row.stateText))).toEqual(
-      new Set(['Idle', 'Working', 'Waiting', 'Blocked', 'Failed', 'Done']),
-    )
+    expect(stateSeries.get('Tinker 1')).toEqual(['Idle', 'Working', 'Blocked', 'Working', 'Done'])
+    expect(stateSeries.get('Tinker 3')).toEqual(['Working', 'Failed', 'Working', 'Done'])
+    // At the held moment every state shows at once; at the end the work is done.
+    expect(heldStates).toEqual(new Set(['Idle', 'Working', 'Waiting', 'Blocked', 'Failed', 'Done']))
+    expect(new Set(shownRows(view.container).map((row) => row.stateText))).toEqual(new Set(['Idle', 'Done']))
     // Only waiting, blocked and failed were announced, each once.
     expect(announcements).toEqual([
       'Archivist is waiting for your approval.',
@@ -239,6 +242,7 @@ describe('replay page', () => {
       'Tinker 1 is blocked: A door upstream is still sealed.',
       'Tinker 2 is waiting for your approval.',
       'Tinker 3 failed: Crew error',
+      'Tinker 2 is waiting for your approval.',
     ])
 
     // One request in all: the recording. No backend, gateway or socket.

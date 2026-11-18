@@ -2,6 +2,7 @@
 // **Validates: Requirements 7.4, 7.5, 7.6, 8.1, 8.5, 10.2**
 import { describe, expect, it } from 'vitest'
 import demo from '../../../../fixtures/replay/demo.jsonl?raw'
+import { heldMoment } from '../test/held-moment'
 import { foldGhostEvents } from './ghost-state'
 import { serializeAppEvent, type AppEvent } from './seance-event'
 import {
@@ -197,8 +198,9 @@ describe('mergeAcknowledged', () => {
 })
 
 describe('the replay fixture story', () => {
-  it('ends with one ghost in each of the six states and contains the evidence replay needs', () => {
-    const { events, snapshots, transitions } = projectEvents(parseEventLog(demo).events)
+  it('shows one ghost in each of the six states at record 64 and contains the evidence replay needs', () => {
+    const { snapshots } = projectEvents(parseEventLog(heldMoment).events)
+    const { events, transitions } = projectEvents(parseEventLog(demo).events)
     const states = Object.fromEntries(snapshots.map((snapshot) => [snapshot.ghost_id, snapshot.state]))
 
     expect(states).toEqual({
@@ -243,5 +245,21 @@ describe('the replay fixture story', () => {
     expect(
       archivist.filter((transition) => transition.from_state !== transition.to_state).map((t) => t.to_state),
     ).toEqual(['working', 'waiting', 'working', 'done'])
+  })
+
+  it('ends with every ghost that had work done, and Tinker 2 waiting twice on the owner before it finished', () => {
+    const { snapshots, transitions } = projectEvents(parseEventLog(demo).events)
+    expect(Object.fromEntries(snapshots.map((snapshot) => [snapshot.ghost_id, snapshot.state]))).toEqual({
+      archivist: 'done',
+      draughtsman: 'done',
+      foreman: 'done',
+      medium: 'idle',
+      'tinker-1': 'done',
+      'tinker-2': 'done',
+      'tinker-3': 'done',
+    })
+    const tinker2 = transitions.filter((t) => t.ghost_id === 'tinker-2' && t.from_state !== t.to_state).map((t) => t.to_state)
+    expect(tinker2.filter((state) => state === 'waiting')).toHaveLength(2)
+    expect(tinker2.at(-1)).toBe('done')
   })
 })

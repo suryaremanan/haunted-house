@@ -13,16 +13,18 @@ then serialize_app_event), so the file is byte-for-byte what the
 Canonical_Event_Writer would persist. Times are fixed, so the output is
 deterministic.
 
-The log ends with one ghost in each of the six Ghost_States:
+At record 64, the held moment, one ghost is in each of the six Ghost_States:
   medium idle, foreman working (run 1, after run 0 failed), tinker-2 waiting,
   tinker-1 blocked, tinker-3 failed, archivist and draughtsman done.
+The requirements and design Doors are open, the tasks phase works behind a
+sealed Door, and Tinker 2 waits on an exact approval for `bun test`.
 
-The same story carries the Spec 4 `doors_and_guardrails` facts of that run,
-built with the backend's own typed builders: explicit phase starts, content-free
-Spec_Document write evidence, Door proposals and decisions, a denied start, and
-one pending risky action. It ends with the requirements and design Doors open,
-the tasks phase working behind a sealed Door, and Tinker 2 waiting on an exact
-approval.
+The story then finishes (finish_story): the owner refuses that whole-project
+run, Tinker 2 asks again for less (one test file, read inside its own folder),
+the Foreman's second plan opens the tasks Door, building starts, the owner
+releases the narrower run, it passes, every Tinker finishes, and the owner
+opens the last Door. The story is scripted, not recorded from a live run; it
+is built from the backend's own typed builders, as above.
 
 Two more files are written beside it, both produced by the backend fold
 (`fold_workflow`) and serializer (`workflow_projection_to_json`), so the
@@ -364,7 +366,125 @@ def build_story() -> Story:
     story.add(t + 7_000, tinker_3, "crew_error_observed", {"category": "provider_error"}, origin="crew",
               source_type="chat_error", identity=("gen-tinker-3", "error"), generation="gen-tinker-3", timed=False)
     story.add(t + 7_400, tinker_3, "run_failed", {"reason": "crew_error"})
+    # Record 64 is the held moment: every Ghost_State at once, Tinker 2 waiting on the owner.
+    finish_story(story, t + 7_400, foreman_1=foreman_1, tinker_1=tinker_1, tinker_2=tinker_2, tinker_3=tinker_3)
     return story
+
+
+# The number of records up to the held moment, when every Ghost_State shows at once.
+HELD_MOMENT_RECORDS = 64
+
+
+def finish_story(
+    story: Story, t: int, *, foreman_1: EventScope, tinker_1: EventScope, tinker_2: EventScope, tinker_3: EventScope,
+) -> None:
+    """The second half: the owner refuses the held command, the Tinker asks again
+    for less, the owner releases it, the work finishes and the last Door opens."""
+
+    first = descriptor({
+        "schema_version": 1,
+        "mansion_id": MANSION,
+        "session_slot": tinker_2.session_slot,
+        "room": "workshop",
+        "kind": "run_command",
+        "working_directory": "",
+        "arguments": {"argv": ["bun", "test"], "timeout_seconds": 120},
+        "path_intents": [{"access": "command_read", "path": "src"}],
+    })
+
+    # The owner refuses the whole-project test run. Tinker 2 is sent back to work.
+    t += 6_000
+    story.fact(t, guardrails.risky_action_rejected(
+        tinker_2, proposal_id="risky-run-tests-1", action_digest=action_digest(first), actor="operator",
+        command_id="cmd-refuse-run-tests-1"))
+    story.add(t + 100, tinker_2, "approval_decided", {"mid": "mid-tinker-2", "outcome": "rejected"}, origin="crew",
+              source_type="crew_approval", identity=("mid-tinker-2",), revision=2, timed=False)
+    story.add(t + 300, tinker_2, "tool_finished", {"tool_call_id": "tool-tinker-2", "final": True}, origin="crew",
+              source_type="tool_result", identity=("tool-tinker-2", "final"), generation="gen-tinker-2", timed=False)
+
+    # The Foreman's second plan is valid: the tasks Door is proposed and opened.
+    t += 2_000
+    story.add(t, foreman_1, "tool_finished", {"tool_call_id": "tool-workshop-2", "final": True}, origin="crew",
+              source_type="tool_result", identity=("tool-workshop-2", "final"), generation="gen-workshop-2",
+              timed=False)
+    first_plan = digest_of(f"{MANSION} tasks.md revision 1")
+    tasks = spec_write(story, t + 200, foreman_1, Phase.TASKS, "write-tasks-2", size_bytes=1_688, revision=2,
+                       base_sha256=first_plan)
+    door(story, t + 400, foreman_1, "tasks", "artifact_validated",
+         {"artifact": ".kiro/specs/demo/tasks.md", "valid": True})
+    story.fact(t + 450, guardrails.phase_output_ready(
+        foreman_1, phase=Phase.TASKS, proposal_id="door-tasks-2", **tasks))
+    story.add(t + 500, foreman_1, "run_completed", {"reason": "tasks.md is ready for review"})
+    story.fact(t + 3_000, guardrails.door_approved(
+        foreman_1, phase=Phase.TASKS, proposal_id="door-tasks-2", actor="operator",
+        command_id="cmd-approve-tasks", **tasks))
+
+    # Building starts behind the open Door. Tinker 1, no longer blocked, and Tinker 3 run again.
+    t += 3_500
+    tinker_1_again = replace(tinker_1, run_id="task-1-b", session_slot="hh-tinker-1-task-1-b", run_sequence=1)
+    tinker_3_again = replace(tinker_3, run_id="task-3-b", session_slot="hh-tinker-3-task-3-b", run_sequence=1)
+    story.fact(t, guardrails.phase_start_reserved(
+        tinker_1_again, phase=Phase.IMPLEMENTATION, reservation_id="res-implementation-1",
+        command_id="cmd-start-implementation-2"))
+    story.fact(t + 150, guardrails.phase_started(
+        tinker_1_again, phase=Phase.IMPLEMENTATION, reservation_id="res-implementation-1",
+        session_slot=tinker_1_again.session_slot))
+    story.add(t + 300, tinker_1_again, "run_started", {"reason": "Building task 1", "room": "workshop"})
+    story.add(t + 600, tinker_3_again, "run_started", {"reason": "Building task 3 again", "room": "workshop"})
+
+    # Tinker 2 asks again for less: one test file, read inside its own folder.
+    t += 1_500
+    second = descriptor({
+        "schema_version": 1,
+        "mansion_id": MANSION,
+        "session_slot": tinker_2.session_slot,
+        "room": "workshop",
+        "kind": "run_command",
+        "working_directory": "src",
+        "arguments": {"argv": ["bun", "test", "lantern.test.ts"], "timeout_seconds": 60},
+        "path_intents": [{"access": "command_read", "path": "src"}],
+    })
+    story.add(t, tinker_2, "tool_started",
+              {"tool_call_id": "tool-tinker-2-b", "tool": "run_tests", "kind": "execute", "is_shell": True},
+              origin="crew", source_type="tool_call", identity=("tool-tinker-2-b", "start"),
+              generation="gen-tinker-2", timed=False)
+    story.fact(t + 150, guardrails.risky_action_proposed(tinker_2, proposal_id="risky-run-tests-2", descriptor=second))
+    story.add(t + 300, tinker_2, "approval_requested", {"mid": "mid-tinker-2-b"}, origin="crew",
+              source_type="crew_approval", identity=("mid-tinker-2-b",), revision=1, timed=False)
+
+    # The owner releases it. It runs once, inside the walls, and passes.
+    t += 4_000
+    digest = action_digest(second)
+    story.fact(t, guardrails.risky_action_approved(
+        tinker_2, proposal_id="risky-run-tests-2", action_digest=digest, actor="operator",
+        command_id="cmd-release-run-tests-2"))
+    story.add(t + 100, tinker_2, "approval_decided", {"mid": "mid-tinker-2-b", "outcome": "approved"}, origin="crew",
+              source_type="crew_approval", identity=("mid-tinker-2-b",), revision=2, timed=False)
+    story.fact(t + 200, guardrails.risky_action_consumed(
+        tinker_2, proposal_id="risky-run-tests-2", action_digest=digest, claim_id="claim-run-tests-2",
+        session_slot=tinker_2.session_slot))
+    story.fact(t + 2_200, guardrails.risky_action_succeeded(
+        tinker_2, proposal_id="risky-run-tests-2", action_digest=digest, claim_id="claim-run-tests-2",
+        code="ok", exit_code=0, output_bytes=640))
+    story.add(t + 2_300, tinker_2, "tool_finished", {"tool_call_id": "tool-tinker-2-b", "final": True},
+              origin="crew", source_type="tool_result", identity=("tool-tinker-2-b", "final"),
+              generation="gen-tinker-2", timed=False)
+
+    # The work finishes.
+    t += 3_000
+    story.add(t, tinker_2, "run_completed", {"reason": "Task 2 is built and its tests pass"})
+    story.add(t + 800, tinker_1_again, "run_completed", {"reason": "Task 1 is built"})
+    story.add(t + 1_600, tinker_3_again, "run_completed", {"reason": "Task 3 is built"})
+
+    # The last Door: the owner approves what was built.
+    t += 2_000
+    built = {"document_path": "src/lantern.ts", "revision": 1, "sha256": digest_of(f"{MANSION} src/lantern.ts"),
+             "size_bytes": 3_204}
+    story.fact(t, guardrails.phase_output_ready(
+        tinker_1_again, phase=Phase.IMPLEMENTATION, proposal_id="door-implementation-1", **built))
+    story.fact(t + 3_000, guardrails.door_approved(
+        tinker_1_again, phase=Phase.IMPLEMENTATION, proposal_id="door-implementation-1", actor="operator",
+        command_id="cmd-approve-implementation", **built))
 
 
 def persist(story: Story) -> list[AppEvent]:

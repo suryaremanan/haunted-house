@@ -7,6 +7,7 @@
 // **Validates: Requirements 10.2, 10.4, 10.5, 10.6, 10.8**
 import { describe, expect, it } from 'vitest'
 import demo from '../../../../fixtures/replay/demo.jsonl?raw'
+import { HELD_MOMENT_RECORDS } from '../test/held-moment'
 import demoWorkflow from '../../../../fixtures/replay/demo.workflow.json'
 import vectors from '../../../../fixtures/seance/workflow-vectors.json'
 import { needsYou } from './house-view'
@@ -97,8 +98,10 @@ describe('backend and TypeScript projections agree', () => {
 
 describe('the replay fixture tells the guarded workflow', () => {
   const final = foldWorkflow(DEMO.events, { mansionId: 'demo-mansion', readOnly: true }).projection
+  const held = foldWorkflow(DEMO.events.slice(0, HELD_MOMENT_RECORDS), { mansionId: 'demo-mansion', readOnly: true }).projection
 
-  it('ends with two open Doors, the tasks phase working behind a sealed Door, and one exact proposal waiting', () => {
+  it('holds, at record 64, two open Doors, the tasks phase working behind a sealed Door, and one exact proposal waiting', () => {
+    const final = held
     expect(final.phases.map((phase) => [phase.phase, phase.status, phase.door.status, phase.ghostIds])).toEqual([
       ['requirements', 'approved', 'open', ['archivist']],
       ['design', 'approved', 'open', ['draughtsman']],
@@ -112,6 +115,22 @@ describe('the replay fixture tells the guarded workflow', () => {
     // The Crew prompt of that proposal's session is the same thing waiting, not a second one.
     expect(final.pendingPermissions).toHaveLength(1)
     expect(needsYou(final).map((item) => item.id)).toEqual(['risky:risky-run-tests-1'])
+  })
+
+  it('ends with every Door open, the whole-project run refused and the narrower run released and passed', () => {
+    expect(final.phases.map((phase) => [phase.phase, phase.status, phase.door.status])).toEqual([
+      ['requirements', 'approved', 'open'],
+      ['design', 'approved', 'open'],
+      ['tasks', 'approved', 'open'],
+      ['implementation', 'approved', 'open'],
+    ])
+    expect(final.riskyProposals.map((proposal) => [proposal.proposalId, proposal.status])).toEqual([
+      ['risky-run-tests-1', 'rejected'],
+      ['risky-run-tests-2', 'succeeded'],
+    ])
+    expect(final.riskyProposals[1].descriptor).toMatchObject({ workingDirectory: 'src', arguments: { argv: ['bun', 'test', 'lantern.test.ts'], timeout_seconds: 60 } })
+    expect(final.pendingPermissions).toEqual([])
+    expect(needsYou(final)).toEqual([])
   })
 
   it('never advances a phase without its own start record, and holds no approval without a decision record', () => {
@@ -129,7 +148,7 @@ describe('the replay fixture tells the guarded workflow', () => {
       ['not_started', 'sealed'],
     ])
     expect(projection.diagnostics.map((diagnostic) => diagnostic.code)).toContain('predecessor_door_sealed')
-    expect(kinds.filter((kind) => kind === 'door_approved')).toHaveLength(2)
+    expect(kinds.filter((kind) => kind === 'door_approved')).toHaveLength(4)
   })
 
   it('holds no document body, secret or home path in any Spec 4 payload', () => {

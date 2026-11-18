@@ -14,6 +14,10 @@ The Warden, the guide who stands in every room, at the gate and in the Foyer, is
 
 Screenshots and the video thumbnail are not captured yet. Each will be an original capture of this interface and will be added to this table and to the manifest when it exists. Their status is tracked in [assets-checklist.md](assets-checklist.md).
 
+## The demo recording
+
+`fixtures/replay/demo.jsonl`, the séance log the public replay plays, is scripted, not recorded from a live run. `scripts/build_replay_fixture.py` writes it from a fixed story about an invented `demo-mansion`, using the backend's own event builders and the same validate, redact, sequence and hash pipeline a live append goes through. It holds no recorded Crew data. Its 91 records run in two halves: up to record 64 every ghost state shows at once and Tinker 2 waits on a test command; after it, the owner refuses that command, Tinker 2 asks again for less, the owner releases it, the work finishes and the last door opens.
+
 ## Audio
 
 No audio file ships. The house's optional sounds (a door creak, a knock, a latch, a draught, two small bells and a moan) are synthesised in the browser by `app/ui/src/adapters/house-sound.ts` from oscillators and filtered noise written for this repository. There is no sample, no music and no recording. Sound is off on every visit until you press Sound.

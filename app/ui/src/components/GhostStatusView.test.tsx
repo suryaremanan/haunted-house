@@ -2,7 +2,8 @@
 // **Validates: Requirements 10.4, 10.5, 10.6, 10.8, 11.6**
 import { render, screen, within } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
-import demo from '../../../../fixtures/replay/demo.jsonl?raw'
+// The six states show together at the recording's held moment (record 64).
+import { heldMoment as demo } from '../test/held-moment'
 import { INITIAL_SEANCE_STATE, type SeanceLiveState } from '../adapters/seance-live'
 import { parseEventLog, projectEvents } from '../core/seance-log'
 import viewSource from './GhostStatusView.tsx?raw'
