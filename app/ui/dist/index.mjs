@@ -15532,23 +15532,28 @@ function ey(e) {
 		d,
 		_
 	]);
-	let y = s ? i.find((e) => !d.has(e.eventId) && h === e.sequence - 1) ?? null : null, b = n(() => {
+	let y = s ? i.find((e) => !d.has(e.eventId) && h === e.sequence - 1) ?? null : null, b = c(!1), x = n(() => {
 		let e = !s;
-		if (u(e), f(/* @__PURE__ */ new Set()), m(null), !e) return;
-		let t = i.find((e) => e.sequence > h) ?? i[0];
-		t !== void 0 && (g === "playing" && _({ kind: "pause" }), v.current = t.sequence - 1, _({
+		u(e), f(/* @__PURE__ */ new Set()), m(null), b.current = e;
+	}, [s]);
+	r(() => {
+		if (!s || !b.current || i.length === 0) return;
+		b.current = !1;
+		let e = i.find((e) => e.sequence > h) ?? i[0];
+		g === "playing" && _({ kind: "pause" }), v.current = e.sequence - 1, _({
 			kind: "seek",
-			cursor: t.sequence - 1
-		}));
+			cursor: e.sequence - 1
+		});
 	}, [
 		s,
 		i,
 		h,
 		g,
 		_
-	]), x = n((e) => {
+	]);
+	let S = n((e) => {
 		y !== null && m(Gv(y, e));
-	}, [y]), S = n(() => {
+	}, [y]), C = n(() => {
 		y !== null && (f((e) => /* @__PURE__ */ new Set([...e, y.eventId])), m(null), v.current = y.sequence, _({
 			kind: "seek",
 			cursor: y.sequence
@@ -15556,11 +15561,11 @@ function ey(e) {
 	}, [y, _]);
 	return {
 		on: s,
-		toggle: b,
+		toggle: x,
 		asking: y,
 		answer: y === null ? null : p,
-		choose: x,
-		goOn: S,
+		choose: S,
+		goOn: C,
 		numbers: a,
 		made: d.size,
 		total: i.length
