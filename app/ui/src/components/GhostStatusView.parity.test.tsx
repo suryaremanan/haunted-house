@@ -6,7 +6,8 @@
 import { act, render } from '@testing-library/react'
 import { useEffect } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import demo from '../../../../fixtures/replay/demo.jsonl?raw'
+// The six states show together at the recording's held moment (record 64).
+import { heldMoment as demo } from '../test/held-moment'
 import { GHOST_STATES } from '../core/ghost-state'
 import { GHOST_STATE_LABELS, ghostRows } from '../core/ghost-status'
 import { appEventToJson } from '../core/seance-event'

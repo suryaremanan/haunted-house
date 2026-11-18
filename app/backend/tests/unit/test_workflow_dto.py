@@ -74,7 +74,8 @@ def test_the_initial_projection_has_requirements_ready_and_every_door_sealed():
 
 
 def test_the_demo_story_serializes_doors_proposals_and_permissions_exactly(builder):
-    events = builder.persist(builder.build_story())
+    # The held moment: two Doors open, the tasks phase working, one proposal waiting.
+    events = builder.persist(builder.build_story())[: builder.HELD_MOMENT_RECORDS]
     projection = fold_workflow(events)
     assert projection.diagnostics == () and projection.ledger.diagnostics == ()
     shown = workflow_projection_to_json(projection, mansion_id=builder.MANSION, events=events)

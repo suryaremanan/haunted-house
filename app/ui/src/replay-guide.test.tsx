@@ -13,7 +13,9 @@ import type { Root } from 'react-dom/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import demo from '../../../fixtures/replay/demo.jsonl?raw'
 import { GATE_STATUS } from './core/first-visit'
+import { BUILT_TEXT } from './core/house-guide'
 import { TERMS } from './core/house-words'
+import { BUILT_TITLE } from './rooms/foyer/BuiltPage'
 import { knock } from './test/first-visit-kit'
 
 vi.setConfig({ testTimeout: 30_000 })
@@ -196,6 +198,38 @@ describe('the Warden in a recording', () => {
     await step(200)
     expect(mutating(await everyChoiceOfEveryRoom(container))).toEqual([])
     // Still the one request.
+    expect(requested).toHaveLength(1)
+  })
+
+  it('plays to the end of the story: the refused run, the narrower one released, every Door open and what was made', async () => {
+    const container = await mountReplay()
+    await enterRecording(container)
+    // Step to the end through the Attic's own control.
+    await act(async () => fireEvent.click(container.querySelector<HTMLElement>('[data-room-control="attic"]')!))
+    await waitFor(() => expect(container.querySelector('[data-guide-control="attic:next"]')).not.toBeNull())
+    for (let turn = 0; turn < 200; turn += 1) {
+      const next = container.querySelector<HTMLElement>('[data-guide-control="attic:next"]')!
+      if (next.getAttribute('aria-disabled') === 'true' || next.hasAttribute('disabled')) break
+      await act(async () => fireEvent.click(next))
+    }
+    fireEvent.keyDown(document.body, { key: 'Escape' })
+    // Every Door on the map is open.
+    const doors = Array.from(container.querySelectorAll<HTMLElement>('.hh-ui-map [data-door-control]'), (door) => door.getAttribute('data-door'))
+    expect(doors.length).toBeGreaterThan(0)
+    expect(new Set(doors)).toEqual(new Set(['open']))
+    // The Warden says so, and offers what was made; pressing it shows the page.
+    await act(async () => fireEvent.click(container.querySelector<HTMLElement>('[data-room-control="study"]')!))
+    expect(says()).toBe(BUILT_TEXT)
+    await press('See what was made')
+    const built = await waitFor(() => {
+      const section = container.querySelector<HTMLElement>('[data-section="built"]')
+      expect(section).not.toBeNull()
+      return section!
+    })
+    expect(built).toHaveTextContent(BUILT_TITLE)
+    expect(built).toHaveTextContent('requirements.md')
+    expect(built).toHaveTextContent('design.md')
+    expect(built).toHaveTextContent('tasks.md')
     expect(requested).toHaveLength(1)
   })
 })

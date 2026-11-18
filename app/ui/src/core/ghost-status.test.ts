@@ -1,7 +1,8 @@
 // Ghost_Status_View view model: row text, safe reasons, interruption budget.
 // **Validates: Requirements 10.4, 10.5, 10.6**
 import { describe, expect, it } from 'vitest'
-import demo from '../../../../fixtures/replay/demo.jsonl?raw'
+// The six states show together at the recording's held moment (record 64).
+import { heldMoment as demo } from '../test/held-moment'
 import { GHOST_STATES, type GhostSnapshot, type GhostTransitionId } from './ghost-state'
 import {
   GHOST_STATE_LABELS,

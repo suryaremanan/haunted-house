@@ -87,8 +87,9 @@ describe('live Attic log source', () => {
     const api = backend(LOG, 25)
     const result = await loadLiveAtticLog(api, MANSION)
     expect(result).toEqual({ status: 'ready', selection: parseCanonicalLog(demo), safeMessage: null })
-    // 64 records in pages of 25: three reads, each after the last Sequence it holds.
-    expect(api.get.mock.calls.map(([path]) => EVENTS_PATH.exec(path)?.[1])).toEqual(['0', '25', '50'])
+    // 91 records in pages of 25: four reads, each after the last Sequence it holds.
+    expect(LOG).toHaveLength(91)
+    expect(api.get.mock.calls.map(([path]) => EVENTS_PATH.exec(path)?.[1])).toEqual(['0', '25', '50', '75'])
   })
 
   it('reads a short log in one request', async () => {

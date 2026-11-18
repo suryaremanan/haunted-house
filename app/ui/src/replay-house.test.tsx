@@ -7,6 +7,7 @@
 import { act, fireEvent, render, within } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import demo from '../../../fixtures/replay/demo.jsonl?raw'
+import { HELD_MOMENT_RECORDS } from './test/held-moment'
 import demoWorkflow from '../../../fixtures/replay/demo.workflow.json'
 import { parseEventLog, projectEvents } from './core/seance-log'
 import { foldWorkflow } from './core/workflow-fold'
@@ -147,7 +148,7 @@ describe('replay house', () => {
     fireEvent.click(within(attic).getByRole('button', { name: 'Play' }))
     expect(view.container.querySelector('[data-replay-start]')).not.toBeNull()
     const shown: string[] = [shownSignature(view.container)]
-    for (let step = 0; step < 500; step += 1) {
+    for (let step = 0; step < 1_200; step += 1) {
       await advance(250)
       note()
       const line = shownSignature(view.container)
@@ -165,7 +166,7 @@ describe('replay house', () => {
       'Foyer. Phase: navigation. Door: not applicable. Ghost: not applicable.',
       'Study. Phase: requirements. Door: open. Ghost: done.',
       'Drafting Room. Phase: design. Door: open. Ghost: done.',
-      'Workshop. Phase: tasks and implementation. Door: sealed. Ghost: failed.',
+      'Workshop. Phase: tasks and implementation. Door: open. Ghost: done.',
       'Attic. Phase: replay. Door: not applicable. Ghost: not applicable.',
       'Séance Room. Phase: review. Door: not applicable. Ghost: idle.',
     ])
@@ -174,7 +175,7 @@ describe('replay house', () => {
       Array.from(view.container.querySelectorAll<HTMLElement>('[data-ghost-control]'), (ghost) => [ghost.dataset.ghostControl, ghost.dataset.ghost]),
     )
     expect(ghosts).toEqual(Object.fromEntries(projectEvents(LOG).snapshots.map((snapshot) => [snapshot.ghost_id, snapshot.state])))
-    expect(ghosts).toMatchObject({ archivist: 'done', draughtsman: 'done', foreman: 'working', 'tinker-1': 'blocked', 'tinker-2': 'waiting', 'tinker-3': 'failed' })
+    expect(ghosts).toMatchObject({ archivist: 'done', draughtsman: 'done', foreman: 'done', 'tinker-1': 'done', 'tinker-2': 'done', 'tinker-3': 'done' })
 
     // Playback interrupts nobody (replay-and-submission Requirement 3.6): the Doors and ghosts that
     // waited on the way were shown in place and not announced. The one thing said is that the replay ended.
@@ -187,7 +188,7 @@ describe('replay house', () => {
 
     view.unmount()
     expect(vi.getTimerCount()).toBe(0)
-  })
+  }, 30_000)
 
   it('shows the fold of the prefix at every Cursor, backwards as well as forwards', async () => {
     const { view, seek } = await mountReplayHouse()
@@ -206,8 +207,9 @@ describe('replay house', () => {
   })
 
   it('shows the exact pending proposal read-only: nothing can be decided or started in a recording', async () => {
-    const { view, page, advance, playAll } = await mountReplayHouse()
-    await playAll()
+    const { view, page, advance, seek } = await mountReplayHouse()
+    // The held moment: Tinker 2's whole-project test run waits on the owner.
+    seek(HELD_MOMENT_RECORDS)
 
     expect(view.container.querySelector('.hh-ui-note[data-block="read_only"]')).toHaveTextContent(
       'This is a recording. Nothing can be started, approved or rejected here.',

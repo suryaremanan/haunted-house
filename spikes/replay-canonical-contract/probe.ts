@@ -17,6 +17,9 @@
 // `evaluate` is pure, so the UI test suite runs it too
 // (app/ui/scripts-tests/replay-canonical-contract.test.ts).
 
+
+/** The demo recording's held moment: every Ghost_State at once, one proposal waiting. */
+const HELD_MOMENT_RECORDS = 64
 export const RESULT_PATH = 'spikes/fixtures/replay-canonical-contract.json'
 
 /** module -> the exports replay composes. A missing one means `contract_unavailable`. */
@@ -203,14 +206,16 @@ export function evaluate(inputs: ProbeInputs): SpikeResult {
       initial.status === 'paused' && initial.cursor === 0,
     )
     check('house_view_reads_the_replay_projection', () => {
-      const workflow = timeline.workflowOf(full, mansionId)
+      // Read at the recording's held moment (record 64), when something waits on the owner.
+      const held = fold(records.slice(0, Math.min(total, HELD_MOMENT_RECORDS)))
+      const workflow = timeline.workflowOf(held, mansionId)
       const rooms = seams['core/house-view']!.ROOMS as readonly unknown[]
       const waiting = seams['core/house-view']!.needsYou(workflow) as readonly unknown[]
       return (
         workflow !== null && workflow.readOnly === true &&
         // A Crew prompt that belongs to a pending proposal is one Needs You item, not two.
         waiting.length >= 1 && waiting.length <= workflow.waitingCount &&
-        rooms.length > 0 && full.ghosts.length >= 2
+        rooms.length > 0 && held.ghosts.length >= 2
       )
     })
 

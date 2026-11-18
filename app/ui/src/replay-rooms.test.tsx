@@ -100,6 +100,7 @@ describe('replay rooms', () => {
     for (const [room, title, index] of [
       ['Study', 'Requirements document', 0],
       ['Drafting Room', 'Design document', 1],
+      ['Workshop', 'Task plan', 2],
     ] as const) {
       const panel = await open(room)
       const proposal = final.phases[index].door.proposal!
@@ -120,17 +121,13 @@ describe('replay rooms', () => {
       // The room answer was read (from the recording), so there is no "could not be read" note.
       expect(panel.querySelector('[data-output-note]')).toBeNull()
       // Ghost and Door state follow the document.
-      const door = within(panel).getByText(/^Open door:/)
+      const door = within(panel).getAllByText(/^Open door:/)[0]
       expect(artifact.compareDocumentPosition(door) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     }
 
-    // The task plan was written but never proposed at its Door: the recording names no revision for it.
+    // The task plan's place is the spec folder its recorded Door proposal names, not a guess from the mansion name.
     const workshop = await open('Workshop')
-    const plan = within(workshop).getByRole('article', { name: 'Task plan' })
-    expect(plan).toHaveTextContent('Not written yet')
-    // Its place is the spec folder the recorded Door proposals name, not a guess from the mansion name.
-    expect(plan).toHaveTextContent('.kiro/specs/demo/tasks.md')
-    expect(plan).not.toHaveTextContent('.kiro/specs/demo-mansion/')
+    expect(within(workshop).getByRole('article', { name: 'Task plan' })).not.toHaveTextContent('.kiro/specs/demo-mansion/')
     expect(within(workshop).queryByRole('region', { name: 'Task board' })).toBeNull()
 
     expect(fetchSpy).toHaveBeenCalledTimes(1)

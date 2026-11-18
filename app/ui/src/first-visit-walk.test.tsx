@@ -232,7 +232,8 @@ async function walk(press: Press) {
   await waitFor(() => expect(says()).toBe('The Archivist has finished what it must do. The door waits for you.'), soon)
   await take(choice('Close this sheet'))
   expect(shown()).toBeNull()
-  expect(offers()).toEqual(['Read what it must do', 'Ask for a change', 'Go to the door', 'See the whole house'])
+  // "Ask for a change" needs the room's answer, which can arrive after the status line on a slow machine.
+  await waitFor(() => expect(offers()).toEqual(['Read what it must do', 'Ask for a change', 'Go to the door', 'See the whole house']), soon)
   // In the bare room nothing decides.
   expect(everyChoice().filter((button) => button.getAttribute('data-kind') === 'decide')).toEqual([])
 

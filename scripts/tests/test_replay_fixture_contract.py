@@ -25,6 +25,9 @@ from haunted_house.core.seance_persistence import GENESIS_HASH, build_app_event,
 from haunted_house.core.workflow import fold_workflow
 from haunted_house.core.workflow_dto import workflow_projection_to_json
 
+# The demo recording's held moment (scripts/build_replay_fixture.py HELD_MOMENT_RECORDS).
+HELD_MOMENT_RECORDS = 64
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT / "scripts" / "lib"))
 
@@ -110,9 +113,12 @@ def test_the_final_projection_shows_the_judge_narrative() -> None:
     states = {ghost["ghost_id"]: ghost["state"] for ghost in expected["projection"]["ghosts"]}
     assert len(states) >= 2
     assert "done" in states.values()
-    assert {"blocked", "failed"} & set(states.values())
+    # The story ends with the work finished and every Door open.
     phases = {phase["phase"]: phase for phase in expected["projection"]["workflow"]["phases"]}
-    assert phases["requirements"]["door"]["status"] == "open"
+    assert all(phase["door"]["status"] == "open" for phase in phases.values())
+    # On the way, at the held moment, every Ghost_State showed at once.
+    held = fold_ghost_events(PARSED.events[:HELD_MOMENT_RECORDS])
+    assert {snapshot.state for snapshot in held.snapshots} == {"idle", "working", "waiting", "blocked", "failed", "done"}
     told = expected["narrative"]
     assert told["tool_started"] >= 1 and told["tool_finished"] >= 1
     assert told["approval_requested"] >= 1 and told["approval_decided"] >= 1
