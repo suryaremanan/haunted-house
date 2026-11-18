@@ -9,7 +9,7 @@
 // balloon, is a press plan: the page presses the one real control for it
 // elsewhere. Nothing here decides anything.
 import { Ghost, Languages, LogOut, Map as MapIcon, Megaphone, MousePointerClick } from 'lucide-react'
-import { useId, type CSSProperties, type RefObject } from 'react'
+import { useId, type CSSProperties, type ReactNode, type RefObject } from 'react'
 import { FRIGHT_TEXT, cobwebStep, dreadEffects, roomLight, wardenStance, type FrightLevel } from '../core/dread'
 import { workingObjects, type Box, type WorkingObject } from '../core/guide-layout'
 import { pressedControls, type GuideView, type PressStep } from '../core/house-guide'
@@ -19,7 +19,8 @@ import type { RoomId } from '../core/house-registry'
 import type { WordMode } from '../core/house-words'
 import { GuideBalloon } from './GuideBalloon'
 import { ObjectLabels } from './ObjectLabels'
-import { Atmosphere, HollowSpectre, StateLight, WardenShadow, type LeakAt } from './dread-art'
+import { Atmosphere, FleeingGhost, HollowSpectre, StateLight, WardenShadow, type LeakAt } from './dread-art'
+import { useHoldAftermath } from './use-hold-aftermath'
 import { DeskPainting, RoomPainting, SpectreArt, WardenArt, spectreRoleOf } from './room-paint'
 
 /** The guide's own settings, kept on the apron so they work while the Warden has stepped back. */
@@ -58,6 +59,8 @@ export interface RoomStageProps {
   statusRef?: RefObject<HTMLParagraphElement>
   /** Whether the house may move (the Motion Policy). */
   motion?: EffectiveMotion
+  /** Shown in place of the Warden's own balloon while it is not null (the replay's practice question). */
+  balloon?: ReactNode
 }
 
 export const FRIGHT_LABEL = 'Fright'
@@ -90,9 +93,11 @@ export function RoomStage({
   refusal = null,
   statusRef,
   motion = 'none',
+  balloon = null,
 }: RoomStageProps) {
   const callHintId = useId()
   const frightHintId = useId()
+  const aftermath = useHoldAftermath(projection, settings.fright !== 'calm' && motion === 'low-frequency')
   const room = projection.rooms.find((candidate) => candidate.roomId === roomId)
   if (room === undefined) return null
   const lit = room.ghosts.some((ghost) => ghost.state === 'working' || ghost.state === 'waiting')
@@ -110,7 +115,15 @@ export function RoomStage({
     return ghost === undefined ? (
       <span key={object.key} className="hh-stage-spot" data-spot={object.key} data-label={object.label} style={placed(object.box)} onClick={() => onPress(object.steps)} />
     ) : (
-      <span key={object.key} className="hh-stage-figure" data-ghost={ghost.state} data-label={object.label} style={placed(object.box)} onClick={() => onPress(object.steps)}>
+      <span
+        key={object.key}
+        className="hh-stage-figure"
+        data-ghost={ghost.state}
+        data-label={object.label}
+        data-dragged={aftermath !== null && aftermath.outcome === 'refused' && aftermath.ghostId === ghost.ghostId ? 'true' : undefined}
+        style={placed(object.box)}
+        onClick={() => onPress(object.steps)}
+      >
         {dread ? <HollowSpectre state={ghost.state} role={spectreRoleOf(ghost.ghostId)} /> : <SpectreArt state={ghost.state} role={spectreRoleOf(ghost.ghostId)} />}
       </span>
     )
@@ -146,13 +159,16 @@ export function RoomStage({
         <StateLight light={light} leakAt={leakAt} effects={effects} />
         <Atmosphere effects={effects} />
         {dread ? <WardenShadow stance={stance} /> : null}
+        {aftermath !== null && aftermath.outcome === 'released' ? <FleeingGhost key={aftermath.proposalId} /> : null}
         <div className="hh-stage-spots" aria-hidden="true">
           {objects.filter((object) => ON_DESK.includes(object.kind)).map(spot)}
         </div>
       </div>
       {settings.reveal ? <ObjectLabels objects={objects} onPress={onPress} /> : null}
       <div className="hh-stage-apron" data-stage-apron>
-        {quiet ? null : (
+        {balloon !== null ? (
+          balloon
+        ) : quiet ? null : (
           <GuideBalloon
             view={view}
             words={words}

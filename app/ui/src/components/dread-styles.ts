@@ -36,17 +36,17 @@ export const DREAD_STYLES = `
 .hh-ui-replay-range:focus-visible { outline: 3px solid var(--hh-sc-lamp); outline-offset: 3px; border-radius: 12px; }
 /* The replay bar and the practice board stand together at the head of the house. */
 .hh-ui-replay-head { display: grid; gap: 8px; min-width: 0; }
-/* The practice board sits under the replay bar, in the same wood: the run's numbers, the switch, and the question. */
-.hh-ui-practice { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; min-width: 0; padding: 10px 14px; font-family: var(--hh-font-serif);
+/* The practice board: one line under the replay bar, in the same wood: the run's numbers and the switch. The question
+   itself is asked by the Warden, in his balloon, so the room keeps its size. */
+.hh-ui-practice { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; min-width: 0; padding: 6px 12px; font-family: var(--hh-font-serif);
   color: var(--hh-sc-slate-ink); background: ${wood(30)}; border: 2px solid ${brass(55)}; border-radius: 12px; }
-.hh-ui-practice-numbers { flex: 1 1 18rem; margin: 0; font-size: 0.9375rem; }
-.hh-ui-practice .hh-ui-button { font-family: var(--hh-font-serif); color: var(--hh-sc-slate-ink); background: ${wood(40)}; border: 2px solid ${brass(70)}; }
-.hh-ui-practice .hh-ui-button[data-variant='primary'], .hh-ui-practice .hh-ui-button[aria-pressed='true'] { color: var(--hh-sc-ink); background: var(--hh-sc-brass); border-color: var(--hh-sc-ink); }
-.hh-ui-practice-body { flex: 1 1 100%; display: grid; gap: 8px; min-width: 0; }
-.hh-ui-practice-note { margin: 0; padding: 2px 8px; border-left: 4px solid var(--hh-sc-lamp); font-weight: 700; }
-.hh-ui-practice-question { margin: 0; font-size: 1.0625rem; font-weight: 700; }
-.hh-ui-practice-choices { display: flex; flex-wrap: wrap; gap: 8px; }
-.hh-ui-practice-answer { display: grid; gap: 6px; justify-items: start; }
+.hh-ui-practice-numbers { flex: 1 1 16rem; margin: 0; font-size: 0.875rem; }
+.hh-ui-practice-state { flex: 1 1 100%; margin: 0; font-size: 0.875rem; font-weight: 700; }
+.hh-ui-practice .hh-ui-button { padding-block: 2px; font-family: var(--hh-font-serif); color: var(--hh-sc-slate-ink); background: ${wood(40)}; border: 2px solid ${brass(70)}; }
+.hh-ui-practice .hh-ui-button[aria-pressed='true'] { color: var(--hh-sc-ink); background: var(--hh-sc-brass); border-color: var(--hh-sc-ink); }
+.hh-practice-balloon .hh-ui-practice-question { font-size: 1.0625rem; }
+.hh-ui-practice-choices { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 6px; }
+.hh-ui-practice-answer { display: grid; gap: 6px; justify-items: start; padding-top: 4px; }
 .hh-ui-practice-answer p { margin: 0; }
 /* The map's windows from outside: lit where a ghost works, dark where nothing happens, red where something is held. */
 .hh-ui-room-scene { position: relative; }
@@ -93,11 +93,18 @@ ${DREAD} .hh-stage-room[data-stance='holding'] .hh-stage-warden .hh-paint-warden
   transform: scale(1.08) translateX(-6%); filter: drop-shadow(0 0 12px var(--hh-sc-lamp)) drop-shadow(0 0 3px var(--hh-sc-night3)); }
 /* The night outside the house. */
 .hh-house:not([data-landing='true']) { background: radial-gradient(ellipse 80% 50% at 75% -5%, ${veil('--hh-sc-night2', 55)} 0%, transparent 70%), ${night(40)}; }
+/* After a held action is decided. Refused: the ghost is dragged back from the Warden's corner to its place. Released: a
+   ghost slips off his chain and flees up and out. Each plays once, only while the house may move. */
+.hh-dread-flee { position: absolute; z-index: 2; right: 6%; bottom: 8%; width: 6%; aspect-ratio: 160 / 190; pointer-events: none; opacity: 0; }
+@keyframes hh-dread-dragged { from { transform: translateX(var(--hh-drag-from, 260%)) rotate(-14deg); opacity: 0.4; } to { transform: none; opacity: 1; } }
+@keyframes hh-dread-fled { 0% { transform: none; opacity: 1; } 100% { transform: translate(-260%, -420%) scale(0.6); opacity: 0; } }
 @keyframes hh-dread-drift { 0%, 100% { transform: translateX(-3%); } 50% { transform: translateX(3%); } }
 @keyframes hh-dread-fall { from { transform: translateY(-12%); } to { transform: translateY(0); } }
 @keyframes hh-dread-motes { 0%, 100% { opacity: 0.5; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-1.5%); } }
 @keyframes hh-dread-flame { 0%, 100% { opacity: 1; } 50% { opacity: 0.82; } }
 @media (prefers-reduced-motion: no-preference) {
+  ${DREAD}[data-motion='low-frequency'] .hh-stage-figure[data-dragged='true'] { animation: hh-dread-dragged 2.2s cubic-bezier(0.3, 0.1, 0.2, 1) 1; }
+  ${DREAD}[data-motion='low-frequency'] .hh-dread-flee { animation: hh-dread-fled 2.4s ease-in 1; }
   ${DREAD}[data-motion='low-frequency'] .hh-dread-fog { animation: hh-dread-drift 24s ease-in-out infinite; }
   ${DREAD}[data-motion='low-frequency'] .hh-dread-rain { animation: hh-dread-fall 2.4s linear infinite; }
   ${DREAD}[data-motion='low-frequency'] .hh-dread-dust { animation: hh-dread-motes 9s ease-in-out infinite; }

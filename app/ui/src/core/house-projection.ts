@@ -204,6 +204,13 @@ export interface ReplayView {
   readonly diagnostic: string | null
 }
 
+/** A held action the owner has decided (dread-and-night 3.4): refused sends the ghost back, released lets it go. */
+export interface DecidedHold {
+  readonly proposalId: string
+  readonly ghostId: string
+  readonly outcome: 'refused' | 'released'
+}
+
 export interface HouseProjection {
   readonly mansionName: string
   readonly mode: 'live' | 'replay'
@@ -212,6 +219,8 @@ export interface HouseProjection {
   /** Deduplicated, in Room order then upstream action order. */
   readonly needsYou: readonly NeedsYouItem[]
   readonly replay: ReplayView
+  /** Held actions already decided, in upstream order. Absent where nothing was ever held. */
+  readonly decided?: readonly DecidedHold[]
 }
 
 // ---------------------------------------------------------------------------
@@ -509,6 +518,11 @@ export function buildHouseProjection(input: UpstreamHouseInput, options: HouseOp
     mode: options.mode,
     rooms,
     needsYou: selectNeedsYouItems(rooms),
+    decided: (input.workflow?.riskyProposals ?? []).flatMap((proposal): DecidedHold[] =>
+      proposal.status === 'pending' || proposal.status === 'superseded'
+        ? []
+        : [{ proposalId: proposal.proposalId, ghostId: proposal.ghostId, outcome: proposal.status === 'rejected' ? 'refused' : 'released' }],
+    ),
     replay: {
       integrity: input.replay.integrity,
       validRecordCount: Math.max(0, Math.trunc(input.replay.validRecordCount) || 0),

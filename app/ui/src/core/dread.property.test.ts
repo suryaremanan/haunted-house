@@ -2,7 +2,7 @@
 // the House Projection and tells the truth; stillness always wins.
 import fc from 'fast-check'
 import { describe, expect, it } from 'vitest'
-import { FRIGHT_LEVELS, HEARTBEAT_MAX_BPM, HEARTBEAT_MIN_BPM, cobwebStep, dreadEffects, heartbeatBpm, roomLight, wardenStance, windowGlow } from './dread'
+import { FRIGHT_LEVELS, HEARTBEAT_MAX_BPM, HEARTBEAT_MIN_BPM, cobwebStep, dreadEffects, heartbeatBpm, holdAftermath, roomLight, wardenStance, windowGlow } from './dread'
 import { EFFECTIVE_MOTIONS } from './motion-policy'
 import { houseOfCase, upstreamCaseArb } from '../test/guide-arbitraries'
 
@@ -74,6 +74,23 @@ describe('dread-and-night properties', () => {
           const active = room.doors.some((door) => door.state === 'waiting') || room.ghosts.some((ghost) => ghost.state === 'working' || ghost.state === 'waiting')
           if (active) expect(step).toBe(0)
           if (!active && room.ghosts.length === 0) expect(step).toBe(3)
+        }
+      }),
+      RUNS,
+    )
+  })
+
+  it('Property 6: a ghost is dragged back or flees only when the very action it was held for was decided', () => {
+    fc.assert(
+      fc.property(houseArb, houseArb, (before, after) => {
+        expect(holdAftermath(null, after)).toBeNull()
+        const result = holdAftermath(before, after)
+        const held = before.needsYou.filter((item) => item.kind === 'risky-decision').map((item) => item.id.slice(item.id.indexOf(':') + 1))
+        if (result === null) {
+          expect((after.decided ?? []).some((decided) => held.includes(decided.proposalId))).toBe(false)
+        } else {
+          expect(held).toContain(result.proposalId)
+          expect(after.decided).toContainEqual(result)
         }
       }),
       RUNS,

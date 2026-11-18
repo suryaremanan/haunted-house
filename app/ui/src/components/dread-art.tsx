@@ -191,3 +191,12 @@ export function HollowSpectre({ state, role = 'plain' }: { state: PresentationGh
     </Svg>
   )
 }
+
+/** Released: the chain drops and the ghost flees the Warden, up and out of the room. Played once, then gone. */
+export function FleeingGhost() {
+  return (
+    <span className="hh-dread-flee" data-aftermath="released" aria-hidden="true">
+      <HollowSpectre state="working" />
+    </span>
+  )
+}

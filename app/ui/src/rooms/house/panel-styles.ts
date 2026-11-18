@@ -37,7 +37,7 @@ export const HOUSE_PANEL_STYLES = `
 .hh-house-muted { color: var(--hh-text-muted); }
 .hh-phase { display: grid; gap: 6px; border-top: 1px solid var(--hh-border-soft); padding-top: 10px; min-width: 0; }
 /* What was made: a plain table of names and files, the finished work, and how to open the folder in Kiro. */
-.hh-built { display: grid; gap: 8px; min-width: 0; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--hh-border); }
+.hh-built { container-type: inline-size; display: grid; gap: 8px; min-width: 0; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--hh-border); }
 .hh-built:focus-visible { outline: 2px solid var(--hh-focus); outline-offset: 4px; }
 .hh-built h5 { margin: 0; font-size: 1rem; }
 .hh-built-lede { margin: 0; font-size: 0.875rem; color: var(--hh-text-muted); }
@@ -46,6 +46,19 @@ export const HOUSE_PANEL_STYLES = `
 .hh-built-table th, .hh-built-table td { text-align: left; vertical-align: top; padding: 4px 12px 4px 0; border-bottom: 1px solid var(--hh-border); overflow-wrap: anywhere; }
 .hh-built-table thead th { font-weight: 600; color: var(--hh-text-muted); }
 .hh-built-table code, .hh-built-tasks code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.8125rem; overflow-wrap: anywhere; }
+/* In a narrow sheet each row stacks: the everyday name and Kiro's name on one line, the file under them, so no word
+   is broken in the middle. */
+.hh-built-table th, .hh-built-table td { overflow-wrap: break-word; }
+@container (max-width: 30rem) {
+  .hh-built-table thead { position: absolute; width: 1px; height: 1px; clip-path: inset(50%); }
+  .hh-built-table, .hh-built-table tbody { display: block; }
+  .hh-built-table tr { display: grid; grid-template-columns: auto 1fr; gap: 0 10px; padding: 6px 0; border-bottom: 1px solid var(--hh-border); }
+  .hh-built-table th, .hh-built-table td { padding: 0; border: 0; }
+  .hh-built-table td:nth-of-type(1) { color: var(--hh-text-muted); }
+  .hh-built-table td:nth-of-type(1)::before { content: '(Kiro: '; }
+  .hh-built-table td:nth-of-type(1)::after { content: ')'; }
+  .hh-built-table td:nth-of-type(2) { grid-column: 1 / -1; }
+}
 .hh-built-tasks { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: 0.875rem; }
 .hh-built-tasks li { display: flex; flex-wrap: wrap; gap: 2px 10px; min-width: 0; }
 .hh-built-steps { margin: 0; padding-left: 1.25rem; font-size: 0.875rem; }

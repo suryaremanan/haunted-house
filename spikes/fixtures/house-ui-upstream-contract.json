@@ -118,6 +118,7 @@
   "houseProjection": {
     "module": "core/house-projection.ts",
     "HouseProjection": [
+      "decided",
       "mansionName",
       "mode",
       "needsYou",

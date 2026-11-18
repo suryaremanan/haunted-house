@@ -5,7 +5,7 @@
 // The Warden grows with what he holds. Cobwebs lie where nobody has been.
 //
 // Pure: no React, DOM, SDK, network, storage, timer or clock.
-import type { HouseProjection, NeedsYouItem, RoomPresentation } from './house-projection'
+import type { DecidedHold, HouseProjection, NeedsYouItem, RoomPresentation } from './house-projection'
 import type { EffectiveMotion } from './motion-policy'
 
 export const FRIGHT_LEVELS = ['calm', 'eerie', 'dread'] as const
@@ -107,4 +107,26 @@ export const HEARTBEAT_MAX_BPM = 90
 export function heartbeatBpm(waiting: number): number | null {
   if (!Number.isFinite(waiting) || waiting < 1) return null
   return Math.min(HEARTBEAT_MAX_BPM, HEARTBEAT_MIN_BPM + 12 * (Math.floor(waiting) - 1))
+}
+
+/**
+ * What happened to a held ghost between two moments of the house: the risky
+ * action that was waiting before is decided now. Refused, the Warden drags it
+ * back to its room; released, the chain drops and it flees. Null when nothing
+ * held was decided in between.
+ */
+export function holdAftermath(before: HouseProjection | null, after: HouseProjection): DecidedHold | null {
+  if (before === null) return null
+  const wasHeld = new Set(before.needsYou.filter((item) => item.kind === 'risky-decision').map((item) => item.id.slice(item.id.indexOf(':') + 1)))
+  return (after.decided ?? []).find((decided) => wasHeld.has(decided.proposalId)) ?? null
+}
+
+/** The held actions a house shows: the proposal ids of its waiting risky decisions. */
+export function heldProposals(projection: HouseProjection): readonly string[] {
+  return projection.needsYou.filter((item) => item.kind === 'risky-decision').map((item) => item.id.slice(item.id.indexOf(':') + 1))
+}
+
+/** The first decided hold among the proposals once seen held and not yet played. */
+export function newlyDecided(seenHeld: ReadonlySet<string>, played: ReadonlySet<string>, projection: HouseProjection): DecidedHold | null {
+  return (projection.decided ?? []).find((decided) => seenHeld.has(decided.proposalId) && !played.has(decided.proposalId)) ?? null
 }

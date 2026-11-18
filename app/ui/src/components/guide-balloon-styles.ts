@@ -11,7 +11,7 @@ const tint = (token: string, percent: number) => `color-mix(in srgb, var(${token
 export const GUIDE_BALLOON_STYLES = `
 /* Night paper: everything that carries words on the house's own paper (the balloon, the guide's settings, the toolbar's
    tags, the room's plate, the labels, the hall) is dark slate with bone ink, so nothing on the page is pale. */
-.hh-guide-balloon, .hh-foyer-hall, .hh-stage-setting, .hh-stage-room-title, .hh-stage-label, .hh-stage-call, .hh-stage-exit, .hh-stage-pose, .hh-hall-pose,
+.hh-guide-balloon, .hh-foyer-hall, .hh-hall-own, .hh-stage-setting, .hh-stage-room-title, .hh-stage-label, .hh-stage-call, .hh-stage-exit, .hh-stage-pose, .hh-hall-pose,
 .hh-ui-toolbar .hh-ui-mansion-name, .hh-ui-toolbar .hh-ui-toggle, .hh-ui-toolbar .hh-ui-status > summary, .hh-ui-toolbar .hh-ui-needs[data-count='0'],
 .hh-ui-toolbar .hh-ui-reason, .hh-house[data-landing='true'] .hh-status[data-quiet='true'] {
   --hh-sc-ink: var(--hh-sc-slate-ink); --hh-sc-balloon: var(--hh-sc-slate); --hh-sc-brass: var(--hh-sc-slate-brass); }
