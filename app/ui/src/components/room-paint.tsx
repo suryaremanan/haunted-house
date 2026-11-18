@@ -12,6 +12,7 @@
 import type { ReactNode } from 'react'
 import type { WardenPose } from '../core/house-guide'
 import type { PresentationDoorState, PresentationGhostState, RoomId } from '../core/house-registry'
+import { DoorBinding } from './dread-art'
 import { Svg } from './house-art'
 
 const p = (name: string) => `hh-p-${name}`
@@ -321,9 +322,39 @@ interface ShellProps {
   leftDoor: boolean
   rightDoor: PresentationDoorState | 'plain' | null
   children: ReactNode
+  /** Dread: how thick the cobwebs are (0 to 3), and the chain and seal on the doors. Absent at Calm. */
+  dread?: { readonly webs: 0 | 1 | 2 | 3 }
 }
 
-function Shell({ floor, beams = false, leftDoor, rightDoor, children }: ShellProps) {
+/** Cobwebs by step: none where work happens, the old two corners, then the far corners, then hanging veils. */
+function Webs({ step }: { step: 0 | 1 | 2 | 3 | null }) {
+  if (step === 0) return null
+  const old = (
+    <>
+      <Cobweb x={0} y={0} size={170} />
+      <Cobweb x={1200} y={0} size={120} flip />
+    </>
+  )
+  if (step === null || step === 1) return old
+  return (
+    <>
+      {old}
+      <Cobweb x={160} y={90} size={110} />
+      <Cobweb x={1040} y={90} size={130} flip />
+      {step === 3 ? (
+        <>
+          <Cobweb x={0} y={0} size={300} />
+          <Cobweb x={1200} y={0} size={260} flip />
+          <g className={ps('web')} fill="none" strokeWidth={1.2}>
+            <path d="M300 90 q30 70 4 150 M320 90 q-12 60 10 120 M860 90 q24 80 -6 170 M880 90 q-10 50 12 110" />
+          </g>
+        </>
+      ) : null}
+    </>
+  )
+}
+
+function Shell({ floor, beams = false, leftDoor, rightDoor, children, dread }: ShellProps) {
   const vx = 600
   const vy = 300
   // Floor lines run to the vanishing point; cross lines close up as they recede.
@@ -369,9 +400,9 @@ function Shell({ floor, beams = false, leftDoor, rightDoor, children }: ShellPro
       ) : null}
       {leftDoor ? <SideDoor mirror={false} state="plain" /> : null}
       {rightDoor === null ? null : <SideDoor mirror state={rightDoor} />}
+      {dread !== undefined && rightDoor !== null && rightDoor !== 'plain' ? <DoorBinding where="side" state={rightDoor} /> : null}
       {children}
-      <Cobweb x={0} y={0} size={170} />
-      <Cobweb x={1200} y={0} size={120} flip />
+      <Webs step={dread === undefined ? null : dread.webs} />
       {/* The corners fall away into the dark. */}
       <path className={p('vignette')} d="M0 0 H1200 V750 H0 Z" />
     </>
@@ -668,6 +699,8 @@ export interface RoomPaintingProps {
   /** Whether a room lies before this one, behind the left-hand door. */
   readonly hasPrevious: boolean
   readonly hasNext: boolean
+  /** Dread and night: cobwebs by step and the doors' chains and seals. Absent at Calm, which draws the room as before. */
+  readonly dread?: { readonly webs: 0 | 1 | 2 | 3 }
 }
 
 function BackDoor({ state }: { state: PresentationDoorState }) {
@@ -793,7 +826,7 @@ function roomBody(room: RoomId, lit: boolean): ReactNode {
 }
 
 /** The whole painted interior of one room. */
-export function RoomPainting({ room, door, secondDoor = null, lit = false, hasPrevious, hasNext }: RoomPaintingProps) {
+export function RoomPainting({ room, door, secondDoor = null, lit = false, hasPrevious, hasNext, dread }: RoomPaintingProps) {
   return (
     <Svg
       viewBox={`0 0 ${PAINT_W} ${PAINT_H}`}
@@ -802,9 +835,16 @@ export function RoomPainting({ room, door, secondDoor = null, lit = false, hasPr
       data={{ 'data-scene': room, 'data-lit': lit ? 'true' : 'false' }}
     >
       <g stroke="none">
-        <Shell floor={room === 'foyer' || room === 'study' ? 'tiles' : 'planks'} beams={room === 'attic'} leftDoor={hasPrevious} rightDoor={door ?? (hasNext ? 'plain' : null)}>
+        <Shell
+          floor={room === 'foyer' || room === 'study' ? 'tiles' : 'planks'}
+          beams={room === 'attic'}
+          leftDoor={hasPrevious}
+          rightDoor={door ?? (hasNext ? 'plain' : null)}
+          dread={dread}
+        >
           {roomBody(room, lit)}
           {secondDoor === null ? null : <BackDoor state={secondDoor} />}
+          {dread !== undefined && secondDoor !== null ? <DoorBinding where="back" state={secondDoor} /> : null}
         </Shell>
       </g>
     </Svg>
@@ -1204,13 +1244,19 @@ export function FrontDoorPainting({ knocker = true }: { knocker?: boolean }) {
           <g>
             <path className={p('iron')} d="M600 250 q-30 -40 -80 -30 q20 10 22 30 q-40 -12 -70 14 q30 0 40 22 q40 -22 88 -6 q48 -16 88 6 q10 -22 40 -22 q-30 -26 -70 -14 q2 -20 22 -30 q-50 -10 -80 30 Z" />
             <circle className={p('iron')} cx={600} cy={262} r={30} />
-            <circle className={p('lamp')} cx={589} cy={258} r={5} />
-            <circle className={p('lamp')} cx={611} cy={258} r={5} />
+            {/* Its eyes watch the pointer (use-knocker-eyes.ts) while the house may move. */}
+            <g className="hh-knocker-eyes">
+              <circle className={p('lamp')} cx={589} cy={258} r={5} />
+              <circle className={p('lamp')} cx={611} cy={258} r={5} />
+            </g>
             <path className={p('iron')} d="M588 232 l-6 -22 l16 14 Z M612 232 l6 -22 l-16 14 Z" />
-            <circle className={p('iron')} cx={600} cy={364} r={74} />
-            <circle className={p('door')} cx={600} cy={364} r={52} />
-            <circle className={p('iron-l')} cx={600} cy={438} r={20} />
-            <circle className={p('iron')} cx={600} cy={438} r={12} />
+            {/* The ring swings once on a knock. */}
+            <g className="hh-knocker-ring">
+              <circle className={p('iron')} cx={600} cy={364} r={74} />
+              <circle className={p('door')} cx={600} cy={364} r={52} />
+              <circle className={p('iron-l')} cx={600} cy={438} r={20} />
+              <circle className={p('iron')} cx={600} cy={438} r={12} />
+            </g>
           </g>
         ) : null}
         <path className={p('vignette')} d="M0 0 H1200 V750 H0 Z" />

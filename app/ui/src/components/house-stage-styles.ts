@@ -43,7 +43,7 @@ const shade = (token: string, percent: number) => `color-mix(in srgb, var(${toke
 const tint = (token: string, percent: number) => `color-mix(in srgb, var(${token}) ${percent}%, transparent)`
 
 export const HOUSE_STAGE_STYLES = `
-.hh-ui { ${sceneCssVariables('light')}
+.hh-ui { ${sceneCssVariables('dark')}
   --hh-font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, "Times New Roman", serif;
   --hh-font-label: var(--hh-font-sans);
   --hh-depth: 110px; --hh-room-h: clamp(130px, 30vw, 200px); border-radius: 16px; }
@@ -247,9 +247,9 @@ ${GUIDE_BALLOON_STYLES}/* The map is always on the page of a narrow layout, so t
 .hh-stage-keeper { display: flex; align-items: flex-end; gap: 10px; min-width: 0; }
 .hh-stage-caption { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; min-width: 0; }
 .hh-stage-warden { position: relative; display: block; flex: none; width: clamp(56px, 18vw, 96px); aspect-ratio: 200 / 300; }
-.hh-stage-pose { margin: 0; font-family: var(--hh-font-serif); font-size: 0.8125rem; line-height: 1.3; color: var(--hh-sc-balloon); }
+.hh-stage-pose { margin: 0; font-family: var(--hh-font-serif); font-size: 0.8125rem; line-height: 1.3; color: var(--hh-sc-ink); }
 .hh-stage-exit { display: inline-flex; align-items: center; gap: 4px; font: inherit; font-family: var(--hh-font-serif); font-weight: 700;
-  font-size: 0.8125rem; color: var(--hh-sc-ecto); background: var(--hh-sc-ink); border: 2px solid var(--hh-sc-ecto); border-radius: 3px;
+  font-size: 0.8125rem; color: var(--hh-sc-ink); background: var(--hh-sc-balloon); border: 2px solid var(--hh-sc-ink); border-radius: 3px;
   padding: 1px 12px; cursor: pointer; }
 .hh-stage-exit:focus-visible { outline: 3px solid var(--hh-sc-lamp); outline-offset: 2px; }
 
@@ -309,11 +309,12 @@ ${GUIDE_BALLOON_STYLES}/* The map is always on the page of a narrow layout, so t
   /* The toolbar, the room and the notes sit on the house's own grid, so the open sheet can share the room's row. */
   .hh-ui > .hh-ui-behind:first-of-type { display: contents; }
   .hh-ui > .hh-ui-behind:first-of-type > * { width: var(--hh-stage-w); grid-column: 1; }
-  .hh-ui-replay-bar { grid-row: 1; margin: 10px 0; }
-  .hh-stage-room { grid-row: 2; }
-  .hh-ui-toolbar { grid-row: 2; align-self: start; z-index: 5; }
-  .hh-ui-notes { grid-row: 3; }
-  .hh-ui-announcer { grid-row: 4; }
+  .hh-ui-replay-bar { grid-row: 1; margin: 10px 0 0; }
+  /* The toolbar is one row of its own above the room: nothing of it lies on the painting. */
+  .hh-ui-toolbar { grid-row: 2; align-self: end; z-index: 5; }
+  .hh-stage-room { grid-row: 3; }
+  .hh-ui-notes { grid-row: 4; }
+  .hh-ui-announcer { grid-row: 5; }
   /* The labels lie over the room, each above its object. An absolutely placed grid child is placed against its
      grid area, so the list is given the room's area: against its own, it would lie under the room, over the apron. */
   .hh-stage-labels { grid-area: scene; position: absolute; z-index: 2; left: 0; top: 0; width: var(--hh-scene-w); aspect-ratio: ${SCENE_WIDTH} / ${SCENE_HEIGHT}; padding: 0;
@@ -341,9 +342,9 @@ ${GUIDE_BALLOON_STYLES}/* The map is always on the page of a narrow layout, so t
   .hh-stage-warden { width: 100%; }
   /* The open sheet and the map of the whole house lie over the left of the room: under the toolbar's tags, however
      many rows they take, and inside the room, so neither reaches the name plate, the balloon or the Guide Reserve. */
-  .hh-ui-panel[data-mode='region'], .hh-ui > .hh-ui-behind ~ .hh-ui-behind { grid-row: 2; grid-column: 1; align-self: start; justify-self: start;
-    margin: calc(var(--hh-toolbar-h) + 4px) 0 0 calc((100cqw - var(--hh-stage-w)) / 2 + var(--hh-scene-w) * ${SHEET_LEFT});
-    max-height: calc(var(--hh-scene-h) - var(--hh-toolbar-h) - 1rem); min-height: 10rem; overflow-y: auto; }
+  .hh-ui-panel[data-mode='region'], .hh-ui > .hh-ui-behind ~ .hh-ui-behind { grid-row: 3; grid-column: 1; align-self: start; justify-self: start;
+    margin: 12px 0 0 calc((100cqw - var(--hh-stage-w)) / 2 + var(--hh-scene-w) * ${SHEET_LEFT});
+    max-height: calc(var(--hh-scene-h) - 1.5rem); min-height: 10rem; overflow-y: auto; }
   .hh-ui-panel[data-mode='region'] { z-index: 4; width: calc(var(--hh-scene-w) * ${ROOM_SHEET_WIDTH}); max-width: 54rem; }
   /* The map is laid over the room on request, and put away again. */
   .hh-ui > .hh-ui-behind ~ .hh-ui-behind { z-index: 6; width: calc(var(--hh-scene-w) * ${MAP_SHEET_WIDTH});
@@ -363,8 +364,6 @@ ${GUIDE_BALLOON_STYLES}/* The map is always on the page of a narrow layout, so t
     --hh-guide-w: clamp(${STAGE_REM.guideMin}rem, calc(100cqw - ${STAGE_GUTTER_PX}px - var(--hh-fit-w)), ${STAGE_REM.guideMax}rem);
     --hh-scene-w: min(calc(100cqw - var(--hh-guide-w) - ${STAGE_GUTTER_PX}px), var(--hh-fit-w));
     --hh-stage-w: calc(var(--hh-scene-w) + var(--hh-guide-w) + ${STAGE_GUTTER_PX}px); }
-  /* The tags of the toolbar stay over the room; the balloon's column is its own. */
-  .hh-ui[data-layout='side'] > .hh-ui-behind:first-of-type > .hh-ui-toolbar { width: var(--hh-scene-w); justify-self: start; margin-left: calc((100cqw - var(--hh-stage-w)) / 2); }
   /* Two columns that do not push each other. Left: the room, and under it a strip with the guide's settings. Right:
      the room's name plate, the balloon and the words beside the Warden. The first two rows are exactly as tall as
      the room, so a tall balloon grows down past the strip and never opens a gap under the room. The strip and the

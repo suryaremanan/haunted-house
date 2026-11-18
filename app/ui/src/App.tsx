@@ -8,6 +8,7 @@
 // Gate for a visitor who has no mansion yet, and the Warden's balloon in the
 // Foyer hall. Where the visitor stands is `core/first-visit.ts`; this file
 // only shows it and hands each choice to the Foyer's own actions.
+import { useKnockerEyes } from './components/use-knocker-eyes'
 import { CircleCheck, CircleDashed, LoaderCircle, RotateCw, TriangleAlert } from 'lucide-react'
 import { useCallback, useEffect, useId, useReducer, useRef, useState } from 'react'
 import { REPLAY_RECORDING, useBackendStatus, type BackendStatus, type GatewayErrorKind } from './adapters/sdk'
@@ -117,12 +118,11 @@ function StatusRow({ name, view }: { name: string; view: RowView }) {
 // for hosts that lack them (the static replay page among them), in light and
 // dark. Icons carry color as a hint only; every state is also spelled out in text.
 const STYLES = `
-.hh-house { ${paletteCssVariables('light')} ${sceneCssVariables('light')}
+.hh-house { ${paletteCssVariables('dark')} ${sceneCssVariables('dark')}
   --hh-font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, "Times New Roman", serif;
   font-family: var(--font-sans, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
   color: var(--card-fg, var(--text, var(--hh-fb-text))); line-height: 1.45;
   display: block; max-width: 76rem; margin: 0 auto; padding: 8px 12px 32px; box-sizing: border-box; }
-@media (prefers-color-scheme: dark) { .hh-house { ${paletteCssVariables('dark')} ${sceneCssVariables('dark')} } }
 /* Inside a mansion the room is sized to the window, so the page keeps little under it. */
 .hh-house:has(.hh-ui) { padding-bottom: 12px; }
 .hh-status { color: var(--card-fg, var(--text, var(--hh-fb-text))); background: var(--card, var(--hh-fb-surface));
@@ -174,6 +174,10 @@ const STYLES = `
 .hh-landing-door { position: absolute; inset: 0 0 auto; height: 100vh; display: block; container-type: size; }
 /* The painted knocker knocks for a pointer. The Knock button is the real control. */
 .hh-landing-knocker { position: absolute; left: 50%; top: 50%; width: max(15cqw, 24cqh); aspect-ratio: 1; translate: -50% -50%; border-radius: 50%; cursor: pointer; }
+.hh-landing-door::after { content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse 46% 52% at 50% 40%, transparent 0%, color-mix(in srgb, var(--hh-sc-night1) 55%, transparent) 62%, color-mix(in srgb, var(--hh-sc-night1) 30%, black) 100%); }
+.hh-knocker-eyes { transform: translate(calc(var(--hh-eye-x, 0) * 1px), calc(var(--hh-eye-y, 0) * 1px)); }
+@media (prefers-reduced-motion: no-preference) { .hh-knocker-eyes { transition: transform 0.5s ease-out; } }
 .hh-landing-knocker:hover { outline: 3px solid var(--hh-sc-lamp); outline-offset: 4px; }
 /* The Gate: nothing but the door, the plate, and the Warden's question at the foot of the window. */
 .hh-gate { position: relative; z-index: 1; box-sizing: border-box; width: 100%; max-width: 44rem; margin: auto auto 0; padding-top: 24px; }
@@ -183,7 +187,7 @@ const STYLES = `
 .hh-house[data-landing='true'] .hh-status[data-quiet='true'] .hh-tagline { margin: 0 auto 6px; }
 .hh-house[data-landing='true'] .hh-status[data-quiet='true'] .hh-summary { color: var(--hh-sc-ink); }
 .hh-house[data-landing='true'] .hh-foyer { position: relative; z-index: 1; box-sizing: border-box; width: 100%; max-width: 44rem; }
-.hh-house[data-landing='true'] .hh-foyer-hall { ${paletteCssVariables('light')}
+.hh-house[data-landing='true'] .hh-foyer-hall { ${paletteCssVariables('dark')}
   --card: var(--hh-sc-balloon); --card-fg: var(--hh-fb-text); --text: var(--hh-fb-text); --muted: var(--hh-fb-text-muted);
   --border: var(--hh-fb-border); --border-strong: var(--hh-fb-border); --input: var(--hh-fb-surface-raised); --ok: var(--hh-fb-ok);
   --warn: var(--hh-fb-accent); --accent: var(--hh-fb-accent); --accent-fg: var(--hh-fb-accent-text); --ring: var(--hh-fb-focus);
@@ -236,6 +240,8 @@ export default function HauntedHouseApp({ landing }: HauntedHouseAppProps = {}) 
   const inMansion = reachable && openMansion !== null
   const atGate = reachable && !inMansion && visit.place === 'gate'
   const gateFormId = useId()
+  const landingDoor = useRef<HTMLSpanElement>(null)
+  useKnockerEyes(landingDoor, atGate)
 
   const onLoad = useCallback((load: LoadState) => {
     setListLoading(load.kind === 'loading')
@@ -318,7 +324,7 @@ export default function HauntedHouseApp({ landing }: HauntedHouseAppProps = {}) 
     <main className="hh-house" aria-labelledby="hh-status-title" data-landing={reachable && !inMansion} data-place={reachable ? visit.place : undefined}>
       <style>{STYLES + ROOM_PAINT_STYLES + GUIDE_BALLOON_STYLES + FIRST_VISIT_STYLES}</style>
       {reachable && !inMansion ? (
-        <span className="hh-landing-door" aria-hidden="true">
+        <span className="hh-landing-door" aria-hidden="true" ref={landingDoor}>
           <FrontDoorPainting knocker={visit.place !== 'hall'} />
           {atGate ? (
             <span

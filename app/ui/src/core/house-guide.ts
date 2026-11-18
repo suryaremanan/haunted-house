@@ -404,8 +404,9 @@ function statusLine(room: RoomPresentation, projection: HouseProjection, situati
       return line('⟦0⟧', room.diagnostic ?? LOCKED_ROOM_TEXT)
     case 'catch': {
       if (situation.item.kind !== 'risky-decision') return line('⟦0⟧', situation.item.label)
-      const name = situation.ghost === null ? 'A ghost' : sentenceStart(theGhost(situation.ghost.name))
-      return line('⟦0⟧ is held. ⟦1⟧ Nothing runs until you decide.', name, situation.item.label)
+      // Colder, still literal (dread-and-night 3.5): he has the ghost; nothing runs until you say.
+      const name = situation.ghost === null ? 'a ghost' : theGhost(situation.ghost.name)
+      return line('I have ⟦0⟧. ⟦1⟧ Nothing runs until you say.', name, situation.item.label)
     }
     case 'door-waiting': {
       const copy = PHASE_COPY[situation.door.phase]

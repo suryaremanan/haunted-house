@@ -199,7 +199,7 @@ describe('the catch', () => {
     await house(held, roomGhosts({ version: 20 }), log)
     expect(stage()).toBe('workshop')
     // The ghost by name, and what it asked to do, in the house's own bounded words.
-    expect(says()).toMatch(/^Tinker 2 is held\. Tinker 2 asks to /)
+    expect(says()).toMatch(/^I have Tinker 2\. Tinker 2 asks to /)
     expect(document.querySelector('[data-guide-pose]')).toHaveAttribute('data-guide-pose', 'holding')
     expect(document.querySelector('[data-guide-pose]')!.textContent).toBe('The Warden is holding Tinker 2.')
     // Nothing decides until the proposal is on show.

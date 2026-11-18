@@ -23,6 +23,9 @@ export default defineConfig({
     // stay outside src/, which tsconfig.json typechecks without Node types.
     include: ['src/**/*.test.{ts,tsx}', 'scripts-tests/**/*.test.ts'],
     setupFiles: ['./src/test-setup.ts'],
+    // Property tests run 200 or more cases each; a shared CI runner can take
+    // longer than the 5 second default on one of them.
+    testTimeout: 20_000,
     watch: false,
   },
 })

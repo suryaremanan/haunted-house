@@ -108,6 +108,7 @@ describe.each(MOTION_MODES)('keyboard with %s', (mode) => {
       'House map: closed',
       "Show Kiro's words: off",
       'Show me what I can press: off',
+      'Fright: Eerie',
       'Exit to the Foyer',
       'Close room',
       'Requirements document text',

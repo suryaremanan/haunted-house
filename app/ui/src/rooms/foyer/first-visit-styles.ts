@@ -5,7 +5,8 @@
 //
 // Everything here is ink on the balloon's colour or the balloon's colour on
 // ink: the two pairs of the Scene Palette that carry text. Nothing moves.
-const field = `color-mix(in srgb, var(--hh-sc-balloon) 55%, white)`
+// A field is a shade darker than the night paper it sits on, so the words typed in it read as ink on slate.
+const field = `color-mix(in srgb, var(--hh-sc-balloon) 70%, black)`
 
 export const FIRST_VISIT_STYLES = `
 /* The Warden and his balloon. On a narrow page he stands under it, small; on a wide one beside it, at full height. */
@@ -17,7 +18,7 @@ export const FIRST_VISIT_STYLES = `
 .hh-hall-warden { position: relative; display: block; flex: none; width: clamp(56px, 16vw, 88px); aspect-ratio: 200 / 300; }
 .hh-hall-caption { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; min-width: 0; }
 .hh-hall-pose { margin: 0; padding: 2px 10px; font-family: var(--hh-font-serif); font-size: 0.8125rem; line-height: 1.3;
-  color: var(--hh-sc-balloon); background: var(--hh-sc-ink); border-radius: 4px; }
+  color: var(--hh-sc-ink); background: var(--hh-sc-balloon); border: 1px solid var(--hh-sc-ink); border-radius: 4px; }
 .hh-foyer-guide { margin: 0 0 14px; }
 
 /* The Gate's one field and its Knock; the Idea Step's field and its "Build this". They sit in the balloon. */

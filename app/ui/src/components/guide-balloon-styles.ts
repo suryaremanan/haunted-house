@@ -9,8 +9,14 @@
 const tint = (token: string, percent: number) => `color-mix(in srgb, var(${token}) ${percent}%, transparent)`
 
 export const GUIDE_BALLOON_STYLES = `
+/* Night paper: everything that carries words on the house's own paper (the balloon, the guide's settings, the toolbar's
+   tags, the room's plate, the labels, the hall) is dark slate with bone ink, so nothing on the page is pale. */
+.hh-guide-balloon, .hh-foyer-hall, .hh-stage-setting, .hh-stage-room-title, .hh-stage-label, .hh-stage-call, .hh-stage-exit, .hh-stage-pose, .hh-hall-pose,
+.hh-ui-toolbar .hh-ui-mansion-name, .hh-ui-toolbar .hh-ui-toggle, .hh-ui-toolbar .hh-ui-status > summary, .hh-ui-toolbar .hh-ui-needs[data-count='0'],
+.hh-ui-toolbar .hh-ui-reason, .hh-house[data-landing='true'] .hh-status[data-quiet='true'] {
+  --hh-sc-ink: var(--hh-sc-slate-ink); --hh-sc-balloon: var(--hh-sc-slate); --hh-sc-brass: var(--hh-sc-slate-brass); }
 .hh-guide-balloon { position: relative; display: flex; flex-direction: column; min-width: 0; min-height: 0; color: var(--hh-sc-ink); background: var(--hh-sc-balloon);
-  border: 2px solid var(--hh-sc-ink); border-radius: 10px; box-shadow: 3px 4px 0 ${tint('--hh-sc-ink', 55)}; }
+  border: 2px solid var(--hh-sc-ink); border-radius: 10px; box-shadow: 0 8px 28px color-mix(in srgb, var(--hh-sc-poche) 80%, transparent); }
 /* What is true now stays in view. What can be done lies under it, and scrolls where the layout gives the balloon a height. */
 .hh-guide-head, .hh-guide-body { display: grid; gap: 6px; min-width: 0; padding: 0 16px; }
 .hh-guide-head { flex: none; padding-top: 12px; padding-bottom: 6px; }

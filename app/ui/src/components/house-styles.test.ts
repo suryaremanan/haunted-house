@@ -66,33 +66,19 @@ describe('plain CSS on Crew theme variables', () => {
     expect(Object.keys(sources).filter((path) => importsCss.test(sources[path]))).toEqual([])
   })
 
-  it('reads each semantic token from a Crew variable first and a palette fallback second', () => {
+  it('reads each semantic token from its own night palette, never from a Crew theme colour, so the house is night in any theme', () => {
     const root = block(css, '.hh-ui {')
-    const expected: Record<string, string> = {
-      '--hh-canvas': 'var(--card, var(--hh-fb-canvas))',
-      '--hh-surface': 'var(--card, var(--hh-fb-surface))',
-      '--hh-surface-raised': 'var(--input, var(--hh-fb-surface-raised))',
-      '--hh-text': 'var(--card-fg, var(--text, var(--hh-fb-text)))',
-      '--hh-text-muted': 'var(--muted, var(--hh-fb-text-muted))',
-      '--hh-border': 'var(--border-strong, var(--hh-fb-border))',
-      '--hh-border-soft': 'var(--border, var(--hh-fb-border))',
-      '--hh-focus': 'var(--ring, var(--hh-fb-focus))',
-      '--hh-accent': 'var(--warn, var(--hh-fb-accent))',
-      '--hh-primary': 'var(--accent, var(--hh-fb-accent))',
-      '--hh-primary-text': 'var(--accent-fg, var(--hh-fb-accent-text))',
-      '--hh-danger': 'var(--warn, var(--hh-fb-danger))',
-      '--hh-ok': 'var(--ok, var(--hh-fb-ok))',
-      '--hh-candle': 'var(--warn, var(--hh-fb-candle))',
-      '--hh-ghost': 'var(--hh-fb-ghost)',
+    for (const token of ['canvas', 'surface', 'surface-raised', 'text', 'text-muted', 'border', 'focus', 'accent', 'danger', 'ok', 'candle', 'ghost', 'working']) {
+      expect(root).toContain(`--hh-${token}: var(--hh-fb-${token});`)
     }
-    for (const [token, value] of Object.entries(expected)) expect(root).toContain(`${token}: ${value};`)
+    expect(root).not.toMatch(/var\(--(card|input|muted|border|ring|accent|warn|ok|text)\b/)
   })
 
-  it('carries the light fallbacks by default and the dark ones under data-theme', () => {
-    const light = block(css, '.hh-ui {')
+  it('carries the night (dark) palette by default and under data-theme', () => {
+    const root = block(css, '.hh-ui {')
     const dark = block(css, ".hh-ui[data-theme='dark'] {")
     for (const token of PALETTE_TOKENS) {
-      expect(light).toContain(`${fallbackVariableName(token)}: ${HOUSE_PALETTES.light[token]};`)
+      expect(root).toContain(`${fallbackVariableName(token)}: ${HOUSE_PALETTES.dark[token]};`)
       expect(dark).toContain(`${fallbackVariableName(token)}: ${HOUSE_PALETTES.dark[token]};`)
     }
   })

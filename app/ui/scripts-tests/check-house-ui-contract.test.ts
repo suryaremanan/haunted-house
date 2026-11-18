@@ -12,6 +12,7 @@ import { HOUSE_PALETTES, CONTRAST_PAIRS, contrastRatio } from '../src/components
 import { HOUSE_UI_STYLES } from '../src/components/house-styles'
 import { ROOM_OUTPUT_STYLES } from '../src/components/room-output-styles'
 import { GUIDE_BALLOON_STYLES } from '../src/components/guide-balloon-styles'
+import { DREAD_STYLES } from '../src/components/dread-styles'
 import { namesKiroWord } from '../src/core/house-words'
 import { MIN_MOTION_CYCLE_SECONDS } from '../src/core/motion-policy'
 import { ATTIC_STYLES } from '../src/rooms/attic/attic-styles'
@@ -48,6 +49,7 @@ const SHEETS: Readonly<Record<string, string>> = {
   'room-output-styles': ROOM_OUTPUT_STYLES,
   'foyer-styles': FOYER_STYLES,
   'attic-styles': ATTIC_STYLES,
+  'dread-styles': DREAD_STYLES,
 }
 
 describe('scan', () => {
@@ -123,7 +125,11 @@ describe('motion', () => {
     for (const [name, css] of Object.entries(SHEETS)) {
       expect(css, name).not.toMatch(/perspective|rotate3d|translate3d|translateZ|parallax|shake|background-attachment:\s*fixed|scroll-timeline|animation-timeline|view-timeline/i)
     }
-    expect(offenders(/mousemove|pointermove|onMouseMove|onPointerMove|deviceorientation|devicemotion|requestAnimationFrame|scrollY|onScroll\b|addEventListener\(['"]scroll/)).toEqual([])
+    // One exception, asked for by dread-and-night 5.5: the Gate's knocker turns its eyes toward the pointer. It moves
+    // two dots inside the knocker, never the page, and only while the browser allows motion.
+    expect(offenders(/mousemove|pointermove|onMouseMove|onPointerMove|deviceorientation|devicemotion|requestAnimationFrame|scrollY|onScroll\b|addEventListener\(['"]scroll/)).toEqual([
+      'src/components/use-knocker-eyes.ts',
+    ])
     // No animation is started from script either.
     expect(offenders(/\.animate\(|setInterval\(/)).toEqual([])
   })

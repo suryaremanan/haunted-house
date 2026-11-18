@@ -10,8 +10,21 @@ import type { SoundCue } from '../core/sound-cues'
 
 export interface HouseSound {
   play: (cue: SoundCue) => void
+  /**
+   * Dread and night (Spec 9, Requirement 7): a low drone while the house is
+   * not Calm, and a slow heartbeat at `heartbeatBpm` while something waits on
+   * the Visitor (null stops it). Each rises from silence; neither starts loud.
+   */
+  setDread?: (dread: { readonly drone: boolean; readonly heartbeatBpm: number | null }) => void
   close: () => void
 }
+
+/** The drone under the house, relative to the master. */
+export const DRONE_GAIN = 0.12
+/** The heartbeat, relative to the master. */
+export const HEARTBEAT_GAIN = 0.5
+/** Every dread sound rises from silence over at least this long, in seconds. */
+export const DREAD_RISE_SECONDS = 1.5
 
 /** Overall loudness, kept low: these are cues, not effects to startle. */
 export const MASTER_GAIN = 0.22
@@ -225,7 +238,75 @@ export function createHouseSound(): HouseSound | null {
   wind.start()
   sway.start()
   let closed = false
+  // The drone: two low tones a fifth apart, darkened, faded in and out.
+  const droneLevel = ctx.createGain()
+  droneLevel.gain.value = 0.0001
+  const droneTone = ctx.createBiquadFilter()
+  droneTone.type = 'lowpass'
+  droneTone.frequency.value = 240
+  for (const [frequency, type] of [[55, 'sine'], [82.4, 'triangle']] as const) {
+    const osc = ctx.createOscillator()
+    osc.type = type
+    osc.frequency.value = frequency
+    osc.connect(droneTone)
+    osc.start()
+  }
+  droneTone.connect(droneLevel).connect(master)
+  // The heartbeat: one beat ("lub-dub") written into a buffer one beat long and looped, so no timer is needed.
+  let heart: { source: AudioBufferSourceNode; level: GainNode; bpm: number } | null = null
+  const beatBuffer = (bpm: number): AudioBuffer => {
+    const length = Math.max(1, Math.round((ctx.sampleRate * 60) / bpm))
+    const buffer = ctx.createBuffer(1, length, ctx.sampleRate)
+    const data = buffer.getChannelData(0)
+    const thump = (at: number, frequency: number, size: number) => {
+      const start = Math.round(at * ctx.sampleRate)
+      const span = Math.round(0.16 * ctx.sampleRate)
+      for (let index = 0; index < span && start + index < length; index += 1) {
+        const t = index / ctx.sampleRate
+        data[start + index] += size * Math.sin(2 * Math.PI * frequency * t) * Math.exp(-t * 26)
+      }
+    }
+    thump(0, 52, 1)
+    thump(0.24, 44, 0.7)
+    return buffer
+  }
+  const fade = (gain: GainNode, to: number) => {
+    const now = ctx.currentTime
+    gain.gain.cancelScheduledValues(now)
+    gain.gain.setValueAtTime(Math.max(0.0001, gain.gain.value), now)
+    gain.gain.exponentialRampToValueAtTime(Math.max(0.0001, to), now + DREAD_RISE_SECONDS)
+  }
+  const stopHeart = () => {
+    if (heart === null) return
+    const old = heart
+    heart = null
+    fade(old.level, 0.0001)
+    old.source.stop(ctx.currentTime + DREAD_RISE_SECONDS + 0.1)
+  }
   return {
+    setDread: ({ drone, heartbeatBpm }) => {
+      if (closed) return
+      try {
+        fade(droneLevel, drone ? DRONE_GAIN : 0.0001)
+        if (heartbeatBpm === null) {
+          stopHeart()
+          return
+        }
+        if (heart !== null && heart.bpm === heartbeatBpm) return
+        stopHeart()
+        const source = ctx.createBufferSource()
+        source.buffer = beatBuffer(heartbeatBpm)
+        source.loop = true
+        const level = ctx.createGain()
+        level.gain.value = 0.0001
+        source.connect(level).connect(master)
+        source.start()
+        fade(level, HEARTBEAT_GAIN)
+        heart = { source, level, bpm: heartbeatBpm }
+      } catch {
+        // A sound that cannot play is skipped. Nothing depends on it.
+      }
+    },
     play: (cue) => {
       if (closed) return
       try {

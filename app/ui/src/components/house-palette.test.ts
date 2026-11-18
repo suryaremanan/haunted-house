@@ -119,13 +119,11 @@ describe('fallback CSS variables', () => {
 })
 
 describe('the static replay page', () => {
-  it('paints the page behind the app in the palette canvas and text of each mode', async () => {
+  it('paints the page behind the app as night in both colour schemes, in the dark palette canvas and text', async () => {
     const { default: html } = await import('../../replay/index.html?raw')
     const style = /<style>([\s\S]*?)<\/style>/.exec(html)?.[1] ?? ''
-    const [light, dark] = style.split('@media (prefers-color-scheme: dark)')
-    expect(light).toContain(`background: ${HOUSE_PALETTES.light.canvas};`)
-    expect(light).toContain(`color: ${HOUSE_PALETTES.light.text};`)
-    expect(dark).toContain(`background: ${HOUSE_PALETTES.dark.canvas};`)
-    expect(dark).toContain(`color: ${HOUSE_PALETTES.dark.text};`)
+    expect(style).not.toContain('prefers-color-scheme')
+    expect(style).toContain(`background: ${HOUSE_PALETTES.dark.canvas};`)
+    expect(style).toContain(`color: ${HOUSE_PALETTES.dark.text};`)
   })
 })

@@ -6,6 +6,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { createHouseSound, type HouseSound } from '../adapters/house-sound'
 import type { HouseProjection } from '../core/house-projection'
+import { heartbeatBpm, type FrightLevel } from '../core/dread'
 import { soundCuesBetween, type SoundCue } from '../core/sound-cues'
 
 export interface HouseSoundState {
@@ -22,6 +23,7 @@ export function useHouseSound(
   projection: HouseProjection,
   openKey: string | null,
   create: () => HouseSound | null = createHouseSound,
+  fright: FrightLevel = 'calm',
 ): HouseSoundState {
   const [on, setOn] = useState(false)
   const [available, setAvailable] = useState(true)
@@ -74,6 +76,12 @@ export function useHouseSound(
     if (engine.current === null || before === openKey) return
     playAll([openKey === null ? 'panel-close' : 'panel-open'])
   }, [openKey, playAll])
+
+  // Dread: the drone while the house is not Calm; the heartbeat while something waits on the Visitor.
+  const waiting = projection.needsYou.length
+  useEffect(() => {
+    engine.current?.setDread?.({ drone: fright !== 'calm', heartbeatBpm: fright === 'calm' ? null : heartbeatBpm(waiting) })
+  }, [on, fright, waiting])
 
   return { on, available, toggle }
 }
