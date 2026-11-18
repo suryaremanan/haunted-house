@@ -9027,7 +9027,7 @@ ${It}/* The map is always on the page of a narrow layout, so there is nothing to
   .hh-ui { container-type: inline-size; grid-template-columns: minmax(0, 1fr); justify-items: center; --hh-scene-top: 7rem; --hh-toolbar-h: 3.4rem;
     --hh-scene-w: min(100cqw, max(${jl.sceneMinStacked}rem, calc((100vh - var(--hh-scene-top) - ${jl.apron}rem) * ${Xl})));
     --hh-stage-w: var(--hh-scene-w); --hh-scene-h: calc(var(--hh-scene-w) * ${Yl}); }
-  .hh-ui[data-mode='replay'] { --hh-scene-top: 14rem; }
+  .hh-ui[data-mode='replay'] { --hh-scene-top: 8.5rem; }
   /* The toolbar, the room and the notes sit on the house's own grid, so the open sheet can share the room's row. */
   .hh-ui > .hh-ui-behind:first-of-type { display: contents; }
   .hh-ui > .hh-ui-behind:first-of-type > * { width: var(--hh-stage-w); grid-column: 1; }
