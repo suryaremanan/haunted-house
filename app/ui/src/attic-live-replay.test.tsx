@@ -177,6 +177,8 @@ async function openAttic(mounted: Mounted) {
 function sharedAttic(mounted: Mounted): string {
   const copy = atticPanel(mounted)!.cloneNode(true) as HTMLElement
   copy.querySelector('[data-attic="mode"]')?.remove()
+  // The static replay's own labelled extra: opening a séance log of your own (own-seance).
+  copy.querySelector('[data-own-seance]')?.remove()
   copy.removeAttribute('data-mode')
   for (const node of [copy, ...Array.from(copy.querySelectorAll('*'))]) {
     const attributes = Array.from(node.attributes, ({ name, value }) => [name, value] as const).sort(([a], [b]) => (a < b ? -1 : 1))

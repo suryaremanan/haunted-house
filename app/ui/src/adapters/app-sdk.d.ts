@@ -71,6 +71,12 @@ declare module '@kirocrew/app-sdk' {
    * which has no such export, simply yields none.
    */
   export const replayRecording:
-    | { load(): Promise<string>; present(mansionId: string, cursor: number): void }
+    | {
+        load(): Promise<string>
+        present(mansionId: string, cursor: number): void
+        replace?(text: string, bytes: number): { readonly ok: boolean; readonly message: string }
+        subscribe?(listener: () => void): () => void
+        version?(): number
+      }
     | undefined
 }

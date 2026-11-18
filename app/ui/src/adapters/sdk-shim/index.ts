@@ -8,7 +8,9 @@ import { WHOAMI_PATH } from '../../core/backend-status'
 // Type-only, so it is erased from the build and creates no import cycle.
 import type { AppApiClient, AppApiError, AppTheme } from '../sdk'
 import { createReplayMansionRoutes } from './mansions'
-import { createReplaySource } from './replay-source'
+import { checkOwnSeance } from '../../core/own-seance'
+import { REPLAY_MANSIONS_PATH } from '../../core/replay-mansion'
+import { createReplaySource, type ReplaySource } from './replay-source'
 import { createRoomGhostsReplayRoutes } from './room-ghosts-replay'
 import { createSeanceReplayRoutes } from './seance-replay'
 import { createWorkflowReplayRoutes } from './workflow-replay'
@@ -16,8 +18,27 @@ import { createWorkflowReplayRoutes } from './workflow-replay'
 /** The recorded Event_Log, next to the replay page. The build copies fixtures/replay/demo.jsonl here. */
 export { FIXTURE_URL } from './seance-replay'
 
-/** This page's one recording: `./fixture.jsonl`, fetched once and never from anywhere else. */
-const replaySource = createReplaySource()
+/**
+ * This page's one recording: `./fixture.jsonl`, fetched once and never from
+ * anywhere else; or, once the visitor opens one, their own séance log, held
+ * in memory only. The routes below read whichever is current through this
+ * one object.
+ */
+let current = createReplaySource()
+const replaySource: ReplaySource = {
+  loadText: () => current.loadText(),
+  recording: () => current.recording(),
+  present: (mansionId, cursor) => current.present(mansionId, cursor),
+  presentedCount: (mansionId) => current.presentedCount(mansionId),
+  presented: (mansionId) => current.presented(mansionId),
+}
+
+/** How many times the visitor has opened a log of their own; the page starts again on each. */
+let ownVersion = 0
+const ownListeners = new Set<() => void>()
+
+/** Where an opened log's mansions are said to be: not on this computer, which the page also says. */
+export const OWN_SEANCE_FOLDER = '~/your-seance-log'
 
 /**
  * The Attic's seam to the recording (replay-and-submission task 3.2). Only the
@@ -29,6 +50,33 @@ const replaySource = createReplaySource()
 export const replayRecording = {
   load: (): Promise<string> => replaySource.loadText(),
   present: (mansionId: string, cursor: number): void => replaySource.present(mansionId, cursor),
+  /**
+   * Replays a séance log the visitor opened from their own computer (Spec 11,
+   * own-seance). The text is checked whole and kept in memory only: nothing
+   * is uploaded, stored or fetched. On success the page starts again on it.
+   */
+  replace: (text: string, bytes: number): { readonly ok: boolean; readonly message: string } => {
+    const check = checkOwnSeance(text, bytes)
+    if (!check.ok) return { ok: false, message: check.message }
+    const fixture = {
+      schemaVersion: 1,
+      mansions: check.mansionIds.map((name) => ({ name, projectSpec: name, displayPath: `${OWN_SEANCE_FOLDER}/${name}`, status: 'ready' })),
+    }
+    const routes = createReplayMansionRoutes(fixture)
+    const listed = routes('GET', REPLAY_MANSIONS_PATH)
+    if (listed === null || listed.status !== 200) return { ok: false, message: 'That séance log names a mansion this page cannot show.' }
+    current = createReplaySource({ text })
+    mansionRoutes = routes
+    ownVersion += 1
+    for (const listener of ownListeners) listener()
+    const names = check.mansionIds.join(', ')
+    return { ok: true, message: `Opened your séance log: ${check.records.length} records of ${names}. It stays on this page and is gone when you leave.` }
+  },
+  subscribe: (listener: () => void): (() => void) => {
+    ownListeners.add(listener)
+    return () => ownListeners.delete(listener)
+  },
+  version: (): number => ownVersion,
 }
 
 /** This page's canonical séance read route, answered from the recording (Spec 2, task 8.1). */
@@ -55,7 +103,7 @@ function readOnly(method: string) {
 }
 
 /** This page's in-memory mansion registry, seeded from the bundled recording. */
-const mansionRoutes = createReplayMansionRoutes()
+let mansionRoutes = createReplayMansionRoutes()
 
 /**
  * Answers a mansion call from the in-memory registry the way the live client

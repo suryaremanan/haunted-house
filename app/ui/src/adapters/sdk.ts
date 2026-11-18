@@ -330,6 +330,11 @@ export interface ReplayRecordingSeam {
   load(): Promise<string>
   /** Tells the stand-in's read routes how long a prefix of a Mansion's Canonical_Order the Attic has reached. */
   present(mansionId: string, cursor: number): void
+  /** Replays a séance log the visitor opened, held in memory only (Spec 11). Absent on a stand-in without it. */
+  replace?(text: string, bytes: number): { readonly ok: boolean; readonly message: string }
+  /** Called when the visitor's own log replaces the recording; the page starts again on it. */
+  subscribe?(listener: () => void): () => void
+  version?(): number
 }
 
 function hostReplayRecording(): ReplayRecordingSeam | null {

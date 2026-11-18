@@ -25,6 +25,8 @@ export const FIXTURE_UNAVAILABLE_TEXT = 'Could not load the replay recording.'
 export interface ReplaySourceOptions {
   /** Defaults to the global fetch. Called once, with `FIXTURE_URL` only. */
   readonly fetch?: (url: string) => Promise<Response>
+  /** A séance log the visitor opened from their own computer: used instead of the fixture, and nothing is fetched. */
+  readonly text?: string
 }
 
 export interface Recording {
@@ -73,6 +75,7 @@ export function createReplaySource(options: ReplaySourceOptions = {}): ReplaySou
   const cursors = new Map<string, number>()
 
   function loadText(): Promise<string> {
+    if (options.text !== undefined) text ??= Promise.resolve(options.text)
     text ??= Promise.resolve()
       .then(() => (options.fetch ?? ((url: string) => fetch(url)))(FIXTURE_URL))
       .then(
