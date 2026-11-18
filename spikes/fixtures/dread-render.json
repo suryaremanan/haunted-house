@@ -333,5 +333,29 @@
    "failed": 0
   }
  ],
- "lookedAt": "Screenshots of the Gate, the Workshop at the held moment and the Attic at the end were looked at by the agent that made them, at each window size and level; they are not committed."
+ "lookedAt": "Looked at by the agent that made them (Claude Code), 18 Nov, in contact sheets of 1280x720 screenshots: the Gate; the Foyer, Study, Drafting Room, Workshop and Attic at the held moment (record 64) and at the end (record 91), at Calm, Eerie and Dread; the Workshop mid-refusal (Tinker 2 dragged back, record 66) and mid-release (a ghost fleeing the Warden's chain, record 82); a practice question in the Warden's balloon at 1280x720, 1024x768, 768x1024 and 390x844 with the room fully inside the window; and 'What was made' at 1280x720 and 390x844. Screenshots are not committed.",
+ "practiceFit": {
+  "1280x720": {
+   "sceneBottom": 621,
+   "viewport": 720
+  },
+  "1024x768": {
+   "sceneBottom": 640,
+   "viewport": 768
+  },
+  "768x1024": {
+   "sceneBottom": 825,
+   "viewport": 1024
+  },
+  "390x844": {
+   "sceneBottom": 664,
+   "viewport": 844
+  }
+ },
+ "holdAftermath": {
+  "refusedDraggedBack": true,
+  "releasedFled": true,
+  "clearedAfterPlaying": true,
+  "runsAtHeldMomentInWorkshop": "3 of 3"
+ }
 }

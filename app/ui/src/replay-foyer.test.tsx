@@ -399,10 +399,13 @@ describe('replay Foyer', () => {
     await screen.findByRole('radiogroup', { name: 'Mansions' })
     // A live page that holds mansions has no Gate. Its balloon counts them and offers the way back in.
     expect(atGate(live.container)).toBe(false)
-    expect(hallBalloon(live.container)).toEqual({
-      says: '4 mansions stand here.',
-      offers: ['Go back into demo-mansion', 'Build something new', 'Step outside'],
-    })
+    // "Go back into" needs the opened mansion's state, which can arrive after the list on a loaded machine.
+    await waitFor(() =>
+      expect(hallBalloon(live.container)).toEqual({
+        says: '4 mansions stand here.',
+        offers: ['Go back into demo-mansion', 'Build something new', 'Step outside'],
+      }),
+    )
     expect(hallMarkup(live.container)).toBe(replayList)
 
     fireEvent.click(radio('weather-station'))

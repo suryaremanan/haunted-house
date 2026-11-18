@@ -226,7 +226,7 @@ export const HOUSE_STAGE_STYLES = `
 .hh-stage-figure:hover .hh-paint-spectre { filter: drop-shadow(0 0 16px var(--hh-sc-moon)); }
 .hh-stage-spot[data-label]:hover::after, .hh-stage-figure[data-label]:hover::after { content: attr(data-label); position: absolute; left: 50%; bottom: 100%;
   translate: -50% -4px; padding: 2px 10px; font-family: var(--hh-font-serif); font-size: 0.8125rem; font-weight: 700; white-space: nowrap;
-  color: var(--hh-sc-ink); background: var(--hh-sc-balloon); border: 2px solid var(--hh-sc-ink); border-radius: 4px; }
+  color: var(--hh-sc-slate-ink); background: var(--hh-sc-slate); border: 2px solid var(--hh-sc-slate-ink); border-radius: 4px; }
 .hh-stage-spot[data-spot='door']:hover::after, .hh-stage-spot[data-spot='next']:hover::after { left: auto; right: 0; translate: 0 -4px; }
 .hh-stage-spot[data-spot='previous']:hover::after { left: 0; translate: 0 -4px; }
 

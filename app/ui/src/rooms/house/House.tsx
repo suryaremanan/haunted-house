@@ -19,7 +19,7 @@ import type { MansionDescriptor } from '../../core/mansion-api'
 import { AtticPanel } from '../attic/AtticPanel'
 import { ReplayBar } from '../attic/ReplayBar'
 import { useAtticPanel } from '../attic/use-attic-panel'
-import { PracticeBoard } from '../attic/PracticeBoard'
+import { PracticeBalloon, PracticeBoard } from '../attic/PracticeBoard'
 import { usePractice } from '../attic/use-practice'
 import { DraftingHousePanel } from '../drafting-room/DraftingHousePanel'
 import { ActiveMansionFoyerPanel } from '../foyer/ActiveMansionFoyerPanel'
@@ -222,6 +222,7 @@ export function House({
       inFlight={house.inFlight}
       panelStyles={PANEL_STYLES}
       guide={guide}
+      guideOverride={mode === 'replay' && practice.asking !== null ? <PracticeBalloon practice={practice} /> : null}
     />
   )
 }

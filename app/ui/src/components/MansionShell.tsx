@@ -104,6 +104,8 @@ export interface MansionShellProps {
    * Mansion. Without it the shell holds them itself.
    */
   guide?: { readonly settings: GuideSettings; readonly onChange: (settings: GuideSettings) => void }
+  /** Shown in the Warden's place instead of his balloon (the replay's practice question). Null for his own words. */
+  guideOverride?: ReactNode
 }
 
 export const CLOSE_LABEL: Readonly<Record<HouseSurfaceTarget['kind'], string>> = {
@@ -175,6 +177,7 @@ export function MansionShell({
   inFlight = null,
   panelStyles = '',
   guide,
+  guideOverride = null,
 }: MansionShellProps) {
   const root = useRef<HTMLElement>(null)
   const mansionTitle = useRef<HTMLHeadingElement>(null)
@@ -446,6 +449,7 @@ export function MansionShell({
               onCycleFright: cycleFright,
             }}
             motion={motion.effective}
+            balloon={guideOverride}
             open={top !== null && top.target.roomId === current}
             onPress={press.run}
             onStepBack={stepBack}

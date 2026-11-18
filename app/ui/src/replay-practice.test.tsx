@@ -99,7 +99,7 @@ describe('practice mode in a recording', () => {
     expect(toggle).toHaveAttribute('aria-pressed', 'false')
     await enter(toggle)
     expect(toggle).toHaveAttribute('aria-pressed', 'true')
-    expect(board.querySelector('[data-practice-note]')!.textContent).toBe(PRACTICE_NOTE)
+    expect(document.querySelector('[data-practice-note]')!.textContent).toBe(PRACTICE_NOTE)
 
     // Play on the replay's own clock, faked from here so the test runs it quickly.
     vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'Date'] })
@@ -111,14 +111,14 @@ describe('practice mode in a recording', () => {
     await enter(screen.getByRole('button', { name: /^(Play|Resume)$/ }))
     const asked: string[] = []
     for (let decision = 0; decision < 6; decision += 1) {
-      await until(() => board.querySelector('[data-practice-question]') !== null)
-      const question = board.querySelector('.hh-ui-practice-question')!.textContent!
+      await until(() => document.querySelector('[data-practice-question]') !== null)
+      const question = document.querySelector('.hh-ui-practice-question')!.textContent!
       asked.push(question)
       // Always refuse: the answer says what that means and what the owner chose.
-      await enter(board.querySelector<HTMLElement>('[data-practice-choice="rejected"]')!)
-      const answer = board.querySelector('[data-practice-answer]')!
+      await enter(document.querySelector<HTMLElement>('[data-practice-choice="rejected"]')!)
+      const answer = document.querySelector('[data-practice-answer]')!
       expect(answer.textContent).toContain('In the recording, the owner chose: ')
-      await enter(board.querySelector<HTMLElement>('[data-practice-go-on]')!)
+      await enter(document.querySelector<HTMLElement>('[data-practice-go-on]')!)
     }
     expect(asked[2]).toBe('Tinker 2 wants to run "bun test". Do you let it?')
     expect(asked[4]).toBe('Tinker 2 wants to run "bun test lantern.test.ts". Do you let it?')

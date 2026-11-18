@@ -29,7 +29,7 @@ Nothing here adds a request, a route, a permission, a storage use or a dependenc
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5_
 
 - [x] 4. The Warden grows with what he holds (MVP)
-  - [x] 4.1 `data-stance` on the keeper; scale, eye brightness and floor shadow by stance; the held ghost on the chain. After a refusal or a release the ghost is shown where it now is (back in its room, or gone from the chain); the drag and the flight are not animated
+  - [x] 4.1 `data-stance` on the keeper; scale, eye brightness and floor shadow by stance; the held ghost on the chain. After a refusal the ghost is dragged back from the Warden's corner to its place; after a release a ghost slips off his chain and flees (`use-hold-aftermath.ts`, Property 6); with motion off it is simply where it now is
   - [x] 4.2 Colder, literal held lines in `core/house-guide.ts`, same in live and replay
     - _Writes: `app/ui/src/components/RoomStage.tsx`, `app/ui/src/components/room-paint.tsx`, `app/ui/src/core/house-guide.ts`_
     - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6_
