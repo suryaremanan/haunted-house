@@ -64,4 +64,11 @@ export const ATTIC_STYLES = `
 @media (prefers-reduced-motion: reduce) {
   .hh-attic * { animation: none !important; transition: none !important; }
 }
+.hh-attic-own { border: 2px dashed currentColor; border-radius: 10px; padding: 10px 12px; }
+.hh-attic-own[data-over='true'] { border-style: solid; }
+.hh-attic-own p { margin: 4px 0; }
+.hh-attic-own-choose { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; cursor: pointer; }
+.hh-attic-own-choose input { font: inherit; }
+.hh-attic-own-choose input:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+.hh-attic-own-refusal { font-weight: 700; }
 `

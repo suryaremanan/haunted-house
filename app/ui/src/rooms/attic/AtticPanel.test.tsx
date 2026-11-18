@@ -275,6 +275,7 @@ describe('Attic panel: order and text', () => {
     const order = Array.from(attic.root().querySelectorAll<HTMLElement>('[data-attic], h4'), (node) => node.dataset.attic ?? `h4:${node.textContent}`)
     expect(order).toEqual([
       'mode',
+      'h4:Replay your own séance',
       'h4:Playback',
       'controls',
       'h4:The house at this point',
@@ -394,7 +395,8 @@ describe('Attic panel: read-only and sources', () => {
       'Previous event',
       'Next event',
     ])
-    expect(attic.root().querySelectorAll('a, form, textarea, input:not([type="radio"]):not([type="range"])')).toHaveLength(0)
+    // The one other input is the file chooser of "Replay your own séance": it reads a file in the page and sends nothing.
+    expect(Array.from(attic.root().querySelectorAll('a, form, textarea, input:not([type="radio"]):not([type="range"])'), (node) => node.getAttribute('type'))).toEqual(['file'])
 
     // The stand-in's read route serves exactly the prefix the Cursor reached.
     const { useAppApi } = await import('../../adapters/sdk')

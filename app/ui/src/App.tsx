@@ -10,7 +10,7 @@
 // only shows it and hands each choice to the Foyer's own actions.
 import { useKnockerEyes } from './components/use-knocker-eyes'
 import { CircleCheck, CircleDashed, LoaderCircle, RotateCw, TriangleAlert } from 'lucide-react'
-import { useCallback, useEffect, useId, useReducer, useRef, useState } from 'react'
+import { useCallback, useEffect, useId, useReducer, useRef, useState, useSyncExternalStore } from 'react'
 import { REPLAY_RECORDING, useBackendStatus, type BackendStatus, type GatewayErrorKind } from './adapters/sdk'
 import { GUIDE_BALLOON_STYLES } from './components/guide-balloon-styles'
 import { FrontDoorPainting } from './components/room-paint'
@@ -221,7 +221,22 @@ function StatusRows({ state }: { state: BackendStatus }) {
 
 const NO_OPTIONS: readonly HallOption[] = []
 
-export default function HauntedHouseApp({ landing }: HauntedHouseAppProps = {}) {
+const noSubscribe = () => () => undefined
+const ownSubscribe = REPLAY_RECORDING?.subscribe ?? noSubscribe
+const ownVersion = () => REPLAY_RECORDING?.version?.() ?? 0
+
+/**
+ * The page. In the static replay, when the visitor opens a séance log of their
+ * own (own-seance), the page starts again on it: the house is keyed by how
+ * many logs have been opened. In Crew nothing is ever opened, so the key never
+ * changes.
+ */
+export default function HauntedHouseApp(props: HauntedHouseAppProps = {}) {
+  const opened = useSyncExternalStore(ownSubscribe, ownVersion, ownVersion)
+  return <HauntedHouse key={opened} {...props} />
+}
+
+function HauntedHouse({ landing }: HauntedHouseAppProps) {
   const { state, retry } = useBackendStatus()
   const replayPage = REPLAY_RECORDING !== null
   const invite = landing ?? (replayPage ? REPLAY_LANDING : undefined)

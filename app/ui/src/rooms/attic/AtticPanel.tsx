@@ -7,6 +7,7 @@
 // and event count, the state at this point, the Timeline, the diagnostics.
 // The panel takes a replay and an announcer and nothing else: it has no
 // mutation, no navigation and no live region of its own.
+import { OwnSeanceDrop } from './OwnSeanceDrop'
 import { History, Lock, RefreshCw } from 'lucide-react'
 import { useId } from 'react'
 import type { AtticReplay } from '../../adapters/attic-replay'
@@ -47,6 +48,7 @@ export function AtticPanel({ replay, onAnnounce, motion = 'none', watch = true }
           <span>{LOADING_LOG_TEXT}</span>
         </p>
       ) : null}
+      {replay.mode === 'replay' ? <OwnSeanceDrop onAnnounce={onAnnounce} /> : null}
       <section className="hh-attic-section" aria-labelledby={`${id}-controls`}>
         <h4 id={`${id}-controls`}>Playback</h4>
         <ReplayControls
