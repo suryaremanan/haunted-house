@@ -310,6 +310,8 @@ ${GUIDE_BALLOON_STYLES}/* The map is always on the page of a narrow layout, so t
   .hh-ui > .hh-ui-behind:first-of-type { display: contents; }
   .hh-ui > .hh-ui-behind:first-of-type > * { width: var(--hh-stage-w); grid-column: 1; }
   .hh-ui-replay-bar { grid-row: 1; margin: 10px 0 0; }
+  .hh-ui-replay-head { grid-row: 1; margin: 10px 0 0; }
+  .hh-ui-replay-head > .hh-ui-replay-bar { margin: 0; }
   /* The toolbar is one row of its own above the room: nothing of it lies on the painting. */
   .hh-ui-toolbar { grid-row: 2; align-self: end; z-index: 5; }
   .hh-stage-room { grid-row: 3; }
